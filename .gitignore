@@ -1,5 +1,9 @@
 .idea/
+
+## Composer
 composer.lock
-composer.phar
-coverage/
 vendor/
+
+## Phpunit
+.phpunit.xml
+.phpunit.result.cache
