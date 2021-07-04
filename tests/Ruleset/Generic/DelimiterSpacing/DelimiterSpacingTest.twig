@@ -1,0 +1,23 @@
+{{ foo }}
+{# comment #}
+{% if foo %}{% endif %}
+
+{{- foo -}}
+{#- comment -#}
+{%- if foo -%}{%- endif -%}
+
+{{
+    shouldNotCareAboutNewLine
+}}
+{#
+    shouldNotCareAboutNewLine
+#}
+{%-if foo  -%}{%-  endif-%}
+
+{{ foo({'bar': {'baz': 'shouldNotCareAboutDoubleHashes'}}) }}
+
+<div>
+    {{
+        shouldNotCareAboutNewLine
+    }}
+</div>

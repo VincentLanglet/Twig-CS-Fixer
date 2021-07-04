@@ -1,0 +1,37 @@
+{{ 1 + 2 }}
+{{ 1 - 2 }}
+{{ 1 / 2 }}
+{{ 1 * 2 }}
+{{ 1 % 2 }}
+{{ 1 // 2 }}
+{{ 1 ** 2 }}
+{{ foo ~ bar }}
+{{ true ? true : false }}
+{{ 1 == 2 }}
+{{ not true }}
+{{ false and true }}
+{{ false or true }}
+{{ a in array }}
+{{ a is array }}
+
+Untouch +-/*%==:
+
+{{ 1 ?: 2 }}
+{{ 1 ?? 2 }}
+
+{{ 1 + -2 }}
+{{ 1 + (-2 + 3) }}
+{{ a[-2] }}
+{{ { 'foo': -2 } }}
+{{ foo.name }}
+{{ 1..10 }}
+{{ -5..-2 }}
+{{ [1, -2] }}
+{% if -2 == -3 or -2 == -3 %}{% endif %}
+{% if a - 2 == -4 %}{% endif %}
+{{ a in -2..-3 }}
+{{ "a_#{1 + 1}" }}
+
+{{ 'array' starts with 'a' }}
+{{ 'array' ends with 'a' }}
+{{ 'array' matches 'a' }}
