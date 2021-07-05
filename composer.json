@@ -18,7 +18,8 @@
         "twig/twig": "^2.12 || ^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5 || ^9.5"
+        "phpunit/phpunit": "^8.5 || ^9.5",
+        "vincentlanglet/symfony-custom-coding-standard": "^9.0"
     },
     "config": {
         "sort-packages": true
