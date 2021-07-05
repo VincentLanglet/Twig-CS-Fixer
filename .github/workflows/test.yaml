@@ -32,7 +32,7 @@ jobs:
                   coverage: pcov
                   tools: composer:v2
 
-            - name: Install Composer dependencies (PHP 7 ${{ matrix.dependencies }})
+            - name: Install Composer dependencies ${{ matrix.dependencies }}
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{ matrix.dependencies }}

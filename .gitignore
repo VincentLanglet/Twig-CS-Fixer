@@ -7,3 +7,6 @@ vendor/
 ## Phpunit
 .phpunit.xml
 .phpunit.result.cache
+
+## PhpCs
+.phpcs-cache
