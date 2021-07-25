@@ -11,7 +11,6 @@ use Twig\Source;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Token\Tokenizer;
 
 /**
