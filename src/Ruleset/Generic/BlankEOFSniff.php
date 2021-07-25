@@ -14,8 +14,8 @@ use TwigCsFixer\Token\Token;
 class BlankEOFSniff extends AbstractSniff
 {
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return void
      *
@@ -42,6 +42,8 @@ class BlankEOFSniff extends AbstractSniff
                 );
 
                 if ($fix) {
+                    \assert(null !== $this->fixer);
+
                     if (0 === $i) {
                         $this->fixer->addNewlineBefore($tokenPosition);
                     } else {

@@ -12,12 +12,12 @@ use Exception;
 class Config
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected $paths = [];
 
     /**
-     * @param array $paths
+     * @param string[] $paths
      *
      * @return void
      */
@@ -27,7 +27,7 @@ class Config
     }
 
     /**
-     * @return array
+     * @return string[]
      *
      * @throws Exception
      */
@@ -53,6 +53,6 @@ class Config
             }
         }
 
-        return $files;
+        return array_filter($files);
     }
 }

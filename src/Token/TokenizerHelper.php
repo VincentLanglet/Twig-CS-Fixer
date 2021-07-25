@@ -8,6 +8,8 @@ use Twig\Environment;
 
 /**
  * Class TokenizerHelper
+ *
+ * @phpstan-import-type TokenizerOptions from Tokenizer
  */
 class TokenizerHelper
 {
@@ -17,17 +19,21 @@ class TokenizerHelper
     private $env;
 
     /**
-     * @var array
+     * @var array<string, string|string[]>
+     *
+     * @phpstan-var TokenizerOptions
      */
-    private $options = [];
+    private $options;
 
     /**
-     * @param Environment $env
-     * @param array       $options
+     * @param Environment                    $env
+     * @param array<string, string|string[]> $options
      *
      * @return void
+     *
+     * @phpstan-param TokenizerOptions $options
      */
-    public function __construct(Environment $env, array $options = [])
+    public function __construct(Environment $env, array $options)
     {
         $this->env = $env;
         $this->options = $options;
@@ -135,6 +141,7 @@ class TokenizerHelper
         );
 
         $operators = array_combine($operators, array_map('strlen', $operators));
+        \assert(false !== $operators);
         arsort($operators);
 
         $regex = [];

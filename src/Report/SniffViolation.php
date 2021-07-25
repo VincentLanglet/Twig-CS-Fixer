@@ -86,7 +86,7 @@ class SniffViolation
             case Report::MESSAGE_TYPE_FATAL:
                 return self::LEVEL_FATAL;
             default:
-                throw new LogicException();
+                throw new LogicException(sprintf('Level "%s" is not supported.', $this->level));
         }
     }
 
@@ -107,7 +107,7 @@ class SniffViolation
             case self::LEVEL_FATAL:
                 return Report::MESSAGE_TYPE_FATAL;
             default:
-                throw new LogicException();
+                throw new LogicException(sprintf('Level "%s" is not supported.', $level));
         }
     }
 
