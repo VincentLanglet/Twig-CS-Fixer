@@ -13,8 +13,8 @@ use TwigCsFixer\Token\Token;
 class DelimiterSpacingSniff extends AbstractSpacingSniff
 {
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return int|null
      */
@@ -34,8 +34,8 @@ class DelimiterSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return int|null
      */

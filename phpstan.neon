@@ -1,0 +1,21 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+    tmpDir: /tmp/phpstan
+    level: max
+    paths:
+        - src
+        - tests
+    parallel:
+        maximumNumberOfProcesses: 4
+    exceptions:
+        uncheckedExceptionRegexes: []
+        uncheckedExceptionClasses:
+            - LogicException
+            - Error
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+    implicitThrows: false

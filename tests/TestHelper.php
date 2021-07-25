@@ -32,7 +32,15 @@ class TestHelper
         }
 
         $tempName = tempnam(sys_get_temp_dir(), 'TwigCsFixer');
+        if (false === $tempName) {
+            throw new \LogicException('Cannot generate temporary name.');
+        }
+
         $fixedFile = fopen($tempName, 'w');
+        if (false === $fixedFile) {
+            throw new \LogicException(sprintf('Cannot open temporary file "%s".', $tempName));
+        }
+
         fwrite($fixedFile, $contents);
 
         // We must use something like shell_exec() because whitespace at the end
@@ -47,10 +55,13 @@ class TestHelper
             unlink($tempName);
         }
 
-        $diffLines = null !== $diff ? explode(PHP_EOL, $diff) : [];
-        if (count($diffLines) === 1) {
-            // Seems to be required for cygwin.
-            $diffLines = explode("\n", $diff);
+        $diffLines = [];
+        if (null !== $diff) {
+            $diffLines = explode(PHP_EOL, $diff);
+            if (count($diffLines) === 1) {
+                // Seems to be required for cygwin.
+                $diffLines = explode("\n", $diff);
+            }
         }
 
         $diff = [];

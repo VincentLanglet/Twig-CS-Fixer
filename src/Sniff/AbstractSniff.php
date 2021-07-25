@@ -55,7 +55,7 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param array $stream
+     * @param array<int, Token> $stream
      *
      * @return void
      */
@@ -67,17 +67,17 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $stream
+     * @param int               $tokenPosition
+     * @param array<int, Token> $stream
      *
      * @return void
      */
     abstract protected function process(int $tokenPosition, array $stream): void;
 
     /**
-     * @param Token        $token
-     * @param int|array    $type
-     * @param string|array $value
+     * @param Token           $token
+     * @param int|int[]       $type
+     * @param string|string[] $value
      *
      * @return bool
      */
@@ -94,10 +94,10 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int|array $type
-     * @param array     $tokens
-     * @param int       $start
-     * @param bool      $exclude
+     * @param int|int[]         $type
+     * @param array<int, Token> $tokens
+     * @param int               $start
+     * @param bool              $exclude
      *
      * @return int|false
      */
@@ -117,10 +117,10 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int|array $type
-     * @param array     $tokens
-     * @param int       $start
-     * @param bool      $exclude
+     * @param int|int[]         $type
+     * @param array<int, Token> $tokens
+     * @param int               $start
+     * @param bool              $exclude
      *
      * @return int|false
      */

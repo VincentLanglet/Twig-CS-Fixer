@@ -18,6 +18,8 @@
         "twig/twig": "^2.12 || ^3.0"
     },
     "require-dev": {
+        "phpstan/phpstan": "^0.12.91",
+        "phpstan/phpstan-phpunit": "^0.12.20",
         "phpunit/phpunit": "^8.5 || ^9.5",
         "vincentlanglet/symfony-custom-coding-standard": "^9.0"
     },

@@ -28,9 +28,14 @@ class TokenizerTest extends TestCase
      */
     public function testTokenize(string $filePath, array $expectedTokenTypes): void
     {
+        $content = file_get_contents($filePath);
+        if (false === $content) {
+            self::fail(sprintf('Cannot read file path %s', $filePath));
+        }
+
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
-        $source = new Source(file_get_contents($filePath), $filePath);
+        $source = new Source($content, $filePath);
 
         $tokens = $tokenizer->tokenize($source);
 
@@ -50,7 +55,9 @@ class TokenizerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<array<mixed>>
+     *
+     * @phpstan-return array<array{string, array<int, int>}>
      */
     public function tokenizeDataProvider(): array
     {

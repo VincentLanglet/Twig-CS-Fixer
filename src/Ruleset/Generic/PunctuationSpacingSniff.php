@@ -13,8 +13,8 @@ use TwigCsFixer\Token\Token;
 class PunctuationSpacingSniff extends AbstractSpacingSniff
 {
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return int|null
      */
@@ -29,8 +29,8 @@ class PunctuationSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return int|null
      */

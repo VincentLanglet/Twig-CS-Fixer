@@ -42,9 +42,9 @@ class Linter
     }
 
     /**
-     * @param array   $files
-     * @param Ruleset $ruleset
-     * @param bool    $fix
+     * @param string[] $files
+     * @param Ruleset  $ruleset
+     * @param bool     $fix
      *
      * @return Report
      *
@@ -64,7 +64,6 @@ class Linter
 
         // Process
         foreach ($files as $file) {
-            $file = strval($file);
             $this->setErrorHandler($report, $file);
 
             $this->processTemplate($file, $ruleset, $report);
@@ -83,14 +82,14 @@ class Linter
     }
 
     /**
-     * @param iterable $files
+     * @param string[] $files
      * @param Ruleset  $ruleset
      *
      * @return void
      *
      * @throws Exception
      */
-    protected function fix(iterable $files, Ruleset $ruleset): void
+    protected function fix(array $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -99,7 +98,6 @@ class Linter
         }
 
         foreach ($files as $file) {
-            $file = strval($file);
             $success = $fixer->fixFile($file);
 
             if (!$success) {
@@ -119,7 +117,20 @@ class Linter
      */
     protected function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
     {
-        $twigSource = new Source(file_get_contents($file), $file);
+        $content = file_get_contents($file);
+        if (false === $content) {
+            $sniffViolation = new SniffViolation(
+                Report::MESSAGE_TYPE_FATAL,
+                sprintf('Unable to read file "%s"', $file),
+                $file
+            );
+
+            $report->addMessage($sniffViolation);
+
+            return false;
+        }
+
+        $twigSource = new Source($content, $file);
 
         // Tokenize + Parse.
         try {
@@ -128,7 +139,7 @@ class Linter
             $sniffViolation = new SniffViolation(
                 Report::MESSAGE_TYPE_FATAL,
                 $e->getRawMessage(),
-                $e->getSourceContext()->getName(),
+                $file,
                 $e->getTemplateLine()
             );
 
@@ -152,7 +163,6 @@ class Linter
             return false;
         }
 
-        /** @var SniffInterface[] $sniffs */
         $sniffs = $ruleset->getSniffs();
         foreach ($sniffs as $sniff) {
             $sniff->processFile($stream);
@@ -162,14 +172,14 @@ class Linter
     }
 
     /**
-     * @param Report      $report
-     * @param string|null $file
+     * @param Report $report
+     * @param string $file
      *
      * @return void
      */
-    protected function setErrorHandler(Report $report, string $file = null): void
+    protected function setErrorHandler(Report $report, string $file): void
     {
-        set_error_handler(function ($type, $message) use ($report, $file) {
+        set_error_handler(function (int $type, string $message) use ($report, $file): bool {
             if (E_USER_DEPRECATED === $type) {
                 $sniffViolation = new SniffViolation(
                     Report::MESSAGE_TYPE_NOTICE,
@@ -178,7 +188,11 @@ class Linter
                 );
 
                 $report->addMessage($sniffViolation);
+
+                return true;
             }
+
+            return false;
         });
     }
 }

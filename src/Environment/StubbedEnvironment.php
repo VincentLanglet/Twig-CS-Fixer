@@ -52,7 +52,9 @@ class StubbedEnvironment extends Environment
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
 
+        // TODO: Remove when dropping support for symfony/twig-bridge@4.4
         if (class_exists(TransChoiceTokenParser::class)) {
+            // @phpstan-ignore-next-line
             $this->addTokenParser(new TransChoiceTokenParser());
         }
     }

@@ -44,15 +44,16 @@ abstract class AbstractSniffTest extends TestCase
         try {
             $class = new ReflectionClass(get_called_class());
             $className = $class->getShortName();
-            $directory = dirname($class->getFileName());
+            $filename = $class->getFileName();
+            self::assertNotFalse($filename);
+
+            $directory = dirname($filename);
             $file = "$directory/$className.twig";
 
             $ruleset->addSniff($sniff);
             $report = $linter->run([$file], $ruleset);
         } catch (Exception $exception) {
             self::fail($exception->getMessage());
-
-            return;
         }
 
         $fixedFile = "$directory/$className.fixed.twig";

@@ -66,9 +66,11 @@ class Report
     }
 
     /**
-     * @param array $filters
+     * @param array<string, string> $filters
      *
      * @return SniffViolation[]
+     *
+     * @phpstan-param array{file?: string, level?: string|null} $filters
      */
     public function getMessages(array $filters = []): array
     {
@@ -81,11 +83,11 @@ class Report
             $fileFilter = true;
             $levelFilter = true;
 
-            if (isset($filters['file']) && $filters['file']) {
-                $fileFilter = (string) $message->getFilename() === (string) $filters['file'];
+            if (isset($filters['file'])) {
+                $fileFilter = $message->getFilename() === $filters['file'];
             }
 
-            if (isset($filters['level']) && $filters['level']) {
+            if (isset($filters['level'])) {
                 $levelFilter = $message->getLevel() >= $message::getLevelAsInt($filters['level']);
             }
 

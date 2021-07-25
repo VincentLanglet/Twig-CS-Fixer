@@ -13,6 +13,25 @@ use Twig\Source;
  *
  * Since the regex are using bytes as position, mb_ methods are voluntary not used.
  * phpcs:disable SymfonyCustom.PHP.EncourageMultiBytes
+ *
+ * @phpstan-type TokenizerOptions = array{
+ *     tag_comment: array{string, string},
+ *     tag_block: array{string, string},
+ *     tag_variable: array{string, string},
+ *     whitespace_trim: string,
+ *     whitespace_line_trim: string,
+ *     interpolation: array{string, string},
+ * }
+ * @phpstan-type Regex = array{
+ *     lex_block: string,
+ *     lex_comment: string,
+ *     lex_variable: string,
+ *     operator: string,
+ *     lex_tokens_start: string,
+ *     interpolation_start: string,
+ *     interpolation_end: string,
+ *     lex_block: string,
+ * }
  */
 class Tokenizer
 {
@@ -34,9 +53,18 @@ class Tokenizer
     private const PUNCTUATION           = '()[]{}:.,|';
 
     /**
-     * @var array
+     * @var array<string, string|string[]>
+     *
+     * @phpstan-var TokenizerOptions
      */
-    private $options = [];
+    private $options = [
+        'tag_comment'          => ['{#', '#}'],
+        'tag_block'            => ['{%', '%}'],
+        'tag_variable'         => ['{{', '}}'],
+        'whitespace_trim'      => '-',
+        'whitespace_line_trim' => '~',
+        'interpolation'        => ['#{', '}'],
+    ];
 
     /**
      * @var string[]
@@ -64,52 +92,48 @@ class Tokenizer
     protected $currentPosition = 0;
 
     /**
-     * @var Token[]
+     * @var array<int, Token>
      */
     protected $tokens = [];
 
     /**
-     * @var array
+     * @var array<int, array<string, mixed>>
+     *
+     * @phpstan-var array<int, array{fullMatch: string, position: int, match: string}>
      */
     protected $tokenPositions = [];
 
     /**
-     * @var array[]
+     * @var mixed[][]
+     *
+     * @phpstan-var array<array{int, array<string, mixed>}>
      */
     protected $state = [];
 
     /**
-     * @var array
+     * @var mixed[][]
+     *
+     * @phpstan-var array<array{string, int}>
      */
     protected $bracketsAndTernary = [];
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected $code;
+    protected $code = '';
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected $filename;
+    protected $filename = '';
 
     /**
      * @param Environment $env
-     * @param array       $options
      *
      * @return void
      */
-    public function __construct(Environment $env, array $options = [])
+    public function __construct(Environment $env)
     {
-        $this->options = array_merge([
-            'tag_comment'          => ['{#', '#}'],
-            'tag_block'            => ['{%', '%}'],
-            'tag_variable'         => ['{{', '}}'],
-            'whitespace_trim'      => '-',
-            'whitespace_line_trim' => '~',
-            'interpolation'        => ['#{', '}'],
-        ], $options);
-
         $tokenizerHelper = new TokenizerHelper($env, $this->options);
         $this->regexes = [
             'lex_block'           => $tokenizerHelper->getBlockRegex(),
@@ -125,7 +149,7 @@ class Tokenizer
     /**
      * @param Source $source
      *
-     * @return Token[]
+     * @return array<int, Token>
      *
      * @throws Exception
      */
@@ -209,8 +233,8 @@ class Tokenizer
     }
 
     /**
-     * @param int   $state
-     * @param array $data
+     * @param int                  $state
+     * @param array<string, mixed> $data
      *
      * @return void
      */
@@ -237,7 +261,7 @@ class Tokenizer
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getStateParams(): array
     {
@@ -266,6 +290,7 @@ class Tokenizer
     {
         $tokenPositions = [];
         preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
+        /** @phpstan-var array<int, array<int, array{string, int}>> $tokenPositions */
 
         $tokenPositionsReworked = [];
         foreach ($tokenPositions[0] as $index => $tokenFullMatch) {
@@ -282,7 +307,9 @@ class Tokenizer
     /**
      * @param int $offset
      *
-     * @return array|null
+     * @return array<string, mixed>|null
+     *
+     * @phpstan-return array{fullMatch: string, position: int, match: string}|null
      */
     protected function getTokenPosition(int $offset = 0): ?array
     {
@@ -446,7 +473,7 @@ class Tokenizer
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $bracket = array_pop($this->bracketsAndTernary);
 
-            if ('"' !== $this->code[$this->cursor]) {
+            if (null !== $bracket && '"' !== $this->code[$this->cursor]) {
                 throw new Exception(sprintf('Unclosed "%s"', $bracket[0]));
             }
 
@@ -468,7 +495,8 @@ class Tokenizer
         $bracket = end($this->bracketsAndTernary);
 
         if (
-            $this->options['interpolation'][0] === $bracket[0]
+            false !== $bracket
+            && $this->options['interpolation'][0] === $bracket[0]
             && preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)
         ) {
             array_pop($this->bracketsAndTernary);
@@ -531,6 +559,8 @@ class Tokenizer
     protected function lexStart(): void
     {
         $tokenStart = $this->getTokenPosition();
+        \assert(null !== $tokenStart);
+
         if ($tokenStart['match'] === $this->options['tag_comment'][0]) {
             $state = self::STATE_COMMENT;
             $tokenType = Token::COMMENT_START_TYPE;

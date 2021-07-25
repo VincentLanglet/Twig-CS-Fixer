@@ -42,7 +42,7 @@ class TextFormatter
      *
      * @return void
      */
-    public function display(Report $report, string $level = null): void
+    public function display(Report $report, ?string $level = null): void
     {
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages([
@@ -54,20 +54,21 @@ class TextFormatter
                 $this->io->text('<fg=red>KO</fg=red> '.$file);
             }
 
+            $content = file_get_contents($file);
             $rows = [];
             foreach ($fileMessages as $message) {
-                $lines = $this->getContext(file_get_contents($file), $message->getLine(), self::ERROR_CONTEXT_LIMIT);
-
                 $formattedText = [];
-                if (!$message->getLine()) {
+
+                if (null === $message->getLine() || false === $content) {
                     $formattedText[] = $this->formatErrorMessage($message);
-                }
+                } else {
+                    $lines = $this->getContext($content, $message->getLine(), self::ERROR_CONTEXT_LIMIT);
+                    foreach ($lines as $no => $code) {
+                        $formattedText[] = sprintf(self::ERROR_LINE_FORMAT, $no, wordwrap($code, self::ERROR_LINE_WIDTH));
 
-                foreach ($lines as $no => $code) {
-                    $formattedText[] = sprintf(self::ERROR_LINE_FORMAT, $no, wordwrap($code, self::ERROR_LINE_WIDTH));
-
-                    if ($no === $message->getLine()) {
-                        $formattedText[] = $this->formatErrorMessage($message);
+                        if ($no === $message->getLine()) {
+                            $formattedText[] = $this->formatErrorMessage($message);
+                        }
                     }
                 }
 
@@ -108,7 +109,7 @@ class TextFormatter
      * @param int|null $line
      * @param int      $context
      *
-     * @return array
+     * @return array<int, string>
      */
     protected function getContext(string $template, ?int $line, int $context): array
     {

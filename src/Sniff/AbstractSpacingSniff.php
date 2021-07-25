@@ -13,8 +13,8 @@ use TwigCsFixer\Token\Token;
 abstract class AbstractSpacingSniff extends AbstractSniff
 {
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return void
      *
@@ -35,25 +35,25 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return int|null
      */
     abstract protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return int|null
      */
     abstract protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
-     * @param int     $expected
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
+     * @param int               $expected
      *
      * @return void
      *
@@ -70,7 +70,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $count = mb_strlen($tokens[$tokenPosition + 1]->getValue());
+            $count = mb_strlen($tokens[$tokenPosition + 1]->getValue() ?? '');
         } else {
             $count = 0;
         }
@@ -82,6 +82,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             );
 
             if ($fix) {
+                \assert(null !== $this->fixer);
                 if (0 === $count) {
                     $this->fixer->addContent($tokenPosition, str_repeat(' ', $expected));
                 } else {
@@ -92,9 +93,9 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
-     * @param int     $expected
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
+     * @param int               $expected
      *
      * @return void
      *
@@ -111,7 +112,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
-            $count = mb_strlen($tokens[$tokenPosition - 1]->getValue());
+            $count = mb_strlen($tokens[$tokenPosition - 1]->getValue() ?? '');
         } else {
             $count = 0;
         }
@@ -123,6 +124,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             );
 
             if ($fix) {
+                \assert(null !== $this->fixer);
                 if (0 === $count) {
                     $this->fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
                 } else {

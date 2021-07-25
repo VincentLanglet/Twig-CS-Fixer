@@ -14,8 +14,8 @@ use TwigCsFixer\Token\Token;
 class EmptyLinesSniff extends AbstractSniff
 {
     /**
-     * @param int     $tokenPosition
-     * @param Token[] $tokens
+     * @param int               $tokenPosition
+     * @param array<int, Token> $tokens
      *
      * @return void
      *
@@ -41,6 +41,8 @@ class EmptyLinesSniff extends AbstractSniff
                 );
 
                 if ($fix) {
+                    \assert(null !== $this->fixer);
+
                     $this->fixer->beginChangeset();
                     while ($i > 1) {
                         $this->fixer->replaceToken($tokenPosition - $i, '');
