@@ -12,6 +12,7 @@ use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -54,8 +55,9 @@ class StubbedEnvironment extends Environment
 
         // TODO: Remove when dropping support for symfony/twig-bridge@4.4
         if (class_exists(TransChoiceTokenParser::class)) {
-            // @phpstan-ignore-next-line
-            $this->addTokenParser(new TransChoiceTokenParser());
+            /** @var TokenParserInterface $transChoiceTokenParser */
+            $transChoiceTokenParser = new TransChoiceTokenParser();
+            $this->addTokenParser($transChoiceTokenParser);
         }
     }
 

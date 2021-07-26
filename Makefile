@@ -9,3 +9,7 @@ test:
 phpstan:
 	vendor/bin/phpstan
 .PHONY: phpstan
+
+psalm:
+	vendor/bin/psalm
+.PHONY: psalm

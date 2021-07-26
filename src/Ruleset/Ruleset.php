@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Ruleset;
 
 use Exception;
+use LogicException;
 use SplFileInfo;
 use TwigCsFixer\Sniff\SniffInterface;
 
@@ -59,9 +60,14 @@ class Ruleset
         foreach ($iterator as $file) {
             $class = __NAMESPACE__.'\\'.$standardName.'\\'.$file->getBasename('.php');
 
-            if (class_exists($class)) {
-                $this->addSniff(new $class());
+            if (!class_exists($class)) {
+                throw new LogicException(sprintf('The class "%s" does not exist.', $class));
             }
+            if (!is_a($class, SniffInterface::class, true)) {
+                throw new LogicException(sprintf('The class "%s" must implement %s.', $class, SniffInterface::class));
+            }
+
+            $this->addSniff(new $class());
         }
 
         return $this;

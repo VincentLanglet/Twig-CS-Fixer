@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests;
 
+use LogicException;
+
 /**
  * Class TestHelper
  */
@@ -33,12 +35,12 @@ class TestHelper
 
         $tempName = tempnam(sys_get_temp_dir(), 'TwigCsFixer');
         if (false === $tempName) {
-            throw new \LogicException('Cannot generate temporary name.');
+            throw new LogicException('Cannot generate temporary name.');
         }
 
         $fixedFile = fopen($tempName, 'w');
         if (false === $fixedFile) {
-            throw new \LogicException(sprintf('Cannot open temporary file "%s".', $tempName));
+            throw new LogicException(sprintf('Cannot open temporary file "%s".', $tempName));
         }
 
         fwrite($fixedFile, $contents);
@@ -48,6 +50,7 @@ class TestHelper
         $filename = escapeshellarg($filename);
         $cmd = "diff -u -L$filename -LTwigCsFixer $filename \"$tempName\"";
 
+        /** @psalm-suppress ForbiddenCode */
         $diff = shell_exec($cmd);
 
         fclose($fixedFile);
