@@ -134,18 +134,26 @@ class TokenizerHelper
      */
     public function getOperatorRegex(): string
     {
+        /** @psalm-suppress InternalMethod */
+        $unaryOperators = $this->env->getUnaryOperators();
+        /** @psalm-suppress InternalMethod */
+        $binaryOperators = $this->env->getBinaryOperators();
+
+        /** @var string[] $operators */
         $operators = array_merge(
             ['=', '?', '?:'],
-            array_keys($this->env->getUnaryOperators()),
-            array_keys($this->env->getBinaryOperators())
+            array_keys($unaryOperators),
+            array_keys($binaryOperators)
         );
 
-        $operators = array_combine($operators, array_map('strlen', $operators));
-        \assert(false !== $operators);
-        arsort($operators);
+        $lengthByOperator = [];
+        foreach ($operators as $operator) {
+            $lengthByOperator[$operator] = mb_strlen($operator);
+        }
+        arsort($lengthByOperator);
 
         $regex = [];
-        foreach ($operators as $operator => $length) {
+        foreach ($lengthByOperator as $operator => $length) {
             if (ctype_alpha($operator[$length - 1])) {
                 $r = preg_quote($operator, '/').'(?=[\s()])';
             } else {

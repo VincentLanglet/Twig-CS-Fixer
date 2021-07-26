@@ -58,11 +58,12 @@ class TextFormatter
             $rows = [];
             foreach ($fileMessages as $message) {
                 $formattedText = [];
+                $line = $message->getLine();
 
-                if (null === $message->getLine() || false === $content) {
+                if (null === $line || false === $content) {
                     $formattedText[] = $this->formatErrorMessage($message);
                 } else {
-                    $lines = $this->getContext($content, $message->getLine(), self::ERROR_CONTEXT_LIMIT);
+                    $lines = $this->getContext($content, $line, self::ERROR_CONTEXT_LIMIT);
                     foreach ($lines as $no => $code) {
                         $formattedText[] = sprintf(self::ERROR_LINE_FORMAT, $no, wordwrap($code, self::ERROR_LINE_WIDTH));
 
@@ -105,13 +106,13 @@ class TextFormatter
     }
 
     /**
-     * @param string   $template
-     * @param int|null $line
-     * @param int      $context
+     * @param string $template
+     * @param int    $line
+     * @param int    $context
      *
      * @return array<int, string>
      */
-    protected function getContext(string $template, ?int $line, int $context): array
+    protected function getContext(string $template, int $line, int $context): array
     {
         $lines = explode("\n", $template);
 
@@ -121,7 +122,7 @@ class TextFormatter
         $result = [];
         $indentCount = null;
         while ($position < $max) {
-            if (preg_match('/^([\s\t]+)/', $lines[$position], $match)) {
+            if (1 === preg_match('/^([\s\t]+)/', $lines[$position], $match)) {
                 if (null === $indentCount) {
                     $indentCount = mb_strlen($match[1]);
                 }
@@ -138,7 +139,7 @@ class TextFormatter
         }
 
         foreach ($result as $index => $code) {
-            $result[$index] = mb_substr($code, $indentCount);
+            $result[$index] = mb_substr($code, $indentCount ?? 0);
         }
 
         return $result;

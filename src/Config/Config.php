@@ -42,7 +42,7 @@ class Config
                 $iterator = new \RecursiveIteratorIterator($filter);
 
                 /** @var \SplFileInfo $file */
-                foreach ($iterator as $k => $file) {
+                foreach ($iterator as $file) {
                     $files[] = $file->getRealPath();
                 }
             } elseif (is_file($path)) {

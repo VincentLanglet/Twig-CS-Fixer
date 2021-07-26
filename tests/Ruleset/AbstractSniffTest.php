@@ -82,7 +82,7 @@ abstract class AbstractSniffTest extends TestCase
                 self::fail($errorMessage);
             }
 
-            $messagePositions[] = [$message->getLine() => $message->getLinePosition()];
+            $messagePositions[] = [$message->getLine() ?? 0 => $message->getLinePosition()];
         }
         self::assertSame($expects, $messagePositions);
     }

@@ -86,7 +86,7 @@ class TwigCsFixerCommand extends Command
         $reporter->display($report, $level);
 
         // Return a meaningful error code.
-        if ($report->getTotalErrors()) {
+        if ($report->getTotalErrors() > 0) {
             return 1;
         }
 

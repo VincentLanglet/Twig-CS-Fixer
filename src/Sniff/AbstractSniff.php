@@ -23,7 +23,7 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @var Fixer|null
      */
-    protected $fixer;
+    private $fixer;
 
     /**
      * @param Report $report
@@ -68,11 +68,11 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @param int               $tokenPosition
-     * @param array<int, Token> $stream
+     * @param array<int, Token> $tokens
      *
      * @return void
      */
-    abstract protected function process(int $tokenPosition, array $stream): void;
+    abstract protected function process(int $tokenPosition, array $tokens): void;
 
     /**
      * @param Token           $token
@@ -90,7 +90,8 @@ abstract class AbstractSniff implements SniffInterface
             $value = [$value];
         }
 
-        return in_array($token->getType(), $type) && ([] === $value || in_array($token->getValue(), $value));
+        return in_array($token->getType(), $type, true)
+            && ([] === $value || in_array($token->getValue(), $value, true));
     }
 
     /**
@@ -169,11 +170,11 @@ abstract class AbstractSniff implements SniffInterface
      * @param string $message
      * @param Token  $token
      *
-     * @return bool
+     * @return Fixer|null
      *
      * @throws Exception
      */
-    protected function addFixableWarning(string $message, Token $token): bool
+    protected function addFixableWarning(string $message, Token $token): ?Fixer
     {
         return $this->addFixableMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
     }
@@ -182,11 +183,11 @@ abstract class AbstractSniff implements SniffInterface
      * @param string $message
      * @param Token  $token
      *
-     * @return bool
+     * @return Fixer|null
      *
      * @throws Exception
      */
-    protected function addFixableError(string $message, Token $token): bool
+    protected function addFixableError(string $message, Token $token): ?Fixer
     {
         return $this->addFixableMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
     }
@@ -202,7 +203,8 @@ abstract class AbstractSniff implements SniffInterface
      */
     private function addMessage(int $messageType, string $message, Token $token): void
     {
-        if (null === $this->report) {
+        $report = $this->report;
+        if (null === $report) {
             if (null !== $this->fixer) {
                 // We are fixing the file, ignore this
                 return;
@@ -219,7 +221,7 @@ abstract class AbstractSniff implements SniffInterface
         );
         $sniffViolation->setLinePosition($token->getPosition());
 
-        $this->report->addMessage($sniffViolation);
+        $report->addMessage($sniffViolation);
     }
 
     /**
@@ -227,14 +229,14 @@ abstract class AbstractSniff implements SniffInterface
      * @param string $message
      * @param Token  $token
      *
-     * @return bool
+     * @return Fixer|null
      *
      * @throws Exception
      */
-    private function addFixableMessage(int $messageType, string $message, Token $token): bool
+    private function addFixableMessage(int $messageType, string $message, Token $token): ?Fixer
     {
         $this->addMessage($messageType, $message, $token);
 
-        return null !== $this->fixer;
+        return $this->fixer;
     }
 }

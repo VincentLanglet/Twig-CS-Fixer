@@ -35,20 +35,18 @@ class EmptyLinesSniff extends AbstractSniff
             }
 
             if (1 < $i) {
-                $fix = $this->addFixableError(
+                $fixer = $this->addFixableError(
                     sprintf('More than 1 empty lines are not allowed, found %d', $i),
                     $token
                 );
 
-                if ($fix) {
-                    \assert(null !== $this->fixer);
-
-                    $this->fixer->beginChangeset();
+                if (null !== $fixer) {
+                    $fixer->beginChangeset();
                     while ($i > 1) {
-                        $this->fixer->replaceToken($tokenPosition - $i, '');
+                        $fixer->replaceToken($tokenPosition - $i, '');
                         $i--;
                     }
-                    $this->fixer->endChangeset();
+                    $fixer->endChangeset();
                 }
             }
         }

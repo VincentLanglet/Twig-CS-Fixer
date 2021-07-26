@@ -119,7 +119,7 @@ class Fixer
         $this->numFixes = 0;
         $this->fixedTokens = [];
 
-        $this->tokens = array_map(function (Token $token) {
+        $this->tokens = array_map(static function (Token $token): string {
             return $token->getValue() ?? '';
         }, $tokens);
 

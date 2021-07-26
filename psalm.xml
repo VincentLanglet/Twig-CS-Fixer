@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="1" rememberPropertyAssignmentsAfterCall="false" findUnusedPsalmSuppress="true" xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd">
+    <projectFiles>
+        <directory name="src"/>
+        <directory name="tests"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
+    </projectFiles>
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
+    <issueHandlers>
+        <UnusedForeachValue errorLevel="suppress"/>
+    </issueHandlers>
+</psalm>

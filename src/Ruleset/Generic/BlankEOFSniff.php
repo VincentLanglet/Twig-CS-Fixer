@@ -36,23 +36,21 @@ class BlankEOFSniff extends AbstractSniff
 
             if (1 !== $i) {
                 // Either 0 or 2+ blank lines.
-                $fix = $this->addFixableError(
+                $fixer = $this->addFixableError(
                     sprintf('A file must end with 1 blank line; found %d', $i),
                     $token
                 );
 
-                if ($fix) {
-                    \assert(null !== $this->fixer);
-
+                if (null !== $fixer) {
                     if (0 === $i) {
-                        $this->fixer->addNewlineBefore($tokenPosition);
+                        $fixer->addNewlineBefore($tokenPosition);
                     } else {
-                        $this->fixer->beginChangeset();
+                        $fixer->beginChangeset();
                         while ($i > 1) {
-                            $this->fixer->replaceToken($tokenPosition - $i, '');
+                            $fixer->replaceToken($tokenPosition - $i, '');
                             $i--;
                         }
-                        $this->fixer->endChangeset();
+                        $fixer->endChangeset();
                     }
                 }
             }

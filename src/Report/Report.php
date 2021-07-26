@@ -79,7 +79,7 @@ class Report
             return $this->messages;
         }
 
-        return array_filter($this->messages, function (SniffViolation $message) use ($filters) {
+        return array_filter($this->messages, static function (SniffViolation $message) use ($filters): bool {
             $fileFilter = true;
             $levelFilter = true;
 

@@ -39,7 +39,7 @@ class TokenizerTest extends TestCase
 
         $tokens = $tokenizer->tokenize($source);
 
-        $tokenValues = array_map(function (Token $token) {
+        $tokenValues = array_map(static function (Token $token): ?string {
             return $token->getValue();
         }, $tokens);
 
@@ -48,7 +48,7 @@ class TokenizerTest extends TestCase
             self::fail($diff);
         }
 
-        $tokenTypes = array_map(function (Token $token) {
+        $tokenTypes = array_map(static function (Token $token): int {
             return $token->getType();
         }, $tokens);
         self::assertSame($expectedTokenTypes, $tokenTypes);

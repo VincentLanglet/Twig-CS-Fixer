@@ -76,17 +76,16 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($expected !== $count) {
-            $fix = $this->addFixableError(
-                sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue(), $count),
+            $fixer = $this->addFixableError(
+                sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue() ?? '', $count),
                 $token
             );
 
-            if ($fix) {
-                \assert(null !== $this->fixer);
+            if (null !== $fixer) {
                 if (0 === $count) {
-                    $this->fixer->addContent($tokenPosition, str_repeat(' ', $expected));
+                    $fixer->addContent($tokenPosition, str_repeat(' ', $expected));
                 } else {
-                    $this->fixer->replaceToken($tokenPosition + 1, str_repeat(' ', $expected));
+                    $fixer->replaceToken($tokenPosition + 1, str_repeat(' ', $expected));
                 }
             }
         }
@@ -118,17 +117,16 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($expected !== $count) {
-            $fix = $this->addFixableError(
-                sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue(), $count),
+            $fixer = $this->addFixableError(
+                sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue() ?? '', $count),
                 $token
             );
 
-            if ($fix) {
-                \assert(null !== $this->fixer);
+            if (null !== $fixer) {
                 if (0 === $count) {
-                    $this->fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
+                    $fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
                 } else {
-                    $this->fixer->replaceToken($tokenPosition - 1, str_repeat(' ', $expected));
+                    $fixer->replaceToken($tokenPosition - 1, str_repeat(' ', $expected));
                 }
             }
         }
