@@ -53,4 +53,4 @@ jobs:
                   composer-options: --prefer-dist --prefer-stable
 
             - name: Run PHP Code Sniffer
-              run: vendor/bin/psalm --sheperd
+              run: vendor/bin/psalm --shepherd
