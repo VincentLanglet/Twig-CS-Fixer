@@ -1,0 +1,56 @@
+name: QA
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+
+jobs:
+    phpstan:
+        name: PHPStan
+        runs-on: ubuntu-18.04
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  coverage: pcov
+                  tools: composer:v2
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v1
+              with:
+                  dependency-versions: highest
+                  composer-options: --prefer-dist --prefer-stable
+
+            - name: Run PHPStan
+              run: vendor/bin/phpstan analyse
+
+    psalm:
+        name: Psalm
+        runs-on: ubuntu-18.04
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  coverage: pcov
+                  tools: composer:v2
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v1
+              with:
+                  dependency-versions: highest
+                  composer-options: --prefer-dist --prefer-stable
+
+            - name: Run PHP Code Sniffer
+              run: vendor/bin/psalm --sheperd
