@@ -6,6 +6,7 @@
        phpVersion="8.0"
        rememberPropertyAssignmentsAfterCall="false"
        findUnusedPsalmSuppress="true"
+       cacheDirectory="/tmp/psalm"
 >
     <projectFiles>
         <directory name="src"/>
