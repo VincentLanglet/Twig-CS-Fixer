@@ -50,7 +50,6 @@ class Tokenizer
     private const REGEX_STRING          = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
     private const REGEX_DQ_STRING_PART  = '/'.self::DQ_STRING_PART.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
-    private const PUNCTUATION           = '()[]{}:.,|';
 
     /**
      * @var array<string, string|string[]>
@@ -377,7 +376,7 @@ class Tokenizer
             $this->lexName($match[0]);
         } elseif (1 === preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $this->lexNumber($match[0]);
-        } elseif (str_contains(self::PUNCTUATION, $this->code[$this->cursor])) {
+        } elseif (in_array($currentToken, ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'], true)) {
             $this->lexPunctuation();
         } elseif (1 === preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
             $this->lexString($match[0]);
@@ -735,7 +734,7 @@ class Tokenizer
 
                 return;
             }
-            if (str_contains(',)]}', $currentToken)) {
+            if (in_array($currentToken, [',', ')', ']', '}'], true)) {
                 // Because {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
                 do {
                     array_pop($this->bracketsAndTernary);
@@ -749,9 +748,9 @@ class Tokenizer
             }
         }
 
-        if (str_contains('([{', $currentToken)) {
+        if (in_array($currentToken, ['(', '[', '{'], true)) {
             $this->bracketsAndTernary[] = [$currentToken, $this->line];
-        } elseif (str_contains(')]}', $currentToken)) {
+        } elseif (in_array($currentToken, [')', ']', '}'], true)) {
             if (0 === count($this->bracketsAndTernary)) {
                 throw new Exception(sprintf('Unexpected "%s"', $currentToken));
             }
