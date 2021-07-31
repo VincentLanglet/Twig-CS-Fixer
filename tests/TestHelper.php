@@ -59,7 +59,7 @@ class TestHelper
         }
 
         $diffLines = [];
-        if (null !== $diff) {
+        if (null !== $diff && false !== $diff) {
             $diffLines = explode(PHP_EOL, $diff);
             if (count($diffLines) === 1) {
                 // Seems to be required for cygwin.

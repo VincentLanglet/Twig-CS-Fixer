@@ -55,9 +55,7 @@ class TokenizerTest extends TestCase
     }
 
     /**
-     * @return array<array<mixed>>
-     *
-     * @phpstan-return array<array{string, array<int, int>}>
+     * @return array<array{string, array<int, int>}>
      */
     public function tokenizeDataProvider(): array
     {
