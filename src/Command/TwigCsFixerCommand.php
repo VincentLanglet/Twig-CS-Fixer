@@ -64,11 +64,8 @@ class TwigCsFixerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $paths = $input->getArgument('paths');
-        \assert(is_array($paths));
         $level = $input->getOption('level');
-        \assert(is_string($level));
         $fix = $input->getOption('fix');
-        \assert(is_bool($fix));
 
         $config = new Config($paths);
 
