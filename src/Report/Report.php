@@ -66,11 +66,9 @@ class Report
     }
 
     /**
-     * @param array<string, string> $filters
+     * @param array{file?: string, level?: string|null} $filters
      *
      * @return SniffViolation[]
-     *
-     * @phpstan-param array{file?: string, level?: string|null} $filters
      */
     public function getMessages(array $filters = []): array
     {

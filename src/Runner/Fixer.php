@@ -61,9 +61,7 @@ class Fixer
      *
      * If a token is being "fixed" back to its last value, the fix is probably conflicting with another.
      *
-     * @var array<array<string, string|int>>
-     *
-     * @phpstan-var array<array{curr: string, prev: string, loop: int}>
+     * @var array<array{curr: string, prev: string, loop: int}>
      */
     protected $oldTokenValues = [];
 

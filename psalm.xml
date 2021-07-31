@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="1" rememberPropertyAssignmentsAfterCall="false" findUnusedPsalmSuppress="true" xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd">
+<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://getpsalm.org/schema/config"
+       xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+       errorLevel="1"
+       phpVersion="8.0"
+       rememberPropertyAssignmentsAfterCall="false"
+       findUnusedPsalmSuppress="true"
+>
     <projectFiles>
         <directory name="src"/>
         <directory name="tests"/>

@@ -9,7 +9,7 @@ use Twig\Environment;
 /**
  * Class TokenizerHelper
  *
- * @phpstan-import-type TokenizerOptions from Tokenizer
+ * @psalm-import-type TokenizerOptions from Tokenizer
  */
 class TokenizerHelper
 {
@@ -21,7 +21,7 @@ class TokenizerHelper
     /**
      * @var array<string, string|string[]>
      *
-     * @phpstan-var TokenizerOptions
+     * @psalm-var TokenizerOptions
      */
     private $options;
 
@@ -31,7 +31,7 @@ class TokenizerHelper
      *
      * @return void
      *
-     * @phpstan-param TokenizerOptions $options
+     * @psalm-param TokenizerOptions $options
      */
     public function __construct(Environment $env, array $options)
     {
