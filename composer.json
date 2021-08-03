@@ -38,6 +38,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "TwigCsFixer\\PHPStan\\": ".phpstan/",
             "TwigCsFixer\\Tests\\": "tests/"
         }
     }

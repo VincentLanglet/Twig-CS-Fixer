@@ -23,3 +23,7 @@ parameters:
             missingCheckedExceptionInThrows: true
             tooWideThrowType: true
     implicitThrows: false
+
+services:
+    exceptionTypeResolver:
+        class: TwigCsFixer\PHPStan\ExceptionTypeResolver
