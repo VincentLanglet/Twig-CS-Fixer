@@ -23,6 +23,11 @@ final class BlankEOFSniff extends AbstractSniff
      */
     public function process(int $tokenPosition, array $tokens): void
     {
+        // Doesn't apply for empty files.
+        if (0 === $tokenPosition) {
+            return;
+        }
+
         $token = $tokens[$tokenPosition];
 
         if ($this->isTokenMatching($token, Token::EOF_TYPE)) {
