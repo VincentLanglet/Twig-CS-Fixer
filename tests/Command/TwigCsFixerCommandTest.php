@@ -23,7 +23,7 @@ final class TwigCsFixerCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '[SUCCESS] Files linted: 0, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
@@ -41,7 +41,7 @@ final class TwigCsFixerCommandTest extends TestCase
             'paths' => [__DIR__.'/data'],
         ]);
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
             $commandTester->getDisplay()
         );
