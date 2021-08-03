@@ -5,6 +5,7 @@ composer.lock
 vendor/
 
 ## Phpunit
+.coverage/
 .phpunit.xml
 .phpunit.result.cache
 
