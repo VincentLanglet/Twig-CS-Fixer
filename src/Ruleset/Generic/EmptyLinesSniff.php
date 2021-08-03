@@ -11,7 +11,7 @@ use TwigCsFixer\Token\Token;
 /**
  * Checks that there are not 2 empty lines following each other.
  */
-class EmptyLinesSniff extends AbstractSniff
+final class EmptyLinesSniff extends AbstractSniff
 {
     /**
      * @param int               $tokenPosition

@@ -10,7 +10,7 @@ use TwigCsFixer\Token\Token;
 /**
  * Ensure there is no space before and after a punctuation except for ':' and ','
  */
-class PunctuationSpacingSniff extends AbstractSpacingSniff
+final class PunctuationSpacingSniff extends AbstractSpacingSniff
 {
     /**
      * @param int               $tokenPosition

@@ -10,7 +10,7 @@ use TwigCsFixer\Token\Token;
 /**
  * Ensure there is one space before {{, {%, {#, and after }}, %} and #}
  */
-class DelimiterSpacingSniff extends AbstractSpacingSniff
+final class DelimiterSpacingSniff extends AbstractSpacingSniff
 {
     /**
      * @param int               $tokenPosition

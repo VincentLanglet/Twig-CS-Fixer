@@ -2,19 +2,23 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Config;
+namespace TwigCsFixer\File;
 
 use Exception;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 /**
- * TwigCsFixer configuration data.
+ * This class list every file which need to be linted.
  */
-class Config
+final class Finder
 {
     /**
      * @var string[]
      */
-    protected $paths = [];
+    private $paths;
 
     /**
      * @param string[] $paths
@@ -36,17 +40,17 @@ class Config
         $files = [];
         foreach ($this->paths as $path) {
             if (is_dir($path)) {
-                $flags = \RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS;
-                $directoryIterator = new \RecursiveDirectoryIterator($path, $flags);
+                $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::FOLLOW_SYMLINKS;
+                $directoryIterator = new RecursiveDirectoryIterator($path, $flags);
                 $filter = new TwigFileFilter($directoryIterator);
-                $iterator = new \RecursiveIteratorIterator($filter);
+                $iterator = new RecursiveIteratorIterator($filter);
 
-                /** @var \SplFileInfo $file */
+                /** @var SplFileInfo $file */
                 foreach ($iterator as $file) {
                     $files[] = $file->getRealPath();
                 }
             } elseif (is_file($path)) {
-                $file = new \SplFileInfo($path);
+                $file = new SplFileInfo($path);
                 $files[] = $file->getRealPath();
             } else {
                 throw new Exception(sprintf('Unknown path: "%s"', $path));

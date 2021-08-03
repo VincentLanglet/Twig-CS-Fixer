@@ -11,7 +11,7 @@ use TwigCsFixer\Token\Token;
 /**
  * Ensure that files ends with one blank line.
  */
-class BlankEOFSniff extends AbstractSniff
+final class BlankEOFSniff extends AbstractSniff
 {
     /**
      * @param int               $tokenPosition

@@ -8,9 +8,9 @@ use TwigCsFixer\Ruleset\Generic\BlankEOFSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
- * Class BlankEOFTest
+ * Test of BlankEOFSniff.
  */
-class BlankEOFTest extends AbstractSniffTest
+final class BlankEOFTest extends AbstractSniffTest
 {
     /**
      * @return void

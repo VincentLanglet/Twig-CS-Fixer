@@ -8,9 +8,9 @@ use TwigCsFixer\Ruleset\Generic\DelimiterSpacingSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
- * Class DelimiterSpacingTest
+ * Test of DelimiterSpacingSniff.
  */
-class DelimiterSpacingTest extends AbstractSniffTest
+final class DelimiterSpacingTest extends AbstractSniffTest
 {
     /**
      * @return void

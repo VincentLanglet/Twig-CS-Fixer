@@ -8,9 +8,9 @@ use TwigCsFixer\Ruleset\Generic\OperatorSpacingSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
- * Class OperatorSpacingTest
+ * Test of OperatorSpacingSniff.
  */
-class OperatorSpacingTest extends AbstractSniffTest
+final class OperatorSpacingTest extends AbstractSniffTest
 {
     /**
      * @return void

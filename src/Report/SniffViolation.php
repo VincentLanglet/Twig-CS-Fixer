@@ -10,7 +10,7 @@ use TwigCsFixer\Sniff\SniffInterface;
 /**
  * Wrapper class that represents a violation to a sniff with context.
  */
-class SniffViolation
+final class SniffViolation
 {
     private const LEVEL_NOTICE  = 'NOTICE';
     private const LEVEL_WARNING = 'WARNING';
@@ -20,32 +20,32 @@ class SniffViolation
     /**
      * @var int
      */
-    protected $level;
+    private $level;
 
     /**
      * @var string
      */
-    protected $message;
+    private $message;
 
     /**
      * @var int|null
      */
-    protected $line;
+    private $line;
 
     /**
      * @var int|null
      */
-    protected $linePosition;
+    private $linePosition;
 
     /**
      * @var string
      */
-    protected $filename;
+    private $filename;
 
     /**
      * @var SniffInterface|null
      */
-    protected $sniff;
+    private $sniff;
 
     /**
      * @param int      $level
