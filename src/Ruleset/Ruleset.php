@@ -12,12 +12,14 @@ use TwigCsFixer\Sniff\SniffInterface;
 /**
  * Set of rules to be used by TwigCsFixer and contains all sniffs.
  */
-class Ruleset
+final class Ruleset
 {
+    public const GENERIC_STANDARD = 'Generic';
+
     /**
      * @var SniffInterface[]
      */
-    protected $sniffs = [];
+    private $sniffs = [];
 
     /**
      * @return SniffInterface[]
@@ -40,13 +42,25 @@ class Ruleset
     }
 
     /**
+     * @param SniffInterface $sniff
+     *
+     * @return $this
+     */
+    public function removeSniff(SniffInterface $sniff): Ruleset
+    {
+        unset($this->sniffs[get_class($sniff)]);
+
+        return $this;
+    }
+
+    /**
      * @param string $standardName
      *
-     * @return Ruleset
+     * @return $this
      *
      * @throws Exception
      */
-    public function addStandard(string $standardName = 'Generic'): Ruleset
+    public function addStandard(string $standardName): Ruleset
     {
         if (!is_dir(__DIR__.'/'.$standardName)) {
             throw new Exception(sprintf('The standard "%s" is not found.', $standardName));

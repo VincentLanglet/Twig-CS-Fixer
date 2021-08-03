@@ -16,17 +16,17 @@ use TwigCsFixer\Token\Tokenizer;
 /**
  * Linter is the main class and will process twig files against a set of rules.
  */
-class Linter
+final class Linter
 {
     /**
      * @var Environment
      */
-    protected $env;
+    private $env;
 
     /**
      * @var Tokenizer
      */
-    protected $tokenizer;
+    private $tokenizer;
 
     /**
      * @param Environment $env
@@ -88,7 +88,7 @@ class Linter
      *
      * @throws Exception
      */
-    protected function fix(array $files, Ruleset $ruleset): void
+    private function fix(array $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -114,7 +114,7 @@ class Linter
      *
      * @return bool
      */
-    protected function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
+    private function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
     {
         $content = file_get_contents($file);
         if (false === $content) {
@@ -176,7 +176,7 @@ class Linter
      *
      * @return void
      */
-    protected function setErrorHandler(Report $report, string $file): void
+    private function setErrorHandler(Report $report, string $file): void
     {
         set_error_handler(static function (int $type, string $message) use ($report, $file): bool {
             if (E_USER_DEPRECATED === $type) {

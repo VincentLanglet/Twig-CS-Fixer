@@ -33,7 +33,7 @@ use Twig\Source;
  *     lex_block: string,
  * }
  */
-class Tokenizer
+final class Tokenizer
 {
     private const STATE_DATA          = 0;
     private const STATE_BLOCK         = 1;
@@ -73,52 +73,52 @@ class Tokenizer
     /**
      * @var int
      */
-    protected $cursor = 0;
+    private $cursor = 0;
 
     /**
      * @var int|null
      */
-    protected $end;
+    private $end;
 
     /**
      * @var int
      */
-    protected $line = 1;
+    private $line = 1;
 
     /**
      * @var int
      */
-    protected $currentPosition = 0;
+    private $currentPosition = 0;
 
     /**
      * @var array<int, Token>
      */
-    protected $tokens = [];
+    private $tokens = [];
 
     /**
      * @var array<int, array{fullMatch: string, position: int, match: string}>
      */
-    protected $tokenPositions = [];
+    private $tokenPositions = [];
 
     /**
      * @var array<array{int, array<string, string>}>
      */
-    protected $state = [];
+    private $state = [];
 
     /**
      * @var array<array{string, int}>
      */
-    protected $bracketsAndTernary = [];
+    private $bracketsAndTernary = [];
 
     /**
      * @var string
      */
-    protected $code = '';
+    private $code = '';
 
     /**
      * @var string
      */
-    protected $filename = '';
+    private $filename = '';
 
     /**
      * @param Environment $env
@@ -203,7 +203,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function resetState(Source $source): void
+    private function resetState(Source $source): void
     {
         $this->cursor = 0;
         $this->line = 1;
@@ -220,7 +220,7 @@ class Tokenizer
     /**
      * @return int
      */
-    protected function getState(): int
+    private function getState(): int
     {
         return count($this->state) > 0 ? $this->state[count($this->state) - 1][0] : self::STATE_DATA;
     }
@@ -231,7 +231,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function pushState(int $state, array $data = []): void
+    private function pushState(int $state, array $data = []): void
     {
         $this->state[] = [$state, $data];
     }
@@ -244,7 +244,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function setStateParam(string $name, string $value): void
+    private function setStateParam(string $name, string $value): void
     {
         if (0 === count($this->state)) {
             throw new Exception('Cannot update state without a current state');
@@ -256,7 +256,7 @@ class Tokenizer
     /**
      * @return array<string, string>
      */
-    protected function getStateParams(): array
+    private function getStateParams(): array
     {
         return count($this->state) > 0 ? $this->state[count($this->state) - 1][1] : [];
     }
@@ -266,7 +266,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function popState(): void
+    private function popState(): void
     {
         if (0 === count($this->state)) {
             throw new Exception('Cannot pop state without a current state');
@@ -279,7 +279,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function preflightSource(string $code): void
+    private function preflightSource(string $code): void
     {
         $tokenPositions = [];
         preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
@@ -302,7 +302,7 @@ class Tokenizer
      *
      * @return array{fullMatch: string, position: int, match: string}|null
      */
-    protected function getTokenPosition(int $offset = 0): ?array
+    private function getTokenPosition(int $offset = 0): ?array
     {
         if (
             count($this->tokenPositions) === 0
@@ -319,7 +319,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function moveCurrentPosition(int $value = 1): void
+    private function moveCurrentPosition(int $value = 1): void
     {
         $this->currentPosition += $value;
     }
@@ -329,7 +329,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function moveCursor(string $value): void
+    private function moveCursor(string $value): void
     {
         $this->cursor += strlen($value);
         $this->line += substr_count($value, "\n");
@@ -341,7 +341,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function pushToken(int $type, string $value = null): void
+    private function pushToken(int $type, string $value = null): void
     {
         $strrpos = strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
         if (false === $strrpos) {
@@ -357,7 +357,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexExpression(): void
+    private function lexExpression(): void
     {
         $currentToken = $this->code[$this->cursor];
         $nextToken = $this->code[$this->cursor + 1] ?? null;
@@ -392,7 +392,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexBlock(): void
+    private function lexBlock(): void
     {
         $endRegex = $this->regexes['lex_block'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
@@ -413,7 +413,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexVariable(): void
+    private function lexVariable(): void
     {
         $endRegex = $this->regexes['lex_variable'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
@@ -434,7 +434,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexComment(): void
+    private function lexComment(): void
     {
         $endRegex = $this->regexes['lex_comment'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
@@ -459,7 +459,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexDqString(): void
+    private function lexDqString(): void
     {
         if (1 === preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
             $this->lexStartInterpolation();
@@ -489,7 +489,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexInterpolation(): void
+    private function lexInterpolation(): void
     {
         $bracket = end($this->bracketsAndTernary);
 
@@ -512,7 +512,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function lexData(int $limit = 0): void
+    private function lexData(int $limit = 0): void
     {
         $nextToken = $this->getTokenPosition();
         if (0 === $limit && null !== $nextToken) {
@@ -555,7 +555,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexStart(): void
+    private function lexStart(): void
     {
         $tokenStart = $this->getTokenPosition();
         \assert(null !== $tokenStart);
@@ -581,7 +581,7 @@ class Tokenizer
     /**
      * @return void
      */
-    protected function lexStartDqString(): void
+    private function lexStartDqString(): void
     {
         $this->bracketsAndTernary[] = ['"', $this->line];
         $this->pushToken(Token::DQ_STRING_START_TYPE, '"');
@@ -592,7 +592,7 @@ class Tokenizer
     /**
      * @return void
      */
-    protected function lexStartInterpolation(): void
+    private function lexStartInterpolation(): void
     {
         $this->bracketsAndTernary[] = [$this->options['interpolation'][0], $this->line];
         $this->pushToken(Token::INTERPOLATION_START_TYPE, '#{');
@@ -603,7 +603,7 @@ class Tokenizer
     /**
      * @return void
      */
-    protected function lexTab(): void
+    private function lexTab(): void
     {
         $currentToken = $this->code[$this->cursor];
         $whitespace = '';
@@ -624,7 +624,7 @@ class Tokenizer
     /**
      * @return void
      */
-    protected function lexWhitespace(): void
+    private function lexWhitespace(): void
     {
         $currentToken = $this->code[$this->cursor];
         $whitespace = '';
@@ -645,7 +645,7 @@ class Tokenizer
     /**
      * @return void
      */
-    protected function lexEOL(): void
+    private function lexEOL(): void
     {
         if (self::STATE_COMMENT === $this->getState()) {
             $this->pushToken(Token::COMMENT_EOL_TYPE, $this->code[$this->cursor]);
@@ -659,7 +659,7 @@ class Tokenizer
     /**
      * @return void
      */
-    protected function lexArrowFunction(): void
+    private function lexArrowFunction(): void
     {
         $this->pushToken(Token::ARROW_TYPE, '=>');
         $this->moveCursor('=>');
@@ -670,7 +670,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function lexOperator(string $operator): void
+    private function lexOperator(string $operator): void
     {
         if ('?' === $operator) {
             $this->bracketsAndTernary[] = [$operator, $this->line];
@@ -689,7 +689,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexName(string $name): void
+    private function lexName(string $name): void
     {
         if (self::STATE_BLOCK === $this->getState() && !isset($this->getStateParams()['tag'])) {
             $this->pushToken(Token::BLOCK_TAG_TYPE, $name);
@@ -706,7 +706,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function lexNumber(string $numberAsString): void
+    private function lexNumber(string $numberAsString): void
     {
         $number = (float) $numberAsString;  // floats
         if (ctype_digit($numberAsString) && $number <= PHP_INT_MAX) {
@@ -722,7 +722,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    protected function lexPunctuation(): void
+    private function lexPunctuation(): void
     {
         $currentToken = $this->code[$this->cursor];
 
@@ -770,7 +770,7 @@ class Tokenizer
      *
      * @return void
      */
-    protected function lexString(string $string): void
+    private function lexString(string $string): void
     {
         $this->pushToken(Token::STRING_TYPE, $string);
         $this->moveCursor($string);

@@ -7,7 +7,7 @@ namespace TwigCsFixer\Report;
 /**
  * Report contains all violations with stats.
  */
-class Report
+final class Report
 {
     public const MESSAGE_TYPE_NOTICE  = 0;
     public const MESSAGE_TYPE_WARNING = 1;
@@ -17,27 +17,27 @@ class Report
     /**
      * @var SniffViolation[]
      */
-    protected $messages = [];
+    private $messages = [];
 
     /**
      * @var string[]
      */
-    protected $files = [];
+    private $files = [];
 
     /**
      * @var int
      */
-    protected $totalNotices = 0;
+    private $totalNotices = 0;
 
     /**
      * @var int
      */
-    protected $totalWarnings = 0;
+    private $totalWarnings = 0;
 
     /**
      * @var int
      */
-    protected $totalErrors = 0;
+    private $totalErrors = 0;
 
     /**
      * @param SniffViolation $sniffViolation

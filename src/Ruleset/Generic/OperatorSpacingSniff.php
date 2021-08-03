@@ -10,7 +10,7 @@ use TwigCsFixer\Token\Token;
 /**
  * Ensure there is one space before and after an operator except for '..'
  */
-class OperatorSpacingSniff extends AbstractSpacingSniff
+final class OperatorSpacingSniff extends AbstractSpacingSniff
 {
     /**
      * @param int               $tokenPosition

@@ -7,9 +7,9 @@ namespace TwigCsFixer\Tests;
 use LogicException;
 
 /**
- * Class TestHelper
+ * Helper for tests.
  */
-class TestHelper
+final class TestHelper
 {
     /**
      * @return void
@@ -83,8 +83,6 @@ class TestHelper
             }
         }
 
-        $diff = implode(PHP_EOL, $diff);
-
-        return $diff;
+        return implode(PHP_EOL, $diff);
     }
 }

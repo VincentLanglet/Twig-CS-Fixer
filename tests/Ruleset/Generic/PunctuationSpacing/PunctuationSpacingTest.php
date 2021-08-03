@@ -8,9 +8,9 @@ use TwigCsFixer\Ruleset\Generic\PunctuationSpacingSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
- * Class PunctuationSpacingTest
+ * Test of PunctuationSpacingSniff.
  */
-class PunctuationSpacingTest extends AbstractSniffTest
+final class PunctuationSpacingTest extends AbstractSniffTest
 {
     /**
      * @return void

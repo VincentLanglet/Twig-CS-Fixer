@@ -11,29 +11,29 @@ use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 
 /**
- * Class Fixer
+ * Fixer will fix twig files against a set of rules.
  */
-class Fixer
+final class Fixer
 {
     /**
      * @var int
      */
-    protected $loops = 0;
+    private $loops = 0;
 
     /**
      * @var string
      */
-    protected $eolChar = "\n";
+    private $eolChar = "\n";
 
     /**
      * @var Ruleset
      */
-    protected $ruleset;
+    private $ruleset;
 
     /**
      * @var Tokenizer
      */
-    protected $tokenizer;
+    private $tokenizer;
 
     /**
      * The list of tokens that make up the file contents.
@@ -44,7 +44,7 @@ class Fixer
      *
      * @var array<int, string>
      */
-    protected $tokens = [];
+    private $tokens = [];
 
     /**
      * A list of tokens that have already been fixed.
@@ -54,7 +54,7 @@ class Fixer
      *
      * @var array<int, string>
      */
-    protected $fixedTokens = [];
+    private $fixedTokens = [];
 
     /**
      * The last value of each fixed token.
@@ -63,7 +63,7 @@ class Fixer
      *
      * @var array<array{curr: string, prev: string, loop: int}>
      */
-    protected $oldTokenValues = [];
+    private $oldTokenValues = [];
 
     /**
      * A list of tokens that have been fixed during a changeset.
@@ -72,28 +72,28 @@ class Fixer
      *
      * @var array<int, string>
      */
-    protected $changeset = [];
+    private $changeset = [];
 
     /**
      * Is there an open changeset.
      *
      * @var bool
      */
-    protected $inChangeset = false;
+    private $inChangeset = false;
 
     /**
      * Is the current fixing loop in conflict?
      *
      * @var bool
      */
-    protected $inConflict = false;
+    private $inConflict = false;
 
     /**
      * The number of fixes that have been performed.
      *
      * @var int
      */
-    protected $numFixes = 0;
+    private $numFixes = 0;
 
     /**
      * @param Ruleset   $ruleset
@@ -359,7 +359,7 @@ class Fixer
      *
      * @return string
      */
-    protected function getTokenContent(int $tokenPosition): string
+    private function getTokenContent(int $tokenPosition): string
     {
         if ($this->inChangeset && isset($this->changeset[$tokenPosition])) {
             return $this->changeset[$tokenPosition];
@@ -373,7 +373,7 @@ class Fixer
      *
      * @return bool
      */
-    protected function revertToken(int $tokenPosition): bool
+    private function revertToken(int $tokenPosition): bool
     {
         if (!isset($this->fixedTokens[$tokenPosition])) {
             return false;

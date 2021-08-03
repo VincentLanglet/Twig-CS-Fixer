@@ -8,9 +8,9 @@ use TwigCsFixer\Ruleset\Generic\EmptyLinesSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
- * Class EmptyLinesTest
+ * Test of EmptyLinesSniff.
  */
-class EmptyLinesTest extends AbstractSniffTest
+final class EmptyLinesTest extends AbstractSniffTest
 {
     /**
      * @return void

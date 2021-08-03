@@ -12,9 +12,9 @@ use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 
 /**
- * Class TokenizerTest
+ * Test of Tokenizer.
  */
-class TokenizerTest extends TestCase
+final class TokenizerTest extends TestCase
 {
     /**
      * @param string          $filePath

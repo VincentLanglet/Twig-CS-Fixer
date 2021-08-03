@@ -10,8 +10,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use TwigCsFixer\Config\Config;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\File\Finder;
 use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Linter;
@@ -20,7 +20,7 @@ use TwigCsFixer\Token\Tokenizer;
 /**
  * TwigCsFixer stands for "Twig Code Sniffer Fixer" and will check twig template of your project.
  */
-class TwigCsFixerCommand extends Command
+final class TwigCsFixerCommand extends Command
 {
     /**
      * @return void
@@ -67,16 +67,16 @@ class TwigCsFixerCommand extends Command
         $level = $input->getOption('level');
         $fix = $input->getOption('fix');
 
-        $config = new Config($paths);
-
         // Get the rules to apply.
         $ruleset = new Ruleset();
-        $ruleset->addStandard();
+        $ruleset->addStandard(Ruleset::GENERIC_STANDARD);
+
+        $finder = new Finder($paths);
 
         // Execute the linter.
         $twig = new StubbedEnvironment();
         $linter = new Linter($twig, new Tokenizer($twig));
-        $report = $linter->run($config->findFiles(), $ruleset, $fix);
+        $report = $linter->run($finder->findFiles(), $ruleset, $fix);
 
         // Format the output.
         $reporter = new TextFormatter($input, $output);

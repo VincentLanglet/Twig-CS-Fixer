@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace TwigCsFixer\Token;
 
 /**
- * Class Token
+ * Override of Twig's Token to add new constants.
  */
-class Token
+final class Token
 {
     // From Twig\Token
     public const EOF_TYPE                 = -1;

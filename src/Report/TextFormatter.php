@@ -11,9 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Human readable output with context.
+ * Human-readable output with context.
  */
-class TextFormatter
+final class TextFormatter
 {
     private const ERROR_CURSOR_CHAR   = '>>';
     private const ERROR_LINE_FORMAT   = '%-5s| %s';
@@ -23,7 +23,7 @@ class TextFormatter
     /**
      * @var SymfonyStyle
      */
-    protected $io;
+    private $io;
 
     /**
      * @param InputInterface  $input
@@ -112,7 +112,7 @@ class TextFormatter
      *
      * @return array<int, string>
      */
-    protected function getContext(string $template, int $line, int $context): array
+    private function getContext(string $template, int $line, int $context): array
     {
         $lines = explode("\n", $template);
 
@@ -150,7 +150,7 @@ class TextFormatter
      *
      * @return string
      */
-    protected function formatErrorMessage(SniffViolation $message): string
+    private function formatErrorMessage(SniffViolation $message): string
     {
         return sprintf(
             '<fg=red>'.self::ERROR_LINE_FORMAT.'</fg=red>',

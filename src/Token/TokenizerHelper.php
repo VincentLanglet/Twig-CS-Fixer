@@ -7,7 +7,7 @@ namespace TwigCsFixer\Token;
 use Twig\Environment;
 
 /**
- * Class TokenizerHelper
+ * List of regex needed by the Tokenizer.
  *
  * @psalm-import-type TokenizerOptions from Tokenizer
  */
