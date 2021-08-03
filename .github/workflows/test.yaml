@@ -39,4 +39,9 @@ jobs:
                   composer-options: --prefer-dist --prefer-stable
 
             - name: Run unit tests with PHPUnit
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+            - name: Send coverage to Codecov
+              uses: codecov/codecov-action@v2
+              with:
+                  file: build/logs/clover.xml
