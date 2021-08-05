@@ -2,31 +2,34 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Standard;
+namespace TwigCsFixer\Tests\Standard;
 
+use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Sniff\BlankEOFSniff;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
-use TwigCsFixer\Sniff\SniffInterface;
+use TwigCsFixer\Standard\Generic;
 
 /**
- * Default standard for twig.
+ * Test for Generic.
  */
-class Generic implements StandardInterface
+class GenericTest extends TestCase
 {
     /**
-     * @return SniffInterface[]
+     * @return void
      */
-    public function getSniffs(): array
+    public function testGetSniffs(): void
     {
-        return [
+        $standard = new Generic();
+
+        self::assertEquals([
             new BlankEOFSniff(),
             new DelimiterSpacingSniff(),
             new EmptyLinesSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
-        ];
+        ], $standard->getSniffs());
     }
 }
