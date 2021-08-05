@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Ruleset\Generic\BlankEOF;
+namespace TwigCsFixer\Tests\Sniff\BlankEOF;
 
-use TwigCsFixer\Ruleset\Generic\BlankEOFSniff;
+use TwigCsFixer\Sniff\BlankEOFSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**

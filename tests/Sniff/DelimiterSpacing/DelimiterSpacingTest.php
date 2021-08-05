@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Ruleset\Generic\DelimiterSpacing;
+namespace TwigCsFixer\Tests\Sniff\DelimiterSpacing;
 
-use TwigCsFixer\Ruleset\Generic\DelimiterSpacingSniff;
+use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
