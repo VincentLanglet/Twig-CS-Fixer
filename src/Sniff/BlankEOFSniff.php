@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Ruleset\Generic;
+namespace TwigCsFixer\Sniff;
 
 use Exception;
-use TwigCsFixer\Sniff\AbstractSniff;
 use TwigCsFixer\Token\Token;
 
 /**

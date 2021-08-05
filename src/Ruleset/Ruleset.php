@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Ruleset;
 
-use Exception;
-use LogicException;
-use SplFileInfo;
 use TwigCsFixer\Sniff\SniffInterface;
+use TwigCsFixer\Standard\StandardInterface;
 
 /**
  * Set of rules to be used by TwigCsFixer and contains all sniffs.
  */
 final class Ruleset
 {
-    public const GENERIC_STANDARD = 'Generic';
-
     /**
      * @var SniffInterface[]
      */
@@ -54,34 +50,14 @@ final class Ruleset
     }
 
     /**
-     * @param string $standardName
+     * @param StandardInterface $standard
      *
      * @return $this
-     *
-     * @throws Exception
      */
-    public function addStandard(string $standardName): Ruleset
+    public function addStandard(StandardInterface $standard): Ruleset
     {
-        if (!is_dir(__DIR__.'/'.$standardName)) {
-            throw new Exception(sprintf('The standard "%s" is not found.', $standardName));
-        }
-
-        $flags = \RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS;
-        $directoryIterator = new \RecursiveDirectoryIterator(__DIR__.'/'.$standardName, $flags);
-        $iterator = new \RecursiveIteratorIterator($directoryIterator);
-
-        /** @var SplFileInfo $file */
-        foreach ($iterator as $file) {
-            $class = __NAMESPACE__.'\\'.$standardName.'\\'.$file->getBasename('.php');
-
-            if (!class_exists($class)) {
-                throw new LogicException(sprintf('The class "%s" does not exist.', $class));
-            }
-            if (!is_a($class, SniffInterface::class, true)) {
-                throw new LogicException(sprintf('The class "%s" must implement %s.', $class, SniffInterface::class));
-            }
-
-            $this->addSniff(new $class());
+        foreach ($standard->getSniffs() as $sniff) {
+            $this->addSniff($sniff);
         }
 
         return $this;

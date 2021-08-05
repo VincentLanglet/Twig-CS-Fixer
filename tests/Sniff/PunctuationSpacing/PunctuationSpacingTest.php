@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Ruleset\Generic\PunctuationSpacing;
+namespace TwigCsFixer\Tests\Sniff\PunctuationSpacing;
 
-use TwigCsFixer\Ruleset\Generic\PunctuationSpacingSniff;
+use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Ruleset\Generic;
+namespace TwigCsFixer\Sniff;
 
-use TwigCsFixer\Sniff\AbstractSpacingSniff;
 use TwigCsFixer\Token\Token;
 
 /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Ruleset\Generic\OperatorSpacing;
+namespace TwigCsFixer\Tests\Sniff\OperatorSpacing;
 
-use TwigCsFixer\Ruleset\Generic\OperatorSpacingSniff;
+use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**

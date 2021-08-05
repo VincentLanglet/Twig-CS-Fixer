@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Ruleset\Generic\EmptyLines;
+namespace TwigCsFixer\Tests\Sniff\EmptyLines;
 
-use TwigCsFixer\Ruleset\Generic\EmptyLinesSniff;
+use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
 
 /**
