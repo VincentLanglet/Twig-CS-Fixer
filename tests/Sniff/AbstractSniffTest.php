@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Ruleset;
+namespace TwigCsFixer\Tests\Sniff;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +17,7 @@ use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Tokenizer;
 
 /**
- * Class AbstractSniffTest
+ * TestCase for a Sniff.
  */
 abstract class AbstractSniffTest extends TestCase
 {
@@ -31,36 +31,31 @@ abstract class AbstractSniffTest extends TestCase
     /**
      * @param SniffInterface         $sniff
      * @param array<array<int, int>> $expects
+     * @param string|null            $filePath
      *
      * @return void
      */
-    protected function checkSniff(SniffInterface $sniff, array $expects): void
+    protected function checkSniff(SniffInterface $sniff, array $expects, ?string $filePath = null): void
     {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
         $linter = new Linter($env, $tokenizer);
         $ruleset = new Ruleset();
 
+        $filePath = $filePath ?? $this->generateFilePath();
+
         try {
-            $class = new ReflectionClass(get_called_class());
-            $className = $class->getShortName();
-            $filename = $class->getFileName();
-            self::assertNotFalse($filename);
-
-            $directory = dirname($filename);
-            $file = "$directory/$className.twig";
-
             $ruleset->addSniff($sniff);
-            $report = $linter->run([$file], $ruleset);
+            $report = $linter->run([$filePath], $ruleset);
         } catch (Exception $exception) {
             self::fail($exception->getMessage());
         }
 
-        $fixedFile = "$directory/$className.fixed.twig";
+        $fixedFile = mb_substr($filePath, 0, -5).'.fixed.twig';
         if (file_exists($fixedFile)) {
             $fixer = new Fixer($ruleset, $tokenizer);
             $sniff->enableFixer($fixer);
-            $fixer->fixFile($file);
+            $fixer->fixFile($filePath);
 
             $diff = TestHelper::generateDiff($fixer->getContents(), $fixedFile);
             if ('' !== $diff) {
@@ -85,5 +80,20 @@ abstract class AbstractSniffTest extends TestCase
             $messagePositions[] = [$message->getLine() ?? 0 => $message->getLinePosition()];
         }
         self::assertSame($expects, $messagePositions);
+    }
+
+    /**
+     * @return string
+     */
+    private function generateFilePath(): string
+    {
+        $class = new ReflectionClass(get_called_class());
+        $className = $class->getShortName();
+        $filename = $class->getFileName();
+        self::assertNotFalse($filename);
+
+        $directory = dirname($filename);
+
+        return "$directory/$className.twig";
     }
 }

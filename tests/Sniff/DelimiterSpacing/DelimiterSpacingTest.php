@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\DelimiterSpacing;
 
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
-use TwigCsFixer\Tests\Ruleset\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
 
 /**
  * Test of DelimiterSpacingSniff.
