@@ -13,17 +13,33 @@ use TwigCsFixer\Standard\Generic;
 class Config
 {
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var Ruleset
      */
     private $ruleset;
 
     /**
+     * @param string $name
+     *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $name = 'Default')
     {
+        $this->name = $name;
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new Generic());
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**

@@ -12,6 +12,21 @@ use Exception;
 class ConfigResolver
 {
     /**
+     * @var string
+     */
+    private $cwd;
+
+    /**
+     * @param string $cwd
+     *
+     * @return void
+     */
+    public function __construct(string $cwd)
+    {
+        $this->cwd = $cwd;
+    }
+
+    /**
      * @param string|null $configPath
      *
      * @return Config
@@ -21,11 +36,13 @@ class ConfigResolver
     public function getConfig(?string $configPath = null): Config
     {
         if (null !== $configPath) {
+            $configPath = 0 === strpos($configPath, '/') ? $configPath : $this->cwd.'/'.$configPath;
+
             return $this->getConfigFromPath($configPath);
         }
 
-        if (file_exists('.twig-cs-fixer.php')) {
-            return $this->getConfigFromPath('.twig-cs-fixer.php');
+        if (file_exists($this->cwd.'/.twig-cs-fixer.php')) {
+            return $this->getConfigFromPath($this->cwd.'/.twig-cs-fixer.php');
         }
 
         return new Config();
