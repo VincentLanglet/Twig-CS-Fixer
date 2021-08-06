@@ -7,7 +7,7 @@ namespace TwigCsFixer\Sniff;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure there is no space before and after a punctuation except for ':' and ','
+ * Ensure there is no space before and after a punctuation except for ':' and ','.
  */
 final class PunctuationSpacingSniff extends AbstractSpacingSniff
 {

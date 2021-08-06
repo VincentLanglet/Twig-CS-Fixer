@@ -7,7 +7,7 @@ namespace TwigCsFixer\Sniff;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure there is one space before and after an operator except for '..'
+ * Ensure there is one space before and after an operator except for '..'.
  */
 final class OperatorSpacingSniff extends AbstractSpacingSniff
 {
