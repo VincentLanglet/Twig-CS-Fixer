@@ -12,10 +12,10 @@ use TwigCsFixer\Sniff\SniffInterface;
  */
 final class SniffViolation
 {
-    private const LEVEL_NOTICE  = 'NOTICE';
-    private const LEVEL_WARNING = 'WARNING';
-    private const LEVEL_ERROR   = 'ERROR';
-    private const LEVEL_FATAL   = 'FATAL';
+    public const LEVEL_NOTICE  = 'NOTICE';
+    public const LEVEL_WARNING = 'WARNING';
+    public const LEVEL_ERROR   = 'ERROR';
+    public const LEVEL_FATAL   = 'FATAL';
 
     /**
      * @var int

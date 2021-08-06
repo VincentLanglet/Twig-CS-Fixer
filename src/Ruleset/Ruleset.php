@@ -38,13 +38,13 @@ final class Ruleset
     }
 
     /**
-     * @param SniffInterface $sniff
+     * @param class-string<SniffInterface> $class
      *
      * @return $this
      */
-    public function removeSniff(SniffInterface $sniff): Ruleset
+    public function removeSniff(string $class): Ruleset
     {
-        unset($this->sniffs[get_class($sniff)]);
+        unset($this->sniffs[$class]);
 
         return $this;
     }
