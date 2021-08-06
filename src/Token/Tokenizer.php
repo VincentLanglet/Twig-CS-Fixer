@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Token;
 
-use Exception;
+use LogicException;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Source;
 
 /**
@@ -102,6 +103,8 @@ final class Tokenizer
 
     /**
      * @var array<array{int, array<string, string>}>
+     *
+     * @phpstan-var array<array{0|1|2|3|4|5, array<string, string>}>
      */
     private $state = [];
 
@@ -144,7 +147,7 @@ final class Tokenizer
      *
      * @return array<int, Token>
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     public function tokenize(Source $source): array
     {
@@ -184,13 +187,11 @@ final class Tokenizer
                 case self::STATE_INTERPOLATION:
                     $this->lexInterpolation();
                     break;
-                default:
-                    throw new Exception('Unhandled state in tokenize.', 1);
             }
         }
 
         if (self::STATE_DATA !== $this->getState()) {
-            throw new Exception('Error Processing Request.', 1);
+            throw new SyntaxError('Error Processing Request.');
         }
 
         $this->pushToken(Token::EOF_TYPE);
@@ -219,6 +220,8 @@ final class Tokenizer
 
     /**
      * @return int
+     *
+     * @phpstan-return 0|1|2|3|4|5
      */
     private function getState(): int
     {
@@ -230,6 +233,8 @@ final class Tokenizer
      * @param array<string, string> $data
      *
      * @return void
+     *
+     * @phpstan-param 0|1|2|3|4|5 $state
      */
     private function pushState(int $state, array $data = []): void
     {
@@ -241,13 +246,11 @@ final class Tokenizer
      * @param string $value
      *
      * @return void
-     *
-     * @throws Exception
      */
     private function setStateParam(string $name, string $value): void
     {
         if (0 === count($this->state)) {
-            throw new Exception('Cannot update state without a current state.');
+            throw new LogicException('Cannot update state without a current state.');
         }
 
         $this->state[count($this->state) - 1][1][$name] = $value;
@@ -263,13 +266,11 @@ final class Tokenizer
 
     /**
      * @return void
-     *
-     * @throws Exception
      */
     private function popState(): void
     {
         if (0 === count($this->state)) {
-            throw new Exception('Cannot pop state without a current state.');
+            throw new LogicException('Cannot pop state without a current state.');
         }
         array_pop($this->state);
     }
@@ -355,7 +356,7 @@ final class Tokenizer
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexExpression(): void
     {
@@ -383,14 +384,14 @@ final class Tokenizer
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartDqString();
         } else {
-            throw new Exception(sprintf('Unexpected character "%s".', $currentToken));
+            throw new SyntaxError(sprintf('Unexpected character "%s".', $currentToken));
         }
     }
 
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexBlock(): void
     {
@@ -411,7 +412,7 @@ final class Tokenizer
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexVariable(): void
     {
@@ -432,7 +433,7 @@ final class Tokenizer
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexComment(): void
     {
@@ -441,7 +442,7 @@ final class Tokenizer
         /** @var array<int, array{string, int}> $match */
 
         if (!isset($match[0])) {
-            throw new Exception('Unclosed comment.');
+            throw new SyntaxError('Unclosed comment.');
         }
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
@@ -457,7 +458,7 @@ final class Tokenizer
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexDqString(): void
     {
@@ -473,21 +474,21 @@ final class Tokenizer
             $bracket = array_pop($this->bracketsAndTernary);
 
             if (null !== $bracket && '"' !== $this->code[$this->cursor]) {
-                throw new Exception(sprintf('Unclosed "%s".', $bracket[0]));
+                throw new SyntaxError(sprintf('Unclosed "%s".', $bracket[0]));
             }
 
             $this->popState();
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0]);
             $this->moveCursor($match[0]);
         } else {
-            throw new Exception(sprintf('Unexpected character "%s".', $this->code[$this->cursor]));
+            throw new SyntaxError(sprintf('Unexpected character "%s".', $this->code[$this->cursor]));
         }
     }
 
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexInterpolation(): void
     {
@@ -552,8 +553,6 @@ final class Tokenizer
 
     /**
      * @return void
-     *
-     * @throws Exception
      */
     private function lexStart(): void
     {
@@ -570,7 +569,7 @@ final class Tokenizer
             $state = self::STATE_VAR;
             $tokenType = Token::VAR_START_TYPE;
         } else {
-            throw new Exception(sprintf('Unhandled tag "%s" in lexStart.', $tokenStart['match']), 1);
+            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $tokenStart['match']), 1);
         }
 
         $this->pushToken($tokenType, $tokenStart['fullMatch']);
@@ -686,8 +685,6 @@ final class Tokenizer
      * @param string $name
      *
      * @return void
-     *
-     * @throws Exception
      */
     private function lexName(string $name): void
     {
@@ -720,7 +717,7 @@ final class Tokenizer
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws SyntaxError
      */
     private function lexPunctuation(): void
     {
@@ -752,12 +749,12 @@ final class Tokenizer
             $this->bracketsAndTernary[] = [$currentToken, $this->line];
         } elseif (in_array($currentToken, [')', ']', '}'], true)) {
             if (0 === count($this->bracketsAndTernary)) {
-                throw new Exception(sprintf('Unexpected "%s".', $currentToken));
+                throw new SyntaxError(sprintf('Unexpected "%s".', $currentToken));
             }
 
             $bracket = array_pop($this->bracketsAndTernary);
             if (strtr($bracket[0], '([{', ')]}') !== $currentToken) {
-                throw new Exception(sprintf('Unclosed "%s".', $bracket[0]));
+                throw new SyntaxError(sprintf('Unclosed "%s".', $bracket[0]));
             }
         }
 
