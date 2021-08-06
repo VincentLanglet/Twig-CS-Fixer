@@ -7,7 +7,7 @@ namespace TwigCsFixer\Sniff;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure there is one space before {{, {%, {#, and after }}, %} and #}
+ * Ensure there is one space before {{, {%, {#, and after }}, %} and #}.
  */
 final class DelimiterSpacingSniff extends AbstractSpacingSniff
 {

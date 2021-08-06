@@ -18,6 +18,7 @@ composer require --dev vincentlanglet/twig-cs-fixer
 Then, use it!
 ```
 bin/twig-cs-fixer lint /path/to/code
+bin/twig-cs-fixer lint --fix /path/to/code
 ```
 
 ## Twig Coding Standard Rules
@@ -50,3 +51,29 @@ Do not put any spaces before and after the following operators: `|`, `.`, `[]`.
 Do not put any spaces before and after the parenthesis used for filter and function calls.
 
 Do not put any spaces before and after the opening and the closing of arrays and hashes.
+
+## Custom configuration
+
+By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
+ - `BlankEOFSniff`: Ensure that files ends with one blank line.
+ - `EmptyLinesSniff`: Checks that there are not 2 empty lines following each other.
+
+If you want to use a custom standard and/or add/disable a sniff, you can provide your own configuration with
+a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class. For instance,
+```php
+<?php
+
+$ruleset = new TwigCsFixer\Ruleset\Ruleset();
+$ruleset->addStandard(new TwigCsFixer\Standard\Generic());
+$ruleset->removeSniff(TwigCsFixer\Sniff\EmptyLinesSniff::class);
+
+$config = new TwigCsFixer\Config\Config();
+$config->setRuleset($ruleset);
+
+return $config;
+```
+
+If your config is not located in your current directory, you can pass his path when running the command.
+```
+bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
+```
