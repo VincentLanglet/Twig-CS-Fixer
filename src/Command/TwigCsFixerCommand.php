@@ -10,9 +10,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use TwigCsFixer\Config\Config;
+use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\File\Finder;
+use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
@@ -31,12 +32,23 @@ final class TwigCsFixerCommand extends Command
             ->setName('lint')
             ->setDescription('Lints a template and outputs encountered errors')
             ->setDefinition([
+                new InputArgument(
+                    'paths',
+                    InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+                    'Paths of files and folders to parse'
+                ),
                 new InputOption(
                     'level',
                     'l',
-                    InputOption::VALUE_OPTIONAL,
+                    InputOption::VALUE_REQUIRED,
                     'Allowed values are notice, warning or error',
-                    'notice'
+                    SniffViolation::LEVEL_NOTICE
+                ),
+                new InputOption(
+                    'config',
+                    'c',
+                    InputOption::VALUE_REQUIRED,
+                    'Path to a `.twig-cs-fixer.php` config file'
                 ),
                 new InputOption(
                     'fix',
@@ -44,13 +56,7 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
                 ),
-            ])
-            ->addArgument(
-                'paths',
-                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
-                'Paths of files and folders to parse',
-                []
-            );
+            ]);
     }
 
     /**
@@ -63,23 +69,20 @@ final class TwigCsFixerCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $paths = $input->getArgument('paths');
-        $level = $input->getOption('level');
-        $fix = $input->getOption('fix');
+        // Resolve config
+        $configResolver = new ConfigResolver();
+        $config = $configResolver->getConfig($input->getOption('config'));
 
-        // TODO: Read a `.twig-cs-fixer.php` file for the config
-        $config = new Config();
-
-        $finder = new Finder($paths);
+        $finder = new Finder($input->getArgument('paths'));
 
         // Execute the linter.
         $twig = new StubbedEnvironment();
         $linter = new Linter($twig, new Tokenizer($twig));
-        $report = $linter->run($finder->findFiles(), $config->getRuleset(), $fix);
+        $report = $linter->run($finder->findFiles(), $config->getRuleset(), $input->getOption('fix'));
 
         // Format the output.
         $reporter = new TextFormatter($input, $output);
-        $reporter->display($report, $level);
+        $reporter->display($report, $input->getOption('level'));
 
         // Return a meaningful error code.
         if ($report->getTotalErrors() > 0) {
