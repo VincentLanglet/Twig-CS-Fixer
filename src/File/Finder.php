@@ -53,7 +53,7 @@ final class Finder
                 $file = new SplFileInfo($path);
                 $files[] = $file->getRealPath();
             } else {
-                throw new Exception(sprintf('Unknown path: "%s"', $path));
+                throw new Exception(sprintf('Unknown path: "%s".', $path));
             }
         }
 

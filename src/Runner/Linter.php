@@ -100,7 +100,7 @@ final class Linter
             $success = $fixer->fixFile($file);
 
             if (!$success) {
-                throw new Exception("Cannot fix the file $file.");
+                throw new Exception(sprintf('Cannot fix the file "%s".', $file));
             }
 
             file_put_contents($file, $fixer->getContents());

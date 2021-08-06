@@ -14,16 +14,16 @@ class ConfigResolver
     /**
      * @var string
      */
-    private $cwd;
+    private $workingDir;
 
     /**
-     * @param string $cwd
+     * @param string $workingDir
      *
      * @return void
      */
-    public function __construct(string $cwd)
+    public function __construct(string $workingDir)
     {
-        $this->cwd = $cwd;
+        $this->workingDir = $workingDir;
     }
 
     /**
@@ -36,13 +36,13 @@ class ConfigResolver
     public function getConfig(?string $configPath = null): Config
     {
         if (null !== $configPath) {
-            $configPath = 0 === strpos($configPath, '/') ? $configPath : $this->cwd.'/'.$configPath;
+            $configPath = 0 === mb_strpos($configPath, '/') ? $configPath : $this->workingDir.'/'.$configPath;
 
             return $this->getConfigFromPath($configPath);
         }
 
-        if (file_exists($this->cwd.'/.twig-cs-fixer.php')) {
-            return $this->getConfigFromPath($this->cwd.'/.twig-cs-fixer.php');
+        if (file_exists($this->workingDir.'/.twig-cs-fixer.php')) {
+            return $this->getConfigFromPath($this->workingDir.'/.twig-cs-fixer.php');
         }
 
         return new Config();
@@ -58,12 +58,12 @@ class ConfigResolver
     private function getConfigFromPath(string $configPath): Config
     {
         if (!file_exists($configPath)) {
-            throw new Exception(sprintf('Cannot find the config file %s', $configPath));
+            throw new Exception(sprintf('Cannot find the config file "%s".', $configPath));
         }
 
         $config = require($configPath);
         if (!$config instanceof Config) {
-            throw new Exception(sprintf('The config file must return a %s object', Config::class));
+            throw new Exception(sprintf('The config file must return a "%s" object.', Config::class));
         }
 
         return $config;

@@ -7,7 +7,7 @@ test:
 .PHONY: test
 
 coverage:
-	vendor/bin/phpunit --coverage-html .coverage
+	vendor/bin/phpunit --coverage-text --coverage-html .coverage
 .PHONY: coverage
 
 phpstan:

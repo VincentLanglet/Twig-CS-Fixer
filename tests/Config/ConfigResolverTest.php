@@ -14,7 +14,7 @@ use TwigCsFixer\Config\ConfigResolver;
 class ConfigResolverTest extends TestCase
 {
     /**
-     * @param string      $cwd
+     * @param string      $workingDir
      * @param string|null $path
      * @param string      $configName
      *
@@ -22,42 +22,43 @@ class ConfigResolverTest extends TestCase
      *
      * @dataProvider getConfigDataProvider
      */
-    public function testGetConfig(string $cwd, ?string $path, string $configName): void
+    public function testGetConfig(string $workingDir, ?string $path, string $configName): void
     {
-        $configResolver = new ConfigResolver($cwd);
+        $configResolver = new ConfigResolver($workingDir);
         $config = $configResolver->getConfig($path);
 
         self::assertSame($configName, $config->getName());
     }
 
     /**
-     * @return iterable<array{string, string|null, string}>
+     * @return iterable<array-key, array{string, string|null, string}>
      */
     public function getConfigDataProvider(): iterable
     {
         yield [__DIR__.'/data/directoryWithoutConfig', null, 'Default'];
         yield [__DIR__.'/data/directoryWithConfig', null, 'Custom'];
         yield [__DIR__, 'data/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
+        yield ['/tmp', __DIR__.'/data/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
     }
 
     /**
-     * @param string      $cwd
+     * @param string      $workingDir
      * @param string|null $path
      *
      * @return void
      *
      * @dataProvider getConfigExceptionDataProvider
      */
-    public function testGetConfigException(string $cwd, ?string $path): void
+    public function testGetConfigException(string $workingDir, ?string $path): void
     {
         self::expectException(Exception::class);
 
-        $configResolver = new ConfigResolver($cwd);
+        $configResolver = new ConfigResolver($workingDir);
         $configResolver->getConfig($path);
     }
 
     /**
-     * @return iterable<array{string, string|null, string}>
+     * @return iterable<array-key, array{string, string|null}>
      */
     public function getConfigExceptionDataProvider(): iterable
     {
