@@ -17,6 +17,22 @@ class ConfigTest extends TestCase
     /**
      * @return void
      */
+    public function testDefaultConfigHaveDefaultName(): void
+    {
+        self::assertEquals('Default', (new Config())->getName());
+    }
+
+    /**
+     * @return void
+     */
+    public function testConfigGetName(): void
+    {
+        self::assertEquals('Custom', (new Config('Custom'))->getName());
+    }
+
+    /**
+     * @return void
+     */
     public function testDefaultConfigHaveGenericStandard(): void
     {
         $config = new Config();

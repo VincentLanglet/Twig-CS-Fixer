@@ -70,7 +70,7 @@ final class TwigCsFixerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Resolve config
-        $configResolver = new ConfigResolver();
+        $configResolver = new ConfigResolver(getcwd());
         $config = $configResolver->getConfig($input->getOption('config'));
 
         $finder = new Finder($input->getArgument('paths'));
