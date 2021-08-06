@@ -210,7 +210,7 @@ abstract class AbstractSniff implements SniffInterface
                 return;
             }
 
-            throw new Exception('Sniff is disabled!');
+            throw new Exception(sprintf('Sniff "%s" is disabled.', self::class));
         }
 
         $sniffViolation = new SniffViolation(

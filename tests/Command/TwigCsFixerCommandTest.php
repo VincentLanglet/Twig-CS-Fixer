@@ -27,6 +27,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '[SUCCESS] Files linted: 0, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
+        self::assertSame(0, $commandTester->getStatusCode());
     }
 
     /**
@@ -45,6 +46,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
             $commandTester->getDisplay()
         );
+        self::assertSame(1, $commandTester->getStatusCode());
     }
 
     /**
@@ -64,5 +66,23 @@ final class TwigCsFixerCommandTest extends TestCase
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $commandTester->getDisplay()
         );
+        self::assertSame(1, $commandTester->getStatusCode());
+    }
+
+    /**
+     * @return void
+     */
+    public function testExecuteWithError(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths'    => [__DIR__.'/data'],
+            '--config' => __DIR__.'/data/.config-not-found.php',
+        ]);
+
+        self::assertStringStartsWith('Error: ', $commandTester->getDisplay());
+        self::assertSame(1, $commandTester->getStatusCode());
     }
 }

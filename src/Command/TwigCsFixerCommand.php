@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Command;
 
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\File\Finder;
@@ -64,25 +64,32 @@ final class TwigCsFixerCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
-     *
-     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Resolve config
-        $configResolver = new ConfigResolver(getcwd());
-        $config = $configResolver->getConfig($input->getOption('config'));
+        $workingDir = getcwd();
+        if (false === $workingDir) {
+            return $this->fail($output, 'Cannot get the current working directory.');
+        }
 
-        $finder = new Finder($input->getArgument('paths'));
+        try {
+            // Resolve config
+            $configResolver = new ConfigResolver($workingDir);
+            $config = $configResolver->getConfig($input->getOption('config'));
 
-        // Execute the linter.
-        $twig = new StubbedEnvironment();
-        $linter = new Linter($twig, new Tokenizer($twig));
-        $report = $linter->run($finder->findFiles(), $config->getRuleset(), $input->getOption('fix'));
+            $finder = new Finder($input->getArgument('paths'));
 
-        // Format the output.
-        $reporter = new TextFormatter($input, $output);
-        $reporter->display($report, $input->getOption('level'));
+            // Execute the linter.
+            $twig = new StubbedEnvironment();
+            $linter = new Linter($twig, new Tokenizer($twig));
+            $report = $linter->run($finder->findFiles(), $config->getRuleset(), $input->getOption('fix'));
+
+            // Format the output.
+            $reporter = new TextFormatter($input, $output);
+            $reporter->display($report, $input->getOption('level'));
+        } catch (Throwable $exception) {
+            return $this->fail($output, $exception->getMessage());
+        }
 
         // Return a meaningful error code.
         if ($report->getTotalErrors() > 0) {
@@ -90,5 +97,18 @@ final class TwigCsFixerCommand extends Command
         }
 
         return 0;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param string          $message
+     *
+     * @return int
+     */
+    private function fail(OutputInterface $output, string $message): int
+    {
+        $output->writeln("<error>Error: $message</error>");
+
+        return 1;
     }
 }
