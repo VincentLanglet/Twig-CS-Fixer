@@ -57,6 +57,7 @@ Do not put any spaces before and after the opening and the closing of arrays and
 By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
  - `BlankEOFSniff`: Ensure that files ends with one blank line.
  - `EmptyLinesSniff`: Checks that there are not 2 empty lines following each other.
+ - `TrailingSpaceSniff`: Ensure that files has no trailing spaces.
 
 If you want to use a custom standard and/or add/disable a sniff, you can provide your own configuration with
 a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class. For instance,
