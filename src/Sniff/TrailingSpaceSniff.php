@@ -48,7 +48,7 @@ final class TrailingSpaceSniff extends AbstractSniff
             $fixer->replaceToken($previousTokenPosition, '');
             $previousTokenPosition--;
 
-            $previousToken = $tokenPositions[$previousTokenPosition] ?? null;
+            $previousToken = $tokens[$previousTokenPosition] ?? null;
         } while (null !== $previousToken && $this->isTokenMatching($previousToken, Token::WHITESPACE_TOKENS));
 
         $fixer->endChangeset();

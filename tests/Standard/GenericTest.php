@@ -10,6 +10,7 @@ use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
+use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\Generic;
 
 /**
@@ -30,6 +31,7 @@ class GenericTest extends TestCase
             new EmptyLinesSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
+            new TrailingSpaceSniff(),
         ], $standard->getSniffs());
     }
 }
