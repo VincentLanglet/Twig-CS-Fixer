@@ -75,19 +75,24 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             $count = 0;
         }
 
-        if ($expected !== $count) {
-            $fixer = $this->addFixableError(
-                sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue() ?? '', $count),
-                $token
-            );
+        if ($expected === $count) {
+            return;
+        }
 
-            if (null !== $fixer) {
-                if (0 === $count) {
-                    $fixer->addContent($tokenPosition, str_repeat(' ', $expected));
-                } else {
-                    $fixer->replaceToken($tokenPosition + 1, str_repeat(' ', $expected));
-                }
-            }
+        $fixer = $this->addFixableError(
+            sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue() ?? '', $count),
+            $token
+        );
+
+        // Only linting currently.
+        if (null === $fixer) {
+            return;
+        }
+
+        if (0 === $count) {
+            $fixer->addContent($tokenPosition, str_repeat(' ', $expected));
+        } else {
+            $fixer->replaceToken($tokenPosition + 1, str_repeat(' ', $expected));
         }
     }
 
@@ -116,19 +121,24 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             $count = 0;
         }
 
-        if ($expected !== $count) {
-            $fixer = $this->addFixableError(
-                sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue() ?? '', $count),
-                $token
-            );
+        if ($expected === $count) {
+            return;
+        }
 
-            if (null !== $fixer) {
-                if (0 === $count) {
-                    $fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
-                } else {
-                    $fixer->replaceToken($tokenPosition - 1, str_repeat(' ', $expected));
-                }
-            }
+        $fixer = $this->addFixableError(
+            sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue() ?? '', $count),
+            $token
+        );
+
+        // Only linting currently.
+        if (null === $fixer) {
+            return;
+        }
+
+        if (0 === $count) {
+            $fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
+        } else {
+            $fixer->replaceToken($tokenPosition - 1, str_repeat(' ', $expected));
         }
     }
 }

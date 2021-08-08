@@ -24,30 +24,37 @@ final class EmptyLinesSniff extends AbstractSniff
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::EOL_TYPE)) {
-            $i = 0;
-            while (
-                isset($tokens[$tokenPosition - ($i + 1)])
-                && $this->isTokenMatching($tokens[$tokenPosition - ($i + 1)], Token::EOL_TYPE)
-            ) {
-                $i++;
-            }
-
-            if (1 < $i) {
-                $fixer = $this->addFixableError(
-                    sprintf('More than 1 empty lines are not allowed, found %d', $i),
-                    $token
-                );
-
-                if (null !== $fixer) {
-                    $fixer->beginChangeset();
-                    while ($i > 1) {
-                        $fixer->replaceToken($tokenPosition - $i, '');
-                        $i--;
-                    }
-                    $fixer->endChangeset();
-                }
-            }
+        if (!$this->isTokenMatching($token, Token::EOL_TYPE)) {
+            return;
         }
+
+        $i = 0;
+        while (
+            isset($tokens[$tokenPosition - ($i + 1)])
+            && $this->isTokenMatching($tokens[$tokenPosition - ($i + 1)], Token::EOL_TYPE)
+        ) {
+            $i++;
+        }
+
+        if (0 === $i || 1 === $i) {
+            return;
+        }
+
+        $fixer = $this->addFixableError(
+            sprintf('More than 1 empty lines are not allowed, found %d', $i),
+            $token
+        );
+
+        // Only linting currently.
+        if (null === $fixer) {
+            return;
+        }
+
+        $fixer->beginChangeset();
+        while ($i > 1) {
+            $fixer->replaceToken($tokenPosition - $i, '');
+            $i--;
+        }
+        $fixer->endChangeset();
     }
 }
