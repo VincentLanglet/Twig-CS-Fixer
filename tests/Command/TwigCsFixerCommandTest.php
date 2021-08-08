@@ -31,6 +31,40 @@ final class TwigCsFixerCommandTest extends TestCase
     }
 
     /**
+     * @param bool $fix
+     *
+     * @return void
+     *
+     * @dataProvider executeWithOnePathDataProvider
+     */
+    public function testExecuteWithOnePath(bool $fix): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([
+            'paths' => [__DIR__.'/data/file.twig'],
+            '--fix' => $fix,
+        ]);
+
+        self::assertStringContainsString(
+            '[SUCCESS] Files linted: 1, notices: 0, warnings: 0, errors: 0',
+            $commandTester->getDisplay()
+        );
+        self::assertSame(0, $commandTester->getStatusCode());
+    }
+
+    /**
+     * @return iterable<array-key, array{bool}>
+     */
+    public function executeWithOnePathDataProvider(): iterable
+    {
+        yield [false];
+        yield [true];
+    }
+
+    /**
      * @return void
      */
     public function testExecuteWithPaths(): void
