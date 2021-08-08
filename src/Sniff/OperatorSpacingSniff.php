@@ -73,26 +73,14 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
         }
 
         $previousToken = $tokens[$previous];
-        if ($this->isTokenMatching($previousToken, Token::OPERATOR_TYPE)) {
-            // {{ 1 * -2 }}
-            return true;
-        }
 
-        if ($this->isTokenMatching($previousToken, Token::VAR_START_TYPE)) {
+        // {{ 1 * -2 }}
+        return $this->isTokenMatching($previousToken, Token::OPERATOR_TYPE)
             // {{ -2 }}
-            return true;
-        }
-
-        if ($this->isTokenMatching($previousToken, Token::PUNCTUATION_TYPE, ['(', '[', ':', ','])) {
+            || $this->isTokenMatching($previousToken, Token::VAR_START_TYPE)
             // {{ 1 + (-2) }}
-            return true;
-        }
-
-        if ($this->isTokenMatching($previousToken, Token::BLOCK_TAG_TYPE)) {
+            || $this->isTokenMatching($previousToken, Token::PUNCTUATION_TYPE, ['(', '[', ':', ','])
             // {% if -2 ... %}
-            return true;
-        }
-
-        return false;
+            || $this->isTokenMatching($previousToken, Token::BLOCK_TAG_TYPE);
     }
 }
