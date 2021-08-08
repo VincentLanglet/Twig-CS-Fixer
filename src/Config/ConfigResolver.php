@@ -36,13 +36,15 @@ class ConfigResolver
     public function getConfig(?string $configPath = null): Config
     {
         if (null !== $configPath) {
-            $configPath = 0 === mb_strpos($configPath, '/') ? $configPath : $this->workingDir.'/'.$configPath;
+            $configPath = $this->isAbsolutePath($configPath)
+                ? $configPath
+                : $this->workingDir.DIRECTORY_SEPARATOR.$configPath;
 
             return $this->getConfigFromPath($configPath);
         }
 
-        if (file_exists($this->workingDir.'/.twig-cs-fixer.php')) {
-            return $this->getConfigFromPath($this->workingDir.'/.twig-cs-fixer.php');
+        if (file_exists($this->workingDir.DIRECTORY_SEPARATOR.'.twig-cs-fixer.php')) {
+            return $this->getConfigFromPath($this->workingDir.DIRECTORY_SEPARATOR.'.twig-cs-fixer.php');
         }
 
         return new Config();
@@ -67,5 +69,24 @@ class ConfigResolver
         }
 
         return $config;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
+    private function isAbsolutePath(string $path): bool
+    {
+        return '' !== $path && (
+                0 !== strspn($path, '/\\', 0, 1)
+                || (
+                    mb_strlen($path) > 3
+                    && ctype_alpha($path[0])
+                    && ':' === $path[1]
+                    && 0 !== strspn($path, '/\\', 2, 1)
+                )
+                || null !== parse_url($path, \PHP_URL_SCHEME)
+            );
     }
 }

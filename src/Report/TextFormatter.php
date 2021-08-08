@@ -122,13 +122,14 @@ final class TextFormatter
         $result = [];
         $indentCount = null;
         while ($position < $max) {
-            if (1 === preg_match('/^([\s\t]+)/', $lines[$position], $match)) {
+            if (1 === preg_match('/^[\s\t]+/', $lines[$position], $match)) {
+                \assert(isset($match[0]));
                 if (null === $indentCount) {
-                    $indentCount = mb_strlen($match[1]);
+                    $indentCount = mb_strlen($match[0]);
                 }
 
-                if (mb_strlen($match[1]) < $indentCount) {
-                    $indentCount = mb_strlen($match[1]);
+                if (mb_strlen($match[0]) < $indentCount) {
+                    $indentCount = mb_strlen($match[0]);
                 }
             } else {
                 $indentCount = 0;

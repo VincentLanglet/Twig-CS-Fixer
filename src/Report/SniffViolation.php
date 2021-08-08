@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Report;
 
 use LogicException;
-use TwigCsFixer\Sniff\SniffInterface;
 
 /**
  * Wrapper class that represents a violation to a sniff with context.
@@ -41,11 +40,6 @@ final class SniffViolation
      * @var string
      */
     private $filename;
-
-    /**
-     * @var SniffInterface|null
-     */
-    private $sniff;
 
     /**
      * @param int      $level
@@ -153,25 +147,5 @@ final class SniffViolation
     public function getLinePosition(): ?int
     {
         return $this->linePosition;
-    }
-
-    /**
-     * @param SniffInterface $sniff
-     *
-     * @return self
-     */
-    public function setSniff(SniffInterface $sniff): SniffViolation
-    {
-        $this->sniff = $sniff;
-
-        return $this;
-    }
-
-    /**
-     * @return SniffInterface|null
-     */
-    public function getSniff(): ?SniffInterface
-    {
-        return $this->sniff;
     }
 }

@@ -26,7 +26,12 @@ final class TestHelper
      */
     public static function generateDiff(string $contents, string $filePath): string
     {
-        $cwd = getcwd().DIRECTORY_SEPARATOR;
+        $cwd = getcwd();
+        if (false === $cwd) {
+            throw new LogicException('Cannot get the current working directory.');
+        }
+
+        $cwd = $cwd.DIRECTORY_SEPARATOR;
         if (mb_strpos($filePath, $cwd) === 0) {
             $filename = mb_substr($filePath, mb_strlen($cwd));
         } else {
@@ -54,7 +59,7 @@ final class TestHelper
         $diff = shell_exec($cmd);
 
         fclose($fixedFile);
-        if (is_file($tempName) === true) {
+        if (is_file($tempName)) {
             unlink($tempName);
         }
 
@@ -69,7 +74,7 @@ final class TestHelper
 
         $diff = [];
         foreach ($diffLines as $line) {
-            if (isset($line[0]) === true) {
+            if (isset($line[0])) {
                 switch ($line[0]) {
                     case '-':
                         $diff[] = "\033[31m$line\033[0m";

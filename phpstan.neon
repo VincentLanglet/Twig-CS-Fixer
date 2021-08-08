@@ -24,6 +24,12 @@ parameters:
             tooWideThrowType: true
     implicitThrows: false
 
+    # This checks are disabled by default
+    checkInternalClassCaseSensitivity: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkUninitializedProperties: true
+    checkMissingCallableSignature: true
+
 services:
     exceptionTypeResolver:
         class: TwigCsFixer\PHPStan\ExceptionTypeResolver
