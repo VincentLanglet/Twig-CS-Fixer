@@ -68,8 +68,10 @@ final class Tokenizer
 
     /**
      * @var string[]
+     *
+     * @psalm-var Regex
      */
-    private $regexes = [];
+    private $regexes;
 
     /**
      * @var int
@@ -104,7 +106,7 @@ final class Tokenizer
     /**
      * @var array<array{int, array<string, string>}>
      *
-     * @phpstan-var array<array{0|1|2|3|4|5, array<string, string>}>
+     * @psalm-var array<array{0|1|2|3|4|5, array<string, string>}>
      */
     private $state = [];
 
@@ -221,7 +223,7 @@ final class Tokenizer
     /**
      * @return int
      *
-     * @phpstan-return 0|1|2|3|4|5
+     * @psalm-return 0|1|2|3|4|5
      */
     private function getState(): int
     {
@@ -234,7 +236,7 @@ final class Tokenizer
      *
      * @return void
      *
-     * @phpstan-param 0|1|2|3|4|5 $state
+     * @psalm-param 0|1|2|3|4|5 $state
      */
     private function pushState(int $state, array $data = []): void
     {
@@ -249,7 +251,7 @@ final class Tokenizer
      */
     private function setStateParam(string $name, string $value): void
     {
-        if (0 === count($this->state)) {
+        if ([] === $this->state) {
             throw new LogicException('Cannot update state without a current state.');
         }
 
@@ -269,7 +271,7 @@ final class Tokenizer
      */
     private function popState(): void
     {
-        if (0 === count($this->state)) {
+        if ([] === $this->state) {
             throw new LogicException('Cannot pop state without a current state.');
         }
         array_pop($this->state);
@@ -284,7 +286,7 @@ final class Tokenizer
     {
         $tokenPositions = [];
         preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
-        /** @var array<int, array<int, array{string, int}>> $tokenPositions */
+        /** @var array<0|1|2, array<0|1|2|3|4, array{string, int}>> $tokenPositions */
 
         $tokenPositionsReworked = [];
         foreach ($tokenPositions[0] as $index => $tokenFullMatch) {
@@ -306,7 +308,7 @@ final class Tokenizer
     private function getTokenPosition(int $offset = 0): ?array
     {
         if (
-            count($this->tokenPositions) === 0
+            [] === $this->tokenPositions
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
         ) {
             return null;
@@ -399,7 +401,7 @@ final class Tokenizer
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
-        if (count($this->bracketsAndTernary) === 0 && isset($match[0])) {
+        if ([] === $this->bracketsAndTernary && isset($match[0])) {
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
@@ -420,7 +422,7 @@ final class Tokenizer
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
-        if (count($this->bracketsAndTernary) === 0 && isset($match[0])) {
+        if ([] === $this->bracketsAndTernary && isset($match[0])) {
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
@@ -705,7 +707,7 @@ final class Tokenizer
      */
     private function lexNumber(string $numberAsString): void
     {
-        $number = (float) $numberAsString;  // floats
+        $number = (float) $numberAsString; // floats
         if (ctype_digit($numberAsString) && $number <= PHP_INT_MAX) {
             $number = (int) $numberAsString; // integers lower than the maximum
         }
@@ -748,7 +750,7 @@ final class Tokenizer
         if (in_array($currentToken, ['(', '[', '{'], true)) {
             $this->bracketsAndTernary[] = [$currentToken, $this->line];
         } elseif (in_array($currentToken, [')', ']', '}'], true)) {
-            if (0 === count($this->bracketsAndTernary)) {
+            if ([] === $this->bracketsAndTernary) {
                 throw new SyntaxError(sprintf('Unexpected "%s".', $currentToken));
             }
 

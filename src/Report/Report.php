@@ -72,7 +72,7 @@ final class Report
      */
     public function getMessages(array $filters = []): array
     {
-        if (0 === count($filters)) {
+        if ([] === $filters) {
             // Return all messages, without filtering.
             return $this->messages;
         }
@@ -117,14 +117,6 @@ final class Report
     public function getTotalFiles(): int
     {
         return count($this->files);
-    }
-
-    /**
-     * @return int
-     */
-    public function getTotalMessages(): int
-    {
-        return count($this->messages);
     }
 
     /**
