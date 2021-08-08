@@ -23,7 +23,7 @@ final class TrailingSpaceSniff extends AbstractSniff
     public function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, [Token::EOL_TYPE, Token::COMMENT_EOL_TYPE])) {
+        if (!$this->isTokenMatching($token, Token::EOL_TOKENS)) {
             return;
         }
 
