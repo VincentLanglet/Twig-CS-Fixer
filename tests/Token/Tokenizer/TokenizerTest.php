@@ -305,6 +305,29 @@ final class TokenizerTest extends TestCase
                 14 => Token::EOF_TYPE,
             ],
         ];
+
+        yield [
+            __DIR__.'/TokenizerTest7.twig',
+            [
+                0  => Token::COMMENT_START_TYPE,
+                1  => Token::COMMENT_EOL_TYPE,
+                2  => Token::COMMENT_WHITESPACE_TYPE,
+                3  => Token::COMMENT_TEXT_TYPE,
+                4  => Token::COMMENT_WHITESPACE_TYPE,
+                5  => Token::COMMENT_TEXT_TYPE,
+                6  => Token::COMMENT_WHITESPACE_TYPE,
+                7  => Token::COMMENT_TEXT_TYPE,
+                8  => Token::COMMENT_WHITESPACE_TYPE,
+                9  => Token::COMMENT_TEXT_TYPE,
+                10 => Token::COMMENT_WHITESPACE_TYPE,
+                11 => Token::COMMENT_TEXT_TYPE,
+                12 => Token::COMMENT_WHITESPACE_TYPE,
+                13 => Token::COMMENT_EOL_TYPE,
+                14 => Token::COMMENT_END_TYPE,
+                15 => Token::EOL_TYPE,
+                16 => Token::EOF_TYPE,
+            ],
+        ];
     }
 
     /**

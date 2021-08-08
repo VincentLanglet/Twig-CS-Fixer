@@ -10,6 +10,7 @@ use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Sniff\SniffInterface;
+use TwigCsFixer\Sniff\TrailingSpaceSniff;
 
 /**
  * Default standard for twig.
@@ -27,6 +28,7 @@ class Generic implements StandardInterface
             new EmptyLinesSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
+            new TrailingSpaceSniff(),
         ];
     }
 }
