@@ -11,7 +11,7 @@ use Twig\Source;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Token\Tokenizer;
+use TwigCsFixer\Token\TokenizerInterface;
 
 /**
  * Linter is the main class and will process twig files against a set of rules.
@@ -24,17 +24,17 @@ final class Linter
     private $env;
 
     /**
-     * @var Tokenizer
+     * @var TokenizerInterface
      */
     private $tokenizer;
 
     /**
-     * @param Environment $env
-     * @param Tokenizer   $tokenizer
+     * @param Environment        $env
+     * @param TokenizerInterface $tokenizer
      *
      * @return void
      */
-    public function __construct(Environment $env, Tokenizer $tokenizer)
+    public function __construct(Environment $env, TokenizerInterface $tokenizer)
     {
         $this->env = $env;
         $this->tokenizer = $tokenizer;
@@ -120,7 +120,7 @@ final class Linter
         if (false === $content) {
             $sniffViolation = new SniffViolation(
                 Report::MESSAGE_TYPE_FATAL,
-                sprintf('Unable to read file "%s"', $file),
+                'Unable to read file.',
                 $file
             );
 
@@ -137,7 +137,7 @@ final class Linter
         } catch (Error $e) {
             $sniffViolation = new SniffViolation(
                 Report::MESSAGE_TYPE_FATAL,
-                $e->getRawMessage(),
+                sprintf('File is invalid: %s', $e->getRawMessage()),
                 $file,
                 $e->getTemplateLine()
             );

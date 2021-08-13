@@ -35,10 +35,10 @@ class ConfigResolverTest extends TestCase
      */
     public function getConfigDataProvider(): iterable
     {
-        yield [__DIR__.'/data/directoryWithoutConfig', null, 'Default'];
-        yield [__DIR__.'/data/directoryWithConfig', null, 'Custom'];
-        yield [__DIR__, 'data/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
-        yield ['/tmp', __DIR__.'/data/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
+        yield [__DIR__.'/Fixtures/directoryWithoutConfig', null, 'Default'];
+        yield [__DIR__.'/Fixtures/directoryWithConfig', null, 'Custom'];
+        yield [__DIR__, 'Fixtures/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
+        yield ['/tmp', __DIR__.'/Fixtures/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
     }
 
     /**
@@ -62,8 +62,8 @@ class ConfigResolverTest extends TestCase
      */
     public function getConfigExceptionDataProvider(): iterable
     {
-        yield [__DIR__.'/data/directoryWithInvalidConfig', null];
-        yield [__DIR__, 'data/directoryWithInvalidConfig/.twig-cs-fixer.php'];
-        yield [__DIR__, 'data/path/to/not/found/.twig-cs-fixer.php'];
+        yield [__DIR__.'/Fixtures/directoryWithInvalidConfig', null];
+        yield [__DIR__, 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
+        yield [__DIR__, 'Fixtures/path/to/not/found/.twig-cs-fixer.php'];
     }
 }

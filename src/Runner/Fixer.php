@@ -8,7 +8,7 @@ use Exception;
 use Twig\Source;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
-use TwigCsFixer\Token\Tokenizer;
+use TwigCsFixer\Token\TokenizerInterface;
 
 /**
  * Fixer will fix twig files against a set of rules.
@@ -31,7 +31,7 @@ final class Fixer
     private $ruleset;
 
     /**
-     * @var Tokenizer
+     * @var TokenizerInterface
      */
     private $tokenizer;
 
@@ -96,12 +96,12 @@ final class Fixer
     private $numFixes = 0;
 
     /**
-     * @param Ruleset   $ruleset
-     * @param Tokenizer $tokenizer
+     * @param Ruleset            $ruleset
+     * @param TokenizerInterface $tokenizer
      *
      * @return void
      */
-    public function __construct(Ruleset $ruleset, Tokenizer $tokenizer)
+    public function __construct(Ruleset $ruleset, TokenizerInterface $tokenizer)
     {
         $this->ruleset = $ruleset;
         $this->tokenizer = $tokenizer;
