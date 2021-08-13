@@ -1,0 +1,38 @@
+name: Mutation testing
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    test:
+        name: Infection
+        runs-on: ubuntu-18.04
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  coverage: pcov
+                  tools: composer:v2
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v1
+              with:
+                  dependency-versions: highest
+                  composer-options: --prefer-dist --prefer-stable
+
+            - name: Run unit tests with PHPUnit
+              run: vendor/bin/phpunit --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+
+            - name: Run Infection
+              env:
+                  INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
+              run: vendor/bin/infection --threads=4 --skip-initial-tests --coverage=build/coverage --no-progress --log-verbosity=none
+
