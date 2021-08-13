@@ -39,7 +39,7 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths' => [__DIR__.'/data'],
+            'paths' => [__DIR__.'/Fixtures'],
         ]);
 
         self::assertStringContainsString(
@@ -58,8 +58,8 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [__DIR__.'/data'],
-            '--config' => __DIR__.'/data/.twig-cs-fixer.php',
+            'paths'    => [__DIR__.'/Fixtures'],
+            '--config' => __DIR__.'/Fixtures/.twig-cs-fixer.php',
         ]);
 
         self::assertStringContainsString(
@@ -78,8 +78,8 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [__DIR__.'/data'],
-            '--config' => __DIR__.'/data/.config-not-found.php',
+            'paths'    => [__DIR__.'/Fixtures'],
+            '--config' => __DIR__.'/Fixtures/.config-not-found.php',
         ]);
 
         self::assertStringStartsWith('Error: ', $commandTester->getDisplay());

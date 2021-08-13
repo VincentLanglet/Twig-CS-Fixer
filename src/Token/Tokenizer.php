@@ -34,7 +34,7 @@ use Twig\Source;
  *     lex_block: string,
  * }
  */
-final class Tokenizer
+final class Tokenizer implements TokenizerInterface
 {
     private const STATE_DATA          = 0;
     private const STATE_BLOCK         = 1;
