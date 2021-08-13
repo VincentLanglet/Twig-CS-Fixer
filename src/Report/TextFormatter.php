@@ -123,7 +123,6 @@ final class TextFormatter
         $indentCount = null;
         while ($position < $max) {
             if (1 === preg_match('/^[\s\t]+/', $lines[$position], $match)) {
-                \assert(isset($match[0]));
                 if (null === $indentCount) {
                     $indentCount = mb_strlen($match[0]);
                 }
