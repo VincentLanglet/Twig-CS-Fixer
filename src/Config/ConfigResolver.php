@@ -86,7 +86,7 @@ class ConfigResolver
                     && ':' === $path[1]
                     && 0 !== strspn($path, '/\\', 2, 1)
                 )
-                || null !== parse_url($path, \PHP_URL_SCHEME)
+                || null !== parse_url($path, PHP_URL_SCHEME)
             );
     }
 }
