@@ -31,6 +31,8 @@ final class PunctuationSpacingTest extends AbstractSniffTest
             [5 => 24],
             [6 => 6],
             [6 => 6],
+            [7 => 12],
+            [7 => 15],
         ]);
     }
 }
