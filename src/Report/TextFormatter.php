@@ -153,7 +153,7 @@ final class TextFormatter
     private function formatErrorMessage(SniffViolation $message): string
     {
         return sprintf(
-            '<fg=red>'.self::ERROR_LINE_FORMAT.'</fg=red>',
+            sprintf('<fg=red>%s</fg=red>', self::ERROR_LINE_FORMAT),
             self::ERROR_CURSOR_CHAR,
             wordwrap($message->getMessage(), self::ERROR_LINE_WIDTH)
         );

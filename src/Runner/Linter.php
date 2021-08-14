@@ -112,9 +112,9 @@ final class Linter
      * @param Ruleset $ruleset
      * @param Report  $report
      *
-     * @return bool
+     * @return void
      */
-    private function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
+    private function processTemplate(string $file, Ruleset $ruleset, Report $report): void
     {
         $content = file_get_contents($file);
         if (false === $content) {
@@ -126,7 +126,7 @@ final class Linter
 
             $report->addMessage($sniffViolation);
 
-            return false;
+            return;
         }
 
         $twigSource = new Source($content, $file);
@@ -144,7 +144,7 @@ final class Linter
 
             $report->addMessage($sniffViolation);
 
-            return false;
+            return;
         }
 
         // Tokenizer.
@@ -159,15 +159,13 @@ final class Linter
 
             $report->addMessage($sniffViolation);
 
-            return false;
+            return;
         }
 
         $sniffs = $ruleset->getSniffs();
         foreach ($sniffs as $sniff) {
             $sniff->processFile($stream);
         }
-
-        return true;
     }
 
     /**
