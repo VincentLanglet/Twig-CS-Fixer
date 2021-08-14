@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Tests\Runner\Fixtures\BuggySniff;
@@ -35,11 +36,11 @@ class LinterTest extends TestCase
 
         $messages = $report->getMessages();
         self::assertCount(1, $messages);
-        self::assertSame('Unable to read file.', $messages[0]->getMessage());
-        self::assertSame(
-            sprintf('%s/Fixtures/file_not_readable.twig', __DIR__),
-            $messages[0]->getFilename()
-        );
+
+        $message = $messages[0];
+        self::assertSame('Unable to read file.', $message->getMessage());
+        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevelAsString());
+        self::assertSame(sprintf('%s/Fixtures/file_not_readable.twig', __DIR__), $message->getFilename());
     }
 
     /**
@@ -58,11 +59,11 @@ class LinterTest extends TestCase
 
         $messages = $report->getMessages();
         self::assertCount(1, $messages);
-        self::assertSame('File is invalid: Error.', $messages[0]->getMessage());
-        self::assertSame(
-            sprintf('%s/Fixtures/file.twig', __DIR__),
-            $messages[0]->getFilename()
-        );
+
+        $message = $messages[0];
+        self::assertSame('File is invalid: Error.', $message->getMessage());
+        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevelAsString());
+        self::assertSame(sprintf('%s/Fixtures/file.twig', __DIR__), $message->getFilename());
     }
 
     /**
@@ -81,11 +82,39 @@ class LinterTest extends TestCase
 
         $messages = $report->getMessages();
         self::assertCount(1, $messages);
-        self::assertSame('Unable to tokenize file: Error.', $messages[0]->getMessage());
-        self::assertSame(
-            sprintf('%s/Fixtures/file.twig', __DIR__),
-            $messages[0]->getFilename()
-        );
+
+        $message = $messages[0];
+        self::assertSame('Unable to tokenize file: Error.', $message->getMessage());
+        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevelAsString());
+        self::assertSame(sprintf('%s/Fixtures/file.twig', __DIR__), $message->getFilename());
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserDeprecationAreReported(): void
+    {
+        $env = new StubbedEnvironment();
+        $tokenizer = $this->createStub(TokenizerInterface::class);
+        $tokenizer->method('tokenize')->willReturnCallback(static function (): array {
+            @trigger_error('Default');
+            @trigger_error('User Deprecation', \E_USER_DEPRECATED);
+
+            return [];
+        });
+        $ruleset = new Ruleset();
+
+        $linter = new Linter($env, $tokenizer);
+
+        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, false);
+
+        $messages = $report->getMessages();
+        self::assertCount(1, $messages);
+
+        $message = $messages[0];
+        self::assertSame('User Deprecation', $message->getMessage());
+        self::assertSame(SniffViolation::LEVEL_NOTICE, $message->getLevelAsString());
+        self::assertSame(sprintf('%s/Fixtures/file.twig', __DIR__), $message->getFilename());
     }
 
     /**
