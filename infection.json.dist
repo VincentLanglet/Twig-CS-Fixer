@@ -8,6 +8,7 @@
         "@default": true
     },
     "logs": {
+        "text": "infection.log",
         "badge": {
             "branch": "main"
         }

@@ -1,6 +1,7 @@
 .* export-ignore
 *.md export-ignore
 tests export-ignore
+infection.json.dist export-ignore
 Makefile export-ignore
 phpcs.xml export-ignore
 phpstan.neon.dist export-ignore
