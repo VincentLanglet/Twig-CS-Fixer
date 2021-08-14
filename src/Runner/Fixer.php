@@ -108,24 +108,6 @@ final class Fixer
     }
 
     /**
-     * @param array<int, Token> $tokens
-     *
-     * @return void
-     */
-    public function startFile(array $tokens): void
-    {
-        $this->numFixes = 0;
-        $this->fixedTokens = [];
-
-        $this->tokens = array_map(static function (Token $token): string {
-            return $token->getValue() ?? '';
-        }, $tokens);
-
-        preg_match("/\r\n?|\n/", $this->getContents(), $matches);
-        $this->eolChar = $matches[0] ?? "\n";
-    }
-
-    /**
      * @param string $file
      *
      * @return bool
@@ -231,21 +213,6 @@ final class Fixer
     }
 
     /**
-     * Stop recording actions for a changeset, and discard logged changes.
-     *
-     * @return void
-     */
-    public function rollbackChangeset(): void
-    {
-        $this->inChangeset = false;
-        $this->inConflict = false;
-
-        if (count($this->changeset) > 0) {
-            $this->changeset = [];
-        }
-    }
-
-    /**
      * @param int    $tokenPosition
      * @param string $content
      *
@@ -345,6 +312,24 @@ final class Fixer
         $current = $this->getTokenContent($tokenPosition);
 
         return $this->replaceToken($tokenPosition, $content.$current);
+    }
+
+    /**
+     * @param array<int, Token> $tokens
+     *
+     * @return void
+     */
+    private function startFile(array $tokens): void
+    {
+        $this->numFixes = 0;
+        $this->fixedTokens = [];
+
+        $this->tokens = array_map(static function (Token $token): string {
+            return $token->getValue() ?? '';
+        }, $tokens);
+
+        preg_match("/\r\n?|\n/", $this->getContents(), $matches);
+        $this->eolChar = $matches[0] ?? "\n";
     }
 
     /**

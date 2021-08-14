@@ -20,15 +20,14 @@ final class TrailingSpaceSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
         if (!$this->isTokenMatching($token, Token::EOL_TOKENS)) {
             return;
         }
 
-        $previousTokenPosition = $tokenPosition - 1;
-        $previousToken = $tokens[$previousTokenPosition] ?? null;
+        $previousToken = $tokens[$tokenPosition - 1] ?? null;
         if (null === $previousToken || !$this->isTokenMatching($previousToken, Token::WHITESPACE_TOKENS)) {
             return;
         }
@@ -42,15 +41,6 @@ final class TrailingSpaceSniff extends AbstractSniff
             return;
         }
 
-        $fixer->beginChangeset();
-
-        do {
-            $fixer->replaceToken($previousTokenPosition, '');
-            $previousTokenPosition--;
-
-            $previousToken = $tokens[$previousTokenPosition] ?? null;
-        } while (null !== $previousToken && $this->isTokenMatching($previousToken, Token::WHITESPACE_TOKENS));
-
-        $fixer->endChangeset();
+        $fixer->replaceToken($tokenPosition - 1, '');
     }
 }

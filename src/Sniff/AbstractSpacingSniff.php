@@ -20,7 +20,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, array $tokens): void
     {
         $spaceAfter = $this->shouldHaveSpaceAfter($tokenPosition, $tokens);
         $spaceBefore = $this->shouldHaveSpaceBefore($tokenPosition, $tokens);
