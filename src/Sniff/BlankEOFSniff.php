@@ -60,7 +60,7 @@ final class BlankEOFSniff extends AbstractSniff
             $fixer->addNewlineBefore($tokenPosition);
         } else {
             $fixer->beginChangeset();
-            while ($i > 1) {
+            while ($i >= 2) {
                 $fixer->replaceToken($tokenPosition - $i, '');
                 $i--;
             }
