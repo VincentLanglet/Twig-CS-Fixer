@@ -30,7 +30,7 @@ class LinterTest extends TestCase
 
         // Suppress the warning sent by `file_get_content` during the test.
         $oldErrorLevel = error_reporting(E_ALL ^ E_WARNING);
-        $report = $linter->run([__DIR__.'/Fixtures/file_not_readable.twig'], $ruleset);
+        $report = $linter->run([__DIR__.'/Fixtures/file_not_readable.twig'], $ruleset, false);
         error_reporting($oldErrorLevel);
 
         $messages = $report->getMessages();
@@ -54,7 +54,7 @@ class LinterTest extends TestCase
 
         $linter = new Linter($env, $tokenizer);
 
-        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset);
+        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, false);
 
         $messages = $report->getMessages();
         self::assertCount(1, $messages);
@@ -77,7 +77,7 @@ class LinterTest extends TestCase
 
         $linter = new Linter($env, $tokenizer);
 
-        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset);
+        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, false);
 
         $messages = $report->getMessages();
         self::assertCount(1, $messages);

@@ -49,7 +49,7 @@ final class Linter
      *
      * @throws Exception
      */
-    public function run(array $files, Ruleset $ruleset, bool $fix = false): Report
+    public function run(array $files, Ruleset $ruleset, bool $fix): Report
     {
         $report = new Report();
 
