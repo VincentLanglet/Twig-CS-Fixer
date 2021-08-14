@@ -20,7 +20,7 @@ final class EmptyLinesSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
 

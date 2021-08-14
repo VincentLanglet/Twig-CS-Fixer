@@ -91,6 +91,21 @@ class LinterTest extends TestCase
     /**
      * @return void
      */
+    public function testEmptyRulesetCanBeFixed(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $ruleset = new Ruleset();
+
+        $linter = new Linter($env, $tokenizer);
+        $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, true);
+    }
+
+    /**
+     * @return void
+     */
     public function testBuggyRulesetCannotBeFixed(): void
     {
         $env = new StubbedEnvironment();

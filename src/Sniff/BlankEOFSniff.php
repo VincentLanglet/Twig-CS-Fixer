@@ -20,7 +20,7 @@ final class BlankEOFSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, array $tokens): void
     {
         // Doesn't apply for empty files.
         if (0 === $tokenPosition) {
