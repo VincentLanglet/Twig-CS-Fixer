@@ -124,11 +124,11 @@ final class TextFormatter
         while ($position < $max) {
             if (1 === preg_match('/^[\s\t]+/', $lines[$position], $match)) {
                 if (null === $indentCount) {
-                    $indentCount = mb_strlen($match[0]);
+                    $indentCount = strlen($match[0]);
                 }
 
-                if (mb_strlen($match[0]) < $indentCount) {
-                    $indentCount = mb_strlen($match[0]);
+                if (strlen($match[0]) < $indentCount) {
+                    $indentCount = strlen($match[0]);
                 }
             } else {
                 $indentCount = 0;
@@ -139,7 +139,7 @@ final class TextFormatter
         }
 
         foreach ($result as $index => $code) {
-            $result[$index] = mb_substr($code, $indentCount ?? 0);
+            $result[$index] = substr($code, $indentCount ?? 0);
         }
 
         return $result;

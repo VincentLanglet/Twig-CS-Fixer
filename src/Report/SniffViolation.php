@@ -91,7 +91,7 @@ final class SniffViolation
      */
     public static function getLevelAsInt(string $level): int
     {
-        switch (mb_strtoupper($level)) {
+        switch (strtoupper($level)) {
             case self::LEVEL_NOTICE:
                 return Report::MESSAGE_TYPE_NOTICE;
             case self::LEVEL_WARNING:

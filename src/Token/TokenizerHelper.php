@@ -144,7 +144,7 @@ class TokenizerHelper
 
         $lengthByOperator = [];
         foreach ($operators as $operator) {
-            $lengthByOperator[$operator] = mb_strlen($operator);
+            $lengthByOperator[$operator] = strlen($operator);
         }
         arsort($lengthByOperator);
 

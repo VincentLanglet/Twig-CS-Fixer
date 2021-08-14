@@ -79,14 +79,9 @@ class ConfigResolver
     private function isAbsolutePath(string $path): bool
     {
         return '' !== $path && (
-                0 !== strspn($path, '/\\', 0, 1)
-                || (
-                    mb_strlen($path) > 3
-                    && ctype_alpha($path[0])
-                    && ':' === $path[1]
-                    && 0 !== strspn($path, '/\\', 2, 1)
-                )
-                || null !== parse_url($path, PHP_URL_SCHEME)
-            );
+            '/' === $path[0]
+            || '\\' === $path[0]
+            || 1 === preg_match('#^[a-zA-Z]:\\\\#', $path)
+        );
     }
 }
