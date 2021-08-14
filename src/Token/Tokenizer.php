@@ -383,7 +383,7 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartDqString();
         } else {
-            throw new SyntaxError(sprintf('Unexpected character "%s".', $currentToken));
+            throw new SyntaxError(sprintf('Unexpected character "%s".', $currentToken), $this->line);
         }
     }
 
@@ -394,8 +394,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexBlock(): void
     {
-        $endRegex = $this->regexes['lex_block'];
-        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match($this->regexes['lex_block'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
         if ([] === $this->bracketsAndTernary && isset($match[0])) {
@@ -415,8 +414,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexVariable(): void
     {
-        $endRegex = $this->regexes['lex_variable'];
-        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match($this->regexes['lex_variable'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
         if ([] === $this->bracketsAndTernary && isset($match[0])) {
@@ -436,12 +434,11 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexComment(): void
     {
-        $endRegex = $this->regexes['lex_comment'];
-        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
         if (!isset($match[0])) {
-            throw new SyntaxError('Unclosed comment.');
+            throw new SyntaxError('Unclosed comment.', $this->line);
         }
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
@@ -473,14 +470,14 @@ final class Tokenizer implements TokenizerInterface
             $bracket = array_pop($this->bracketsAndTernary);
 
             if (null !== $bracket && '"' !== $this->code[$this->cursor]) {
-                throw new SyntaxError(sprintf('Unclosed "%s".', $bracket[0]));
+                throw new SyntaxError(sprintf('Unclosed "%s".', $bracket[0]), $bracket[1]);
             }
 
             $this->popState();
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0]);
             $this->moveCursor($match[0]);
         } else {
-            throw new SyntaxError(sprintf('Unexpected character "%s".', $this->code[$this->cursor]));
+            throw new SyntaxError(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->line);
         }
     }
 
@@ -704,12 +701,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexNumber(string $numberAsString): void
     {
-        $number = (float) $numberAsString; // floats
-        if (ctype_digit($numberAsString) && $number <= PHP_INT_MAX) {
-            $number = (int) $numberAsString; // integers lower than the maximum
-        }
-
-        $this->pushToken(Token::NUMBER_TYPE, (string) $number);
+        $this->pushToken(Token::NUMBER_TYPE, $numberAsString);
         $this->moveCursor($numberAsString);
     }
 
@@ -748,12 +740,12 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary[] = [$currentToken, $this->line];
         } elseif (in_array($currentToken, [')', ']', '}'], true)) {
             if ([] === $this->bracketsAndTernary) {
-                throw new SyntaxError(sprintf('Unexpected "%s".', $currentToken));
+                throw new SyntaxError(sprintf('Unexpected "%s".', $currentToken), $this->line);
             }
 
             $bracket = array_pop($this->bracketsAndTernary);
             if (strtr($bracket[0], '([{', ')]}') !== $currentToken) {
-                throw new SyntaxError(sprintf('Unclosed "%s".', $bracket[0]));
+                throw new SyntaxError(sprintf('Unclosed "%s".', $bracket[0]), $bracket[1]);
             }
         }
 
