@@ -96,12 +96,12 @@ final class TextFormatter
             $report->getTotalErrors()
         );
 
-        if (0 === $report->getTotalWarnings() && 0 === $report->getTotalErrors()) {
-            $this->io->block($summaryString, 'SUCCESS', 'fg=black;bg=green', ' ', true);
-        } elseif (0 < $report->getTotalWarnings() && 0 === $report->getTotalErrors()) {
+        if (0 < $report->getTotalErrors()) {
+            $this->io->block($summaryString, 'ERROR', 'fg=black;bg=red', ' ', true);
+        } elseif (0 < $report->getTotalWarnings()) {
             $this->io->block($summaryString, 'WARNING', 'fg=black;bg=yellow', ' ', true);
         } else {
-            $this->io->block($summaryString, 'ERROR', 'fg=black;bg=red', ' ', true);
+            $this->io->block($summaryString, 'SUCCESS', 'fg=black;bg=green', ' ', true);
         }
     }
 
