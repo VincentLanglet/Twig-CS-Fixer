@@ -18,7 +18,7 @@ jobs:
                     - 8.0
                 dependencies: [highest]
                 include:
-                    - php-version: 7.2
+                    - php-version: 7.3
                       dependencies: lowest
 
         steps:
