@@ -20,6 +20,10 @@ final class BlankEOFTest extends AbstractSniffTest
         $this->checkSniff(new BlankEOFSniff(), [
             [4 => 1],
         ]);
+
+        $this->checkSniff(new BlankEOFSniff(), [
+            [2 => 7],
+        ], __DIR__.'/BlankEOFTest2.twig');
     }
 
     /**

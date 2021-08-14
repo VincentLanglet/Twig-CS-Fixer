@@ -11,3 +11,6 @@ vendor/
 
 ## PhpCs
 .phpcs-cache
+
+## Infection
+infection.log

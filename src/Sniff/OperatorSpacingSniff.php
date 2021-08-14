@@ -68,9 +68,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     private function isUnary(int $tokenPosition, array $tokens): bool
     {
         $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
-        if (false === $previous) {
-            return true;
-        }
+        \assert(false !== $previous); // An OPERATOR_TYPE cannot be the first non-empty token
 
         $previousToken = $tokens[$previous];
 

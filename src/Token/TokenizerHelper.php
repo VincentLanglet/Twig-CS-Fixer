@@ -111,9 +111,7 @@ class TokenizerHelper
     public function getInterpolationStartRegex(): string
     {
         return '/'
-            .'('
-                .preg_quote($this->options['interpolation'][0])
-            .')'
+            .preg_quote($this->options['interpolation'][0])
             .'/A';
     }
 
@@ -123,9 +121,7 @@ class TokenizerHelper
     public function getInterpolationEndRegex(): string
     {
         return '/'
-            .'('
-                .preg_quote($this->options['interpolation'][1])
-            .')'
+            .preg_quote($this->options['interpolation'][1])
             .'/A';
     }
 

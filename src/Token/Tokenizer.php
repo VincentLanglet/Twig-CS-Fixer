@@ -571,7 +571,7 @@ final class Tokenizer implements TokenizerInterface
             $state = self::STATE_VAR;
             $tokenType = Token::VAR_START_TYPE;
         } else {
-            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $tokenStart['match']), 1);
+            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $tokenStart['match']));
         }
 
         $this->pushToken($tokenType, $tokenStart['fullMatch']);
