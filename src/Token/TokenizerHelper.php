@@ -8,132 +8,91 @@ use Twig\Environment;
 
 /**
  * List of regex needed by the Tokenizer.
- *
- * @psalm-import-type TokenizerOptions from Tokenizer
  */
 class TokenizerHelper
 {
-    /**
-     * @var Environment
-     */
-    private $env;
-
-    /**
-     * @var array<string, string|string[]>
-     *
-     * @psalm-var TokenizerOptions
-     */
-    private $options;
-
-    /**
-     * @param Environment                    $env
-     * @param array<string, string|string[]> $options
-     *
-     * @return void
-     *
-     * @psalm-param TokenizerOptions $options
-     */
-    public function __construct(Environment $env, array $options)
-    {
-        $this->env = $env;
-        $this->options = $options;
-    }
+    private const COMMENT_START = '{#';
+    private const COMMENT_END = '#}';
+    private const BLOCK_START = '{%';
+    private const BLOCK_END = '%}';
+    private const VARIABLE_START = '{{';
+    private const VARIABLE_END = '}}';
+    private const INTERPOLATION_START = '#{';
+    private const INTERPOLATION_END = '}';
+    private const WHITESPACE_TRIM = '-';
+    private const WHITESPACE_LINE_TRIM = '~';
 
     /**
      * @return string
      */
-    public function getBlockRegex(): string
+    public static function getBlockEndRegex(): string
     {
         return '/'
-            .'(?:'
-                .preg_quote($this->options['whitespace_trim'])
-                .'|'.preg_quote($this->options['whitespace_line_trim'])
-            .')?'
-            .'(?:'
-                .preg_quote($this->options['tag_block'][1])
-            .')'
+            .'(?:'.self::WHITESPACE_TRIM.'|'.self::WHITESPACE_LINE_TRIM.')?'
+            .'(?:'.self::BLOCK_END.')'
             .'/A';
     }
 
     /**
      * @return string
      */
-    public function getCommentRegex(): string
+    public static function getCommentEndRegex(): string
     {
         return '/'
-            .'(?:'
-                .preg_quote($this->options['whitespace_trim'])
-                .'|'.preg_quote($this->options['whitespace_line_trim'])
-            .')?'
-            .'(?:'
-                .preg_quote($this->options['tag_comment'][1])
-            .')'
+            .'(?:'.self::WHITESPACE_TRIM.'|'.self::WHITESPACE_LINE_TRIM.')?'
+            .'(?:'.self::COMMENT_END.')'
             .'/'; // Should not be anchored
     }
 
     /**
      * @return string
      */
-    public function getVariableRegex(): string
+    public static function getVariableEndRegex(): string
     {
         return '/'
-            .'(?:'
-                .preg_quote($this->options['whitespace_trim'])
-                .'|'.preg_quote($this->options['whitespace_line_trim'])
-            .')?'
-            .'(?:'
-                .preg_quote($this->options['tag_variable'][1])
-            .')'
+            .'(?:'.self::WHITESPACE_TRIM.'|'.self::WHITESPACE_LINE_TRIM.')?'
+            .'(?:'.self::VARIABLE_END.')'
             .'/A';
     }
 
     /**
      * @return string
      */
-    public function getTokensStartRegex(): string
+    public static function getExpressionStartRegex(): string
     {
         return '/'
-            .'('
-                .preg_quote($this->options['tag_variable'][0])
-                .'|'.preg_quote($this->options['tag_block'][0])
-                .'|'.preg_quote($this->options['tag_comment'][0])
-            .')'
-            .'('
-                .preg_quote($this->options['whitespace_trim'])
-                .'|'.preg_quote($this->options['whitespace_line_trim'])
-            .')?'
+            .'('.self::VARIABLE_START.'|'.self::BLOCK_START.'|'.self::COMMENT_START.')'
+            .'('.self::WHITESPACE_TRIM.'|'.self::WHITESPACE_LINE_TRIM.')?'
             .'/';
     }
 
     /**
      * @return string
      */
-    public function getInterpolationStartRegex(): string
+    public static function getInterpolationStartRegex(): string
     {
-        return '/'
-            .preg_quote($this->options['interpolation'][0])
-            .'/A';
+        return '/'.self::INTERPOLATION_START.'/A';
     }
 
     /**
      * @return string
      */
-    public function getInterpolationEndRegex(): string
+    public static function getInterpolationEndRegex(): string
     {
-        return '/'
-            .preg_quote($this->options['interpolation'][1])
-            .'/A';
+        return '/'.self::INTERPOLATION_END.'/A';
     }
 
     /**
+     * @param Environment $env
+     *
      * @return string
      */
-    public function getOperatorRegex(): string
+    public static function getOperatorRegex(Environment $env): string
     {
         /** @psalm-suppress InternalMethod */
-        $unaryOperators = $this->env->getUnaryOperators();
+        $unaryOperators = $env->getUnaryOperators();
         /** @psalm-suppress InternalMethod */
-        $binaryOperators = $this->env->getBinaryOperators();
+        $binaryOperators = $env->getBinaryOperators();
 
         /** @var string[] $operators */
         $operators = array_merge(

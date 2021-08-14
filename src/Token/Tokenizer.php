@@ -12,23 +12,14 @@ use Twig\Source;
 /**
  * An override of Twig's Lexer to add whitespace and new line detection.
  *
- * @psalm-type TokenizerOptions = array{
- *     tag_comment: array{string, string},
- *     tag_block: array{string, string},
- *     tag_variable: array{string, string},
- *     whitespace_trim: string,
- *     whitespace_line_trim: string,
- *     interpolation: array{string, string},
- * }
  * @psalm-type Regex = array{
- *     lex_block: string,
- *     lex_comment: string,
- *     lex_variable: string,
+ *     expression_start: string,
+ *     block_end: string,
+ *     comment_end: string,
+ *     variable_end: string,
  *     operator: string,
- *     lex_tokens_start: string,
  *     interpolation_start: string,
  *     interpolation_end: string,
- *     lex_block: string,
  * }
  */
 final class Tokenizer implements TokenizerInterface
@@ -48,20 +39,6 @@ final class Tokenizer implements TokenizerInterface
     private const REGEX_STRING          = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
     private const REGEX_DQ_STRING_PART  = '/'.self::DQ_STRING_PART.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
-
-    /**
-     * @var array<string, string|string[]>
-     *
-     * @psalm-var TokenizerOptions
-     */
-    private $options = [
-        'tag_comment'          => ['{#', '#}'],
-        'tag_block'            => ['{%', '%}'],
-        'tag_variable'         => ['{{', '}}'],
-        'whitespace_trim'      => '-',
-        'whitespace_line_trim' => '~',
-        'interpolation'        => ['#{', '}'],
-    ];
 
     /**
      * @var string[]
@@ -129,15 +106,15 @@ final class Tokenizer implements TokenizerInterface
      */
     public function __construct(Environment $env)
     {
-        $tokenizerHelper = new TokenizerHelper($env, $this->options);
+        // Caching the regexes.
         $this->regexes = [
-            'lex_block'           => $tokenizerHelper->getBlockRegex(),
-            'lex_comment'         => $tokenizerHelper->getCommentRegex(),
-            'lex_variable'        => $tokenizerHelper->getVariableRegex(),
-            'operator'            => $tokenizerHelper->getOperatorRegex(),
-            'lex_tokens_start'    => $tokenizerHelper->getTokensStartRegex(),
-            'interpolation_start' => $tokenizerHelper->getInterpolationStartRegex(),
-            'interpolation_end'   => $tokenizerHelper->getInterpolationEndRegex(),
+            'expression_start'    => TokenizerHelper::getExpressionStartRegex(),
+            'block_end'           => TokenizerHelper::getBlockEndRegex(),
+            'comment_end'         => TokenizerHelper::getCommentEndRegex(),
+            'variable_end'        => TokenizerHelper::getVariableEndRegex(),
+            'operator'            => TokenizerHelper::getOperatorRegex($env),
+            'interpolation_start' => TokenizerHelper::getInterpolationStartRegex(),
+            'interpolation_end'   => TokenizerHelper::getInterpolationEndRegex(),
         ];
     }
 
@@ -282,7 +259,7 @@ final class Tokenizer implements TokenizerInterface
     private function preflightSource(string $code): void
     {
         $tokenPositions = [];
-        preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
+        preg_match_all($this->regexes['expression_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
         /** @var array<0|1|2, array<0|1|2|3|4, array{string, int}>> $tokenPositions */
 
         $tokenPositionsReworked = [];
@@ -394,7 +371,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexBlock(): void
     {
-        preg_match($this->regexes['lex_block'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match($this->regexes['block_end'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
         if ([] === $this->bracketsAndTernary && isset($match[0])) {
@@ -414,7 +391,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexVariable(): void
     {
-        preg_match($this->regexes['lex_variable'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match($this->regexes['variable_end'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
         if ([] === $this->bracketsAndTernary && isset($match[0])) {
@@ -434,7 +411,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexComment(): void
     {
-        preg_match($this->regexes['lex_comment'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match($this->regexes['comment_end'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
         if (!isset($match[0])) {
@@ -492,7 +469,7 @@ final class Tokenizer implements TokenizerInterface
 
         if (
             false !== $bracket
-            && $this->options['interpolation'][0] === $bracket[0]
+            && '#{' === $bracket[0]
             && 1 === preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)
         ) {
             array_pop($this->bracketsAndTernary);
@@ -532,7 +509,7 @@ final class Tokenizer implements TokenizerInterface
             }
 
             // Fixing token start among expressions and comments.
-            $nbTokenStart = preg_match_all($this->regexes['lex_tokens_start'], $value, $matches);
+            $nbTokenStart = preg_match_all($this->regexes['expression_start'], $value, $matches);
             if ($nbTokenStart > 0) {
                 $this->moveCurrentPosition($nbTokenStart);
             }
@@ -555,13 +532,13 @@ final class Tokenizer implements TokenizerInterface
         $tokenStart = $this->getTokenPosition();
         \assert(null !== $tokenStart);
 
-        if ($tokenStart['match'] === $this->options['tag_comment'][0]) {
+        if ('{#' === $tokenStart['match']) {
             $state = self::STATE_COMMENT;
             $tokenType = Token::COMMENT_START_TYPE;
-        } elseif ($tokenStart['match'] === $this->options['tag_block'][0]) {
+        } elseif ('{%' === $tokenStart['match']) {
             $state = self::STATE_BLOCK;
             $tokenType = Token::BLOCK_START_TYPE;
-        } elseif ($tokenStart['match'] === $this->options['tag_variable'][0]) {
+        } elseif ('{{' === $tokenStart['match']) {
             $state = self::STATE_VAR;
             $tokenType = Token::VAR_START_TYPE;
         } else {
@@ -589,10 +566,10 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexStartInterpolation(): void
     {
-        $this->bracketsAndTernary[] = [$this->options['interpolation'][0], $this->line];
+        $this->bracketsAndTernary[] = ['#{', $this->line];
         $this->pushToken(Token::INTERPOLATION_START_TYPE, '#{');
         $this->pushState(self::STATE_INTERPOLATION);
-        $this->moveCursor($this->options['interpolation'][0]);
+        $this->moveCursor('#{');
     }
 
     /**
