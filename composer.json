@@ -11,19 +11,19 @@
     ],
     "bin": ["bin/twig-cs-fixer"],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "ext-mbstring": "*",
         "symfony/console": "^4.4 || ^5.0",
         "symfony/twig-bridge": "^4.4 || ^5.0",
         "twig/twig": "^2.12 || ^3.0"
     },
     "require-dev": {
-        "infection/infection": "^0.15 || ^0.17 || ^0.24",
+        "infection/infection": "^0.17 || ^0.24",
         "phpstan/phpstan": "^0.12.91",
         "phpstan/phpstan-phpunit": "^0.12.20",
         "phpstan/phpstan-strict-rules": "^0.12.10",
         "phpstan/phpstan-symfony": "^0.12.41",
-        "phpunit/phpunit": "^8.5 || ^9.5",
+        "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.1",
         "psalm/plugin-symfony": "^2.4",
         "vimeo/psalm": "^4.9",
