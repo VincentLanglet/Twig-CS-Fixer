@@ -51,9 +51,9 @@ class ConfigResolverTest extends TestCase
      */
     public function testGetConfigException(string $workingDir, ?string $path): void
     {
-        self::expectException(Exception::class);
-
         $configResolver = new ConfigResolver($workingDir);
+
+        self::expectException(Exception::class);
         $configResolver->getConfig($path);
     }
 
@@ -65,5 +65,34 @@ class ConfigResolverTest extends TestCase
         yield [__DIR__.'/Fixtures/directoryWithInvalidConfig', null];
         yield [__DIR__, 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
         yield [__DIR__, 'Fixtures/path/to/not/found/.twig-cs-fixer.php'];
+    }
+
+    /**
+     * @param string $configPath
+     * @param string $path
+     *
+     * @return void
+     *
+     * @dataProvider configPathIsCorrectlyGeneratedDataProvider
+     */
+    public function testConfigPathIsCorrectlyGenerated(string $configPath, string $path): void
+    {
+        $configResolver = new ConfigResolver('/tmp/path/not/found');
+
+        self::expectExceptionMessage(sprintf('Cannot find the config file "%s".', $configPath));
+        $configResolver->getConfig($path);
+    }
+
+    /**
+     * @return iterable<array-key, array{string, string}>
+     */
+    public function configPathIsCorrectlyGeneratedDataProvider(): iterable
+    {
+        yield ['/tmp/path/not/found/', ''];
+        yield ['/tmp/path/not/found/a', 'a'];
+        yield ['/tmp/path/not/found/../a', '../a'];
+        yield ['/a', '/a'];
+        yield ['\\a', '\\a'];
+        yield ['C:\WINDOWS', 'C:\WINDOWS'];
     }
 }

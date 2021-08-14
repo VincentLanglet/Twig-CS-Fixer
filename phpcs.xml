@@ -10,7 +10,10 @@
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
 
-    <rule ref="SymfonyCustom"/>
+    <rule ref="SymfonyCustom">
+        <!-- Since we are using bytes as position, mb_ methods are voluntary not used. -->
+        <exclude name="SymfonyCustom.PHP.EncourageMultiBytes" />
+    </rule>
 
     <file>src/</file>
     <file>tests/</file>

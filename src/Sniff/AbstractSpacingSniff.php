@@ -70,7 +70,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $count = mb_strlen($tokens[$tokenPosition + 1]->getValue() ?? '');
+            $count = strlen($tokens[$tokenPosition + 1]->getValue() ?? '');
         } else {
             $count = 0;
         }
@@ -116,7 +116,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
-            $count = mb_strlen($tokens[$tokenPosition - 1]->getValue() ?? '');
+            $count = strlen($tokens[$tokenPosition - 1]->getValue() ?? '');
         } else {
             $count = 0;
         }

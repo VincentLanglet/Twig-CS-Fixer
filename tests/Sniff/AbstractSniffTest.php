@@ -51,7 +51,7 @@ abstract class AbstractSniffTest extends TestCase
             self::fail($exception->getMessage());
         }
 
-        $fixedFile = mb_substr($filePath, 0, -5).'.fixed.twig';
+        $fixedFile = substr($filePath, 0, -5).'.fixed.twig';
         if (file_exists($fixedFile)) {
             $fixer = new Fixer($ruleset, $tokenizer);
             $sniff->enableFixer($fixer);

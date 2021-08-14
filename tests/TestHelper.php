@@ -32,8 +32,8 @@ final class TestHelper
         }
 
         $cwd = $cwd.DIRECTORY_SEPARATOR;
-        if (mb_strpos($filePath, $cwd) === 0) {
-            $filename = mb_substr($filePath, mb_strlen($cwd));
+        if (strpos($filePath, $cwd) === 0) {
+            $filename = substr($filePath, strlen($cwd));
         } else {
             $filename = $filePath;
         }
