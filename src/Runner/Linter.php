@@ -63,12 +63,12 @@ final class Linter
 
         // Process
         foreach ($files as $file) {
+            // Add this file to the report.
+            $report->addFile($file);
+
             $this->setErrorHandler($report, $file);
 
             $this->processTemplate($file, $ruleset, $report);
-
-            // Add this file to the report.
-            $report->addFile($file);
         }
         restore_error_handler();
 
@@ -119,7 +119,7 @@ final class Linter
         $content = file_get_contents($file);
         if (false === $content) {
             $sniffViolation = new SniffViolation(
-                Report::MESSAGE_TYPE_FATAL,
+                SniffViolation::LEVEL_FATAL,
                 'Unable to read file.',
                 $file
             );
@@ -136,7 +136,7 @@ final class Linter
             $this->env->parse($this->env->tokenize($twigSource));
         } catch (Error $e) {
             $sniffViolation = new SniffViolation(
-                Report::MESSAGE_TYPE_FATAL,
+                SniffViolation::LEVEL_FATAL,
                 sprintf('File is invalid: %s', $e->getRawMessage()),
                 $file,
                 $e->getTemplateLine()
@@ -152,7 +152,7 @@ final class Linter
             $stream = $this->tokenizer->tokenize($twigSource);
         } catch (Exception $exception) {
             $sniffViolation = new SniffViolation(
-                Report::MESSAGE_TYPE_FATAL,
+                SniffViolation::LEVEL_FATAL,
                 sprintf('Unable to tokenize file: %s', $exception->getMessage()),
                 $file
             );
@@ -179,7 +179,7 @@ final class Linter
         set_error_handler(static function (int $type, string $message) use ($report, $file): bool {
             if (E_USER_DEPRECATED === $type) {
                 $sniffViolation = new SniffViolation(
-                    Report::MESSAGE_TYPE_NOTICE,
+                    SniffViolation::LEVEL_NOTICE,
                     $message,
                     $file
                 );

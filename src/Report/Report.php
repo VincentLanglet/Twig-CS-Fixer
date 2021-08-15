@@ -9,15 +9,15 @@ namespace TwigCsFixer\Report;
  */
 final class Report
 {
-    public const MESSAGE_TYPE_NOTICE  = 0;
-    public const MESSAGE_TYPE_WARNING = 1;
-    public const MESSAGE_TYPE_ERROR   = 2;
-    public const MESSAGE_TYPE_FATAL   = 3;
+    public const MESSAGE_TYPE_NOTICE  = 'NOTICE';
+    public const MESSAGE_TYPE_WARNING = 'WARNING';
+    public const MESSAGE_TYPE_ERROR   = 'ERROR';
+    public const MESSAGE_TYPE_FATAL   = 'FATAL';
 
     /**
-     * @var SniffViolation[]
+     * @var array<string, array<SniffViolation>>
      */
-    private $messages = [];
+    private $messagesByFiles = [];
 
     /**
      * @var string[]
@@ -46,51 +46,48 @@ final class Report
      */
     public function addMessage(SniffViolation $sniffViolation): Report
     {
+        $filename = $sniffViolation->getFilename();
+        if (!in_array($filename, $this->getFiles(), true)) {
+             throw new \InvalidArgumentException(sprintf('The file "%s" is not handled by this report.', $filename));
+        }
+
         // Update stats
         switch ($sniffViolation->getLevel()) {
-            case self::MESSAGE_TYPE_NOTICE:
-                ++$this->totalNotices;
+            case SniffViolation::LEVEL_NOTICE:
+                $this->totalNotices++;
                 break;
-            case self::MESSAGE_TYPE_WARNING:
-                ++$this->totalWarnings;
+            case SniffViolation::LEVEL_WARNING:
+                $this->totalWarnings++;
                 break;
-            case self::MESSAGE_TYPE_ERROR:
-            case self::MESSAGE_TYPE_FATAL:
-                ++$this->totalErrors;
+            case SniffViolation::LEVEL_ERROR:
+            case SniffViolation::LEVEL_FATAL:
+                $this->totalErrors++;
                 break;
         }
 
-        $this->messages[] = $sniffViolation;
+        $this->messagesByFiles[$filename][] = $sniffViolation;
 
         return $this;
     }
 
     /**
-     * @param array{file?: string, level?: string|null} $filters
+     * @param string|null $level
      *
-     * @return SniffViolation[]
+     * @return array<string, array<SniffViolation>>
      */
-    public function getMessages(array $filters = []): array
+    public function getMessagesByFiles(?string $level = null): array
     {
-        if ([] === $filters) {
-            // Return all messages, without filtering.
-            return $this->messages;
+        if (null === $level) {
+            return $this->messagesByFiles;
         }
 
-        return array_filter($this->messages, static function (SniffViolation $message) use ($filters): bool {
-            $fileFilter = true;
-            $levelFilter = true;
-
-            if (isset($filters['file'])) {
-                $fileFilter = $message->getFilename() === $filters['file'];
-            }
-
-            if (isset($filters['level'])) {
-                $levelFilter = $message->getLevel() >= $message::getLevelAsInt($filters['level']);
-            }
-
-            return $fileFilter && $levelFilter;
-        });
+        return array_map(static function (array $messages) use ($level): array {
+            return array_values(
+                array_filter($messages, static function (SniffViolation $message) use ($level): bool {
+                    return $message->getLevel() >= SniffViolation::getLevelAsInt($level);
+                })
+            );
+        }, $this->messagesByFiles);
     }
 
     /**
@@ -101,6 +98,7 @@ final class Report
     public function addFile(string $file): void
     {
         $this->files[] = $file;
+        $this->messagesByFiles[$file] = [];
     }
 
     /**

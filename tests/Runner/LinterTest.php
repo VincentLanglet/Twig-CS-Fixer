@@ -28,19 +28,24 @@ class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
+        $file = __DIR__.'/Fixtures/file_not_readable.twig';
 
         // Suppress the warning sent by `file_get_content` during the test.
         $oldErrorLevel = error_reporting(E_ALL ^ E_WARNING);
-        $report = $linter->run([__DIR__.'/Fixtures/file_not_readable.twig'], $ruleset, false);
+        $report = $linter->run([$file], $ruleset, false);
         error_reporting($oldErrorLevel);
 
-        $messages = $report->getMessages();
+        $messagesByFiles = $report->getMessagesByFiles();
+        self::assertCount(1, $messagesByFiles);
+        self::assertArrayHasKey($file, $messagesByFiles);
+
+        $messages = $messagesByFiles[$file];
         self::assertCount(1, $messages);
 
         $message = $messages[0];
         self::assertSame('Unable to read file.', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevelAsString());
-        self::assertSame(sprintf('%s/Fixtures/file_not_readable.twig', __DIR__), $message->getFilename());
+        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        self::assertSame($file, $message->getFilename());
     }
 
     /**
@@ -54,16 +59,21 @@ class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
+        $file = __DIR__.'/Fixtures/file.twig';
 
-        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, false);
+        $report = $linter->run([$file], $ruleset, false);
 
-        $messages = $report->getMessages();
+        $messagesByFiles = $report->getMessagesByFiles();
+        self::assertCount(1, $messagesByFiles);
+        self::assertArrayHasKey($file, $messagesByFiles);
+
+        $messages = $messagesByFiles[$file];
         self::assertCount(1, $messages);
 
         $message = $messages[0];
         self::assertSame('File is invalid: Error.', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevelAsString());
-        self::assertSame(sprintf('%s/Fixtures/file.twig', __DIR__), $message->getFilename());
+        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        self::assertSame($file, $message->getFilename());
     }
 
     /**
@@ -77,16 +87,21 @@ class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
+        $file = __DIR__.'/Fixtures/file.twig';
 
-        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, false);
+        $report = $linter->run([$file], $ruleset, false);
 
-        $messages = $report->getMessages();
+        $messagesByFiles = $report->getMessagesByFiles();
+        self::assertCount(1, $messagesByFiles);
+        self::assertArrayHasKey($file, $messagesByFiles);
+
+        $messages = $messagesByFiles[$file];
         self::assertCount(1, $messages);
 
         $message = $messages[0];
         self::assertSame('Unable to tokenize file: Error.', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevelAsString());
-        self::assertSame(sprintf('%s/Fixtures/file.twig', __DIR__), $message->getFilename());
+        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        self::assertSame($file, $message->getFilename());
     }
 
     /**
@@ -105,16 +120,21 @@ class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
+        $file = __DIR__.'/Fixtures/file.twig';
 
-        $report = $linter->run([__DIR__.'/Fixtures/file.twig'], $ruleset, false);
+        $report = $linter->run([$file], $ruleset, false);
 
-        $messages = $report->getMessages();
+        $messagesByFiles = $report->getMessagesByFiles();
+        self::assertCount(1, $messagesByFiles);
+        self::assertArrayHasKey($file, $messagesByFiles);
+
+        $messages = $messagesByFiles[$file];
         self::assertCount(1, $messages);
 
         $message = $messages[0];
         self::assertSame('User Deprecation', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_NOTICE, $message->getLevelAsString());
-        self::assertSame(sprintf('%s/Fixtures/file.twig', __DIR__), $message->getFilename());
+        self::assertSame(SniffViolation::LEVEL_NOTICE, $message->getLevel());
+        self::assertSame($file, $message->getFilename());
     }
 
     /**

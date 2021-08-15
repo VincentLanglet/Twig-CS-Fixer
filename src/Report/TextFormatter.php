@@ -44,12 +44,10 @@ final class TextFormatter
      */
     public function display(Report $report, ?string $level = null): void
     {
-        foreach ($report->getFiles() as $file) {
-            $fileMessages = $report->getMessages([
-                'file'  => $file,
-                'level' => $level,
-            ]);
+        $messages = $report->getMessagesByFiles($level);
 
+        foreach ($report->getFiles() as $file) {
+            $fileMessages = $messages[$file];
             if (count($fileMessages) > 0) {
                 $this->io->text('<fg=red>KO</fg=red> '.$file);
             }
