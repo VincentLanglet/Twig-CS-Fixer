@@ -32,13 +32,13 @@ class TextFormatterTest extends TestCase
         $report = new Report();
         $report->addFile($file);
 
-        $violation0 = new SniffViolation(0, 'Notice', $file, 1);
+        $violation0 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice', $file, 1);
         $report->addMessage($violation0);
-        $violation1 = new SniffViolation(1, 'Warning', $file, 2);
+        $violation1 = new SniffViolation(SniffViolation::LEVEL_WARNING, 'Warning', $file, 2);
         $report->addMessage($violation1);
-        $violation2 = new SniffViolation(2, 'Error', $file, 3);
+        $violation2 = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3);
         $report->addMessage($violation2);
-        $violation3 = new SniffViolation(3, 'Fatal', $file);
+        $violation3 = new SniffViolation(SniffViolation::LEVEL_FATAL, 'Fatal', $file);
         $report->addMessage($violation3);
 
         $textFormatter->display($report, $level);
@@ -94,7 +94,7 @@ class TextFormatterTest extends TestCase
                 EOD,
                 __DIR__
             ),
-            'ERROR',
+            Report::MESSAGE_TYPE_ERROR,
         ];
     }
 
@@ -130,9 +130,9 @@ class TextFormatterTest extends TestCase
      */
     public function displayBlockDataProvider(): iterable
     {
-        yield ['[SUCCESS] Files linted: 1, notices: 1, warnings: 0, errors: 0', 0];
-        yield ['[WARNING] Files linted: 1, notices: 0, warnings: 1, errors: 0', 1];
-        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', 2];
-        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', 3];
+        yield ['[SUCCESS] Files linted: 1, notices: 1, warnings: 0, errors: 0', SniffViolation::LEVEL_NOTICE];
+        yield ['[WARNING] Files linted: 1, notices: 0, warnings: 1, errors: 0', SniffViolation::LEVEL_WARNING];
+        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', SniffViolation::LEVEL_ERROR];
+        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', SniffViolation::LEVEL_FATAL];
     }
 }

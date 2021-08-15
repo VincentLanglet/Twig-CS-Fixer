@@ -1,6 +1,5 @@
 <?php
 
-use TwigCsFixer\Config\Config;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Standard\Generic;

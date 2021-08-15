@@ -11,10 +11,10 @@ use LogicException;
  */
 final class SniffViolation
 {
-    public const LEVEL_NOTICE  = 'NOTICE';
-    public const LEVEL_WARNING = 'WARNING';
-    public const LEVEL_ERROR   = 'ERROR';
-    public const LEVEL_FATAL   = 'FATAL';
+    public const LEVEL_NOTICE  = 0;
+    public const LEVEL_WARNING = 1;
+    public const LEVEL_ERROR   = 2;
+    public const LEVEL_FATAL   = 3;
 
     /**
      * @var int
@@ -71,14 +71,14 @@ final class SniffViolation
     public function getLevelAsString(): string
     {
         switch ($this->level) {
-            case Report::MESSAGE_TYPE_NOTICE:
-                return self::LEVEL_NOTICE;
-            case Report::MESSAGE_TYPE_WARNING:
-                return self::LEVEL_WARNING;
-            case Report::MESSAGE_TYPE_ERROR:
-                return self::LEVEL_ERROR;
-            case Report::MESSAGE_TYPE_FATAL:
-                return self::LEVEL_FATAL;
+            case self::LEVEL_NOTICE:
+                return Report::MESSAGE_TYPE_NOTICE;
+            case self::LEVEL_WARNING:
+                return Report::MESSAGE_TYPE_WARNING;
+            case self::LEVEL_ERROR:
+                return Report::MESSAGE_TYPE_ERROR;
+            case self::LEVEL_FATAL:
+                return Report::MESSAGE_TYPE_FATAL;
             default:
                 throw new LogicException(sprintf('Level "%s" is not supported.', $this->level));
         }
@@ -92,14 +92,14 @@ final class SniffViolation
     public static function getLevelAsInt(string $level): int
     {
         switch (strtoupper($level)) {
-            case self::LEVEL_NOTICE:
-                return Report::MESSAGE_TYPE_NOTICE;
-            case self::LEVEL_WARNING:
-                return Report::MESSAGE_TYPE_WARNING;
-            case self::LEVEL_ERROR:
-                return Report::MESSAGE_TYPE_ERROR;
-            case self::LEVEL_FATAL:
-                return Report::MESSAGE_TYPE_FATAL;
+            case Report::MESSAGE_TYPE_NOTICE:
+                return self::LEVEL_NOTICE;
+            case Report::MESSAGE_TYPE_WARNING:
+                return self::LEVEL_WARNING;
+            case Report::MESSAGE_TYPE_ERROR:
+                return self::LEVEL_ERROR;
+            case Report::MESSAGE_TYPE_FATAL:
+                return self::LEVEL_FATAL;
             default:
                 throw new LogicException(sprintf('Level "%s" is not supported.', $level));
         }

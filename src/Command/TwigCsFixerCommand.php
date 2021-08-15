@@ -13,7 +13,7 @@ use Throwable;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\File\Finder;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
@@ -42,7 +42,7 @@ final class TwigCsFixerCommand extends Command
                     'l',
                     InputOption::VALUE_REQUIRED,
                     'Allowed values are notice, warning or error',
-                    SniffViolation::LEVEL_NOTICE
+                    Report::MESSAGE_TYPE_NOTICE
                 ),
                 new InputOption(
                     'config',

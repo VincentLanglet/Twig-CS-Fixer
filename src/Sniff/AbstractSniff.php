@@ -150,7 +150,7 @@ abstract class AbstractSniff implements SniffInterface
      */
     protected function addWarning(string $message, Token $token): void
     {
-        $this->addMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
+        $this->addMessage(SniffViolation::LEVEL_WARNING, $message, $token);
     }
 
     /**
@@ -163,7 +163,7 @@ abstract class AbstractSniff implements SniffInterface
      */
     protected function addError(string $message, Token $token): void
     {
-        $this->addMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
+        $this->addMessage(SniffViolation::LEVEL_ERROR, $message, $token);
     }
 
     /**
@@ -176,7 +176,7 @@ abstract class AbstractSniff implements SniffInterface
      */
     protected function addFixableWarning(string $message, Token $token): ?Fixer
     {
-        return $this->addFixableMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
+        return $this->addFixableMessage(SniffViolation::LEVEL_WARNING, $message, $token);
     }
 
     /**
@@ -189,7 +189,7 @@ abstract class AbstractSniff implements SniffInterface
      */
     protected function addFixableError(string $message, Token $token): ?Fixer
     {
-        return $this->addFixableMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
+        return $this->addFixableMessage(SniffViolation::LEVEL_ERROR, $message, $token);
     }
 
     /**

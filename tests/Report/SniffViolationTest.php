@@ -15,8 +15,8 @@ class SniffViolationTest extends TestCase
      */
     public function testGetters(): void
     {
-        $sniffViolation = new SniffViolation(1, 'message', 'filename', 42);
-        self::assertSame(1, $sniffViolation->getLevel());
+        $sniffViolation = new SniffViolation(SniffViolation::LEVEL_WARNING, 'message', 'filename', 42);
+        self::assertSame(SniffViolation::LEVEL_WARNING, $sniffViolation->getLevel());
         self::assertSame('message', $sniffViolation->getMessage());
         self::assertSame('filename', $sniffViolation->getFilename());
         self::assertSame(42, $sniffViolation->getLine());

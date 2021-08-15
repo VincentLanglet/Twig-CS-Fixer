@@ -8,7 +8,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use TwigCsFixer\Environment\StubbedEnvironment;
-use TwigCsFixer\Report\Report;
+use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Runner\Linter;
@@ -63,11 +63,11 @@ abstract class AbstractSniffTest extends TestCase
             }
         }
 
-        $messages = $report->getMessages();
+        $messages = $report->getMessagesByFiles()[$filePath];
         $messagePositions = [];
 
         foreach ($messages as $message) {
-            if (Report::MESSAGE_TYPE_FATAL === $message->getLevel()) {
+            if (SniffViolation::LEVEL_FATAL === $message->getLevel()) {
                 $errorMessage = $message->getMessage();
                 $line = $message->getLine();
 
