@@ -106,7 +106,10 @@ abstract class AbstractSniff implements SniffInterface
     {
         $i = 0;
 
-        while (isset($tokens[$start + $i]) && $exclude === $this->isTokenMatching($tokens[$start + $i], $type)) {
+        while (
+            isset($tokens[$start + $i])
+            && $exclude === $this->isTokenMatching($tokens[$start + $i], $type)
+        ) {
             $i++;
         }
 
@@ -129,7 +132,10 @@ abstract class AbstractSniff implements SniffInterface
     {
         $i = 0;
 
-        while (isset($tokens[$start - $i]) && $exclude === $this->isTokenMatching($tokens[$start - $i], $type)) {
+        while (
+            isset($tokens[$start - $i])
+            && $exclude === $this->isTokenMatching($tokens[$start - $i], $type)
+        ) {
             $i++;
         }
 

@@ -63,7 +63,11 @@ final class TextFormatter
                 } else {
                     $lines = $this->getContext($content, $line, self::ERROR_CONTEXT_LIMIT);
                     foreach ($lines as $no => $code) {
-                        $formattedText[] = sprintf(self::ERROR_LINE_FORMAT, $no, wordwrap($code, self::ERROR_LINE_WIDTH));
+                        $formattedText[] = sprintf(
+                            self::ERROR_LINE_FORMAT,
+                            $no,
+                            wordwrap($code, self::ERROR_LINE_WIDTH)
+                        );
 
                         if ($no === $message->getLine()) {
                             $formattedText[] = $this->formatErrorMessage($message);

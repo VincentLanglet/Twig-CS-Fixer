@@ -48,7 +48,9 @@ final class Report
     {
         $filename = $sniffViolation->getFilename();
         if (!in_array($filename, $this->getFiles(), true)) {
-             throw new \InvalidArgumentException(sprintf('The file "%s" is not handled by this report.', $filename));
+             throw new \InvalidArgumentException(
+                 sprintf('The file "%s" is not handled by this report.', $filename)
+             );
         }
 
         // Update stats
