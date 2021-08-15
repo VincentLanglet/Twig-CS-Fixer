@@ -10,6 +10,7 @@ use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Sniff\SniffInterface;
+use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 
 /**
@@ -28,6 +29,7 @@ class Generic implements StandardInterface
             new EmptyLinesSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
+            new TrailingCommaSingleLineSniff(),
             new TrailingSpaceSniff(),
         ];
     }
