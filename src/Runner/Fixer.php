@@ -325,7 +325,7 @@ final class Fixer
         $this->fixedTokens = [];
 
         $this->tokens = array_map(static function (Token $token): string {
-            return $token->getValue() ?? '';
+            return $token->getValue();
         }, $tokens);
 
         preg_match("/\r\n?|\n/", $this->getContents(), $matches);

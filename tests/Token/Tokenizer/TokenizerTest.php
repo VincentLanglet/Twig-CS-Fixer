@@ -39,7 +39,7 @@ final class TokenizerTest extends TestCase
 
         $tokens = $tokenizer->tokenize($source);
 
-        $tokenValues = array_map(static function (Token $token): ?string {
+        $tokenValues = array_map(static function (Token $token): string {
             return $token->getValue();
         }, $tokens);
 

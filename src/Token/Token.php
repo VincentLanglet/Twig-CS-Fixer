@@ -81,9 +81,14 @@ final class Token
     private $filename;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $value;
+
+    /**
+     * @var Token|null
+     */
+    private $relatedToken;
 
     /**
      * @param int         $type
@@ -91,6 +96,7 @@ final class Token
      * @param int         $position
      * @param string      $filename
      * @param string|null $value
+     * @param Token|null  $relatedToken
      *
      * @return void
      */
@@ -99,13 +105,15 @@ final class Token
         int $line,
         int $position,
         string $filename,
-        string $value = null
+        string $value = null,
+        ?Token $relatedToken = null
     ) {
         $this->type = $type;
         $this->line = $line;
         $this->position = $position;
         $this->filename = $filename;
-        $this->value = $value;
+        $this->value = $value ?? '';
+        $this->relatedToken = $relatedToken;
     }
 
     /**
@@ -141,10 +149,18 @@ final class Token
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getValue(): ?string
+    public function getValue(): string
     {
         return $this->value;
+    }
+
+    /**
+     * @return Token|null
+     */
+    public function getRelatedToken(): ?Token
+    {
+        return $this->relatedToken;
     }
 }
