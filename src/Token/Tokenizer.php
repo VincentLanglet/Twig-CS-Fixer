@@ -442,14 +442,6 @@ final class Tokenizer implements TokenizerInterface
             $this->moveCursor($match[0]);
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $bracket = array_pop($this->bracketsAndTernary);
-
-            if (null !== $bracket && '"' !== $this->code[$this->cursor]) {
-                throw new SyntaxError(
-                    sprintf('Unclosed "%s".', $bracket->getValue()),
-                    $bracket->getLine()
-                );
-            }
-
             $this->popState();
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0], $bracket);
             $this->moveCursor($match[0]);
