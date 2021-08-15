@@ -70,7 +70,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $count = strlen($tokens[$tokenPosition + 1]->getValue() ?? '');
+            $count = strlen($tokens[$tokenPosition + 1]->getValue());
         } else {
             $count = 0;
         }
@@ -80,7 +80,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         $fixer = $this->addFixableError(
-            sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue() ?? '', $count),
+            sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue(), $count),
             $token
         );
 
@@ -116,7 +116,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
-            $count = strlen($tokens[$tokenPosition - 1]->getValue() ?? '');
+            $count = strlen($tokens[$tokenPosition - 1]->getValue());
         } else {
             $count = 0;
         }
@@ -126,7 +126,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         $fixer = $this->addFixableError(
-            sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue() ?? '', $count),
+            sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue(), $count),
             $token
         );
 
