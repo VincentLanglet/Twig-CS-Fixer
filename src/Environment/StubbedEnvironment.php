@@ -23,17 +23,17 @@ use Twig\TwigTest;
 class StubbedEnvironment extends Environment
 {
     /**
-     * @var array<TwigFilter|null>
+     * @var array<string, TwigFilter|null>
      */
     protected $stubFilters = [];
 
     /**
-     * @var array<TwigFunction|null>
+     * @var array<string, TwigFunction|null>
      */
     protected $stubFunctions = [];
 
     /**
-     * @var array<TwigTest|null>
+     * @var array<string, TwigTest|null>
      */
     protected $stubTests = [
         'divisible' => null, // Allow 'divisible by'

@@ -19,15 +19,15 @@
     },
     "require-dev": {
         "infection/infection": "^0.17 || ^0.24",
-        "phpstan/phpstan": "^0.12.91",
+        "phpstan/phpstan": "^0.12.95",
         "phpstan/phpstan-phpunit": "^0.12.20",
         "phpstan/phpstan-strict-rules": "^0.12.10",
         "phpstan/phpstan-symfony": "^0.12.41",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.1",
-        "psalm/plugin-symfony": "^2.4",
-        "vimeo/psalm": "^4.9",
-        "vincentlanglet/symfony-custom-coding-standard": "^9.0.1"
+        "psalm/plugin-symfony": "^2.5",
+        "vimeo/psalm": "^4.9.3",
+        "vincentlanglet/symfony-custom-coding-standard": "^9.0.2"
     },
     "config": {
         "sort-packages": true

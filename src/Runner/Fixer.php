@@ -61,7 +61,7 @@ final class Fixer
      *
      * If a token is being "fixed" back to its last value, the fix is probably conflicting with another.
      *
-     * @var array<array{curr: string, prev: string, loop: int}>
+     * @var array<int, array{curr: string, prev: string, loop: int}>
      */
     private $oldTokenValues = [];
 
@@ -236,22 +236,20 @@ final class Fixer
 
         if (!isset($this->oldTokenValues[$tokenPosition])) {
             $this->oldTokenValues[$tokenPosition] = [
-                'curr' => $content,
                 'prev' => $this->tokens[$tokenPosition],
+                'curr' => $content,
                 'loop' => $this->loops,
             ];
-        } else {
-            if (
-                $content === $this->oldTokenValues[$tokenPosition]['prev']
-                && ($this->loops - 1) === $this->oldTokenValues[$tokenPosition]['loop']
-            ) {
-                if ($this->oldTokenValues[$tokenPosition]['loop'] >= ($this->loops - 1)) {
-                    $this->inConflict = true;
-                }
-
-                return false;
+        } elseif (
+            $content === $this->oldTokenValues[$tokenPosition]['prev']
+            && ($this->loops - 1) === $this->oldTokenValues[$tokenPosition]['loop']
+        ) {
+            if ($this->oldTokenValues[$tokenPosition]['loop'] >= ($this->loops - 1)) {
+                $this->inConflict = true;
             }
 
+            return false;
+        } else {
             $this->oldTokenValues[$tokenPosition]['prev'] = $this->oldTokenValues[$tokenPosition]['curr'];
             $this->oldTokenValues[$tokenPosition]['curr'] = $content;
             $this->oldTokenValues[$tokenPosition]['loop'] = $this->loops;

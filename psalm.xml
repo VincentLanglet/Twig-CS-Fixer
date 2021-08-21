@@ -6,10 +6,13 @@
        phpVersion="8.0"
        strictBinaryOperands="true"
        rememberPropertyAssignmentsAfterCall="false"
+       checkForThrowsDocblock="true"
        checkForThrowsInGlobalScope="true"
+       ignoreInternalFunctionFalseReturn="false"
        ignoreInternalFunctionNullReturn="false"
        inferPropertyTypesFromConstructor="false"
        findUnusedPsalmSuppress="true"
+       ensureArrayStringOffsetsExist="true"
        cacheDirectory="/tmp/psalm"
 >
     <projectFiles>
@@ -23,7 +26,16 @@
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
     </plugins>
+    <ignoreExceptions>
+        <classAndDescendants name="LogicException" />
+        <classAndDescendants name="Error" />
+    </ignoreExceptions>
     <issueHandlers>
         <UnusedForeachValue errorLevel="suppress"/>
+        <MissingThrowsDocblock errorLevel="suppress">
+            <errorLevel type="suppress">
+                <directory name="tests"/>
+            </errorLevel>
+        </MissingThrowsDocblock>
     </issueHandlers>
 </psalm>

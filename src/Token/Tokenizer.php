@@ -63,7 +63,7 @@ final class Tokenizer implements TokenizerInterface
     private $currentPosition = 0;
 
     /**
-     * @var array<int, Token>
+     * @var list<Token>
      */
     private $tokens = [];
 
@@ -80,7 +80,7 @@ final class Tokenizer implements TokenizerInterface
     private $state = [];
 
     /**
-     * @var array<int, Token>
+     * @var list<Token>
      */
     private $bracketsAndTernary = [];
 
@@ -108,7 +108,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @param Source $source
      *
-     * @return array<int, Token>
+     * @return list<Token>
      *
      * @throws SyntaxError
      */

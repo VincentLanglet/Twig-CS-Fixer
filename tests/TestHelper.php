@@ -12,13 +12,6 @@ use LogicException;
 final class TestHelper
 {
     /**
-     * @return void
-     */
-    private function __construct()
-    {
-    }
-
-    /**
      * @param string $contents Content to compare
      * @param string $filePath File path to diff the file against.
      *

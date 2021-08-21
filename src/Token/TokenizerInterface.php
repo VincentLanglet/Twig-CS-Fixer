@@ -13,7 +13,7 @@ interface TokenizerInterface
     /**
      * @param Source $source
      *
-     * @return array<int, Token>
+     * @return list<Token>
      *
      * @throws SyntaxError
      */
