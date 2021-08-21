@@ -104,7 +104,7 @@ final class Report
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getFiles(): array
     {
