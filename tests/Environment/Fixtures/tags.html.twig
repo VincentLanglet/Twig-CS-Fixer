@@ -1,0 +1,10 @@
+{% form_theme form 'form.html.twig' %}
+
+{% dump foo %}
+
+{% stopwatch 'bar' %}
+{% endstopwatch %}
+
+{% trans_default_domain domain %}
+
+{% trans with vars from domain into locale %}message{% endtrans %}

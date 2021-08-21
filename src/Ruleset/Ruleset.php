@@ -13,12 +13,12 @@ use TwigCsFixer\Standard\StandardInterface;
 final class Ruleset
 {
     /**
-     * @var SniffInterface[]
+     * @var array<class-string<SniffInterface>, SniffInterface>
      */
     private $sniffs = [];
 
     /**
-     * @return SniffInterface[]
+     * @return array<class-string<SniffInterface>, SniffInterface>
      */
     public function getSniffs(): array
     {
