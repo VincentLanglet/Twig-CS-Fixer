@@ -15,12 +15,12 @@ final class Report
     public const MESSAGE_TYPE_FATAL   = 'FATAL';
 
     /**
-     * @var array<string, array<SniffViolation>>
+     * @var array<string, list<SniffViolation>>
      */
     private $messagesByFiles = [];
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private $files = [];
 
@@ -75,7 +75,7 @@ final class Report
     /**
      * @param string|null $level
      *
-     * @return array<string, array<SniffViolation>>
+     * @return array<string, list<SniffViolation>>
      */
     public function getMessagesByFiles(?string $level = null): array
     {

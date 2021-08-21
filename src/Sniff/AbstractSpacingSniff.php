@@ -65,7 +65,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
 
         // Ignore new line
         $next = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
-        if (false !== $next && $this->isTokenMatching($tokens[$next], Token::EOL_TOKENS)) {
+        if (false === $next || $this->isTokenMatching($tokens[$next], Token::EOL_TOKENS)) {
             return;
         }
 
@@ -111,7 +111,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
 
         // Ignore new line
         $previous = $this->findPrevious(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition - 1, true);
-        if ($this->isTokenMatching($tokens[$previous], Token::EOL_TOKENS)) {
+        if (false === $previous || $this->isTokenMatching($tokens[$previous], Token::EOL_TOKENS)) {
             return;
         }
 
