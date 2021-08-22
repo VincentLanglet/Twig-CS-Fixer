@@ -55,7 +55,7 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param array<int, Token> $stream
+     * @param list<Token> $stream
      *
      * @return void
      */
@@ -67,8 +67,8 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return void
      */
@@ -95,10 +95,10 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int|int[]         $type
-     * @param array<int, Token> $tokens
-     * @param int               $start
-     * @param bool              $exclude
+     * @param int|int[]   $type
+     * @param list<Token> $tokens
+     * @param int         $start
+     * @param bool        $exclude
      *
      * @return int|false
      */
@@ -121,10 +121,10 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int|int[]         $type
-     * @param array<int, Token> $tokens
-     * @param int               $start
-     * @param bool              $exclude
+     * @param int|int[]   $type
+     * @param list<Token> $tokens
+     * @param int         $start
+     * @param bool        $exclude
      *
      * @return int|false
      */

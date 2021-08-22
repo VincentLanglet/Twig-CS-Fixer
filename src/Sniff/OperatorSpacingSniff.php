@@ -12,8 +12,8 @@ use TwigCsFixer\Token\Token;
 final class OperatorSpacingSniff extends AbstractSpacingSniff
 {
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return int|null
      */
@@ -36,8 +36,8 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return int|null
      */
@@ -60,8 +60,8 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return bool
      */

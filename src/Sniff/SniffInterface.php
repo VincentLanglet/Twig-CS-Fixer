@@ -38,7 +38,7 @@ interface SniffInterface
     public function disable(): void;
 
     /**
-     * @param array<int, Token> $stream
+     * @param list<Token> $stream
      *
      * @return void
      */

@@ -13,8 +13,8 @@ use TwigCsFixer\Token\Token;
 abstract class AbstractSpacingSniff extends AbstractSniff
 {
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return void
      *
@@ -35,25 +35,25 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return int|null
      */
     abstract protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return int|null
      */
     abstract protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
-     * @param int               $expected
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
+     * @param int         $expected
      *
      * @return void
      *
@@ -97,9 +97,9 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
-     * @param int               $expected
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
+     * @param int         $expected
      *
      * @return void
      *

@@ -42,7 +42,7 @@ final class Fixer
      * This is the array that is updated as fixes are made, not the file's token array.
      * Imploding this array will give you the file content back.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     private $tokens = [];
 
@@ -313,7 +313,7 @@ final class Fixer
     }
 
     /**
-     * @param array<int, Token> $tokens
+     * @param list<Token> $tokens
      *
      * @return void
      */

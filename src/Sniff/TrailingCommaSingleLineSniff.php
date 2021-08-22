@@ -13,8 +13,8 @@ use TwigCsFixer\Token\Token;
 final class TrailingCommaSingleLineSniff extends AbstractSniff
 {
     /**
-     * @param int               $tokenPosition
-     * @param array<int, Token> $tokens
+     * @param int         $tokenPosition
+     * @param list<Token> $tokens
      *
      * @return void
      *
