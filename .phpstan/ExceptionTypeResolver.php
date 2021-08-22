@@ -6,6 +6,8 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Exceptions\DefaultExceptionTypeResolver;
 use PHPStan\Rules\Exceptions\ExceptionTypeResolver as PHPStanExceptionTypeResolver;
 
+use function strpos;
+
 /**
  * Class ExceptionTypeResolver
  */
@@ -35,7 +37,7 @@ class ExceptionTypeResolver implements PHPStanExceptionTypeResolver
     public function isCheckedException(string $className, Scope $scope): bool
     {
         $namespace = $scope->getNamespace();
-        if (null !== $namespace && 0 === mb_strpos($namespace, 'TwigCsFixer\Tests')) {
+        if (null !== $namespace && 0 === strpos($namespace, 'TwigCsFixer\Tests')) {
             return false;
         }
 

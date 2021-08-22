@@ -10,6 +10,10 @@ use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Token\Token;
 
+use function in_array;
+use function is_array;
+use function sprintf;
+
 /**
  * Base for all sniff.
  */

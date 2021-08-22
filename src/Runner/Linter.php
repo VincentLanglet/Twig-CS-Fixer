@@ -13,6 +13,12 @@ use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
 
+use function file_get_contents;
+use function file_put_contents;
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+
 /**
  * Linter is the main class and will process twig files against a set of rules.
  */

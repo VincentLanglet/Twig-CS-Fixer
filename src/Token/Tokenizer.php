@@ -9,6 +9,30 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Source;
 
+use function array_keys;
+use function array_merge;
+use function array_pop;
+use function arsort;
+use function assert;
+use function count;
+use function ctype_alpha;
+use function end;
+use function implode;
+use function in_array;
+use function preg_match;
+use function preg_match_all;
+use function preg_quote;
+use function preg_replace;
+use function sprintf;
+use function str_replace;
+use function strlen;
+use function strrpos;
+use function strtr;
+use function substr;
+use function substr_count;
+
+use const PHP_EOL;
+
 /**
  * An override of Twig's Lexer to add whitespace and new line detection.
  */
@@ -458,7 +482,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexInterpolation(): void
     {
         $bracket = end($this->bracketsAndTernary);
-        \assert(false !== $bracket); // Interpolation always start with a bracket.
+        assert(false !== $bracket); // Interpolation always start with a bracket.
 
         if (
             '#{' === $bracket->getValue()
@@ -522,7 +546,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexStart(): void
     {
         $tokenStart = $this->getTokenPosition();
-        \assert(null !== $tokenStart);
+        assert(null !== $tokenStart);
 
         if ('{#' === $tokenStart['match']) {
             $state = self::STATE_COMMENT;

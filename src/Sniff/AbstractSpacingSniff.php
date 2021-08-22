@@ -7,6 +7,10 @@ namespace TwigCsFixer\Sniff;
 use Exception;
 use TwigCsFixer\Token\Token;
 
+use function sprintf;
+use function str_repeat;
+use function strlen;
+
 /**
  * Ensure there is one space before or after some tokens
  */

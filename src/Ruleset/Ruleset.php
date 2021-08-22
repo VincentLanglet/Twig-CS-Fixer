@@ -7,6 +7,8 @@ namespace TwigCsFixer\Ruleset;
 use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Standard\StandardInterface;
 
+use function get_class;
+
 /**
  * Set of rules to be used by TwigCsFixer and contains all sniffs.
  */

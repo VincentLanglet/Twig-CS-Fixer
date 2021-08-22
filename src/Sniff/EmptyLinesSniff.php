@@ -7,6 +7,8 @@ namespace TwigCsFixer\Sniff;
 use Exception;
 use TwigCsFixer\Token\Token;
 
+use function sprintf;
+
 /**
  * Checks that there are not 2 empty lines following each other.
  */

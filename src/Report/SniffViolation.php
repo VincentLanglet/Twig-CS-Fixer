@@ -6,6 +6,9 @@ namespace TwigCsFixer\Report;
 
 use LogicException;
 
+use function sprintf;
+use function strtoupper;
+
 /**
  * Wrapper class that represents a violation to a sniff with context.
  */

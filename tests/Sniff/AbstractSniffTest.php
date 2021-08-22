@@ -16,6 +16,12 @@ use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Tokenizer;
 
+use function dirname;
+use function file_exists;
+use function get_called_class;
+use function sprintf;
+use function substr;
+
 /**
  * TestCase for a Sniff.
  */

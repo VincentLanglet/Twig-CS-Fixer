@@ -6,6 +6,10 @@ namespace TwigCsFixer\Config;
 
 use Exception;
 
+use function file_exists;
+use function preg_match;
+use function sprintf;
+
 /**
  * Resolve config from `.twig-cs-fixer.php` is provided
  */

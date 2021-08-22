@@ -18,6 +18,8 @@ use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
 
+use function getcwd;
+
 /**
  * TwigCsFixer stands for "Twig Code Sniffer Fixer" and will check twig template of your project.
  */

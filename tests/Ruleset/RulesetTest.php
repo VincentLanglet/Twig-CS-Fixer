@@ -11,6 +11,8 @@ use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\StandardInterface;
 
+use function get_class;
+
 /**
  * Test for Ruleset.
  */

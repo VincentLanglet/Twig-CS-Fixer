@@ -13,6 +13,10 @@ use TwigCsFixer\Tests\Runner\Fixtures\BuggySniff;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 
+use function error_reporting;
+use function sprintf;
+use function trigger_error;
+
 /**
  * Test for Linter.
  */
