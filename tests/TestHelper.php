@@ -6,6 +6,27 @@ namespace TwigCsFixer\Tests;
 
 use LogicException;
 
+use function count;
+use function escapeshellarg;
+use function explode;
+use function fclose;
+use function fopen;
+use function fwrite;
+use function getcwd;
+use function implode;
+use function is_file;
+use function shell_exec;
+use function sprintf;
+use function strlen;
+use function strpos;
+use function substr;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 /**
  * Helper for tests.
  */

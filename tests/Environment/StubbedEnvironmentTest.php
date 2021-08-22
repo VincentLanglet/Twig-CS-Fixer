@@ -11,6 +11,8 @@ use Twig\TwigFunction;
 use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
 
+use function file_get_contents;
+
 /**
  * Test for StubbedEnvironment.
  */

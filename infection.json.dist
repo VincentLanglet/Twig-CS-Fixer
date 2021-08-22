@@ -7,7 +7,7 @@
     "mutators": {
         "@default": true,
         "global-ignoreSourceCodeByRegex": [
-            "\\\\assert\\(.*"
+            "assert\\(.*"
         ]
     },
     "logs": {

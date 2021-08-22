@@ -27,7 +27,7 @@
         "psalm/plugin-phpunit": "^0.16.1",
         "psalm/plugin-symfony": "^2.5",
         "vimeo/psalm": "^4.9.3",
-        "vincentlanglet/symfony-custom-coding-standard": "^9.0.2"
+        "vincentlanglet/symfony-custom-coding-standard": "^9.1.0"
     },
     "config": {
         "sort-packages": true

@@ -10,6 +10,12 @@ use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
 
+use function array_map;
+use function assert;
+use function file_get_contents;
+use function implode;
+use function preg_match;
+
 /**
  * Fixer will fix twig files against a set of rules.
  */
@@ -357,7 +363,7 @@ final class Fixer
         if (!isset($this->fixedTokens[$tokenPosition])) {
             return false;
         }
-        \assert(isset($this->tokens[$tokenPosition]));
+        assert(isset($this->tokens[$tokenPosition]));
 
         $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
         unset($this->fixedTokens[$tokenPosition]);

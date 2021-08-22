@@ -8,6 +8,8 @@ use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Token\TokenizerInterface;
 
+use function error_reporting;
+
 /**
  * Test for Fixer.
  */

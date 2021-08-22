@@ -10,6 +10,11 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+use function array_filter;
+use function is_dir;
+use function is_file;
+use function sprintf;
+
 /**
  * This class list every file which need to be linted.
  */

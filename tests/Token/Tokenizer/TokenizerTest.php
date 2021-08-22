@@ -11,6 +11,11 @@ use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 
+use function array_map;
+use function file_get_contents;
+use function implode;
+use function sprintf;
+
 /**
  * Test of Tokenizer.
  */

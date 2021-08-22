@@ -10,6 +10,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+use function count;
+use function explode;
+use function file_get_contents;
+use function implode;
+use function max;
+use function min;
+use function preg_match;
+use function sprintf;
+use function strlen;
+use function substr;
+use function wordwrap;
+
 /**
  * Human-readable output with context.
  */

@@ -9,6 +9,8 @@ use TwigCsFixer\Config\Config;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
 
+use function array_values;
+
 /**
  * Test for Config.
  */

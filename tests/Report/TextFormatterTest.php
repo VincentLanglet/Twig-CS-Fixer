@@ -9,6 +9,8 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Report\TextFormatter;
 
+use function sprintf;
+
 /**
  * Test for TextFormatter.
  */

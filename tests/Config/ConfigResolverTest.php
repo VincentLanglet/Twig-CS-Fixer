@@ -8,6 +8,8 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Config\ConfigResolver;
 
+use function sprintf;
+
 /**
  * Test for ConfigResolver.
  */

@@ -17,6 +17,9 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
+use function array_key_exists;
+use function class_exists;
+
 /**
  * Provide stubs for all filters, functions, tests and tags that are not defined in twig's core.
  */
