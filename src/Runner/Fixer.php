@@ -357,6 +357,7 @@ final class Fixer
         if (!isset($this->fixedTokens[$tokenPosition])) {
             return false;
         }
+        \assert(isset($this->tokens[$tokenPosition]));
 
         $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
         unset($this->fixedTokens[$tokenPosition]);

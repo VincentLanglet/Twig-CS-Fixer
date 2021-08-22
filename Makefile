@@ -2,6 +2,10 @@ lint:
 	vendor/bin/phpcs --standard=phpcs.xml
 .PHONY: lint
 
+lint-fix:
+	vendor/bin/phpcbf --standard=phpcs.xml
+.PHONY: lint-fix
+
 test:
 	vendor/bin/phpunit
 .PHONY: test
