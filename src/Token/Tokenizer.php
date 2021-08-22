@@ -458,10 +458,10 @@ final class Tokenizer implements TokenizerInterface
     private function lexInterpolation(): void
     {
         $bracket = end($this->bracketsAndTernary);
+        \assert(false !== $bracket); // Interpolation always start with a bracket.
 
         if (
-            false !== $bracket
-            && '#{' === $bracket->getValue()
+            '#{' === $bracket->getValue()
             && 1 === preg_match(self::REGEX_INTERPOLATION_END, $this->code, $match, 0, $this->cursor)
         ) {
             $bracket = array_pop($this->bracketsAndTernary);
@@ -701,9 +701,7 @@ final class Tokenizer implements TokenizerInterface
                     $lastBracket = end($this->bracketsAndTernary);
                 } while (false !== $lastBracket && '?' === $lastBracket->getValue());
 
-                // This is maybe the end of the variable, start again.
-                $this->lexVariable();
-
+                // This is maybe the end of the expression so start again.
                 return;
             }
         }
