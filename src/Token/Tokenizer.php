@@ -524,12 +524,6 @@ final class Tokenizer implements TokenizerInterface
                 $value = substr($value, 0, $limit - $this->cursor);
             }
 
-            // Fixing token start among expressions and comments.
-            $nbTokenStart = preg_match_all(self::REGEX_EXPRESSION_START, $value, $matches);
-            if ($nbTokenStart > 0) {
-                $this->moveCurrentPosition($nbTokenStart);
-            }
-
             if (self::STATE_COMMENT === $this->getState()) {
                 $this->pushToken(Token::COMMENT_TEXT_TYPE, $value);
             } else {
