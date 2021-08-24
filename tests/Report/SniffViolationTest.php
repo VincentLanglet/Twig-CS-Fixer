@@ -35,8 +35,7 @@ class SniffViolationTest extends TestCase
      */
     public function testGetLevelAsString(string $expected, int $level): void
     {
-        $sniffViolation = new SniffViolation($level, 'foo', 'bar');
-        self::assertSame($expected, $sniffViolation->getLevelAsString());
+        self::assertSame($expected, SniffViolation::getLevelAsString($level));
     }
 
     /**
@@ -55,9 +54,8 @@ class SniffViolationTest extends TestCase
      */
     public function testGetLevelAsStringException(): void
     {
-        $sniffViolation = new SniffViolation(4, 'foo', 'bar');
         self::expectExceptionMessage('Level "4" is not supported.');
-        $sniffViolation->getLevelAsString();
+        SniffViolation::getLevelAsString(4);
     }
 
     /**

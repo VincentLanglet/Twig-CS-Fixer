@@ -91,8 +91,9 @@ final class TextFormatter
                     $rows[] = new TableSeparator();
                 }
 
+                $level = SniffViolation::getLevelAsString($message->getLevel());
                 $rows[] = [
-                    new TableCell('<comment>'.$message->getLevelAsString().'</comment>'),
+                    new TableCell('<comment>'.$level.'</comment>'),
                     implode("\n", $formattedText),
                 ];
             }

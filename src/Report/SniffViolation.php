@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Report;
 
-use LogicException;
+use InvalidArgumentException;
 
 use function sprintf;
 use function strtoupper;
@@ -69,11 +69,13 @@ final class SniffViolation
     }
 
     /**
+     * @param int $level
+     *
      * @return string
      */
-    public function getLevelAsString(): string
+    public static function getLevelAsString(int $level): string
     {
-        switch ($this->level) {
+        switch ($level) {
             case self::LEVEL_NOTICE:
                 return Report::MESSAGE_TYPE_NOTICE;
             case self::LEVEL_WARNING:
@@ -83,7 +85,7 @@ final class SniffViolation
             case self::LEVEL_FATAL:
                 return Report::MESSAGE_TYPE_FATAL;
             default:
-                throw new LogicException(sprintf('Level "%s" is not supported.', $this->level));
+                throw new InvalidArgumentException(sprintf('Level "%s" is not supported.', $level));
         }
     }
 
@@ -104,7 +106,7 @@ final class SniffViolation
             case Report::MESSAGE_TYPE_FATAL:
                 return self::LEVEL_FATAL;
             default:
-                throw new LogicException(sprintf('Level "%s" is not supported.', $level));
+                throw new InvalidArgumentException(sprintf('Level "%s" is not supported.', $level));
         }
     }
 
