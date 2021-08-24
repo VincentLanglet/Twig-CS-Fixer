@@ -237,7 +237,9 @@ final class Tokenizer implements TokenizerInterface
     private function setStateParam(string $name, string $value): void
     {
         if ([] === $this->state) {
+            // @codeCoverageIgnoreStart
             throw new LogicException('Cannot update state without a current state.');
+            // @codeCoverageIgnoreEnd
         }
 
         $this->state[count($this->state) - 1][1][$name] = $value;
@@ -257,7 +259,9 @@ final class Tokenizer implements TokenizerInterface
     private function popState(): void
     {
         if ([] === $this->state) {
+            // @codeCoverageIgnoreStart
             throw new LogicException('Cannot pop state without a current state.');
+            // @codeCoverageIgnoreEnd
         }
         array_pop($this->state);
     }
@@ -451,8 +455,6 @@ final class Tokenizer implements TokenizerInterface
 
     /**
      * @return void
-     *
-     * @throws SyntaxError
      */
     private function lexDqString(): void
     {
@@ -470,7 +472,9 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0], $bracket);
             $this->moveCursor($match[0]);
         } else {
-            throw new SyntaxError(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->line);
+            // @codeCoverageIgnoreStart
+            throw new LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -552,7 +556,9 @@ final class Tokenizer implements TokenizerInterface
             $state = self::STATE_VAR;
             $tokenType = Token::VAR_START_TYPE;
         } else {
+            // @codeCoverageIgnoreStart
             throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $tokenStart['match']));
+            // @codeCoverageIgnoreEnd
         }
 
         $this->pushToken($tokenType, $tokenStart['fullMatch']);
