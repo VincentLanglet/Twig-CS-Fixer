@@ -47,7 +47,7 @@ final class Linter
     }
 
     /**
-     * @param string[] $files
+     * @param iterable $files
      * @param Ruleset  $ruleset
      * @param bool     $fix
      *
@@ -55,7 +55,7 @@ final class Linter
      *
      * @throws Exception
      */
-    public function run(array $files, Ruleset $ruleset, bool $fix): Report
+    public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
     {
         $report = new Report();
 
@@ -70,11 +70,12 @@ final class Linter
         // Process
         foreach ($files as $file) {
             // Add this file to the report.
-            $report->addFile($file);
+            $file_name = $file->getRelativePath();
+            $report->addFile($file_name);
 
-            $this->setErrorHandler($report, $file);
+            $this->setErrorHandler($report, $file_name);
 
-            $this->processTemplate($file, $ruleset, $report);
+            $this->processTemplate($file_name, $ruleset, $report);
         }
         restore_error_handler();
 
@@ -87,14 +88,14 @@ final class Linter
     }
 
     /**
-     * @param string[] $files
+     * @param itterable $files
      * @param Ruleset  $ruleset
      *
      * @return void
      *
      * @throws Exception
      */
-    private function fix(array $files, Ruleset $ruleset): void
+    private function fix(iterable $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
