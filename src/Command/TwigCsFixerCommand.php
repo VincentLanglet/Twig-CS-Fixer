@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace TwigCsFixer\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder as SymfonyFinder;
 use Throwable;
+use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\File\Finder;
@@ -58,6 +61,13 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
                 ),
+                new InputOption(
+                    'exclude',
+                    'e',
+                    InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                    'Excludes, based on regex, paths of files and folders from parsing',
+                    ['vendor/']
+                ),
             ]);
     }
 
@@ -75,16 +85,30 @@ final class TwigCsFixerCommand extends Command
         }
 
         try {
-            // Resolve config
-            $configResolver = new ConfigResolver($workingDir);
-            $config = $configResolver->getConfig($input->getOption('config'));
-
-            $finder = new Finder($input->getArgument('paths'));
-
             // Execute the linter.
             $twig = new StubbedEnvironment();
             $linter = new Linter($twig, new Tokenizer($twig));
-            $report = $linter->run($finder->findFiles(), $config->getRuleset(), $input->getOption('fix'));
+
+            // Resolve config
+            $configResolver = new ConfigResolver($workingDir);
+            $config = $configResolver->getConfig($input->getOption('config'));
+            $paths = $input->getArgument('paths');
+
+            // Get a list of files using the specified finder approach.
+            if ($config->getFinder() == Config::FINDER_TWIGCS) {
+                $finder = new Finder($paths);
+                $files = $finder->findFiles();
+            }
+            else {
+                $finder = SymfonyFinder::create()->in($paths);
+                try {
+                    $exclude = $input->getOption('exclude');
+                    $finder->exclude($exclude);
+                }
+                catch (InvalidArgumentException $exception) { }
+                $files = $finder->getIterator();
+            }
+            $report = $linter->run($files, $config->getRuleset(), $input->getOption('fix'));
 
             // Format the output.
             $reporter = new TextFormatter($input, $output);

@@ -12,6 +12,9 @@ use TwigCsFixer\Standard\Generic;
  */
 class Config
 {
+    const FINDER_TWIGCS = 'twigcs';
+    const FINDER_SYMFONY = 'symfony';
+
     /**
      * @var string
      */
@@ -23,6 +26,13 @@ class Config
     private $ruleset;
 
     /**
+     * @var string
+     *
+     * The finder class to use.
+     */
+    private $finder;
+
+    /**
      * @param string $name
      *
      * @return void
@@ -32,6 +42,7 @@ class Config
         $this->name = $name;
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new Generic());
+        $this->finder = 'symfony';
     }
 
     /**
@@ -48,6 +59,14 @@ class Config
     public function getRuleset(): Ruleset
     {
         return $this->ruleset;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinder(): string
+    {
+        return $this->finder;
     }
 
     /**
