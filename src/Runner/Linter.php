@@ -89,14 +89,14 @@ final class Linter
     }
 
     /**
-     * @param itterable $files
+     * @param string[] $files
      * @param Ruleset  $ruleset
      *
      * @return void
      *
      * @throws Exception
      */
-    private function fix(iterable $files, Ruleset $ruleset): void
+    private function fix(array $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
