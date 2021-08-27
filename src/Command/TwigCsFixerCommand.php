@@ -100,7 +100,7 @@ final class TwigCsFixerCommand extends Command
             //   where else we could add this data. Doing this in Config.php
             //   seems like we are bringing too many concerns into that class.
             //   Perhaps we would do this in Finder.php or what is your idea?
-            $finder->in($paths);
+            $finder->path($paths);
             // @todo I realize that you are proposing that we don't include this
             //   flag and instead rely upon a twig-cs-fixer.php file. What is
             //   the benefit of that approach? The flag seems much easier for a
@@ -108,9 +108,6 @@ final class TwigCsFixerCommand extends Command
             // Exclude files if the flag was included.
             try {
                 if ($exclude = $input->getOption('exclude')) {
-                    // @todo The Symfony Finder wants paths that are relative to
-                    //    to the paths included from the in() method. I would
-                    //    ideally like to include full relative paths.
                     $finder->exclude($exclude);
                 }
             }

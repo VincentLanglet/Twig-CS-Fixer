@@ -12,6 +12,7 @@ class Finder extends BaseFinder
 
         // @todo How does this know what paths to use?
         $this
+            ->in('./')
             ->files()
             ->name('*.twig')
             ->exclude('vendor');
