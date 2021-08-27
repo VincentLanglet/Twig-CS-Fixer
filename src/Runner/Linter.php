@@ -69,13 +69,14 @@ final class Linter
 
         // Process
         foreach ($files as $file) {
+            /** @var \Symfony\Component\Finder\SplFileInfo $file */
+            $file_path = $file->getPathname();
             // Add this file to the report.
-            $file_name = $file->getRelativePath();
-            $report->addFile($file_name);
+            $report->addFile($file_path);
 
-            $this->setErrorHandler($report, $file_name);
+            $this->setErrorHandler($report, $file_path);
 
-            $this->processTemplate($file_name, $ruleset, $report);
+            $this->processTemplate($file_path, $ruleset, $report);
         }
         restore_error_handler();
 

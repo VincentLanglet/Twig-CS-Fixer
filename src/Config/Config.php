@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Config;
 
+use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
+use TwigCsFixer\File\Finder as TwigCsFinder;
 
 /**
  * Main entry point to config the TwigCsFixer.
  */
 class Config
 {
-    const FINDER_TWIGCS = 'twigcs';
-    const FINDER_SYMFONY = 'symfony';
-
     /**
      * @var string
      */
@@ -26,9 +25,7 @@ class Config
     private $ruleset;
 
     /**
-     * @var string
-     *
-     * The finder class to use.
+     * @var Finder
      */
     private $finder;
 
@@ -42,7 +39,7 @@ class Config
         $this->name = $name;
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new Generic());
-        $this->finder = 'symfony';
+        $this->finder = new TwigCsFinder();
     }
 
     /**
@@ -62,9 +59,9 @@ class Config
     }
 
     /**
-     * @return string
+     * @return Finder
      */
-    public function getFinder(): string
+    public function getFinder(): Finder
     {
         return $this->finder;
     }
@@ -79,5 +76,13 @@ class Config
         $this->ruleset = $ruleset;
 
         return $this;
+    }
+
+    /**
+     * @param Finder $finder
+     */
+    public function setFinder(Finder $finder)
+    {
+        $this->finder = $finder;
     }
 }

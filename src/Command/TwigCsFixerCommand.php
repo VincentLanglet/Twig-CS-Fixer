@@ -10,12 +10,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder as SymfonyFinder;
+use Symfony\Component\Finder\Finder;
 use Throwable;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
-use TwigCsFixer\File\Finder;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
@@ -94,21 +93,21 @@ final class TwigCsFixerCommand extends Command
             $config = $configResolver->getConfig($input->getOption('config'));
             $paths = $input->getArgument('paths');
 
-            // Get a list of files using the specified finder approach.
-            if ($config->getFinder() == Config::FINDER_TWIGCS) {
-                $finder = new Finder($paths);
-                $files = $finder->findFiles();
-            }
-            else {
-                $finder = SymfonyFinder::create()->in($paths);
-                try {
-                    $exclude = $input->getOption('exclude');
+            // Get the file finder and add the path data.
+            $finder = $config->getFinder();
+            // @todo This overwrites what the user provided, but I'm not sure
+            //   where else we could add this data.
+            $finder->in($paths);
+            // Exclude files if the flag was included.
+            try {
+                if ($exclude = $input->getOption('exclude')) {
                     $finder->exclude($exclude);
                 }
-                catch (InvalidArgumentException $exception) { }
-                $files = $finder->getIterator();
             }
-            $report = $linter->run($files, $config->getRuleset(), $input->getOption('fix'));
+            catch (InvalidArgumentException $exception) { }
+
+            // Build the report.
+            $report = $linter->run($finder, $config->getRuleset(), $input->getOption('fix'));
 
             // Format the output.
             $reporter = new TextFormatter($input, $output);

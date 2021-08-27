@@ -1,67 +1,20 @@
 <?php
 
-declare(strict_types=1);
-
 namespace TwigCsFixer\File;
 
-use Exception;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
+use Symfony\Component\Finder\Finder as BaseFinder;
 
-use function array_filter;
-use function is_dir;
-use function is_file;
-use function sprintf;
-
-/**
- * This class list every file which need to be linted.
- */
-final class Finder
+class Finder extends BaseFinder
 {
-    /**
-     * @var string[]
-     */
-    private $paths;
-
-    /**
-     * @param string[] $paths
-     *
-     * @return void
-     */
-    public function __construct(array $paths = [])
+    public function __construct()
     {
-        $this->paths = $paths;
-    }
+        parent::__construct();
 
-    /**
-     * @return string[]
-     *
-     * @throws Exception
-     */
-    public function findFiles(): array
-    {
-        $files = [];
-        foreach ($this->paths as $path) {
-            if (is_dir($path)) {
-                $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::FOLLOW_SYMLINKS;
-                $directoryIterator = new RecursiveDirectoryIterator($path, $flags);
-                $filter = new TwigFileFilter($directoryIterator);
-                $iterator = new RecursiveIteratorIterator($filter);
-
-                /** @var SplFileInfo $file */
-                foreach ($iterator as $file) {
-                    $files[] = $file->getRealPath();
-                }
-            } elseif (is_file($path)) {
-                $file = new SplFileInfo($path);
-                $files[] = $file->getRealPath();
-            } else {
-                throw new Exception(sprintf('Unknown path: "%s".', $path));
-            }
-        }
-
-        return array_filter($files);
+        // @todo How does this know what paths to use?
+        $this
+            ->files()
+            ->name('*.twig')
+            ->exclude('vendor');
+        ;
     }
 }
