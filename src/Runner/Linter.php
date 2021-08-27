@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Runner;
 
 use Exception;
+use Symfony\Component\Finder\Finder;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
@@ -47,7 +48,7 @@ final class Linter
     }
 
     /**
-     * @param iterable $files
+     * @param Finder $files
      * @param Ruleset  $ruleset
      * @param bool     $fix
      *
@@ -55,7 +56,7 @@ final class Linter
      *
      * @throws Exception
      */
-    public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
+    public function run(Finder $files, Ruleset $ruleset, bool $fix): Report
     {
         $report = new Report();
 
