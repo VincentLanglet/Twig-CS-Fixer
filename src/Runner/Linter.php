@@ -48,9 +48,9 @@ final class Linter
     }
 
     /**
-     * @param Finder $files
-     * @param Ruleset  $ruleset
-     * @param bool     $fix
+     * @param Finder  $files
+     * @param Ruleset $ruleset
+     * @param bool    $fix
      *
      * @return Report
      *
@@ -70,14 +70,14 @@ final class Linter
 
         // Process
         foreach ($files as $file) {
-            /** @var \Symfony\Component\Finder\SplFileInfo $file */
-            $file_path = $file->getPathname();
+            $filePath = $file->getPathname();
+
             // Add this file to the report.
-            $report->addFile($file_path);
+            $report->addFile($filePath);
 
-            $this->setErrorHandler($report, $file_path);
+            $this->setErrorHandler($report, $filePath);
 
-            $this->processTemplate($file_path, $ruleset, $report);
+            $this->processTemplate($filePath, $ruleset, $report);
         }
         restore_error_handler();
 
@@ -90,14 +90,14 @@ final class Linter
     }
 
     /**
-     * @param string[] $files
-     * @param Ruleset  $ruleset
+     * @param Finder  $finder
+     * @param Ruleset $ruleset
      *
      * @return void
      *
      * @throws Exception
      */
-    private function fix(array $files, Ruleset $ruleset): void
+    private function fix(Finder $finder, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -105,11 +105,12 @@ final class Linter
             $sniff->enableFixer($fixer);
         }
 
-        foreach ($files as $file) {
-            $success = $fixer->fixFile($file);
+        foreach ($finder as $file) {
+            $filePath = $file->getPathname();
+            $success = $fixer->fixFile($filePath);
 
             if (!$success) {
-                throw new Exception(sprintf('Cannot fix the file "%s".', $file));
+                throw new Exception(sprintf('Cannot fix the file "%s".', $filePath));
             }
 
             file_put_contents($file, $fixer->getContents());

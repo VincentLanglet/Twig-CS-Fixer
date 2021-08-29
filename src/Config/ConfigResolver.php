@@ -5,15 +5,21 @@ declare(strict_types=1);
 namespace TwigCsFixer\Config;
 
 use Exception;
+use LogicException;
+use Symfony\Component\Finder\Finder;
+use TwigCsFixer\File\Finder as TwigCsFinder;
 
 use function file_exists;
+use function is_file;
 use function preg_match;
 use function sprintf;
+
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Resolve config from `.twig-cs-fixer.php` is provided
  */
-class ConfigResolver
+final class ConfigResolver
 {
     /**
      * @var string
@@ -31,13 +37,29 @@ class ConfigResolver
     }
 
     /**
+     * @param string[]    $paths
      * @param string|null $configPath
      *
      * @return Config
      *
      * @throws Exception
      */
-    public function getConfig(?string $configPath = null): Config
+    public function resolveConfig(array $paths, ?string $configPath = null): Config
+    {
+        $config = $this->getConfig($configPath);
+        $config->setFinder($this->resolveFinder($config->getFinder(), $paths));
+
+        return $config;
+    }
+
+    /**
+     * @param string|null $configPath
+     *
+     * @return Config
+     *
+     * @throws Exception
+     */
+    private function getConfig(?string $configPath = null): Config
     {
         if (null !== $configPath) {
             $configPath = $this->isAbsolutePath($configPath)
@@ -73,6 +95,46 @@ class ConfigResolver
         }
 
         return $config;
+    }
+
+    /**
+     * @param Finder   $finder
+     * @param string[] $paths
+     *
+     * @return Finder
+     */
+    private function resolveFinder(Finder $finder, array $paths): Finder
+    {
+        $nestedFinder = null;
+        try {
+            $nestedFinder = $finder->getIterator();
+        } catch (LogicException $exception) {
+            // Only way to know if in() method has not been called
+        }
+
+        if ([] === $paths) {
+            if (null === $nestedFinder) {
+                return $finder->in('./');
+            }
+
+            return $finder;
+        }
+
+        $files = [];
+        $directories = [];
+        foreach ($paths as $path) {
+            if (is_file($path)) {
+                $files[] = $path;
+            } else {
+                $directories[] = $path.DIRECTORY_SEPARATOR;
+            }
+        }
+
+        if (null === $nestedFinder) {
+            return $finder->in($directories)->append($files);
+        }
+
+        return TwigCsFinder::create()->in($directories)->append($files);
     }
 
     /**

@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace TwigCsFixer\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use Throwable;
-use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Report;
@@ -60,13 +57,6 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
                 ),
-                new InputOption(
-                    'exclude',
-                    'e',
-                    InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                    'Excludes, based on regex, paths of files and folders from parsing',
-                    ['vendor/']
-                ),
             ]);
     }
 
@@ -90,31 +80,13 @@ final class TwigCsFixerCommand extends Command
 
             // Resolve config
             $configResolver = new ConfigResolver($workingDir);
-            $config = $configResolver->getConfig($input->getOption('config'));
-            $paths = $input->getArgument('paths');
-
-            // Get the file finder and add the path data.
-            $finder = $config->getFinder();
-            // @todo This overwrites what the user provided if they supplied
-            //   their own finder. If we don't add it here though, I'm not sure
-            //   where else we could add this data. Doing this in Config.php
-            //   seems like we are bringing too many concerns into that class.
-            //   Perhaps we would do this in Finder.php or what is your idea?
-            $finder->path($paths);
-            // @todo I realize that you are proposing that we don't include this
-            //   flag and instead rely upon a twig-cs-fixer.php file. What is
-            //   the benefit of that approach? The flag seems much easier for a
-            //   new user to find and figure out to me.
-            // Exclude files if the flag was included.
-            try {
-                if ($exclude = $input->getOption('exclude')) {
-                    $finder->exclude($exclude);
-                }
-            }
-            catch (InvalidArgumentException $exception) { }
+            $config = $configResolver->resolveConfig(
+                $input->getArgument('paths'),
+                $input->getOption('config')
+            );
 
             // Build the report.
-            $report = $linter->run($finder, $config->getRuleset(), $input->getOption('fix'));
+            $report = $linter->run($config->getFinder(), $config->getRuleset(), $input->getOption('fix'));
 
             // Format the output.
             $reporter = new TextFormatter($input, $output);
