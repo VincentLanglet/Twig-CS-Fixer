@@ -86,7 +86,11 @@ final class TwigCsFixerCommand extends Command
             );
 
             // Build the report.
-            $report = $linter->run($config->getFinder(), $config->getRuleset(), $input->getOption('fix'));
+            $report = $linter->run(
+                $config->getFinder(),
+                $config->getRuleset(),
+                $input->getOption('fix')
+            );
 
             // Format the output.
             $reporter = new TextFormatter($input, $output);
