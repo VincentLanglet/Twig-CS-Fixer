@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Runner;
 
 use Exception;
-use Symfony\Component\Finder\Finder;
+use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
@@ -48,15 +48,15 @@ final class Linter
     }
 
     /**
-     * @param Finder  $files
-     * @param Ruleset $ruleset
-     * @param bool    $fix
+     * @param iterable<SplFileInfo> $files
+     * @param Ruleset               $ruleset
+     * @param bool                  $fix
      *
      * @return Report
      *
      * @throws Exception
      */
-    public function run(Finder $files, Ruleset $ruleset, bool $fix): Report
+    public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
     {
         $report = new Report();
 
@@ -90,14 +90,14 @@ final class Linter
     }
 
     /**
-     * @param Finder  $finder
-     * @param Ruleset $ruleset
+     * @param iterable<SplFileInfo> $finder
+     * @param Ruleset               $ruleset
      *
      * @return void
      *
      * @throws Exception
      */
-    private function fix(Finder $finder, Ruleset $ruleset): void
+    private function fix(iterable $finder, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -113,7 +113,7 @@ final class Linter
                 throw new Exception(sprintf('Cannot fix the file "%s".', $filePath));
             }
 
-            file_put_contents($file, $fixer->getContents());
+            file_put_contents($filePath, $fixer->getContents());
         }
     }
 

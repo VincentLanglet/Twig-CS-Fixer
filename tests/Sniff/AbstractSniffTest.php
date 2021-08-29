@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests\Sniff;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use SplFileInfo;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -52,7 +53,7 @@ abstract class AbstractSniffTest extends TestCase
 
         try {
             $ruleset->addSniff($sniff);
-            $report = $linter->run([$filePath], $ruleset, false);
+            $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
         } catch (Exception $exception) {
             self::fail($exception->getMessage());
         }

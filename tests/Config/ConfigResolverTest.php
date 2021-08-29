@@ -22,12 +22,12 @@ class ConfigResolverTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider getConfigDataProvider
+     * @dataProvider resolveConfigDataProvider
      */
-    public function testGetConfig(string $workingDir, ?string $path, string $configName): void
+    public function testResolveConfig(string $workingDir, ?string $path, string $configName): void
     {
         $configResolver = new ConfigResolver($workingDir);
-        $config = $configResolver->getConfig($path);
+        $config = $configResolver->resolveConfig([], $path);
 
         self::assertSame($configName, $config->getName());
     }
@@ -35,7 +35,7 @@ class ConfigResolverTest extends TestCase
     /**
      * @return iterable<array-key, array{string, string|null, string}>
      */
-    public function getConfigDataProvider(): iterable
+    public function resolveConfigDataProvider(): iterable
     {
         yield [__DIR__.'/Fixtures/directoryWithoutConfig', null, 'Default'];
         yield [__DIR__.'/Fixtures/directoryWithConfig', null, 'Custom'];
@@ -49,20 +49,20 @@ class ConfigResolverTest extends TestCase
      *
      * @return void
      *
-     * @dataProvider getConfigExceptionDataProvider
+     * @dataProvider resolveConfigExceptionDataProvider
      */
-    public function testGetConfigException(string $workingDir, ?string $path): void
+    public function testResolveConfigException(string $workingDir, ?string $path): void
     {
         $configResolver = new ConfigResolver($workingDir);
 
         self::expectException(Exception::class);
-        $configResolver->getConfig($path);
+        $configResolver->resolveConfig([], $path);
     }
 
     /**
      * @return iterable<array-key, array{string, string|null}>
      */
-    public function getConfigExceptionDataProvider(): iterable
+    public function resolveConfigExceptionDataProvider(): iterable
     {
         yield [__DIR__.'/Fixtures/directoryWithInvalidConfig', null];
         yield [__DIR__, 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
@@ -82,7 +82,7 @@ class ConfigResolverTest extends TestCase
         $configResolver = new ConfigResolver('/tmp/path/not/found');
 
         self::expectExceptionMessage(sprintf('Cannot find the config file "%s".', $configPath));
-        $configResolver->getConfig($path);
+        $configResolver->resolveConfig([], $path);
     }
 
     /**
