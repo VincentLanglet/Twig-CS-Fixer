@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace TwigCsFixer\Config;
 
 use Symfony\Component\Finder\Finder;
+use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
-use TwigCsFixer\File\Finder as TwigCsFinder;
 
 /**
  * Main entry point to config the TwigCsFixer.
  */
-class Config
+final class Config
 {
     /**
      * @var string
@@ -59,14 +59,6 @@ class Config
     }
 
     /**
-     * @return Finder
-     */
-    public function getFinder(): Finder
-    {
-        return $this->finder;
-    }
-
-    /**
      * @param Ruleset $ruleset
      *
      * @return $this
@@ -79,10 +71,22 @@ class Config
     }
 
     /**
-     * @param Finder $finder
+     * @return Finder
      */
-    public function setFinder(Finder $finder)
+    public function getFinder(): Finder
+    {
+        return $this->finder;
+    }
+
+    /**
+     * @param Finder $finder
+     *
+     * @return $this
+     */
+    public function setFinder(Finder $finder): self
     {
         $this->finder = $finder;
+
+        return $this;
     }
 }
