@@ -328,13 +328,13 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int         $type
-     * @param string|null $value
-     * @param Token|null  $relatedToken
+     * @param int        $type
+     * @param string     $value
+     * @param Token|null $relatedToken
      *
      * @return Token
      */
-    private function pushToken(int $type, string $value = null, ?Token $relatedToken = null): Token
+    private function pushToken(int $type, string $value = '', ?Token $relatedToken = null): Token
     {
         $strrpos = strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
         if (false === $strrpos) {

@@ -90,12 +90,12 @@ final class Token
     private $relatedToken;
 
     /**
-     * @param int         $type
-     * @param int         $line
-     * @param int         $position
-     * @param string      $filename
-     * @param string|null $value
-     * @param Token|null  $relatedToken
+     * @param int        $type
+     * @param int        $line
+     * @param int        $position
+     * @param string     $filename
+     * @param string     $value
+     * @param Token|null $relatedToken
      *
      * @return void
      */
@@ -104,14 +104,14 @@ final class Token
         int $line,
         int $position,
         string $filename,
-        string $value = null,
+        string $value = '',
         ?Token $relatedToken = null
     ) {
         $this->type = $type;
         $this->line = $line;
         $this->position = $position;
         $this->filename = $filename;
-        $this->value = $value ?? '';
+        $this->value = $value;
         $this->relatedToken = $relatedToken;
     }
 
