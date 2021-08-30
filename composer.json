@@ -26,7 +26,7 @@
         "phpstan/phpstan-symfony": "^0.12.41",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.1",
-        "psalm/plugin-symfony": "^2.5",
+        "psalm/plugin-symfony": "^3.0.1",
         "vimeo/psalm": "^4.9.3",
         "vincentlanglet/symfony-custom-coding-standard": "^9.1.0"
     },
