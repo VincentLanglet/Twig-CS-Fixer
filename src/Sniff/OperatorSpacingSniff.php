@@ -26,7 +26,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
             return null;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ['-', '+'])) {
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ['not', '-', '+'])) {
             return $this->isUnary($tokenPosition, $tokens) ? null : 1;
         }
 
