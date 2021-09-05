@@ -14,8 +14,6 @@ use function is_file;
 use function preg_match;
 use function sprintf;
 
-use const DIRECTORY_SEPARATOR;
-
 /**
  * Resolve config from `.twig-cs-fixer.php` is provided
  */
@@ -126,7 +124,7 @@ final class ConfigResolver
             if (is_file($path)) {
                 $files[] = $path;
             } else {
-                $directories[] = $path.DIRECTORY_SEPARATOR;
+                $directories[] = $path;
             }
         }
 

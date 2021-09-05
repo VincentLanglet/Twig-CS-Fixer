@@ -55,6 +55,25 @@ final class TwigCsFixerCommandTest extends TestCase
     /**
      * @return void
      */
+    public function testExecuteWithSuccess(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths' => [__DIR__.'/Fixtures/file.twig'],
+        ]);
+
+        self::assertStringContainsString(
+            '[SUCCESS] Files linted: 1, notices: 0, warnings: 0, errors: 0',
+            $commandTester->getDisplay()
+        );
+        self::assertSame(0, $commandTester->getStatusCode());
+    }
+
+    /**
+     * @return void
+     */
     public function testExecuteWithError(): void
     {
         $command = new TwigCsFixerCommand();

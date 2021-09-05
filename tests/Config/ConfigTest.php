@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Config;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Config\Config;
+use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
 
@@ -58,5 +60,28 @@ class ConfigTest extends TestCase
         $config->setRuleset($ruleset);
 
         self::assertSame($ruleset, $config->getRuleset());
+    }
+
+    /**
+     * @return void
+     */
+    public function testDefaultConfigHaveDefaultFinder(): void
+    {
+        $config = new Config();
+
+        self::assertInstanceOf(TwigCsFinder::class, $config->getFinder());
+    }
+
+    /**
+     * @return void
+     */
+    public function testSetFinderOverrideTheDefaultOne(): void
+    {
+        $finder = new Finder();
+
+        $config = new Config();
+        $config->setFinder($finder);
+
+        self::assertSame($finder, $config->getFinder());
     }
 }
