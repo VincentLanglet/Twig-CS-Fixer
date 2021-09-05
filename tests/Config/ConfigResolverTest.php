@@ -17,17 +17,17 @@ class ConfigResolverTest extends TestCase
 {
     /**
      * @param string      $workingDir
-     * @param string|null $path
+     * @param string|null $configPath
      * @param string      $configName
      *
      * @return void
      *
      * @dataProvider resolveConfigDataProvider
      */
-    public function testResolveConfig(string $workingDir, ?string $path, string $configName): void
+    public function testResolveConfig(string $workingDir, ?string $configPath, string $configName): void
     {
         $configResolver = new ConfigResolver($workingDir);
-        $config = $configResolver->resolveConfig([], $path);
+        $config = $configResolver->resolveConfig([], $configPath);
 
         self::assertSame($configName, $config->getName());
     }
@@ -38,9 +38,9 @@ class ConfigResolverTest extends TestCase
     public function resolveConfigDataProvider(): iterable
     {
         yield [__DIR__.'/Fixtures/directoryWithoutConfig', null, 'Default'];
-        yield [__DIR__.'/Fixtures/directoryWithConfig', null, 'Custom'];
-        yield [__DIR__, 'Fixtures/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
-        yield ['/tmp', __DIR__.'/Fixtures/directoryWithConfig/.twig-cs-fixer.php', 'Custom'];
+        yield [__DIR__.'/Fixtures/directoryWithCustomRuleset', null, 'Custom'];
+        yield [__DIR__, 'Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
+        yield ['/tmp', __DIR__.'/Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
     }
 
     /**
@@ -67,6 +67,47 @@ class ConfigResolverTest extends TestCase
         yield [__DIR__.'/Fixtures/directoryWithInvalidConfig', null];
         yield [__DIR__, 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
         yield [__DIR__, 'Fixtures/path/to/not/found/.twig-cs-fixer.php'];
+    }
+
+    /**
+     * @param string[] $paths
+     * @param string   $configPath
+     * @param int      $expectedCount
+     *
+     * @return void
+     *
+     * @dataProvider resolveFinderDataProvider
+     */
+    public function testResolveFinder(array $paths, string $configPath, int $expectedCount): void
+    {
+        $configResolver = new ConfigResolver(__DIR__);
+        $config = $configResolver->resolveConfig($paths, $configPath);
+
+        self::assertCount($expectedCount, $config->getFinder());
+    }
+
+    /**
+     * @return iterable<array-key, array{array<string>, string, int}>
+     */
+    public function resolveFinderDataProvider(): iterable
+    {
+        yield [
+            [],
+            __DIR__.'/Fixtures/directoryWithCustomFinder/.twig-cs-fixer.php',
+            0,
+        ];
+
+        yield [
+            [__DIR__.'/Fixtures/directoryWithFile'],
+            __DIR__.'/Fixtures/directoryWithCustomFinder/.twig-cs-fixer.php',
+            1,
+        ];
+
+        yield [
+            [__DIR__.'/Fixtures/directoryWithFile'],
+            __DIR__.'/Fixtures/directoryWithCustomFinder2/.twig-cs-fixer.php',
+            2,
+        ];
     }
 
     /**

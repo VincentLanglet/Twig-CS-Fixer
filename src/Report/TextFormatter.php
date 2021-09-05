@@ -27,10 +27,9 @@ use function wordwrap;
  */
 final class TextFormatter
 {
-    private const ERROR_CURSOR_CHAR   = '>>';
-    private const ERROR_LINE_FORMAT   = '%-5s| %s';
-    private const ERROR_CONTEXT_LIMIT = 2;
-    private const ERROR_LINE_WIDTH    = 120;
+    private const ERROR_CURSOR_CHAR = '>>';
+    private const ERROR_LINE_FORMAT = '%-5s| %s';
+    private const ERROR_LINE_WIDTH  = 120;
 
     /**
      * @var SymfonyStyle
@@ -73,7 +72,7 @@ final class TextFormatter
                 if (null === $line || false === $content) {
                     $formattedText[] = $this->formatErrorMessage($message);
                 } else {
-                    $lines = $this->getContext($content, $line, self::ERROR_CONTEXT_LIMIT);
+                    $lines = $this->getContext($content, $line);
                     foreach ($lines as $no => $code) {
                         $formattedText[] = sprintf(
                             self::ERROR_LINE_FORMAT,
@@ -123,38 +122,31 @@ final class TextFormatter
     /**
      * @param string $template
      * @param int    $line
-     * @param int    $context
      *
      * @return array<int, string>
      */
-    private function getContext(string $template, int $line, int $context): array
+    private function getContext(string $template, int $line): array
     {
         $lines = explode("\n", $template);
-
-        $position = max(0, $line - $context);
-        $max = min(count($lines), $line - 1 + $context);
+        $position = max(0, $line - 2);
+        $max = min(count($lines), $line + 1);
 
         $result = [];
         $indentCount = null;
-        while ($position < $max) {
-            if (1 === preg_match('/^[\s\t]+/', $lines[$position], $match)) {
-                if (null === $indentCount) {
-                    $indentCount = strlen($match[0]);
-                }
 
-                if (strlen($match[0]) < $indentCount) {
-                    $indentCount = strlen($match[0]);
-                }
-            } else {
+        do {
+            if (1 !== preg_match('/^[\s\t]+/', $lines[$position], $match)) {
                 $indentCount = 0;
+            } elseif (null === $indentCount || strlen($match[0]) < $indentCount) {
+                $indentCount = strlen($match[0]);
             }
 
             $result[$position + 1] = $lines[$position];
             $position++;
-        }
+        } while ($position < $max);
 
         foreach ($result as $index => $code) {
-            $result[$index] = substr($code, $indentCount ?? 0);
+            $result[$index] = substr($code, $indentCount);
         }
 
         return $result;

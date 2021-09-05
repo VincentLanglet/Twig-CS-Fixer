@@ -24,7 +24,7 @@ class TextFormatterTest extends TestCase
      *
      * @dataProvider displayDataProvider
      */
-    public function testDisplay(string $expected, ?string $level): void
+    public function testDisplayErrors(string $expected, ?string $level): void
     {
         $input = new ArrayInput([]);
         $output = new BufferedOutput();
@@ -47,6 +47,7 @@ class TextFormatterTest extends TestCase
 
         $text = $output->fetch();
         self::assertStringContainsString($expected, $text);
+        self::assertStringContainsString('[ERROR]', $text);
     }
 
     /**
@@ -98,6 +99,26 @@ class TextFormatterTest extends TestCase
             ),
             Report::MESSAGE_TYPE_ERROR,
         ];
+    }
+
+    /**
+     * @return void
+     */
+    public function testDisplaySuccess(): void
+    {
+        $input = new ArrayInput([]);
+        $output = new BufferedOutput();
+        $textFormatter = new TextFormatter($input, $output);
+
+        $file = __DIR__.'/Fixtures/file.twig';
+        $report = new Report();
+        $report->addFile($file);
+
+        $textFormatter->display($report);
+
+        $text = $output->fetch();
+        self::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
+        self::assertStringContainsString('[SUCCESS]', $text);
     }
 
     /**
