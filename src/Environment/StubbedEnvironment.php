@@ -58,9 +58,11 @@ class StubbedEnvironment extends Environment
 
         // TODO: Remove when dropping support for symfony/twig-bridge@4.4
         if (class_exists(TransChoiceTokenParser::class)) {
+            // @codeCoverageIgnoreStart
             /** @var TokenParserInterface $transChoiceTokenParser */
             $transChoiceTokenParser = new TransChoiceTokenParser();
             $this->addTokenParser($transChoiceTokenParser);
+            // @codeCoverageIgnoreEnd
         }
     }
 

@@ -19,7 +19,7 @@
         "twig/twig": "^2.13.1 || ^3.0.5"
     },
     "require-dev": {
-        "infection/infection": "^0.17 || ^0.24",
+        "infection/infection": "^0.17 || ^0.25",
         "phpstan/phpstan": "^0.12.95",
         "phpstan/phpstan-phpunit": "^0.12.20",
         "phpstan/phpstan-strict-rules": "^0.12.10",
