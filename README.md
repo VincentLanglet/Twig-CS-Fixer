@@ -56,7 +56,7 @@ Do not put any spaces before and after the opening and the closing of arrays and
 
 ## Custom configuration
 
-## Standard
+### Standard
 
 By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
  - `BlankEOFSniff`: Ensure that files ends with one blank line.
@@ -84,7 +84,7 @@ If your config is not located in your current directory, you can pass his path w
 bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ```
 
-## Files
+### Files
 
 By default, all the `.twig` files in the current directory are linted, except the one in the `vendor` directory.
 
