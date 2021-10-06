@@ -19,6 +19,7 @@ final class Finder extends BaseFinder
         $this
             ->files()
             ->name('*.twig')
+            ->exclude('node_modules')
             ->exclude('vendor');
     }
 }
