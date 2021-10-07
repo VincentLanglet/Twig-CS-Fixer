@@ -94,7 +94,7 @@ rule, you can configure it in the `.twig-cs-fixer.php` file. For instance,
 <?php
 
 $finder = new TwigCsFixer\File\Finder();
-$finder->exclude('myCustomDirectory')
+$finder->exclude('myCustomDirectory');
 
 $config = new TwigCsFixer\Config\Config();
 $config->setFinder($finder);
