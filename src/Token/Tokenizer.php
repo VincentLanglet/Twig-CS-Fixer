@@ -9,6 +9,7 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Source;
 
+use function array_filter;
 use function array_keys;
 use function array_merge;
 use function array_pop;
@@ -206,6 +207,16 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
+     * @return Token[]
+     */
+    private function getBrackets(): array
+    {
+        return array_filter($this->bracketsAndTernary, function (Token $token): bool {
+            return '?' !== $token->getValue();
+        });
+    }
+
+    /**
      * @return int
      *
      * @psalm-return 0|1|2|3|4|5
@@ -399,7 +410,8 @@ final class Tokenizer implements TokenizerInterface
         preg_match(self::REGEX_BLOCK_END, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
-        if ([] === $this->bracketsAndTernary && isset($match[0])) {
+        if (isset($match[0]) && [] === $this->getBrackets()) {
+            $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
@@ -419,7 +431,8 @@ final class Tokenizer implements TokenizerInterface
         preg_match(self::REGEX_VAR_END, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
 
-        if ([] === $this->bracketsAndTernary && isset($match[0])) {
+        if (isset($match[0]) && [] === $this->getBrackets()) {
+            $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
