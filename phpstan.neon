@@ -22,7 +22,9 @@ parameters:
         check:
             missingCheckedExceptionInThrows: true
             tooWideThrowType: true
-    implicitThrows: false
+        implicitThrows: false
+    symfony:
+        console_application_loader: .phpstan/ConsoleApplicationLoader.php
 
     # This checks are disabled by default
     checkInternalClassCaseSensitivity: true
