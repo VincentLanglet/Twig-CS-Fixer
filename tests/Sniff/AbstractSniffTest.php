@@ -71,8 +71,9 @@ abstract class AbstractSniffTest extends TestCase
         }
 
         $messages = $report->getMessagesByFiles()[$filePath];
-        $messagePositions = [];
 
+        /** @var array<array<int, int>> $messagePositions */
+        $messagePositions = [];
         foreach ($messages as $message) {
             if (SniffViolation::LEVEL_FATAL === $message->getLevel()) {
                 $errorMessage = $message->getMessage();
@@ -86,6 +87,7 @@ abstract class AbstractSniffTest extends TestCase
 
             $messagePositions[] = [$message->getLine() ?? 0 => $message->getLinePosition()];
         }
+
         self::assertSame($expects, $messagePositions);
     }
 
