@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\TrailingSpace;
 
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
-use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
 /**
  * Test of TrailingSpaceSniff.
  */
-final class TrailingSpaceTest extends AbstractSniffTest
+final class TrailingSpaceTest extends AbstractSniffTestCase
 {
     /**
      * @return void

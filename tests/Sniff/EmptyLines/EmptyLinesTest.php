@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\EmptyLines;
 
 use TwigCsFixer\Sniff\EmptyLinesSniff;
-use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
 /**
  * Test of EmptyLinesSniff.
  */
-final class EmptyLinesTest extends AbstractSniffTest
+final class EmptyLinesTest extends AbstractSniffTestCase
 {
     /**
      * @return void
