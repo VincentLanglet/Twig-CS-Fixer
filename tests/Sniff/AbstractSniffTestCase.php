@@ -26,7 +26,7 @@ use function substr;
 /**
  * TestCase for a Sniff.
  */
-abstract class AbstractSniffTest extends TestCase
+abstract class AbstractSniffTestCase extends TestCase
 {
     /**
      * Should call $this->checkSniff(new Sniff(), [...]);

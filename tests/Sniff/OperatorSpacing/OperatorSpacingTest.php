@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\OperatorSpacing;
 
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
-use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
 /**
  * Test of OperatorSpacingSniff.
  */
-final class OperatorSpacingTest extends AbstractSniffTest
+final class OperatorSpacingTest extends AbstractSniffTestCase
 {
     /**
      * @return void

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\PunctuationSpacing;
 
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
-use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
 /**
  * Test of PunctuationSpacingSniff.
  */
-final class PunctuationSpacingTest extends AbstractSniffTest
+final class PunctuationSpacingTest extends AbstractSniffTestCase
 {
     /**
      * @return void

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\DelimiterSpacing;
 
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
-use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
 /**
  * Test of DelimiterSpacingSniff.
  */
-final class DelimiterSpacingTest extends AbstractSniffTest
+final class DelimiterSpacingTest extends AbstractSniffTestCase
 {
     /**
      * @return void

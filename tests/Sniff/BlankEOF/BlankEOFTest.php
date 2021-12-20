@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Sniff\BlankEOF;
 
 use TwigCsFixer\Sniff\BlankEOFSniff;
-use TwigCsFixer\Tests\Sniff\AbstractSniffTest;
+use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
 /**
  * Test of BlankEOFSniff.
  */
-final class BlankEOFTest extends AbstractSniffTest
+final class BlankEOFTest extends AbstractSniffTestCase
 {
     /**
      * @return void
