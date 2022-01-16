@@ -14,8 +14,8 @@
     },
     "logs": {
         "text": "infection.log",
-        "badge": {
-            "branch": "main"
+        "stryker": {
+            "report": "main"
         }
     }
 }
