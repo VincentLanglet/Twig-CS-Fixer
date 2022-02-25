@@ -12,7 +12,6 @@
        ignoreInternalFunctionNullReturn="false"
        inferPropertyTypesFromConstructor="false"
        findUnusedPsalmSuppress="true"
-       ensureArrayStringOffsetsExist="true"
        cacheDirectory="/tmp/psalm"
 >
     <projectFiles>
