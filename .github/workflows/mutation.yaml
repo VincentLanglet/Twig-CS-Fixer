@@ -18,7 +18,7 @@ jobs:
             - name: Install PHP with extensions
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.0
+                  php-version: 8.1
                   coverage: pcov
                   tools: composer:v2
 
@@ -35,4 +35,3 @@ jobs:
               env:
                   INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
               run: vendor/bin/infection --threads=4 --skip-initial-tests --coverage=build/coverage --no-progress --log-verbosity=none
-
