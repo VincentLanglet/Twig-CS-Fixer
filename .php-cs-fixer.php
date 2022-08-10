@@ -18,8 +18,14 @@ $rules = [
             '=>' => 'align_single_space',
         ],
     ],
-    'class_attributes_separation'                      => ['elements' => ['method' => 'one', 'property' => 'one']],
-    'class_definition'                                 => ['inline_constructor_arguments' => false, 'space_before_parenthesis' => true, 'single_line' => true], // To be PSR12
+    'class_attributes_separation'                      => [
+        'elements' => ['method' => 'one', 'property' => 'one'],
+    ],
+    'class_definition'                                 => [
+        'inline_constructor_arguments' => false,
+        'space_before_parenthesis'     => true,
+        'single_line'                  => true,
+    ], // To be PSR12
     'increment_style'                                  => ['style' => 'post'],
     'no_trailing_whitespace_in_string'                 => false, // For string comparison in tests
     'phpdoc_summary'                                   => false,
@@ -27,7 +33,9 @@ $rules = [
 
     // Added
     'explicit_string_variable'                         => true,
-    'general_phpdoc_annotation_remove'                 => ['annotations' => ['author', 'since', 'package', 'subpackage']],
+    'general_phpdoc_annotation_remove'                 => [
+        'annotations' => ['author', 'since', 'package', 'subpackage'],
+    ],
     'global_namespace_import'                          => [
         'import_classes'   => true,
         'import_constants' => false,
