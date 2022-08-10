@@ -10,35 +10,17 @@ use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
 
-use function array_map;
-use function assert;
-use function file_get_contents;
-use function implode;
-use function preg_match;
-
 /**
  * Fixer will fix twig files against a set of rules.
  */
 final class Fixer
 {
-    /**
-     * @var int
-     */
     private int $loops = 0;
 
-    /**
-     * @var string
-     */
     private string $eolChar = "\n";
 
-    /**
-     * @var Ruleset
-     */
     private Ruleset $ruleset;
 
-    /**
-     * @var TokenizerInterface
-     */
     private TokenizerInterface $tokenizer;
 
     /**
@@ -82,42 +64,25 @@ final class Fixer
 
     /**
      * Is there an open changeset.
-     *
-     * @var bool
      */
     private bool $inChangeset = false;
 
     /**
      * Is the current fixing loop in conflict?
-     *
-     * @var bool
      */
     private bool $inConflict = false;
 
     /**
      * The number of fixes that have been performed.
-     *
-     * @var int
      */
     private int $numFixes = 0;
 
-    /**
-     * @param Ruleset            $ruleset
-     * @param TokenizerInterface $tokenizer
-     *
-     * @return void
-     */
     public function __construct(Ruleset $ruleset, TokenizerInterface $tokenizer)
     {
         $this->ruleset = $ruleset;
         $this->tokenizer = $tokenizer;
     }
 
-    /**
-     * @param string $file
-     *
-     * @return bool
-     */
     public function fixFile(string $file): bool
     {
         $contents = file_get_contents($file);
@@ -161,18 +126,13 @@ final class Fixer
         return true;
     }
 
-    /**
-     * @return string
-     */
     public function getContents(): string
     {
-        return implode($this->tokens);
+        return implode('', $this->tokens);
     }
 
     /**
      * Start recording actions for a changeset.
-     *
-     * @return void
      */
     public function beginChangeset(): void
     {
@@ -186,8 +146,6 @@ final class Fixer
 
     /**
      * Stop recording actions for a changeset, and apply logged changes.
-     *
-     * @return void
      */
     public function endChangeset(): void
     {
@@ -203,9 +161,8 @@ final class Fixer
             $success = $this->replaceToken($tokenPosition, $content);
             if (!$success) {
                 break;
-            } else {
-                $applied[] = $tokenPosition;
             }
+            $applied[] = $tokenPosition;
         }
 
         if (!$success) {
@@ -218,12 +175,6 @@ final class Fixer
         $this->changeset = [];
     }
 
-    /**
-     * @param int    $tokenPosition
-     * @param string $content
-     *
-     * @return bool
-     */
     public function replaceToken(int $tokenPosition, string $content): bool
     {
         if ($this->inConflict) {
@@ -268,11 +219,6 @@ final class Fixer
         return true;
     }
 
-    /**
-     * @param int $tokenPosition
-     *
-     * @return bool
-     */
     public function addNewline(int $tokenPosition): bool
     {
         $current = $this->getTokenContent($tokenPosition);
@@ -280,11 +226,6 @@ final class Fixer
         return $this->replaceToken($tokenPosition, $current.$this->eolChar);
     }
 
-    /**
-     * @param int $tokenPosition
-     *
-     * @return bool
-     */
     public function addNewlineBefore(int $tokenPosition): bool
     {
         $current = $this->getTokenContent($tokenPosition);
@@ -292,12 +233,6 @@ final class Fixer
         return $this->replaceToken($tokenPosition, $this->eolChar.$current);
     }
 
-    /**
-     * @param int    $tokenPosition
-     * @param string $content
-     *
-     * @return bool
-     */
     public function addContent(int $tokenPosition, string $content): bool
     {
         $current = $this->getTokenContent($tokenPosition);
@@ -305,12 +240,6 @@ final class Fixer
         return $this->replaceToken($tokenPosition, $current.$content);
     }
 
-    /**
-     * @param int    $tokenPosition
-     * @param string $content
-     *
-     * @return bool
-     */
     public function addContentBefore(int $tokenPosition, string $content): bool
     {
         $current = $this->getTokenContent($tokenPosition);
@@ -320,17 +249,13 @@ final class Fixer
 
     /**
      * @param list<Token> $tokens
-     *
-     * @return void
      */
     private function startFile(array $tokens): void
     {
         $this->numFixes = 0;
         $this->fixedTokens = [];
 
-        $this->tokens = array_map(static function (Token $token): string {
-            return $token->getValue();
-        }, $tokens);
+        $this->tokens = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
 
         preg_match("/\r\n?|\n/", $this->getContents(), $matches);
         $this->eolChar = $matches[0] ?? "\n";
@@ -339,10 +264,6 @@ final class Fixer
     /**
      * This function takes changesets into account so should be used
      * instead of directly accessing the token array.
-     *
-     * @param int $tokenPosition
-     *
-     * @return string
      */
     private function getTokenContent(int $tokenPosition): string
     {
@@ -353,17 +274,12 @@ final class Fixer
         return $this->tokens[$tokenPosition];
     }
 
-    /**
-     * @param int $tokenPosition
-     *
-     * @return bool
-     */
     private function revertToken(int $tokenPosition): bool
     {
         if (!isset($this->fixedTokens[$tokenPosition])) {
             return false;
         }
-        assert(isset($this->tokens[$tokenPosition]));
+        \assert(isset($this->tokens[$tokenPosition]));
 
         $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
         unset($this->fixedTokens[$tokenPosition]);

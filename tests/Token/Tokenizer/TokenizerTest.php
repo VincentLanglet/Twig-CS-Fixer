@@ -11,21 +11,13 @@ use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 
-use function array_map;
-use function file_get_contents;
-use function implode;
-use function sprintf;
-
 /**
  * Test of Tokenizer.
  */
 final class TokenizerTest extends TestCase
 {
     /**
-     * @param string          $filePath
      * @param array<int, int> $expectedTokenTypes
-     *
-     * @return void
      *
      * @throws \Exception
      *
@@ -44,18 +36,14 @@ final class TokenizerTest extends TestCase
 
         $tokens = $tokenizer->tokenize($source);
 
-        $tokenValues = array_map(static function (Token $token): string {
-            return $token->getValue();
-        }, $tokens);
+        $tokenValues = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
 
-        $diff = TestHelper::generateDiff(implode($tokenValues), $filePath);
+        $diff = TestHelper::generateDiff(implode('', $tokenValues), $filePath);
         if ('' !== $diff) {
             self::fail($diff);
         }
 
-        $tokenTypes = array_map(static function (Token $token): int {
-            return $token->getType();
-        }, $tokens);
+        $tokenTypes = array_map(static fn (Token $token): int => $token->getType(), $tokens);
         self::assertSame($expectedTokenTypes, $tokenTypes);
     }
 
@@ -414,11 +402,6 @@ final class TokenizerTest extends TestCase
     }
 
     /**
-     * @param string $filePath
-     * @param string $expectedMessage
-     *
-     * @return void
-     *
      * @throws \Exception
      *
      * @dataProvider tokenizeInvalidDataProvider

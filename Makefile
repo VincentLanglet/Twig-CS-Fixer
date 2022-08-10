@@ -1,9 +1,9 @@
 lint:
-	vendor/bin/phpcs --standard=phpcs.xml
+	vendor/bin/php-cs-fixer fix --dry-run
 .PHONY: lint
 
 lint-fix:
-	vendor/bin/phpcbf --standard=phpcs.xml
+	vendor/bin/php-cs-fixer fix
 .PHONY: lint-fix
 
 test:

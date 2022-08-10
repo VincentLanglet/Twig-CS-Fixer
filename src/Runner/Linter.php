@@ -14,33 +14,15 @@ use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
 
-use function file_get_contents;
-use function file_put_contents;
-use function restore_error_handler;
-use function set_error_handler;
-use function sprintf;
-
 /**
  * Linter is the main class and will process twig files against a set of rules.
  */
 final class Linter
 {
-    /**
-     * @var Environment
-     */
     private Environment $env;
 
-    /**
-     * @var TokenizerInterface
-     */
     private TokenizerInterface $tokenizer;
 
-    /**
-     * @param Environment        $env
-     * @param TokenizerInterface $tokenizer
-     *
-     * @return void
-     */
     public function __construct(Environment $env, TokenizerInterface $tokenizer)
     {
         $this->env = $env;
@@ -49,10 +31,6 @@ final class Linter
 
     /**
      * @param iterable<SplFileInfo> $files
-     * @param Ruleset               $ruleset
-     * @param bool                  $fix
-     *
-     * @return Report
      *
      * @throws Exception
      */
@@ -91,9 +69,6 @@ final class Linter
 
     /**
      * @param iterable<SplFileInfo> $finder
-     * @param Ruleset               $ruleset
-     *
-     * @return void
      *
      * @throws Exception
      */
@@ -117,13 +92,6 @@ final class Linter
         }
     }
 
-    /**
-     * @param string  $file
-     * @param Ruleset $ruleset
-     * @param Report  $report
-     *
-     * @return void
-     */
     private function processTemplate(string $file, Ruleset $ruleset, Report $report): void
     {
         $content = file_get_contents($file);
@@ -178,16 +146,10 @@ final class Linter
         }
     }
 
-    /**
-     * @param Report $report
-     * @param string $file
-     *
-     * @return void
-     */
     private function setErrorHandler(Report $report, string $file): void
     {
         set_error_handler(static function (int $type, string $message) use ($report, $file): bool {
-            if (E_USER_DEPRECATED === $type) {
+            if (\E_USER_DEPRECATED === $type) {
                 $sniffViolation = new SniffViolation(
                     SniffViolation::LEVEL_NOTICE,
                     $message,

@@ -13,9 +13,6 @@ use TwigCsFixer\Command\TwigCsFixerCommand;
  */
 final class TwigCsFixerCommandTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testExecuteWithPaths(): void
     {
         $command = new TwigCsFixerCommand();
@@ -32,9 +29,6 @@ final class TwigCsFixerCommandTest extends TestCase
         self::assertSame(1, $commandTester->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
     public function testExecuteWithConfig(): void
     {
         $command = new TwigCsFixerCommand();
@@ -52,9 +46,6 @@ final class TwigCsFixerCommandTest extends TestCase
         self::assertSame(1, $commandTester->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
     public function testExecuteWithSuccess(): void
     {
         $command = new TwigCsFixerCommand();
@@ -71,9 +62,6 @@ final class TwigCsFixerCommandTest extends TestCase
         self::assertSame(0, $commandTester->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
     public function testExecuteWithOptionFix(): void
     {
         $command = new TwigCsFixerCommand();
@@ -91,9 +79,6 @@ final class TwigCsFixerCommandTest extends TestCase
         self::assertSame(0, $commandTester->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
     public function testExecuteWithError(): void
     {
         $command = new TwigCsFixerCommand();

@@ -15,25 +15,15 @@ use TwigCsFixer\Token\Token;
  */
 final class SniffTest extends TestCase
 {
-    /**
-     * @var AbstractSniff
-     */
     private AbstractSniff $sniff;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->sniff = new class extends AbstractSniff
-        {
+        $this->sniff = new class () extends AbstractSniff {
             /**
-             * @param int         $tokenPosition
              * @param list<Token> $tokens
-             *
-             * @return void
              *
              * @throws Exception
              */
@@ -65,9 +55,6 @@ final class SniffTest extends TestCase
         };
     }
 
-    /**
-     * @return void
-     */
     public function testSniffWithoutReport(): void
     {
         self::expectException(Exception::class);
@@ -76,9 +63,6 @@ final class SniffTest extends TestCase
         $this->sniff->processFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]);
     }
 
-    /**
-     * @return void
-     */
     public function testSniffWithReport(): void
     {
         $report = new Report();
@@ -91,9 +75,6 @@ final class SniffTest extends TestCase
         self::assertSame(2, $report->getTotalErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testSniffWithReport2(): void
     {
         $report = new Report();

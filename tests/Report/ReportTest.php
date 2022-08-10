@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
@@ -11,9 +13,6 @@ use TwigCsFixer\Report\SniffViolation;
  */
 class ReportTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testReportDefaultState(): void
     {
         $report = new Report();
@@ -25,9 +24,6 @@ class ReportTest extends TestCase
         self::assertSame(0, $report->getTotalFiles());
     }
 
-    /**
-     * @return void
-     */
     public function testReport(): void
     {
         $file = 'file.twig';
@@ -74,9 +70,6 @@ class ReportTest extends TestCase
         ], $report->getMessagesByFiles(Report::MESSAGE_TYPE_ERROR));
     }
 
-    /**
-     * @return void
-     */
     public function testAddMessageForAnotherFile(): void
     {
         $report = new Report();

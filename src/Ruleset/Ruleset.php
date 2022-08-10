@@ -7,8 +7,6 @@ namespace TwigCsFixer\Ruleset;
 use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Standard\StandardInterface;
 
-use function get_class;
-
 /**
  * Set of rules to be used by TwigCsFixer and contains all sniffs.
  */
@@ -28,13 +26,11 @@ final class Ruleset
     }
 
     /**
-     * @param SniffInterface $sniff
-     *
      * @return $this
      */
-    public function addSniff(SniffInterface $sniff): Ruleset
+    public function addSniff(SniffInterface $sniff): self
     {
-        $this->sniffs[get_class($sniff)] = $sniff;
+        $this->sniffs[\get_class($sniff)] = $sniff;
 
         return $this;
     }
@@ -44,7 +40,7 @@ final class Ruleset
      *
      * @return $this
      */
-    public function removeSniff(string $class): Ruleset
+    public function removeSniff(string $class): self
     {
         unset($this->sniffs[$class]);
 
@@ -52,11 +48,9 @@ final class Ruleset
     }
 
     /**
-     * @param StandardInterface $standard
-     *
      * @return $this
      */
-    public function addStandard(StandardInterface $standard): Ruleset
+    public function addStandard(StandardInterface $standard): self
     {
         foreach ($standard->getSniffs() as $sniff) {
             $this->addSniff($sniff);

@@ -19,9 +19,6 @@ use TwigCsFixer\Standard\Generic;
  */
 class GenericTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testGetSniffs(): void
     {
         $standard = new Generic();

@@ -13,10 +13,7 @@ use TwigCsFixer\Token\Token;
 final class TrailingSpaceSniff extends AbstractSniff
 {
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return void
      *
      * @throws Exception
      */

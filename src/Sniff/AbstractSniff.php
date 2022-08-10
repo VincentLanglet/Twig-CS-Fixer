@@ -10,48 +10,25 @@ use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Token\Token;
 
-use function in_array;
-use function is_array;
-use function sprintf;
-
 /**
  * Base for all sniff.
  */
 abstract class AbstractSniff implements SniffInterface
 {
-    /**
-     * @var Report|null
-     */
     protected ?Report $report = null;
 
-    /**
-     * @var Fixer|null
-     */
     private ?Fixer $fixer = null;
 
-    /**
-     * @param Report $report
-     *
-     * @return void
-     */
     public function enableReport(Report $report): void
     {
         $this->report = $report;
     }
 
-    /**
-     * @param Fixer $fixer
-     *
-     * @return void
-     */
     public function enableFixer(Fixer $fixer): void
     {
         $this->fixer = $fixer;
     }
 
-    /**
-     * @return void
-     */
     public function disable(): void
     {
         $this->report = null;
@@ -60,8 +37,6 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @param list<Token> $stream
-     *
-     * @return void
      */
     public function processFile(array $stream): void
     {
@@ -71,38 +46,30 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return void
      */
     abstract protected function process(int $tokenPosition, array $tokens): void;
 
     /**
-     * @param Token           $token
      * @param int|int[]       $type
      * @param string|string[] $value
-     *
-     * @return bool
      */
     protected function isTokenMatching(Token $token, $type, $value = []): bool
     {
-        if (!is_array($type)) {
+        if (!\is_array($type)) {
             $type = [$type];
         }
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             $value = [$value];
         }
 
-        return in_array($token->getType(), $type, true)
-            && ([] === $value || in_array($token->getValue(), $value, true));
+        return \in_array($token->getType(), $type, true)
+            && ([] === $value || \in_array($token->getValue(), $value, true));
     }
 
     /**
      * @param int|int[]   $type
      * @param list<Token> $tokens
-     * @param int         $start
-     * @param bool        $exclude
      *
      * @return int|false
      */
@@ -127,8 +94,6 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param int|int[]   $type
      * @param list<Token> $tokens
-     * @param int         $start
-     * @param bool        $exclude
      *
      * @return int|false
      */
@@ -151,11 +116,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param string $message
-     * @param Token  $token
-     *
-     * @return void
-     *
      * @throws Exception
      */
     protected function addWarning(string $message, Token $token): void
@@ -164,11 +124,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param string $message
-     * @param Token  $token
-     *
-     * @return void
-     *
      * @throws Exception
      */
     protected function addError(string $message, Token $token): void
@@ -177,11 +132,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param string $message
-     * @param Token  $token
-     *
-     * @return Fixer|null
-     *
      * @throws Exception
      */
     protected function addFixableWarning(string $message, Token $token): ?Fixer
@@ -190,11 +140,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param string $message
-     * @param Token  $token
-     *
-     * @return Fixer|null
-     *
      * @throws Exception
      */
     protected function addFixableError(string $message, Token $token): ?Fixer
@@ -203,12 +148,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int    $messageType
-     * @param string $message
-     * @param Token  $token
-     *
-     * @return void
-     *
      * @throws Exception
      */
     private function addMessage(int $messageType, string $message, Token $token): void
@@ -235,12 +174,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int    $messageType
-     * @param string $message
-     * @param Token  $token
-     *
-     * @return Fixer|null
-     *
      * @throws Exception
      */
     private function addFixableMessage(int $messageType, string $message, Token $token): ?Fixer

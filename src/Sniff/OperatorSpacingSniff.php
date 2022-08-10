@@ -6,18 +6,13 @@ namespace TwigCsFixer\Sniff;
 
 use TwigCsFixer\Token\Token;
 
-use function assert;
-
 /**
  * Ensure there is one space before and after an operator except for '..'.
  */
 final class OperatorSpacingSniff extends AbstractSpacingSniff
 {
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return int|null
      */
     protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
@@ -38,10 +33,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return int|null
      */
     protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
@@ -62,15 +54,12 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return bool
      */
     private function isUnary(int $tokenPosition, array $tokens): bool
     {
         $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
-        assert(false !== $previous); // An OPERATOR_TYPE cannot be the first non-empty token
+        \assert(false !== $previous); // An OPERATOR_TYPE cannot be the first non-empty token
 
         $previousToken = $tokens[$previous];
 

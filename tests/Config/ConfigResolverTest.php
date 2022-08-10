@@ -8,20 +8,12 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Config\ConfigResolver;
 
-use function sprintf;
-
 /**
  * Test for ConfigResolver.
  */
 class ConfigResolverTest extends TestCase
 {
     /**
-     * @param string      $workingDir
-     * @param string|null $configPath
-     * @param string      $configName
-     *
-     * @return void
-     *
      * @dataProvider resolveConfigDataProvider
      */
     public function testResolveConfig(string $workingDir, ?string $configPath, string $configName): void
@@ -44,11 +36,6 @@ class ConfigResolverTest extends TestCase
     }
 
     /**
-     * @param string      $workingDir
-     * @param string|null $path
-     *
-     * @return void
-     *
      * @dataProvider resolveConfigExceptionDataProvider
      */
     public function testResolveConfigException(string $workingDir, ?string $path): void
@@ -71,10 +58,6 @@ class ConfigResolverTest extends TestCase
 
     /**
      * @param string[] $paths
-     * @param string   $configPath
-     * @param int      $expectedCount
-     *
-     * @return void
      *
      * @dataProvider resolveFinderDataProvider
      */
@@ -111,11 +94,6 @@ class ConfigResolverTest extends TestCase
     }
 
     /**
-     * @param string $configPath
-     * @param string $path
-     *
-     * @return void
-     *
      * @dataProvider configPathIsCorrectlyGeneratedDataProvider
      */
     public function testConfigPathIsCorrectlyGenerated(string $configPath, string $path): void

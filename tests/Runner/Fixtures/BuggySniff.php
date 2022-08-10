@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Runner\Fixtures;
 
 use TwigCsFixer\Sniff\AbstractSpacingSniff;
@@ -11,10 +13,7 @@ use TwigCsFixer\Token\Token;
 class BuggySniff extends AbstractSpacingSniff
 {
     /**
-     * @param int               $tokenPosition
      * @param array<int, Token> $tokens
-     *
-     * @return int|null
      */
     protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
@@ -27,10 +26,7 @@ class BuggySniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int               $tokenPosition
      * @param array<int, Token> $tokens
-     *
-     * @return int|null
      */
     protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
     {

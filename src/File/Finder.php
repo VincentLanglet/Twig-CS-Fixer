@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\File;
 
 use Symfony\Component\Finder\Finder as BaseFinder;
@@ -9,9 +11,6 @@ use Symfony\Component\Finder\Finder as BaseFinder;
  */
 final class Finder extends BaseFinder
 {
-    /**
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();

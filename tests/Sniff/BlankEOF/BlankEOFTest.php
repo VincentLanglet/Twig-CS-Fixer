@@ -12,9 +12,6 @@ use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
  */
 final class BlankEOFTest extends AbstractSniffTestCase
 {
-    /**
-     * @return void
-     */
     public function testSniff(): void
     {
         $this->checkSniff(new BlankEOFSniff(), [
@@ -26,9 +23,6 @@ final class BlankEOFTest extends AbstractSniffTestCase
         ], __DIR__.'/BlankEOFTest2.twig');
     }
 
-    /**
-     * @return void
-     */
     public function testSniffForEmptyFile(): void
     {
         $this->checkSniff(new BlankEOFSniff(), [], __DIR__.'/BlankEOFTest.empty.twig');
