@@ -19,7 +19,7 @@ jobs:
                     - 8.1
                 dependencies: [highest]
                 include:
-                    - php-version: 7.3
+                    - php-version: 7.4
                       dependencies: lowest
 
         steps:

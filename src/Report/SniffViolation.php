@@ -22,27 +22,27 @@ final class SniffViolation
     /**
      * @var int
      */
-    private $level;
+    private int $level;
 
     /**
      * @var string
      */
-    private $message;
+    private string $message;
 
     /**
      * @var int|null
      */
-    private $line;
+    private ?int $line;
 
     /**
      * @var int|null
      */
-    private $linePosition;
+    private ?int $linePosition = null;
 
     /**
      * @var string
      */
-    private $filename;
+    private string $filename;
 
     /**
      * @param int      $level

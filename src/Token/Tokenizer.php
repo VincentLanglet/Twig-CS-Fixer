@@ -65,59 +65,59 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @var string
      */
-    private $operatorRegex;
+    private string $operatorRegex;
 
     /**
      * @var int
      */
-    private $cursor = 0;
+    private int $cursor = 0;
 
     /**
      * @var int|null
      */
-    private $end;
+    private ?int $end = null;
 
     /**
      * @var int
      */
-    private $line = 1;
+    private int $line = 1;
 
     /**
      * @var int
      */
-    private $currentPosition = 0;
+    private int $currentPosition = 0;
 
     /**
      * @var list<Token>
      */
-    private $tokens = [];
+    private array $tokens = [];
 
     /**
      * @var array<int, array{fullMatch: string, position: int, match: string}>
      */
-    private $tokenPositions = [];
+    private array $tokenPositions = [];
 
     /**
      * @var array<array{int, array<string, string>}>
      *
      * @psalm-var array<array{0|1|2|3|4|5, array<string, string>}>
      */
-    private $state = [];
+    private array $state = [];
 
     /**
      * @var list<Token>
      */
-    private $bracketsAndTernary = [];
+    private array $bracketsAndTernary = [];
 
     /**
      * @var string
      */
-    private $code = '';
+    private string $code = '';
 
     /**
      * @var string
      */
-    private $filename = '';
+    private string $filename = '';
 
     /**
      * @param Environment $env

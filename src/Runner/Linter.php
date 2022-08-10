@@ -28,12 +28,12 @@ final class Linter
     /**
      * @var Environment
      */
-    private $env;
+    private Environment $env;
 
     /**
      * @var TokenizerInterface
      */
-    private $tokenizer;
+    private TokenizerInterface $tokenizer;
 
     /**
      * @param Environment        $env

@@ -24,22 +24,22 @@ final class Fixer
     /**
      * @var int
      */
-    private $loops = 0;
+    private int $loops = 0;
 
     /**
      * @var string
      */
-    private $eolChar = "\n";
+    private string $eolChar = "\n";
 
     /**
      * @var Ruleset
      */
-    private $ruleset;
+    private Ruleset $ruleset;
 
     /**
      * @var TokenizerInterface
      */
-    private $tokenizer;
+    private TokenizerInterface $tokenizer;
 
     /**
      * The list of tokens that make up the file contents.
@@ -50,7 +50,7 @@ final class Fixer
      *
      * @var list<string>
      */
-    private $tokens = [];
+    private array $tokens = [];
 
     /**
      * A list of tokens that have already been fixed.
@@ -60,7 +60,7 @@ final class Fixer
      *
      * @var array<int, string>
      */
-    private $fixedTokens = [];
+    private array $fixedTokens = [];
 
     /**
      * The last value of each fixed token.
@@ -69,7 +69,7 @@ final class Fixer
      *
      * @var array<int, array{curr: string, prev: string, loop: int}>
      */
-    private $oldTokenValues = [];
+    private array $oldTokenValues = [];
 
     /**
      * A list of tokens that have been fixed during a changeset.
@@ -78,28 +78,28 @@ final class Fixer
      *
      * @var array<int, string>
      */
-    private $changeset = [];
+    private array $changeset = [];
 
     /**
      * Is there an open changeset.
      *
      * @var bool
      */
-    private $inChangeset = false;
+    private bool $inChangeset = false;
 
     /**
      * Is the current fixing loop in conflict?
      *
      * @var bool
      */
-    private $inConflict = false;
+    private bool $inConflict = false;
 
     /**
      * The number of fixes that have been performed.
      *
      * @var int
      */
-    private $numFixes = 0;
+    private int $numFixes = 0;
 
     /**
      * @param Ruleset            $ruleset

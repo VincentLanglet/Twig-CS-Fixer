@@ -22,12 +22,12 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @var Report|null
      */
-    protected $report;
+    protected ?Report $report = null;
 
     /**
      * @var Fixer|null
      */
-    private $fixer;
+    private ?Fixer $fixer = null;
 
     /**
      * @param Report $report

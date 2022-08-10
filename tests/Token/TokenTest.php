@@ -1,6 +1,6 @@
 <?php
 
-namespace TwigCsFixer\Token\Token;
+namespace TwigCsFixer\Tests\Token;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Token\Token;
