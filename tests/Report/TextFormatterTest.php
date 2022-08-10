@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
@@ -9,19 +11,12 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Report\TextFormatter;
 
-use function sprintf;
-
 /**
  * Test for TextFormatter.
  */
 class TextFormatterTest extends TestCase
 {
     /**
-     * @param string      $expected
-     * @param string|null $level
-     *
-     * @return void
-     *
      * @dataProvider displayDataProvider
      */
     public function testDisplayErrors(string $expected, ?string $level): void
@@ -58,25 +53,25 @@ class TextFormatterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                 KO %s/Fixtures/file.twig
-                 --------- --------------------------------------- 
-                  NOTICE    1    |     {# Some text line 1 #}      
-                            >>   | Notice                          
-                            2    | {# Some text line 2 #}          
-                 --------- --------------------------------------- 
-                  WARNING   1    |         {# Some text line 1 #}  
-                            2    |     {# Some text line 2 #}      
-                            >>   | Warning                         
-                            3    | {# Some text line 3 #}          
-                 --------- --------------------------------------- 
-                  ERROR     2    |     {# Some text line 2 #}      
-                            3    | {# Some text line 3 #}          
-                            >>   | Error                           
-                            4    |                                 
-                 --------- --------------------------------------- 
-                  FATAL     >>   | Fatal                           
-                 --------- --------------------------------------- 
-                EOD,
+                     KO %s/Fixtures/file.twig
+                     --------- ---------------------------------------
+                      NOTICE    1    |     {# Some text line 1 #}
+                                >>   | Notice
+                                2    | {# Some text line 2 #}
+                     --------- ---------------------------------------
+                      WARNING   1    |         {# Some text line 1 #}
+                                2    |     {# Some text line 2 #}
+                                >>   | Warning
+                                3    | {# Some text line 3 #}
+                     --------- ---------------------------------------
+                      ERROR     2    |     {# Some text line 2 #}
+                                3    | {# Some text line 3 #}
+                                >>   | Error
+                                4    |
+                     --------- ---------------------------------------
+                      FATAL     >>   | Fatal
+                     --------- ---------------------------------------
+                    EOD,
                 __DIR__
             ),
             null,
@@ -85,25 +80,22 @@ class TextFormatterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                 KO %s/Fixtures/file.twig
-                 ------- ----------------------------------- 
-                  ERROR   2    |     {# Some text line 2 #}  
-                          3    | {# Some text line 3 #}      
-                          >>   | Error                       
-                          4    |                             
-                 ------- ----------------------------------- 
-                  FATAL   >>   | Fatal                       
-                 ------- ----------------------------------- 
-                EOD,
+                     KO %s/Fixtures/file.twig
+                     ------- -----------------------------------
+                      ERROR   2    |     {# Some text line 2 #}
+                              3    | {# Some text line 3 #}
+                              >>   | Error
+                              4    |
+                     ------- -----------------------------------
+                      FATAL   >>   | Fatal
+                     ------- -----------------------------------
+                    EOD,
                 __DIR__
             ),
             Report::MESSAGE_TYPE_ERROR,
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testDisplaySuccess(): void
     {
         $input = new ArrayInput([]);
@@ -122,11 +114,6 @@ class TextFormatterTest extends TestCase
     }
 
     /**
-     * @param string $expected
-     * @param int    $level
-     *
-     * @return void
-     *
      * @dataProvider displayBlockDataProvider
      */
     public function testDisplayBlock(string $expected, int $level): void

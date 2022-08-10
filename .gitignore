@@ -10,7 +10,7 @@ vendor/
 .phpunit.result.cache
 
 ## PhpCs
-.phpcs-cache
+.php-cs-fixer.cache
 
 ## Infection
 infection.log

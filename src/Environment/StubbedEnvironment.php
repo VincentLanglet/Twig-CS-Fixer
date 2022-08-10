@@ -17,9 +17,6 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-use function array_key_exists;
-use function class_exists;
-
 /**
  * Provide stubs for all filters, functions, tests and tags that are not defined in twig's core.
  */
@@ -43,9 +40,6 @@ class StubbedEnvironment extends Environment
         'same'      => null, // Allow 'same as'
     ];
 
-    /**
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct(new ArrayLoader());
@@ -68,12 +62,10 @@ class StubbedEnvironment extends Environment
 
     /**
      * @param string $name
-     *
-     * @return TwigFilter|null
      */
     public function getFilter($name): ?TwigFilter
     {
-        if (!array_key_exists($name, $this->stubFilters)) {
+        if (!\array_key_exists($name, $this->stubFilters)) {
             $this->stubFilters[$name] = new TwigFilter('stub');
         }
 
@@ -82,12 +74,10 @@ class StubbedEnvironment extends Environment
 
     /**
      * @param string $name
-     *
-     * @return TwigFunction|null
      */
     public function getFunction($name): ?TwigFunction
     {
-        if (!array_key_exists($name, $this->stubFunctions)) {
+        if (!\array_key_exists($name, $this->stubFunctions)) {
             $this->stubFunctions[$name] = new TwigFunction('stub');
         }
 
@@ -96,12 +86,10 @@ class StubbedEnvironment extends Environment
 
     /**
      * @param string $name
-     *
-     * @return TwigTest|null
      */
     public function getTest($name): ?TwigTest
     {
-        if (!array_key_exists($name, $this->stubTests)) {
+        if (!\array_key_exists($name, $this->stubTests)) {
             $this->stubTests[$name] = new TwigTest('stub');
         }
 

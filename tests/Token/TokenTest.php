@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Token;
 
 use PHPUnit\Framework\TestCase;
@@ -10,9 +12,6 @@ use TwigCsFixer\Token\Token;
  */
 class TokenTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testGetters(): void
     {
         $relatedToken = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '[');
@@ -26,9 +25,6 @@ class TokenTest extends TestCase
         self::assertSame($relatedToken, $token->getRelatedToken());
     }
 
-    /**
-     * @return void
-     */
     public function testNullValue(): void
     {
         $token = new Token(Token::EOF_TYPE, 2, 1, 'file.twig');

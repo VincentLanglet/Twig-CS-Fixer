@@ -17,12 +17,6 @@ use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Tokenizer;
 
-use function dirname;
-use function file_exists;
-use function get_called_class;
-use function sprintf;
-use function substr;
-
 /**
  * TestCase for a Sniff.
  */
@@ -30,17 +24,11 @@ abstract class AbstractSniffTestCase extends TestCase
 {
     /**
      * Should call $this->checkSniff(new Sniff(), [...]);
-     *
-     * @return void
      */
     abstract public function testSniff(): void;
 
     /**
-     * @param SniffInterface         $sniff
      * @param array<array<int, int>> $expects
-     * @param string|null            $filePath
-     *
-     * @return void
      */
     protected function checkSniff(SniffInterface $sniff, array $expects, ?string $filePath = null): void
     {
@@ -49,7 +37,7 @@ abstract class AbstractSniffTestCase extends TestCase
         $linter = new Linter($env, $tokenizer);
         $ruleset = new Ruleset();
 
-        $filePath = $filePath ?? $this->generateFilePath();
+        $filePath ??= $this->generateFilePath();
 
         try {
             $ruleset->addSniff($sniff);
@@ -91,18 +79,15 @@ abstract class AbstractSniffTestCase extends TestCase
         self::assertSame($expects, $messagePositions);
     }
 
-    /**
-     * @return string
-     */
     private function generateFilePath(): string
     {
-        $class = new ReflectionClass(get_called_class());
+        $class = new ReflectionClass(static::class);
         $className = $class->getShortName();
         $filename = $class->getFileName();
         self::assertNotFalse($filename);
 
-        $directory = dirname($filename);
+        $directory = \dirname($filename);
 
-        return "$directory/$className.twig";
+        return "{$directory}/{$className}.twig";
     }
 }

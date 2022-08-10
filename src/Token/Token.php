@@ -10,33 +10,33 @@ namespace TwigCsFixer\Token;
 final class Token
 {
     // From Twig\Token
-    public const EOF_TYPE                 = -1;
-    public const TEXT_TYPE                = 0;
-    public const BLOCK_START_TYPE         = 1;
-    public const VAR_START_TYPE           = 2;
-    public const BLOCK_END_TYPE           = 3;
-    public const VAR_END_TYPE             = 4;
-    public const NAME_TYPE                = 5;
-    public const NUMBER_TYPE              = 6;
-    public const STRING_TYPE              = 7;
-    public const OPERATOR_TYPE            = 8;
-    public const PUNCTUATION_TYPE         = 9;
+    public const EOF_TYPE = -1;
+    public const TEXT_TYPE = 0;
+    public const BLOCK_START_TYPE = 1;
+    public const VAR_START_TYPE = 2;
+    public const BLOCK_END_TYPE = 3;
+    public const VAR_END_TYPE = 4;
+    public const NAME_TYPE = 5;
+    public const NUMBER_TYPE = 6;
+    public const STRING_TYPE = 7;
+    public const OPERATOR_TYPE = 8;
+    public const PUNCTUATION_TYPE = 9;
     public const INTERPOLATION_START_TYPE = 10;
-    public const INTERPOLATION_END_TYPE   = 11;
-    public const ARROW_TYPE               = 12;
+    public const INTERPOLATION_END_TYPE = 11;
+    public const ARROW_TYPE = 12;
     // New constants
-    public const DQ_STRING_START_TYPE     = 13;
-    public const DQ_STRING_END_TYPE       = 14;
-    public const BLOCK_TAG_TYPE           = 15;
-    public const WHITESPACE_TYPE          = 16;
-    public const TAB_TYPE                 = 17;
-    public const EOL_TYPE                 = 18;
-    public const COMMENT_START_TYPE       = 19;
-    public const COMMENT_TEXT_TYPE        = 20;
-    public const COMMENT_WHITESPACE_TYPE  = 21;
-    public const COMMENT_TAB_TYPE         = 22;
-    public const COMMENT_EOL_TYPE         = 23;
-    public const COMMENT_END_TYPE         = 24;
+    public const DQ_STRING_START_TYPE = 13;
+    public const DQ_STRING_END_TYPE = 14;
+    public const BLOCK_TAG_TYPE = 15;
+    public const WHITESPACE_TYPE = 16;
+    public const TAB_TYPE = 17;
+    public const EOL_TYPE = 18;
+    public const COMMENT_START_TYPE = 19;
+    public const COMMENT_TEXT_TYPE = 20;
+    public const COMMENT_WHITESPACE_TYPE = 21;
+    public const COMMENT_TAB_TYPE = 22;
+    public const COMMENT_EOL_TYPE = 23;
+    public const COMMENT_END_TYPE = 24;
 
     public const WHITESPACE_TOKENS = [
         self::WHITESPACE_TYPE         => self::WHITESPACE_TYPE,
@@ -59,53 +59,25 @@ final class Token
         self::COMMENT_END_TYPE   => self::COMMENT_END_TYPE,
     ];
 
-    /**
-     * @var int
-     */
     private int $type;
 
-    /**
-     * @var int
-     */
     private int $line;
 
-    /**
-     * @var int
-     */
     private int $position;
 
-    /**
-     * @var string
-     */
     private string $filename;
 
-    /**
-     * @var string
-     */
     private string $value;
 
-    /**
-     * @var Token|null
-     */
     private ?Token $relatedToken;
 
-    /**
-     * @param int        $type
-     * @param int        $line
-     * @param int        $position
-     * @param string     $filename
-     * @param string     $value
-     * @param Token|null $relatedToken
-     *
-     * @return void
-     */
     public function __construct(
         int $type,
         int $line,
         int $position,
         string $filename,
         string $value = '',
-        ?Token $relatedToken = null
+        ?self $relatedToken = null
     ) {
         $this->type = $type;
         $this->line = $line;
@@ -115,50 +87,32 @@ final class Token
         $this->relatedToken = $relatedToken;
     }
 
-    /**
-     * @return int
-     */
     public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @return int
-     */
     public function getLine(): int
     {
         return $this->line;
     }
 
-    /**
-     * @return int
-     */
     public function getPosition(): int
     {
         return $this->position;
     }
 
-    /**
-     * @return string
-     */
     public function getFilename(): string
     {
         return $this->filename;
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     * @return Token|null
-     */
-    public function getRelatedToken(): ?Token
+    public function getRelatedToken(): ?self
     {
         return $this->relatedToken;
     }

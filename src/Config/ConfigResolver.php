@@ -9,36 +9,20 @@ use LogicException;
 use Symfony\Component\Finder\Finder;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 
-use function file_exists;
-use function is_file;
-use function preg_match;
-use function sprintf;
-
 /**
  * Resolve config from `.twig-cs-fixer.php` is provided
  */
 final class ConfigResolver
 {
-    /**
-     * @var string
-     */
     private string $workingDir;
 
-    /**
-     * @param string $workingDir
-     *
-     * @return void
-     */
     public function __construct(string $workingDir)
     {
         $this->workingDir = $workingDir;
     }
 
     /**
-     * @param string[]    $paths
-     * @param string|null $configPath
-     *
-     * @return Config
+     * @param string[] $paths
      *
      * @throws Exception
      */
@@ -51,10 +35,6 @@ final class ConfigResolver
     }
 
     /**
-     * @param string|null $configPath
-     *
-     * @return Config
-     *
      * @throws Exception
      */
     private function getConfig(?string $configPath = null): Config
@@ -62,23 +42,19 @@ final class ConfigResolver
         if (null !== $configPath) {
             $configPath = $this->isAbsolutePath($configPath)
                 ? $configPath
-                : $this->workingDir.DIRECTORY_SEPARATOR.$configPath;
+                : $this->workingDir.\DIRECTORY_SEPARATOR.$configPath;
 
             return $this->getConfigFromPath($configPath);
         }
 
-        if (file_exists($this->workingDir.DIRECTORY_SEPARATOR.'.twig-cs-fixer.php')) {
-            return $this->getConfigFromPath($this->workingDir.DIRECTORY_SEPARATOR.'.twig-cs-fixer.php');
+        if (file_exists($this->workingDir.\DIRECTORY_SEPARATOR.'.twig-cs-fixer.php')) {
+            return $this->getConfigFromPath($this->workingDir.\DIRECTORY_SEPARATOR.'.twig-cs-fixer.php');
         }
 
         return new Config();
     }
 
     /**
-     * @param string $configPath
-     *
-     * @return Config
-     *
      * @throws Exception
      */
     private function getConfigFromPath(string $configPath): Config
@@ -87,7 +63,7 @@ final class ConfigResolver
             throw new Exception(sprintf('Cannot find the config file "%s".', $configPath));
         }
 
-        $config = require($configPath);
+        $config = require $configPath;
         if (!$config instanceof Config) {
             throw new Exception(sprintf('The config file must return a "%s" object.', Config::class));
         }
@@ -96,10 +72,7 @@ final class ConfigResolver
     }
 
     /**
-     * @param Finder   $finder
      * @param string[] $paths
-     *
-     * @return Finder
      */
     private function resolveFinder(Finder $finder, array $paths): Finder
     {
@@ -135,11 +108,6 @@ final class ConfigResolver
         return TwigCsFinder::create()->in($directories)->append($files);
     }
 
-    /**
-     * @param string $path
-     *
-     * @return bool
-     */
     private function isAbsolutePath(string $path): bool
     {
         return '' !== $path && (

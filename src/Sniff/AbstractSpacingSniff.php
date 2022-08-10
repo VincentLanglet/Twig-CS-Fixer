@@ -7,20 +7,13 @@ namespace TwigCsFixer\Sniff;
 use Exception;
 use TwigCsFixer\Token\Token;
 
-use function sprintf;
-use function str_repeat;
-use function strlen;
-
 /**
  * Ensure there is one space before or after some tokens
  */
 abstract class AbstractSpacingSniff extends AbstractSniff
 {
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return void
      *
      * @throws Exception
      */
@@ -39,27 +32,17 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return int|null
      */
     abstract protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return int|null
      */
     abstract protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     * @param int         $expected
-     *
-     * @return void
      *
      * @throws Exception
      */
@@ -74,7 +57,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $count = strlen($tokens[$tokenPosition + 1]->getValue());
+            $count = \strlen($tokens[$tokenPosition + 1]->getValue());
         } else {
             $count = 0;
         }
@@ -101,11 +84,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     * @param int         $expected
-     *
-     * @return void
      *
      * @throws Exception
      */
@@ -120,7 +99,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         }
 
         if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
-            $count = strlen($tokens[$tokenPosition - 1]->getValue());
+            $count = \strlen($tokens[$tokenPosition - 1]->getValue());
         } else {
             $count = 0;
         }

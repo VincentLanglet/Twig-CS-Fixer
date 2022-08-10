@@ -7,18 +7,13 @@ namespace TwigCsFixer\Sniff;
 use Exception;
 use TwigCsFixer\Token\Token;
 
-use function sprintf;
-
 /**
  * Ensure that files ends with one blank line.
  */
 final class BlankEOFSniff extends AbstractSniff
 {
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return void
      *
      * @throws Exception
      */

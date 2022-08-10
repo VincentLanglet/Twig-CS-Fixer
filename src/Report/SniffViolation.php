@@ -6,53 +6,27 @@ namespace TwigCsFixer\Report;
 
 use InvalidArgumentException;
 
-use function sprintf;
-use function strtoupper;
-
 /**
  * Wrapper class that represents a violation to a sniff with context.
  */
 final class SniffViolation
 {
-    public const LEVEL_NOTICE  = 0;
+    public const LEVEL_NOTICE = 0;
     public const LEVEL_WARNING = 1;
-    public const LEVEL_ERROR   = 2;
-    public const LEVEL_FATAL   = 3;
+    public const LEVEL_ERROR = 2;
+    public const LEVEL_FATAL = 3;
 
-    /**
-     * @var int
-     */
     private int $level;
 
-    /**
-     * @var string
-     */
     private string $message;
 
-    /**
-     * @var int|null
-     */
     private ?int $line;
 
-    /**
-     * @var int|null
-     */
     private ?int $linePosition = null;
 
-    /**
-     * @var string
-     */
     private string $filename;
 
-    /**
-     * @param int      $level
-     * @param string   $message
-     * @param string   $filename
-     * @param int|null $line
-     *
-     * @return void
-     */
-    public function __construct(int $level, string $message, string $filename, int $line = null)
+    public function __construct(int $level, string $message, string $filename, ?int $line = null)
     {
         $this->level = $level;
         $this->message = $message;
@@ -60,19 +34,11 @@ final class SniffViolation
         $this->filename = $filename;
     }
 
-    /**
-     * @return int
-     */
     public function getLevel(): int
     {
         return $this->level;
     }
 
-    /**
-     * @param int $level
-     *
-     * @return string
-     */
     public static function getLevelAsString(int $level): string
     {
         switch ($level) {
@@ -89,11 +55,6 @@ final class SniffViolation
         }
     }
 
-    /**
-     * @param string $level
-     *
-     * @return int
-     */
     public static function getLevelAsInt(string $level): int
     {
         switch (strtoupper($level)) {
@@ -110,45 +71,28 @@ final class SniffViolation
         }
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * @return int|null
-     */
     public function getLine(): ?int
     {
         return $this->line;
     }
 
-    /**
-     * @return string
-     */
     public function getFilename(): string
     {
         return $this->filename;
     }
 
-    /**
-     * @param int|null $linePosition
-     *
-     * @return self
-     */
-    public function setLinePosition(?int $linePosition): SniffViolation
+    public function setLinePosition(?int $linePosition): self
     {
         $this->linePosition = $linePosition;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getLinePosition(): ?int
     {
         return $this->linePosition;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Runner;
 
 use PHPUnit\Framework\TestCase;
@@ -14,18 +16,11 @@ use TwigCsFixer\Tests\Runner\Fixtures\BuggySniff;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 
-use function error_reporting;
-use function sprintf;
-use function trigger_error;
-
 /**
  * Test for Linter.
  */
 class LinterTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testUnreadableFilesAreReported(): void
     {
         $env = new StubbedEnvironment();
@@ -36,7 +31,7 @@ class LinterTest extends TestCase
         $filePath = __DIR__.'/Fixtures/file_not_readable.twig';
 
         // Suppress the warning sent by `file_get_content` during the test.
-        $oldErrorLevel = error_reporting(E_ALL ^ E_WARNING);
+        $oldErrorLevel = error_reporting(\E_ALL ^ \E_WARNING);
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
         error_reporting($oldErrorLevel);
 
@@ -53,9 +48,6 @@ class LinterTest extends TestCase
         self::assertSame($filePath, $message->getFilename());
     }
 
-    /**
-     * @return void
-     */
     public function testInvalidFilesAreReported(): void
     {
         $env = $this->createStub(Environment::class);
@@ -81,9 +73,6 @@ class LinterTest extends TestCase
         self::assertSame($filePath, $message->getFilename());
     }
 
-    /**
-     * @return void
-     */
     public function testUntokenizableFilesAreReported(): void
     {
         $env = new StubbedEnvironment();
@@ -109,9 +98,6 @@ class LinterTest extends TestCase
         self::assertSame($filePath, $message->getFilename());
     }
 
-    /**
-     * @return void
-     */
     public function testUserDeprecationAreReported(): void
     {
         $env = new StubbedEnvironment();
@@ -142,9 +128,6 @@ class LinterTest extends TestCase
         self::assertSame($filePath, $message->getFilename());
     }
 
-    /**
-     * @return void
-     */
     public function testEmptyRulesetCanBeFixed(): void
     {
         self::expectNotToPerformAssertions();
@@ -157,9 +140,6 @@ class LinterTest extends TestCase
         $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
     }
 
-    /**
-     * @return void
-     */
     public function testBuggyRulesetCannotBeFixed(): void
     {
         $env = new StubbedEnvironment();

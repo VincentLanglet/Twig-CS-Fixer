@@ -17,16 +17,11 @@ use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
 
-use function getcwd;
-
 /**
  * TwigCsFixer stands for "Twig Code Sniffer Fixer" and will check twig template of your project.
  */
 final class TwigCsFixerCommand extends Command
 {
-    /**
-     * @return void
-     */
     protected function configure(): void
     {
         $this
@@ -60,12 +55,6 @@ final class TwigCsFixerCommand extends Command
             ]);
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $workingDir = getcwd();
@@ -107,15 +96,9 @@ final class TwigCsFixerCommand extends Command
         return 0;
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param string          $message
-     *
-     * @return int
-     */
     private function fail(OutputInterface $output, string $message): int
     {
-        $output->writeln("<error>Error: $message</error>");
+        $output->writeln("<error>Error: {$message}</error>");
 
         return 1;
     }

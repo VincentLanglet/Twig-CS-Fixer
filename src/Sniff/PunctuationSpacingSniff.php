@@ -16,10 +16,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     private const ONE_SPACE_AFTER = [':', ','];
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return int|null
      */
     protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
@@ -32,10 +29,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param int         $tokenPosition
      * @param list<Token> $tokens
-     *
-     * @return int|null
      */
     protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
     {

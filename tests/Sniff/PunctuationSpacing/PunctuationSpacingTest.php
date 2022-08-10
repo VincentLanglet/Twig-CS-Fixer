@@ -12,9 +12,6 @@ use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
  */
 final class PunctuationSpacingTest extends AbstractSniffTestCase
 {
-    /**
-     * @return void
-     */
     public function testSniff(): void
     {
         $this->checkSniff(new PunctuationSpacingSniff(), [

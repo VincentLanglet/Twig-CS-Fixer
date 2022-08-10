@@ -11,25 +11,17 @@ use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\StandardInterface;
 
-use function get_class;
-
 /**
  * Test for Ruleset.
  */
 class RulesetTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testStartWithNoSniff(): void
     {
         $ruleset = new Ruleset();
         self::assertSame([], $ruleset->getSniffs());
     }
 
-    /**
-     * @return void
-     */
     public function testAddAndRemoveSniff(): void
     {
         $ruleset = new Ruleset();
@@ -38,13 +30,10 @@ class RulesetTest extends TestCase
         $ruleset->addSniff($sniff);
         self::assertCount(1, $ruleset->getSniffs());
 
-        $ruleset->removeSniff(get_class($sniff));
+        $ruleset->removeSniff(\get_class($sniff));
         self::assertCount(0, $ruleset->getSniffs());
     }
 
-    /**
-     * @return void
-     */
     public function testAddStandard(): void
     {
         $ruleset = new Ruleset();

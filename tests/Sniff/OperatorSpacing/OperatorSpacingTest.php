@@ -12,32 +12,29 @@ use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
  */
 final class OperatorSpacingTest extends AbstractSniffTestCase
 {
-    /**
-     * @return void
-     */
     public function testSniff(): void
     {
         $this->checkSniff(new OperatorSpacingSniff(), [
             [1 => 4],
-            [1 => 4],
-            [2 => 5],
-            [2 => 5],
-            [3 => 5],
-            [3 => 5],
-            [4 => 5],
-            [4 => 5],
-            [5 => 5],
-            [5 => 5],
-            [6 => 5],
-            [6 => 5],
-            [7 => 5],
-            [7 => 5],
-            [8 => 7],
-            [8 => 7],
-            [9 => 10],
-            [9 => 10],
-            [9 => 19],
-            [9 => 19],
+            [1  => 4],
+            [2  => 5],
+            [2  => 5],
+            [3  => 5],
+            [3  => 5],
+            [4  => 5],
+            [4  => 5],
+            [5  => 5],
+            [5  => 5],
+            [6  => 5],
+            [6  => 5],
+            [7  => 5],
+            [7  => 5],
+            [8  => 7],
+            [8  => 7],
+            [9  => 10],
+            [9  => 10],
+            [9  => 19],
+            [9  => 19],
             [10 => 5],
             [10 => 5],
             [11 => 4],

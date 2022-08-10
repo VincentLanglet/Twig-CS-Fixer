@@ -9,82 +9,42 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Source;
 
-use function array_filter;
-use function array_keys;
-use function array_merge;
-use function array_pop;
-use function arsort;
-use function assert;
-use function count;
-use function ctype_alpha;
-use function end;
-use function implode;
-use function in_array;
-use function preg_match;
-use function preg_match_all;
-use function preg_quote;
-use function preg_replace;
-use function sprintf;
-use function str_replace;
-use function strlen;
-use function strrpos;
-use function strtr;
-use function substr;
-use function substr_count;
-
-use const PHP_EOL;
-
 /**
  * An override of Twig's Lexer to add whitespace and new line detection.
  */
 final class Tokenizer implements TokenizerInterface
 {
-    private const STATE_DATA          = 0;
-    private const STATE_BLOCK         = 1;
-    private const STATE_VAR           = 2;
-    private const STATE_DQ_STRING     = 3;
+    private const STATE_DATA = 0;
+    private const STATE_BLOCK = 1;
+    private const STATE_VAR = 2;
+    private const STATE_DQ_STRING = 3;
     private const STATE_INTERPOLATION = 4;
-    private const STATE_COMMENT       = 5;
+    private const STATE_COMMENT = 5;
 
     private const SQ_STRING_PART = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
     private const DQ_STRING_PART = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
 
-    private const REGEX_EXPRESSION_START    = '/({%|{#|{{)(-|~)?/';
-    private const REGEX_BLOCK_END           = '/(?:-|~)?(?:%})/A';
-    private const REGEX_COMMENT_END         = '/(?:-|~)?(?:#})/'; // Must not be anchored
-    private const REGEX_VAR_END             = '/(?:-|~)?(?:}})/A';
+    private const REGEX_EXPRESSION_START = '/({%|{#|{{)(-|~)?/';
+    private const REGEX_BLOCK_END = '/(?:-|~)?(?:%})/A';
+    private const REGEX_COMMENT_END = '/(?:-|~)?(?:#})/'; // Must not be anchored
+    private const REGEX_VAR_END = '/(?:-|~)?(?:}})/A';
     private const REGEX_INTERPOLATION_START = '/#{/A';
-    private const REGEX_INTERPOLATION_END   = '/}/A';
+    private const REGEX_INTERPOLATION_END = '/}/A';
 
-    private const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    private const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
-    private const REGEX_STRING          = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
-    private const REGEX_DQ_STRING_PART  = '/'.self::DQ_STRING_PART.'/As';
+    private const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
+    private const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?/A';
+    private const REGEX_STRING = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
+    private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PART.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
 
-    /**
-     * @var string
-     */
     private string $operatorRegex;
 
-    /**
-     * @var int
-     */
     private int $cursor = 0;
 
-    /**
-     * @var int|null
-     */
     private ?int $end = null;
 
-    /**
-     * @var int
-     */
     private int $line = 1;
 
-    /**
-     * @var int
-     */
     private int $currentPosition = 0;
 
     /**
@@ -109,21 +69,10 @@ final class Tokenizer implements TokenizerInterface
      */
     private array $bracketsAndTernary = [];
 
-    /**
-     * @var string
-     */
     private string $code = '';
 
-    /**
-     * @var string
-     */
     private string $filename = '';
 
-    /**
-     * @param Environment $env
-     *
-     * @return void
-     */
     public function __construct(Environment $env)
     {
         // Caching the regex.
@@ -131,8 +80,6 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param Source $source
-     *
      * @return list<Token>
      *
      * @throws SyntaxError
@@ -187,11 +134,6 @@ final class Tokenizer implements TokenizerInterface
         return $this->tokens;
     }
 
-    /**
-     * @param Source $source
-     *
-     * @return void
-     */
     private function resetState(Source $source): void
     {
         $this->cursor = 0;
@@ -202,7 +144,7 @@ final class Tokenizer implements TokenizerInterface
         $this->bracketsAndTernary = [];
 
         $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
-        $this->end = strlen($this->code);
+        $this->end = \strlen($this->code);
         $this->filename = $source->getName();
     }
 
@@ -211,26 +153,19 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getBrackets(): array
     {
-        return array_filter($this->bracketsAndTernary, function (Token $token): bool {
-            return '?' !== $token->getValue();
-        });
+        return array_filter($this->bracketsAndTernary, fn (Token $token): bool => '?' !== $token->getValue());
     }
 
     /**
-     * @return int
-     *
      * @psalm-return 0|1|2|3|4|5
      */
     private function getState(): int
     {
-        return count($this->state) > 0 ? $this->state[count($this->state) - 1][0] : self::STATE_DATA;
+        return \count($this->state) > 0 ? $this->state[\count($this->state) - 1][0] : self::STATE_DATA;
     }
 
     /**
-     * @param int                   $state
      * @param array<string, string> $data
-     *
-     * @return void
      *
      * @psalm-param 0|1|2|3|4|5 $state
      */
@@ -239,12 +174,6 @@ final class Tokenizer implements TokenizerInterface
         $this->state[] = [$state, $data];
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     *
-     * @return void
-     */
     private function setStateParam(string $name, string $value): void
     {
         if ([] === $this->state) {
@@ -253,7 +182,7 @@ final class Tokenizer implements TokenizerInterface
             // @codeCoverageIgnoreEnd
         }
 
-        $this->state[count($this->state) - 1][1][$name] = $value;
+        $this->state[\count($this->state) - 1][1][$name] = $value;
     }
 
     /**
@@ -261,12 +190,9 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getStateParams(): array
     {
-        return count($this->state) > 0 ? $this->state[count($this->state) - 1][1] : [];
+        return \count($this->state) > 0 ? $this->state[\count($this->state) - 1][1] : [];
     }
 
-    /**
-     * @return void
-     */
     private function popState(): void
     {
         if ([] === $this->state) {
@@ -277,17 +203,11 @@ final class Tokenizer implements TokenizerInterface
         array_pop($this->state);
     }
 
-    /**
-     * @param string $code
-     *
-     * @return void
-     */
     private function preflightSource(string $code): void
     {
         $tokenPositions = [];
-        preg_match_all(self::REGEX_EXPRESSION_START, $code, $tokenPositions, PREG_OFFSET_CAPTURE);
+        preg_match_all(self::REGEX_EXPRESSION_START, $code, $tokenPositions, \PREG_OFFSET_CAPTURE);
         /** @var array<0|1|2, array<0|1|2|3|4, array{string, int}>> $tokenPositions */
-
         $tokenPositionsReworked = [];
         foreach ($tokenPositions[0] as $index => $tokenFullMatch) {
             $tokenPositionsReworked[$index] = [
@@ -301,8 +221,6 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int $offset
-     *
      * @return array{fullMatch: string, position: int, match: string}|null
      */
     private function getTokenPosition(int $offset = 0): ?array
@@ -317,37 +235,20 @@ final class Tokenizer implements TokenizerInterface
         return $this->tokenPositions[$this->currentPosition + $offset];
     }
 
-    /**
-     * @param int $value
-     *
-     * @return void
-     */
     private function moveCurrentPosition(int $value = 1): void
     {
         $this->currentPosition += $value;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return void
-     */
     private function moveCursor(string $value): void
     {
-        $this->cursor += strlen($value);
+        $this->cursor += \strlen($value);
         $this->line += substr_count($value, "\n");
     }
 
-    /**
-     * @param int        $type
-     * @param string     $value
-     * @param Token|null $relatedToken
-     *
-     * @return Token
-     */
     private function pushToken(int $type, string $value = '', ?Token $relatedToken = null): Token
     {
-        $strrpos = strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
+        $strrpos = strrpos(substr($this->code, 0, $this->cursor), \PHP_EOL);
         if (false === $strrpos) {
             $strrpos = 0;
         }
@@ -366,8 +267,6 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return void
-     *
      * @throws SyntaxError
      */
     private function lexExpression(): void
@@ -379,7 +278,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (PHP_EOL === $currentCode) {
+        } elseif (\PHP_EOL === $currentCode) {
             $this->lexEOL();
         } elseif ('=' === $currentCode && '>' === $nextToken) {
             $this->lexArrowFunction();
@@ -389,7 +288,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexName($match[0]);
         } elseif (1 === preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $this->lexNumber($match[0]);
-        } elseif (in_array($currentCode, ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'], true)) {
+        } elseif (\in_array($currentCode, ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'], true)) {
             $this->lexPunctuation();
         } elseif (1 === preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
             $this->lexString($match[0]);
@@ -401,15 +300,12 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return void
-     *
      * @throws SyntaxError
      */
     private function lexBlock(): void
     {
-        preg_match(self::REGEX_BLOCK_END, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match(self::REGEX_BLOCK_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
-
         if (isset($match[0]) && [] === $this->getBrackets()) {
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
@@ -422,15 +318,12 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return void
-     *
      * @throws SyntaxError
      */
     private function lexVariable(): void
     {
-        preg_match(self::REGEX_VAR_END, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match(self::REGEX_VAR_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
-
         if (isset($match[0]) && [] === $this->getBrackets()) {
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
@@ -443,15 +336,12 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return void
-     *
      * @throws SyntaxError
      */
     private function lexComment(): void
     {
-        preg_match(self::REGEX_COMMENT_END, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+        preg_match(self::REGEX_COMMENT_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
-
         if (!isset($match[0])) {
             throw new SyntaxError('Unclosed comment.', $this->line);
         }
@@ -466,16 +356,13 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    /**
-     * @return void
-     */
     private function lexDqString(): void
     {
         if (1 === preg_match(self::REGEX_INTERPOLATION_START, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartInterpolation();
         } elseif (
             1 === preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor)
-            && strlen($match[0]) > 0
+            && '' !== $match[0]
         ) {
             $this->pushToken(Token::STRING_TYPE, $match[0]);
             $this->moveCursor($match[0]);
@@ -492,14 +379,12 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return void
-     *
      * @throws SyntaxError
      */
     private function lexInterpolation(): void
     {
         $bracket = end($this->bracketsAndTernary);
-        assert(false !== $bracket); // Interpolation always start with a bracket.
+        \assert(false !== $bracket); // Interpolation always start with a bracket.
 
         if (
             '#{' === $bracket->getValue()
@@ -514,11 +399,6 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    /**
-     * @param int $limit
-     *
-     * @return void
-     */
     private function lexData(int $limit = 0): void
     {
         $nextToken = $this->getTokenPosition();
@@ -531,13 +411,13 @@ final class Tokenizer implements TokenizerInterface
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (PHP_EOL === $currentCode) {
+        } elseif (\PHP_EOL === $currentCode) {
             $this->lexEOL();
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
 
             // Stop if cursor reaches the next token start.
-            if (0 !== $limit && $limit <= ($this->cursor + strlen($value))) {
+            if (0 !== $limit && $limit <= ($this->cursor + \strlen($value))) {
                 $value = substr($value, 0, $limit - $this->cursor);
             }
 
@@ -551,13 +431,10 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    /**
-     * @return void
-     */
     private function lexStart(): void
     {
         $tokenStart = $this->getTokenPosition();
-        assert(null !== $tokenStart);
+        \assert(null !== $tokenStart);
 
         if ('{#' === $tokenStart['match']) {
             $state = self::STATE_COMMENT;
@@ -579,9 +456,6 @@ final class Tokenizer implements TokenizerInterface
         $this->moveCursor($tokenStart['fullMatch']);
     }
 
-    /**
-     * @return void
-     */
     private function lexStartDqString(): void
     {
         $token = $this->pushToken(Token::DQ_STRING_START_TYPE, '"');
@@ -590,9 +464,6 @@ final class Tokenizer implements TokenizerInterface
         $this->bracketsAndTernary[] = $token;
     }
 
-    /**
-     * @return void
-     */
     private function lexStartInterpolation(): void
     {
         $token = $this->pushToken(Token::INTERPOLATION_START_TYPE, '#{');
@@ -601,9 +472,6 @@ final class Tokenizer implements TokenizerInterface
         $this->bracketsAndTernary[] = $token;
     }
 
-    /**
-     * @return void
-     */
     private function lexTab(): void
     {
         $currentCode = $this->code[$this->cursor];
@@ -622,9 +490,6 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    /**
-     * @return void
-     */
     private function lexWhitespace(): void
     {
         $currentCode = $this->code[$this->cursor];
@@ -643,9 +508,6 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    /**
-     * @return void
-     */
     private function lexEOL(): void
     {
         if (self::STATE_COMMENT === $this->getState()) {
@@ -657,20 +519,12 @@ final class Tokenizer implements TokenizerInterface
         $this->moveCursor($this->code[$this->cursor]);
     }
 
-    /**
-     * @return void
-     */
     private function lexArrowFunction(): void
     {
         $this->pushToken(Token::ARROW_TYPE, '=>');
         $this->moveCursor('=>');
     }
 
-    /**
-     * @param string $operator
-     *
-     * @return void
-     */
     private function lexOperator(string $operator): void
     {
         if ('?' === $operator) {
@@ -686,11 +540,6 @@ final class Tokenizer implements TokenizerInterface
         $this->moveCursor($operator);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return void
-     */
     private function lexName(string $name): void
     {
         if (self::STATE_BLOCK === $this->getState() && !isset($this->getStateParams()['tag'])) {
@@ -703,11 +552,6 @@ final class Tokenizer implements TokenizerInterface
         $this->moveCursor($name);
     }
 
-    /**
-     * @param string $numberAsString
-     *
-     * @return void
-     */
     private function lexNumber(string $numberAsString): void
     {
         $this->pushToken(Token::NUMBER_TYPE, $numberAsString);
@@ -715,8 +559,6 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return void
-     *
      * @throws SyntaxError
      */
     private function lexPunctuation(): void
@@ -731,7 +573,7 @@ final class Tokenizer implements TokenizerInterface
 
                 return;
             }
-            if (in_array($currentCode, [',', ')', ']', '}'], true)) {
+            if (\in_array($currentCode, [',', ')', ']', '}'], true)) {
                 // Because {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
                 do {
                     array_pop($this->bracketsAndTernary);
@@ -743,10 +585,10 @@ final class Tokenizer implements TokenizerInterface
             }
         }
 
-        if (in_array($currentCode, ['(', '[', '{'], true)) {
+        if (\in_array($currentCode, ['(', '[', '{'], true)) {
             $token = $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
             $this->bracketsAndTernary[] = $token;
-        } elseif (in_array($currentCode, [')', ']', '}'], true)) {
+        } elseif (\in_array($currentCode, [')', ']', '}'], true)) {
             if ([] === $this->bracketsAndTernary) {
                 throw new SyntaxError(sprintf('Unexpected "%s".', $currentCode), $this->line);
             }
@@ -775,22 +617,12 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    /**
-     * @param string $string
-     *
-     * @return void
-     */
     private function lexString(string $string): void
     {
         $this->pushToken(Token::STRING_TYPE, $string);
         $this->moveCursor($string);
     }
 
-    /**
-     * @param Environment $env
-     *
-     * @return string
-     */
     private function getOperatorRegex(Environment $env): string
     {
         /** @psalm-suppress InternalMethod */
@@ -807,7 +639,7 @@ final class Tokenizer implements TokenizerInterface
 
         $lengthByOperator = [];
         foreach ($operators as $operator) {
-            $lengthByOperator[$operator] = strlen($operator);
+            $lengthByOperator[$operator] = \strlen($operator);
         }
         arsort($lengthByOperator);
 

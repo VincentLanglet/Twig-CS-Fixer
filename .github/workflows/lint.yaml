@@ -8,7 +8,7 @@ on:
 
 jobs:
     phpcs:
-        name: PHP Code Sniffer
+        name: PHP Cs Fixer
         runs-on: ubuntu-18.04
 
         steps:
@@ -28,5 +28,5 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Run PHP Code Sniffer
-              run: vendor/bin/phpcs --standard=phpcs.xml
+            - name: Run PHP Cs Fixer
+              run: vendor/bin/php-cs-fixer fix --ansi --verbose --diff --dry-run

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Token;
 
 use Twig\Error\SyntaxError;
@@ -11,8 +13,6 @@ use Twig\Source;
 interface TokenizerInterface
 {
     /**
-     * @param Source $source
-     *
      * @return list<Token>
      *
      * @throws SyntaxError
