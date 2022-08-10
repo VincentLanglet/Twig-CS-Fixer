@@ -17,7 +17,7 @@ final class Ruleset
     /**
      * @var array<class-string<SniffInterface>, SniffInterface>
      */
-    private $sniffs = [];
+    private array $sniffs = [];
 
     /**
      * @return array<class-string<SniffInterface>, SniffInterface>

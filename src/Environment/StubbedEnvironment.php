@@ -28,12 +28,12 @@ class StubbedEnvironment extends Environment
     /**
      * @var array<string, TwigFilter|null>
      */
-    protected $stubFilters = [];
+    protected array $stubFilters = [];
 
     /**
      * @var array<string, TwigFunction|null>
      */
-    protected $stubFunctions = [];
+    protected array $stubFunctions = [];
 
     /**
      * @var array<string, TwigTest|null>

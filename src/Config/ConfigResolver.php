@@ -22,7 +22,7 @@ final class ConfigResolver
     /**
      * @var string
      */
-    private $workingDir;
+    private string $workingDir;
 
     /**
      * @param string $workingDir

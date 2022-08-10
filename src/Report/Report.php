@@ -24,27 +24,27 @@ final class Report
     /**
      * @var array<string, list<SniffViolation>>
      */
-    private $messagesByFiles = [];
+    private array $messagesByFiles = [];
 
     /**
      * @var list<string>
      */
-    private $files = [];
+    private array $files = [];
 
     /**
      * @var int
      */
-    private $totalNotices = 0;
+    private int $totalNotices = 0;
 
     /**
      * @var int
      */
-    private $totalWarnings = 0;
+    private int $totalWarnings = 0;
 
     /**
      * @var int
      */
-    private $totalErrors = 0;
+    private int $totalErrors = 0;
 
     /**
      * @param SniffViolation $sniffViolation

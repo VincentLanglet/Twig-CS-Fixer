@@ -34,7 +34,7 @@ final class TextFormatter
     /**
      * @var SymfonyStyle
      */
-    private $io;
+    private SymfonyStyle $io;
 
     /**
      * @param InputInterface  $input

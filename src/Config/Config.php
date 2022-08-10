@@ -17,17 +17,17 @@ final class Config
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var Ruleset
      */
-    private $ruleset;
+    private Ruleset $ruleset;
 
     /**
      * @var Finder
      */
-    private $finder;
+    private Finder $finder;
 
     /**
      * @param string $name

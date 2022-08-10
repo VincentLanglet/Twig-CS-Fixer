@@ -18,7 +18,7 @@ final class SniffTest extends TestCase
     /**
      * @var AbstractSniff
      */
-    private $sniff;
+    private AbstractSniff $sniff;
 
     /**
      * @return void

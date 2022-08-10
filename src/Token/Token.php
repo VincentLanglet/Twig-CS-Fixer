@@ -62,32 +62,32 @@ final class Token
     /**
      * @var int
      */
-    private $type;
+    private int $type;
 
     /**
      * @var int
      */
-    private $line;
+    private int $line;
 
     /**
      * @var int
      */
-    private $position;
+    private int $position;
 
     /**
      * @var string
      */
-    private $filename;
+    private string $filename;
 
     /**
      * @var string
      */
-    private $value;
+    private string $value;
 
     /**
      * @var Token|null
      */
-    private $relatedToken;
+    private ?Token $relatedToken;
 
     /**
      * @param int        $type
