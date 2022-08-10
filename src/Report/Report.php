@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Report;
 
+use InvalidArgumentException;
+
 /**
  * Report contains all violations with stats.
  */
@@ -34,7 +36,7 @@ final class Report
     {
         $filename = $sniffViolation->getFilename();
         if (!\in_array($filename, $this->getFiles(), true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }

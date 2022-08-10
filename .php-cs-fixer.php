@@ -27,6 +27,11 @@ $rules = [
     // Added
     'explicit_string_variable'                         => true,
     'general_phpdoc_annotation_remove'                 => ['annotations' => ['author', 'since', 'package', 'subpackage']],
+    'global_namespace_import'                          => [
+        'import_classes'   => true,
+        'import_constants' => false,
+        'import_functions' => false,
+    ],
     'header_comment'                                   => ['header' => ''],
     'no_superfluous_elseif'                            => true,
     'no_useless_else'                                  => true,

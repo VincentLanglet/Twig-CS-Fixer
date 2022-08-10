@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Token\Tokenizer;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -19,7 +20,7 @@ final class TokenizerTest extends TestCase
     /**
      * @param array<int, int> $expectedTokenTypes
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider tokenizeDataProvider
      */
@@ -402,7 +403,7 @@ final class TokenizerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider tokenizeInvalidDataProvider
      */
