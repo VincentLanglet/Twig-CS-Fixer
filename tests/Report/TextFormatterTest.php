@@ -54,23 +54,23 @@ class TextFormatterTest extends TestCase
             sprintf(
                 <<<EOD
                      KO %s/Fixtures/file.twig
-                     --------- ---------------------------------------
-                      NOTICE    1    |     {# Some text line 1 #}
-                                >>   | Notice
-                                2    | {# Some text line 2 #}
-                     --------- ---------------------------------------
-                      WARNING   1    |         {# Some text line 1 #}
-                                2    |     {# Some text line 2 #}
-                                >>   | Warning
-                                3    | {# Some text line 3 #}
-                     --------- ---------------------------------------
-                      ERROR     2    |     {# Some text line 2 #}
-                                3    | {# Some text line 3 #}
-                                >>   | Error
-                                4    |
-                     --------- ---------------------------------------
-                      FATAL     >>   | Fatal
-                     --------- ---------------------------------------
+                     --------- --------------------------------------- 
+                      NOTICE    1    |     {# Some text line 1 #}      
+                                >>   | Notice                          
+                                2    | {# Some text line 2 #}          
+                     --------- --------------------------------------- 
+                      WARNING   1    |         {# Some text line 1 #}  
+                                2    |     {# Some text line 2 #}      
+                                >>   | Warning                         
+                                3    | {# Some text line 3 #}          
+                     --------- --------------------------------------- 
+                      ERROR     2    |     {# Some text line 2 #}      
+                                3    | {# Some text line 3 #}          
+                                >>   | Error                           
+                                4    |                                 
+                     --------- --------------------------------------- 
+                      FATAL     >>   | Fatal                           
+                     --------- --------------------------------------- 
                     EOD,
                 __DIR__
             ),
@@ -81,14 +81,14 @@ class TextFormatterTest extends TestCase
             sprintf(
                 <<<EOD
                      KO %s/Fixtures/file.twig
-                     ------- -----------------------------------
-                      ERROR   2    |     {# Some text line 2 #}
-                              3    | {# Some text line 3 #}
-                              >>   | Error
-                              4    |
-                     ------- -----------------------------------
-                      FATAL   >>   | Fatal
-                     ------- -----------------------------------
+                     ------- ----------------------------------- 
+                      ERROR   2    |     {# Some text line 2 #}  
+                              3    | {# Some text line 3 #}      
+                              >>   | Error                       
+                              4    |                             
+                     ------- ----------------------------------- 
+                      FATAL   >>   | Fatal                       
+                     ------- ----------------------------------- 
                     EOD,
                 __DIR__
             ),

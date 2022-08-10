@@ -21,6 +21,7 @@ $rules = [
     'class_attributes_separation'                      => ['elements' => ['method' => 'one', 'property' => 'one']],
     'class_definition'                                 => ['inline_constructor_arguments' => false, 'space_before_parenthesis' => true, 'single_line' => true], // To be PSR12
     'increment_style'                                  => ['style' => 'post'],
+    'no_trailing_whitespace_in_string'                 => false, // For string comparison in tests
     'phpdoc_summary'                                   => false,
     'single_line_throw'                                => false,
 
