@@ -142,6 +142,12 @@ class LinterTest extends TestCase
 
     public function testBuggyRulesetCannotBeFixed(): void
     {
+        // Avoid mutation-testing to modify the file
+        $file = __DIR__.'/Fixtures/file.twig';
+        $tmpFile = sys_get_temp_dir().'/file.twig';
+        $copySuccessful = copy($file, $tmpFile);
+        static::assertTrue($copySuccessful);
+
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
         $ruleset = new Ruleset();
@@ -149,7 +155,7 @@ class LinterTest extends TestCase
 
         $linter = new Linter($env, $tokenizer);
 
-        self::expectExceptionMessage(sprintf('Cannot fix the file "%s/Fixtures/file.twig".', __DIR__));
-        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
+        self::expectExceptionMessage(sprintf('Cannot fix the file "%s".', $tmpFile));
+        $linter->run([new SplFileInfo($tmpFile)], $ruleset, true);
     }
 }

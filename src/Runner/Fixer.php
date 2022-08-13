@@ -201,9 +201,7 @@ final class Fixer
             $content === $this->oldTokenValues[$tokenPosition]['prev']
             && ($this->loops - 1) === $this->oldTokenValues[$tokenPosition]['loop']
         ) {
-            if ($this->oldTokenValues[$tokenPosition]['loop'] >= ($this->loops - 1)) {
-                $this->inConflict = true;
-            }
+            $this->inConflict = true;
 
             return false;
         } else {
