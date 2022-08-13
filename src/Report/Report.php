@@ -69,11 +69,12 @@ final class Report
             return $this->messagesByFiles;
         }
 
-        return array_map(static function (array $messages) use ($level): array {
-            return array_values(
-                array_filter($messages, static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level))
-            );
-        }, $this->messagesByFiles);
+        return array_map(static fn (array $messages): array => array_values(
+            array_filter(
+                $messages,
+                static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level)
+            )
+        ), $this->messagesByFiles);
     }
 
     public function addFile(string $file): void

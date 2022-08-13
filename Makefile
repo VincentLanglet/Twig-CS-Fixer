@@ -1,10 +1,6 @@
-lint:
-	vendor/bin/php-cs-fixer fix --dry-run
-.PHONY: lint
-
-lint-fix:
+cs:
 	vendor/bin/php-cs-fixer fix
-.PHONY: lint-fix
+.PHONY: cs
 
 test:
 	vendor/bin/phpunit
@@ -25,3 +21,7 @@ phpstan:
 psalm:
 	vendor/bin/psalm
 .PHONY: psalm
+
+rector:
+	vendor/bin/rector
+.PHONY: rector
