@@ -13,6 +13,7 @@ final class TwigCsFixerCommandTest extends TestCase
     public function testExecuteWithPaths(): void
     {
         $command = new TwigCsFixerCommand();
+        $command->setAutoExit(false);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
@@ -29,6 +30,7 @@ final class TwigCsFixerCommandTest extends TestCase
     public function testExecuteWithConfig(): void
     {
         $command = new TwigCsFixerCommand();
+        $command->setAutoExit(false);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
@@ -46,6 +48,7 @@ final class TwigCsFixerCommandTest extends TestCase
     public function testExecuteWithSuccess(): void
     {
         $command = new TwigCsFixerCommand();
+        $command->setAutoExit(false);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
@@ -62,6 +65,7 @@ final class TwigCsFixerCommandTest extends TestCase
     public function testExecuteWithOptionFix(): void
     {
         $command = new TwigCsFixerCommand();
+        $command->setAutoExit(false);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
@@ -79,6 +83,7 @@ final class TwigCsFixerCommandTest extends TestCase
     public function testExecuteWithError(): void
     {
         $command = new TwigCsFixerCommand();
+        $command->setAutoExit(false);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
