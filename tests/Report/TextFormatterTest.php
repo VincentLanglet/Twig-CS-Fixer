@@ -7,7 +7,6 @@ namespace TwigCsFixer\Tests\Report;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\Output;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
