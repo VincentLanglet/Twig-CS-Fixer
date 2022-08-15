@@ -12,9 +12,6 @@ use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 
-/**
- * Test of Tokenizer.
- */
 final class TokenizerTest extends TestCase
 {
     /**

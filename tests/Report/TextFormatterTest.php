@@ -7,13 +7,12 @@ namespace TwigCsFixer\Tests\Report;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\Output;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Report\TextFormatter;
 
-/**
- * Test for TextFormatter.
- */
 class TextFormatterTest extends TestCase
 {
     /**
@@ -22,7 +21,7 @@ class TextFormatterTest extends TestCase
     public function testDisplayErrors(string $expected, ?string $level): void
     {
         $input = new ArrayInput([]);
-        $output = new BufferedOutput();
+        $output = new BufferedOutput(Output::VERBOSITY_NORMAL, true);
         $textFormatter = new TextFormatter($input, $output);
 
         $file = __DIR__.'/Fixtures/file.twig';
@@ -53,23 +52,23 @@ class TextFormatterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                     KO %s/Fixtures/file.twig
+                     \e[31mKO\e[39m %s/Fixtures/file.twig
                      --------- --------------------------------------- 
-                      NOTICE    1    |     {# Some text line 1 #}      
-                                >>   | Notice                          
+                      \e[33mNOTICE\e[39m    1    |     {# Some text line 1 #}      
+                                \e[31m>>   | Notice\e[39m                          
                                 2    | {# Some text line 2 #}          
                      --------- --------------------------------------- 
-                      WARNING   1    |         {# Some text line 1 #}  
+                      \e[33mWARNING\e[39m   1    |         {# Some text line 1 #}  
                                 2    |     {# Some text line 2 #}      
-                                >>   | Warning                         
+                                \e[31m>>   | Warning\e[39m                         
                                 3    | {# Some text line 3 #}          
                      --------- --------------------------------------- 
-                      ERROR     2    |     {# Some text line 2 #}      
+                      \e[33mERROR\e[39m     2    |     {# Some text line 2 #}      
                                 3    | {# Some text line 3 #}          
-                                >>   | Error                           
+                                \e[31m>>   | Error\e[39m                           
                                 4    |                                 
                      --------- --------------------------------------- 
-                      FATAL     >>   | Fatal                           
+                      \e[33mFATAL\e[39m     \e[31m>>   | Fatal\e[39m                           
                      --------- --------------------------------------- 
                     EOD,
                 __DIR__
@@ -80,14 +79,14 @@ class TextFormatterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                     KO %s/Fixtures/file.twig
+                     \e[31mKO\e[39m %s/Fixtures/file.twig
                      ------- ----------------------------------- 
-                      ERROR   2    |     {# Some text line 2 #}  
+                      \e[33mERROR\e[39m   2    |     {# Some text line 2 #}  
                               3    | {# Some text line 3 #}      
-                              >>   | Error                       
+                              \e[31m>>   | Error\e[39m                       
                               4    |                             
                      ------- ----------------------------------- 
-                      FATAL   >>   | Fatal                       
+                      \e[33mFATAL\e[39m   \e[31m>>   | Fatal\e[39m                       
                      ------- ----------------------------------- 
                     EOD,
                 __DIR__
@@ -110,7 +109,7 @@ class TextFormatterTest extends TestCase
 
         $text = $output->fetch();
         self::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
-        self::assertStringContainsString('[SUCCESS]', $text);
+        self::assertStringContainsString('[OK]', $text);
     }
 
     /**
@@ -119,7 +118,7 @@ class TextFormatterTest extends TestCase
     public function testDisplayBlock(string $expected, int $level): void
     {
         $input = new ArrayInput([]);
-        $output = new BufferedOutput();
+        $output = new BufferedOutput(Output::VERBOSITY_NORMAL, true);
         $textFormatter = new TextFormatter($input, $output);
 
         $file = __DIR__.'/Fixtures/file.twig';
@@ -140,7 +139,7 @@ class TextFormatterTest extends TestCase
      */
     public function displayBlockDataProvider(): iterable
     {
-        yield ['[SUCCESS] Files linted: 1, notices: 1, warnings: 0, errors: 0', SniffViolation::LEVEL_NOTICE];
+        yield ['[OK] Files linted: 1, notices: 1, warnings: 0, errors: 0', SniffViolation::LEVEL_NOTICE];
         yield ['[WARNING] Files linted: 1, notices: 0, warnings: 1, errors: 0', SniffViolation::LEVEL_WARNING];
         yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', SniffViolation::LEVEL_ERROR];
         yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', SniffViolation::LEVEL_FATAL];

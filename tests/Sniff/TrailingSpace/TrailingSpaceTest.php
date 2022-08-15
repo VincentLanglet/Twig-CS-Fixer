@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Sniff\TrailingSpace;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
-/**
- * Test of TrailingSpaceSniff.
- */
 final class TrailingSpaceTest extends AbstractSniffTestCase
 {
     public function testSniff(): void
@@ -23,5 +20,12 @@ final class TrailingSpaceTest extends AbstractSniffTestCase
             [2 => 32],
             [4 => 21],
         ], __DIR__.'/TrailingSpaceTest2.twig');
+
+        // Check empty file
+        $this->checkSniff(
+            new TrailingSpaceSniff(),
+            [],
+            __DIR__.'/TrailingSpaceTest3.twig'
+        );
     }
 }

@@ -8,9 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TwigCsFixer\Command\TwigCsFixerCommand;
 
-/**
- * Test of Tokenizer.
- */
 final class TwigCsFixerCommandTest extends TestCase
 {
     public function testExecuteWithPaths(): void
@@ -56,7 +53,7 @@ final class TwigCsFixerCommandTest extends TestCase
         ]);
 
         self::assertStringContainsString(
-            '[SUCCESS] Files linted: 1, notices: 0, warnings: 0, errors: 0',
+            '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
         self::assertSame(0, $commandTester->getStatusCode());
@@ -73,7 +70,7 @@ final class TwigCsFixerCommandTest extends TestCase
         ]);
 
         self::assertStringContainsString(
-            '[SUCCESS] Files linted: 1, notices: 0, warnings: 0, errors: 0',
+            '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
         self::assertSame(0, $commandTester->getStatusCode());

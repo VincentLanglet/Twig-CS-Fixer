@@ -8,9 +8,6 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Config\ConfigResolver;
 
-/**
- * Test for ConfigResolver.
- */
 class ConfigResolverTest extends TestCase
 {
     /**

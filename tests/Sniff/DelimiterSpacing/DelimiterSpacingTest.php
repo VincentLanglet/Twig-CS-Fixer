@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Sniff\DelimiterSpacing;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
-/**
- * Test of DelimiterSpacingSniff.
- */
 final class DelimiterSpacingTest extends AbstractSniffTestCase
 {
     public function testSniff(): void

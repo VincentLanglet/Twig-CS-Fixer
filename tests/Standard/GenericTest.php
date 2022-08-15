@@ -14,9 +14,6 @@ use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\Generic;
 
-/**
- * Test for Generic.
- */
 class GenericTest extends TestCase
 {
     public function testGetSniffs(): void

@@ -11,9 +11,6 @@ use Twig\TwigFunction;
 use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
 
-/**
- * Test for StubbedEnvironment.
- */
 class StubbedEnvironmentTest extends TestCase
 {
     public function testFilterIsStubbed(): void

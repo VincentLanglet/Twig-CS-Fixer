@@ -10,9 +10,6 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Sniff\AbstractSniff;
 use TwigCsFixer\Token\Token;
 
-/**
- * Test of AbstractSniff protected methods.
- */
 final class SniffTest extends TestCase
 {
     private AbstractSniff $sniff;
