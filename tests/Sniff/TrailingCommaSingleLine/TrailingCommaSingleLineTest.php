@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Sniff\TrailingCommaSingleLine;
 use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
-/**
- * Test of TrailingCommaSingleLine.
- */
 final class TrailingCommaSingleLineTest extends AbstractSniffTestCase
 {
     public function testSniff(): void

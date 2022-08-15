@@ -17,9 +17,6 @@ use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Tokenizer;
 
-/**
- * TestCase for a Sniff.
- */
 abstract class AbstractSniffTestCase extends TestCase
 {
     /**

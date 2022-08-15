@@ -33,7 +33,7 @@ final class TextFormatter
         foreach ($report->getFiles() as $file) {
             $fileMessages = $messages[$file];
             if (\count($fileMessages) > 0) {
-                $this->io->text('<fg=red>KO</fg=red> '.$file);
+                $this->io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
             }
 
             $content = file_get_contents($file);
@@ -65,7 +65,7 @@ final class TextFormatter
 
                 $level = SniffViolation::getLevelAsString($message->getLevel());
                 $rows[] = [
-                    new TableCell('<comment>'.$level.'</comment>'),
+                    new TableCell(sprintf('<comment>%s</comment>', $level)),
                     implode("\n", $formattedText),
                 ];
             }
@@ -84,11 +84,11 @@ final class TextFormatter
         );
 
         if (0 < $report->getTotalErrors()) {
-            $this->io->block($summaryString, 'ERROR', 'fg=black;bg=red', ' ', true);
+            $this->io->error($summaryString);
         } elseif (0 < $report->getTotalWarnings()) {
-            $this->io->block($summaryString, 'WARNING', 'fg=black;bg=yellow', ' ', true);
+            $this->io->warning($summaryString);
         } else {
-            $this->io->block($summaryString, 'SUCCESS', 'fg=black;bg=green', ' ', true);
+            $this->io->success($summaryString);
         }
     }
 

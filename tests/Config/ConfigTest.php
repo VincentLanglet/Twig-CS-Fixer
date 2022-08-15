@@ -11,9 +11,6 @@ use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
 
-/**
- * Test for Config.
- */
 class ConfigTest extends TestCase
 {
     public function testDefaultConfigHaveDefaultName(): void

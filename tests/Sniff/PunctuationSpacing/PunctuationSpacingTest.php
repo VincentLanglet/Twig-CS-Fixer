@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Sniff\PunctuationSpacing;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
-/**
- * Test of PunctuationSpacingSniff.
- */
 final class PunctuationSpacingTest extends AbstractSniffTestCase
 {
     public function testSniff(): void

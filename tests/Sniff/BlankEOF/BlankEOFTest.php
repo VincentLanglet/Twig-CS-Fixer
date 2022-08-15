@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Sniff\BlankEOF;
 use TwigCsFixer\Sniff\BlankEOFSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
-/**
- * Test of BlankEOFSniff.
- */
 final class BlankEOFTest extends AbstractSniffTestCase
 {
     public function testSniff(): void

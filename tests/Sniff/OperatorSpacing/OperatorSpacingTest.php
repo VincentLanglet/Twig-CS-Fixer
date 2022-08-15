@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Sniff\OperatorSpacing;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
 
-/**
- * Test of OperatorSpacingSniff.
- */
 final class OperatorSpacingTest extends AbstractSniffTestCase
 {
     public function testSniff(): void

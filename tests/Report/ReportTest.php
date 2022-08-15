@@ -8,9 +8,6 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 
-/**
- * Test for Report.
- */
 class ReportTest extends TestCase
 {
     public function testReportDefaultState(): void

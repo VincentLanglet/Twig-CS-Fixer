@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Runner;
 
 use Exception;
+use LogicException;
 use Twig\Source;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
@@ -272,17 +273,17 @@ final class Fixer
         return $this->tokens[$tokenPosition];
     }
 
-    private function revertToken(int $tokenPosition): bool
+    private function revertToken(int $tokenPosition): void
     {
         if (!isset($this->fixedTokens[$tokenPosition])) {
-            return false;
+            // @codeCoverageIgnoreStart
+            throw new LogicException('Nothing to revert at position');
+            // @codeCoverageIgnoreEnd
         }
         \assert(isset($this->tokens[$tokenPosition]));
 
         $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
         unset($this->fixedTokens[$tokenPosition]);
         $this->numFixes--;
-
-        return true;
     }
 }

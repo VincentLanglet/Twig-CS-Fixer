@@ -7,9 +7,6 @@ namespace TwigCsFixer\Tests\Report;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\SniffViolation;
 
-/**
- * Test for SniffViolation.
- */
 class SniffViolationTest extends TestCase
 {
     public function testGetters(): void
