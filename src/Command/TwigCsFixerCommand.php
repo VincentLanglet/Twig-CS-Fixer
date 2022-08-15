@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\SingleCommandApplication;
 use Throwable;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -20,7 +20,7 @@ use TwigCsFixer\Token\Tokenizer;
 /**
  * TwigCsFixer stands for "Twig Code Sniffer Fixer" and will check twig template of your project.
  */
-final class TwigCsFixerCommand extends Command
+final class TwigCsFixerCommand extends SingleCommandApplication
 {
     protected function configure(): void
     {
