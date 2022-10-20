@@ -84,7 +84,7 @@ final class TwigCsFixerCommand extends Command
             }
 
             // Execute the linter.
-            $twig = new StubbedEnvironment();
+            $twig = new StubbedEnvironment($config->getTokenParsers());
             $linter = new Linter($twig, new Tokenizer($twig), $config->getCacheManager());
 
             // Build the report.

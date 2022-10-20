@@ -41,7 +41,10 @@ final class StubbedEnvironment extends Environment
         'same'      => null, // Allow 'same as'
     ];
 
-    public function __construct()
+    /**
+     * @param TokenParserInterface[] $customTokenParsers
+     */
+    public function __construct(array $customTokenParsers = [])
     {
         parent::__construct(new ArrayLoader());
 
@@ -63,6 +66,10 @@ final class StubbedEnvironment extends Environment
         // Optional dependency
         if (class_exists(CacheTokenParser::class)) {
             $this->addTokenParser(new CacheTokenParser());
+        }
+
+        foreach ($customTokenParsers as $customTokenParser) {
+            $this->addTokenParser($customTokenParser);
         }
     }
 
