@@ -11,6 +11,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Tests\Environment\Fixtures\CustomTokenParser;
 
 class StubbedEnvironmentTest extends TestCase
 {
@@ -60,6 +61,17 @@ class StubbedEnvironmentTest extends TestCase
 
         $env = new StubbedEnvironment();
         $source = new Source($content, 'tags.html.twig');
+
+        $env->parse($env->tokenize($source));
+    }
+
+    public function testParseWithCustomTag(): void
+    {
+        $content = file_get_contents(__DIR__.'/Fixtures/custom_tags.html.twig');
+        self::assertNotFalse($content);
+
+        $env = new StubbedEnvironment([new CustomTokenParser()]);
+        $source = new Source($content, 'custom_tags.html.twig');
 
         $env->parse($env->tokenize($source));
     }
