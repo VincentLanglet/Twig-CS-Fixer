@@ -6,6 +6,7 @@ namespace TwigCsFixer\Config;
 
 use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
+use Twig\TokenParser\TokenParserInterface;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
@@ -27,6 +28,11 @@ final class Config
     private ?string $cacheFile = self::DEFAULT_CACHE_PATH;
 
     private ?CacheManagerInterface $cacheManager = null;
+
+    /**
+     * @var list<TokenParserInterface>
+     */
+    private array $tokenParsers = [];
 
     public function __construct(string $name = 'Default')
     {
@@ -82,8 +88,6 @@ final class Config
     public function setCacheManager(?CacheManagerInterface $cacheManager): self
     {
         $this->cacheManager = $cacheManager;
-
-        return $this;
     }
 
     public function getCacheFile(): ?string
@@ -96,5 +100,23 @@ final class Config
         $this->cacheFile = $cacheFile;
 
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addTokenParser(TokenParserInterface $tokenParser): self
+    {
+        $this->tokenParsers[] = $tokenParser;
+
+        return $this;
+    }
+
+    /**
+     * @return list<TokenParserInterface>
+     */
+    public function getTokenParsers(): array
+    {
+        return $this->tokenParsers;
     }
 }
