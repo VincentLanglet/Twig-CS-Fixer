@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Config;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
+use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
@@ -66,5 +68,19 @@ class ConfigTest extends TestCase
 
         $config->setCacheFile(null);
         static::assertNull($config->getCacheFile());
+    }
+
+    public function testConfigTokenParsers(): void
+    {
+        $config = new Config();
+
+        self::assertSame([], $config->getTokenParsers());
+
+        $tokenParser1 = new DumpTokenParser();
+        $tokenParser2 = new TransTokenParser();
+        $config->addTokenParser($tokenParser1);
+        $config->addTokenParser($tokenParser2);
+
+        self::assertSame([$tokenParser1, $tokenParser2], $config->getTokenParsers());
     }
 }
