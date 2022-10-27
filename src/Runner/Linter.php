@@ -9,6 +9,8 @@ use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
+use TwigCsFixer\Cache\CacheManagerInterface;
+use TwigCsFixer\Cache\NullCacheManager;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -23,10 +25,13 @@ final class Linter
 
     private TokenizerInterface $tokenizer;
 
-    public function __construct(Environment $env, TokenizerInterface $tokenizer)
+    private ?CacheManagerInterface $cacheManager;
+
+    public function __construct(Environment $env, TokenizerInterface $tokenizer, ?CacheManagerInterface $cacheManager = null)
     {
         $this->env = $env;
         $this->tokenizer = $tokenizer;
+        $this->cacheManager = $cacheManager ?: new NullCacheManager();
     }
 
     /**
@@ -53,9 +58,11 @@ final class Linter
             // Add this file to the report.
             $report->addFile($filePath);
 
-            $this->setErrorHandler($report, $filePath);
-
-            $this->processTemplate($filePath, $ruleset, $report);
+            $fileContent = file_get_contents($filePath);
+            if (false === $fileContent || $this->cacheManager->needFixing($filePath, $fileContent)) {
+                $this->setErrorHandler($report, $filePath);
+                $this->processTemplate($filePath, $ruleset, $report);
+            }
         }
         restore_error_handler();
 
@@ -82,13 +89,18 @@ final class Linter
 
         foreach ($finder as $file) {
             $filePath = $file->getPathname();
-            $success = $fixer->fixFile($filePath);
+            $success = true;
+            if ($this->cacheManager->needFixing($filePath, file_get_contents($filePath))) {
+                $success = $fixer->fixFile($filePath);
+            }
 
             if (!$success) {
                 throw new Exception(sprintf('Cannot fix the file "%s".', $filePath));
             }
 
-            file_put_contents($filePath, $fixer->getContents());
+            $contents = $fixer->getContents();
+            file_put_contents($filePath, $contents);
+            $this->cacheManager->setFile($filePath, $contents);
         }
     }
 
