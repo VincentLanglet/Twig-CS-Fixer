@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-/**
- * @internal
- */
 final class Directory implements DirectoryInterface
 {
-    /**
-     * @var string
-     */
-    private $directoryName;
+    private string $directoryName;
 
     public function __construct(string $directoryName)
     {

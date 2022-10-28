@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-/**
- * @internal
- */
 interface CacheInterface
 {
     public function getSignature(): SignatureInterface;

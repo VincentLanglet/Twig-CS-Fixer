@@ -17,8 +17,6 @@ use BadMethodCallException;
  *  - rules changed
  *  - file is new
  *  - file changed
- *
- * @internal
  */
 final class FileCacheManager implements CacheManagerInterface
 {
@@ -28,16 +26,16 @@ final class FileCacheManager implements CacheManagerInterface
 
     private CacheInterface $cache;
 
-    private ?DirectoryInterface $cacheDirectory;
+    private DirectoryInterface $cacheDirectory;
 
     public function __construct(
         FileHandlerInterface $handler,
         SignatureInterface $signature,
-        ?DirectoryInterface $cacheDirectory = null
+        DirectoryInterface $cacheDirectory
     ) {
         $this->handler = $handler;
         $this->signature = $signature;
-        $this->cacheDirectory = $cacheDirectory ?? new Directory('');
+        $this->cacheDirectory = $cacheDirectory;
 
         $this->readCache();
     }

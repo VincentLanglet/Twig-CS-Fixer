@@ -5,23 +5,20 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache;
 
 use InvalidArgumentException;
-use TwigCsFixer\RuleSet\RuleSet;
+use JsonException;
+use LogicException;
+use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Sniff\SniffInterface;
 use UnexpectedValueException;
 
-/**
- * @internal
- */
 final class Cache implements CacheInterface
 {
-    /**
-     * @var SignatureInterface
-     */
-    private $signature;
+    private SignatureInterface $signature;
 
     /**
      * @var array<string, int>
      */
-    private $hashes = [];
+    private array $hashes = [];
 
     public function __construct(SignatureInterface $signature)
     {
@@ -38,10 +35,13 @@ final class Cache implements CacheInterface
         return \array_key_exists($file, $this->hashes);
     }
 
-    public function get(string $file): ?int
+    /**
+     * @throws LogicException
+     */
+    public function get(string $file): int
     {
         if (!$this->has($file)) {
-            return null;
+            throw new LogicException('You should call the \'has\' method prior to calling \'get\'');
         }
 
         return $this->hashes[$file];
@@ -57,20 +57,24 @@ final class Cache implements CacheInterface
         unset($this->hashes[$file]);
     }
 
+    /**
+     * @throws UnexpectedValueException
+     */
     public function toJson(): string
     {
-        $json = json_encode([
-            'php'     => $this->getSignature()->getPhpVersion(),
-            'version' => $this->getSignature()->getFixerVersion(),
-            'sniffs'  => array_keys($this->getSignature()->getRuleset()->getSniffs()),
-            'hashes'  => $this->hashes,
-        ]);
-
-        if (\JSON_ERROR_NONE !== json_last_error()) {
-            throw new UnexpectedValueException(sprintf(
-                'Cannot encode cache signature to JSON, error: "%s". If you have non-UTF8 chars in your signature, like in license for `header_comment`, consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.',
-                json_last_error_msg()
-            ));
+        try {
+            $json = json_encode([
+                'php'     => $this->getSignature()->getPhpVersion(),
+                'version' => $this->getSignature()->getFixerVersion(),
+                'sniffs'  => array_keys($this->getSignature()->getRuleset()->getSniffs()),
+                'hashes'  => $this->hashes,
+            ], \JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $error = sprintf('Cannot encode cache signature to JSON, error: "%s".', $e->getMessage());
+            if (\in_array($e->getCode(), [\JSON_ERROR_UTF8, \JSON_ERROR_UTF16], true)) {
+                $error .= ' If you have non-UTF8 or non-UTF16 chars in your signature, like in license for `header_comment`, consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.';
+            }
+            throw new UnexpectedValueException($error);
         }
 
         return $json;
@@ -81,13 +85,17 @@ final class Cache implements CacheInterface
      */
     public static function fromJson(string $json): self
     {
-        $data = json_decode($json, true);
+        try {
+            $data = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
 
-        if (null === $data && \JSON_ERROR_NONE !== json_last_error()) {
+            if (!\is_array($data)) {
+                throw new InvalidArgumentException('Value needs to decode to an array.');
+            }
+        } catch (JsonException $e) {
             throw new InvalidArgumentException(sprintf(
                 'Value needs to be a valid JSON string, got "%s", error: "%s".',
                 $json,
-                json_last_error_msg()
+                $e->getMessage()
             ));
         }
 
@@ -108,8 +116,13 @@ final class Cache implements CacheInterface
         }
 
         $ruleSet = new RuleSet();
-        foreach ($data['sniffs'] as $sniff) {
-            $ruleSet->addSniff(new $sniff());
+        if (\is_array($data['sniffs'])) {
+            foreach ($data['sniffs'] as $sniffName) {
+                $sniff = new $sniffName();
+                if ($sniff instanceof SniffInterface) {
+                    $ruleSet->addSniff($sniff);
+                }
+            }
         }
 
         $signature = new Signature(

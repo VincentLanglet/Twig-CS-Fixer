@@ -16,21 +16,12 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
-use TwigCsFixer\ToolInfo\ToolInfoInterface;
 
 /**
  * TwigCsFixer stands for "Twig Code Sniffer Fixer" and will check twig template of your project.
  */
 final class TwigCsFixerCommand extends Command
 {
-    private ToolInfoInterface $toolInfo;
-
-    public function __construct(ToolInfoInterface $toolInfo)
-    {
-        parent::__construct();
-        $this->toolInfo = $toolInfo;
-    }
-
     protected function configure(): void
     {
         $this
@@ -81,9 +72,9 @@ final class TwigCsFixerCommand extends Command
 
             // Execute the linter.
             $twig = new StubbedEnvironment();
-            $cacheManager = $config->getCacheManager($this->toolInfo);
+            $cacheManager = $config->getCacheManager();
             $cacheFile = $config->getCacheFile();
-            if ($cacheFile) {
+            if (null !== $cacheFile) {
                 $output->writeln("Using cache file : {$cacheFile}");
             }
             $linter = new Linter($twig, new Tokenizer($twig), $cacheManager);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Config;
 
+use Composer\InstalledVersions;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Cache\CacheManagerInterface;
@@ -16,7 +17,6 @@ use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
-use TwigCsFixer\ToolInfo\ToolInfoInterface;
 
 /**
  * Main entry point to config the TwigCsFixer.
@@ -35,7 +35,7 @@ final class Config
 
     private ?Directory $directory = null;
 
-    private ?string $cwd;
+    private string $cwd;
 
     public function __construct(string $name = 'Default', ?string $cwd = null)
     {
@@ -43,7 +43,8 @@ final class Config
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new Generic());
         $this->finder = new TwigCsFinder();
-        $this->cwd = $cwd;
+        $workingDir = getcwd();
+        $this->cwd = $cwd ?? (false !== $workingDir ? $workingDir : __DIR__);
     }
 
     public function getName(): string
@@ -81,7 +82,7 @@ final class Config
         return $this;
     }
 
-    public function getCacheManager(ToolInfoInterface $toolInfo): CacheManagerInterface
+    public function getCacheManager(): CacheManagerInterface
     {
         if (null === $this->cacheManager) {
             $cacheFile = $this->getCacheFile();
@@ -93,7 +94,7 @@ final class Config
                     new FileHandler($cacheFile),
                     new Signature(
                         \PHP_VERSION,
-                        $toolInfo->getVersion(),
+                        InstalledVersions::getReference('vincentlanglet/twig-cs-fixer') ?? '0',
                         $this->getRuleset()
                     ),
                     $this->getDirectory()

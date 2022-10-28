@@ -25,13 +25,13 @@ final class Linter
 
     private TokenizerInterface $tokenizer;
 
-    private ?CacheManagerInterface $cacheManager;
+    private CacheManagerInterface $cacheManager;
 
     public function __construct(Environment $env, TokenizerInterface $tokenizer, ?CacheManagerInterface $cacheManager = null)
     {
         $this->env = $env;
         $this->tokenizer = $tokenizer;
-        $this->cacheManager = $cacheManager ?: new NullCacheManager();
+        $this->cacheManager = $cacheManager ?? new NullCacheManager();
     }
 
     /**
@@ -89,12 +89,12 @@ final class Linter
 
         foreach ($finder as $file) {
             $filePath = $file->getPathname();
-            $success = true;
-            if ($this->cacheManager->needFixing($filePath, file_get_contents($filePath))) {
-                $success = $fixer->fixFile($filePath);
+            $contents = file_get_contents($filePath);
+            if (false === $contents || !$this->cacheManager->needFixing($filePath, $contents)) {
+                continue;
             }
 
-            if (!$success) {
+            if (!$fixer->fixFile($filePath)) {
                 throw new Exception(sprintf('Cannot fix the file "%s".', $filePath));
             }
 

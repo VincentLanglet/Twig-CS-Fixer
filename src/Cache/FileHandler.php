@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-use InvalidArgumentException;
 use Symfony\Component\Filesystem\Exception\IOException;
 
-/**
- * @internal
- */
 final class FileHandler implements FileHandlerInterface
 {
     private string $file;
@@ -31,16 +27,16 @@ final class FileHandler implements FileHandlerInterface
         }
 
         $content = file_get_contents($this->file);
-
-        try {
-            $cache = Cache::fromJson($content);
-        } catch (InvalidArgumentException $exception) {
+        if (false === $content) {
             return null;
         }
 
-        return $cache;
+        return Cache::fromJson($content);
     }
 
+    /**
+     * @throws IOException
+     */
     public function write(CacheInterface $cache): void
     {
         $content = $cache->toJson();

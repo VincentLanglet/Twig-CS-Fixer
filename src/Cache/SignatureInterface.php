@@ -6,9 +6,6 @@ namespace TwigCsFixer\Cache;
 
 use TwigCsFixer\Ruleset\Ruleset;
 
-/**
- * @internal
- */
 interface SignatureInterface
 {
     public function getPhpVersion(): string;
