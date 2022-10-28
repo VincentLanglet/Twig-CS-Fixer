@@ -13,7 +13,6 @@
        inferPropertyTypesFromConstructor="false"
        findUnusedPsalmSuppress="true"
        cacheDirectory="/tmp/psalm"
-       allowStringToStandInForClass="true"
 >
     <projectFiles>
         <directory name="src"/>
