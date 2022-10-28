@@ -7,8 +7,6 @@ namespace TwigCsFixer\Cache;
 use InvalidArgumentException;
 use JsonException;
 use LogicException;
-use ReflectionClass;
-use ReflectionException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Sniff\SniffInterface;
 use UnexpectedValueException;
@@ -121,14 +119,10 @@ final class Cache implements CacheInterface
         if (\is_array($data['sniffs'])) {
             /** @psalm-var class-string $sniffName */
             foreach ($data['sniffs'] as $sniffName) {
-                try {
-                    $cl = new ReflectionClass($sniffName);
-                    $sniff = $cl->newInstance();
-                    if ($sniff instanceof SniffInterface) {
-                        $ruleSet->addSniff($sniff);
-                    }
-                } catch (ReflectionException $e) {
+                if (!is_a($sniffName, SniffInterface::class, true)) {
+                    continue;
                 }
+                $ruleSet->addSniff(new $sniffName());
             }
         }
 
