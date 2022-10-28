@@ -44,7 +44,7 @@ final class FileHandler implements FileHandlerInterface
         if (file_exists($this->file)) {
             if (is_dir($this->file)) {
                 throw new IOException(
-                    sprintf('Cannot write cache file "%s" as the location exists as directory.', realpath($this->file)),
+                    sprintf('Cannot write cache file "%s" as the location exists as directory.', $this->file),
                     0,
                     null,
                     $this->file
@@ -53,7 +53,7 @@ final class FileHandler implements FileHandlerInterface
 
             if (!is_writable($this->file)) {
                 throw new IOException(
-                    sprintf('Cannot write to file "%s" as it is not writable.', realpath($this->file)),
+                    sprintf('Cannot write to file "%s" as it is not writable.', $this->file),
                     0,
                     null,
                     $this->file
