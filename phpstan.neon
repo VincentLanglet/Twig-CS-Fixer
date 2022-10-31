@@ -3,6 +3,7 @@ includes:
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
     - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-webmozart-assert/extension.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
@@ -32,6 +33,11 @@ parameters:
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkUninitializedProperties: true
     checkMissingCallableSignature: true
+
+    ignoreErrors:
+        - # https://github.com/phpstan/phpstan-webmozart-assert/issues/150
+            message: "#Call to static method Webmozart\\\\Assert\\\\Assert::implementsInterface\\(\\) with class-string and 'TwigCsFixer\\\\\\\\Sniff\\\\\\\\SniffInterface' will always evaluate to false.#"
+            path:    'src/Cache/CacheEncoder.php'
 
 services:
     exceptionTypeResolver:

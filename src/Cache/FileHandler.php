@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache;
 
 use Symfony\Component\Filesystem\Exception\IOException;
-use UnexpectedValueException;
 
 final class FileHandler implements FileHandlerInterface
 {
@@ -35,10 +34,6 @@ final class FileHandler implements FileHandlerInterface
         return CacheEncoder::fromJson($content);
     }
 
-    /**
-     * @throws IOException
-     * @throws UnexpectedValueException
-     */
     public function write(CacheInterface $cache): void
     {
         if (file_exists($this->file)) {

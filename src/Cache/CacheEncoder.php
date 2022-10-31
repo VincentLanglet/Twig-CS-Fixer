@@ -9,20 +9,14 @@ use JsonException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Sniff\SniffInterface;
 use UnexpectedValueException;
+use Webmozart\Assert\Assert;
 
 class CacheEncoder
 {
-    /**
-     * @throws InvalidArgumentException
-     */
     public static function fromJson(string $json): Cache
     {
         try {
             $data = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
-
-            if (!\is_array($data)) {
-                throw new InvalidArgumentException('Value needs to decode to an array.');
-            }
         } catch (JsonException $e) {
             throw new InvalidArgumentException(sprintf(
                 'Value needs to be a valid JSON string, got "%s", error: "%s".',
@@ -31,59 +25,24 @@ class CacheEncoder
             ));
         }
 
-        $requiredKeys = [
-            'php_version',
-            'fixer_version',
-            'sniffs',
-            'hashes',
-        ];
+        Assert::isArray($data);
 
-        $missingKeys = array_diff($requiredKeys, array_keys($data));
-
-        if (\count($missingKeys) > 0) {
-            throw new InvalidArgumentException(sprintf(
-                'JSON data is missing keys "%s".',
-                implode('", "', $missingKeys)
-            ));
-        }
-
-        if (!\is_array($data['hashes'])) {
-            throw new InvalidArgumentException('hashes must be an array.');
-        }
-
-        if (!\is_array($data['sniffs'])) {
-            throw new InvalidArgumentException('sniffs must be an array.');
-        }
+        Assert::keyExists($data, 'sniffs');
+        Assert::isArray($data['sniffs']);
 
         $ruleSet = new RuleSet();
-        foreach ($data['sniffs'] as $sniffOffset => $sniffName) {
-            if (!\is_string($sniffName)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Sniff #%d should be a string.',
-                    $sniffOffset
-                ));
-            }
-            if (!class_exists($sniffName)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Sniff class "%s" does not exist.',
-                    $sniffName
-                ));
-            }
-            if (!is_a($sniffName, SniffInterface::class, true)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Sniff class "%s" should implement TwigCsFixer\Sniff\SniffInterface.',
-                    $sniffName
-                ));
-            }
+        foreach ($data['sniffs'] as $sniffName) {
+            Assert::string($sniffName);
+            Assert::classExists($sniffName);
+            Assert::implementsInterface($sniffName, SniffInterface::class);
+
             $ruleSet->addSniff(new $sniffName());
         }
-        if (!\is_string($data['php_version'])) {
-            throw new InvalidArgumentException('php_version must be a string.');
-        }
 
-        if (!\is_string($data['fixer_version'])) {
-            throw new InvalidArgumentException('fixer_version must be a string.');
-        }
+        Assert::keyExists($data, 'php_version');
+        Assert::string($data['php_version']);
+        Assert::keyExists($data, 'fixer_version');
+        Assert::string($data['fixer_version']);
 
         $signature = new Signature(
             $data['php_version'],
@@ -93,10 +52,12 @@ class CacheEncoder
 
         $cache = new Cache($signature);
 
+        Assert::keyExists($data, 'hashes');
+        Assert::isArray($data['hashes']);
         foreach ($data['hashes'] as $file => $hash) {
-            if (!\is_string($file) || !\is_string($hash)) {
-                throw new InvalidArgumentException('Cache file and hash must be strings.');
-            }
+            Assert::string($file);
+            Assert::string($hash);
+
             $cache->set($file, $hash);
         }
 
@@ -109,6 +70,7 @@ class CacheEncoder
     public static function toJson(CacheInterface $cache): string
     {
         $signature = $cache->getSignature();
+
         try {
             return json_encode([
                 'php_version'     => $signature->getPhpVersion(),
@@ -119,8 +81,10 @@ class CacheEncoder
         } catch (JsonException $e) {
             $error = sprintf('Cannot encode cache signature to JSON, error: "%s".', $e->getMessage());
             if (\in_array($e->getCode(), [\JSON_ERROR_UTF8, \JSON_ERROR_UTF16], true)) {
-                $error .= ' If you have non-UTF8 or non-UTF16 chars in your signature, like in license for `header_comment`, consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.';
+                $error .= ' If you have non-UTF8 or non-UTF16 chars in your signature,'
+                    .' consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.';
             }
+
             throw new UnexpectedValueException($error);
         }
     }
