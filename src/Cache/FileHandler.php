@@ -174,11 +174,10 @@ final class FileHandler implements FileHandlerInterface
 
         $cache = new Cache($signature);
 
-        /**
-         * @var string $file
-         * @var string $hash
-         */
         foreach ($data['hashes'] as $file => $hash) {
+            if (!\is_string($file) || !\is_string($hash)) {
+                throw new InvalidArgumentException('Cache file and hash must be strings.');
+            }
             $cache->set($file, $hash);
         }
 
