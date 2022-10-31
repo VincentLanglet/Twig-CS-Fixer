@@ -58,4 +58,9 @@ final class Ruleset
 
         return $this;
     }
+
+    public function equals(self $ruleset): bool
+    {
+        return array_keys($this->getSniffs()) === array_keys($ruleset->getSniffs());
+    }
 }

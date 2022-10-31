@@ -12,5 +12,8 @@ vendor/
 ## PhpCs
 .php-cs-fixer.cache
 
+## TwigCs
+.twig-cs-fixer.cache
+
 ## Infection
 infection.log

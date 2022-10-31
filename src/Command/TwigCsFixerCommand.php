@@ -52,7 +52,8 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
                 ),
-            ]);
+            ])
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -63,16 +64,18 @@ final class TwigCsFixerCommand extends Command
         }
 
         try {
-            // Execute the linter.
-            $twig = new StubbedEnvironment();
-            $linter = new Linter($twig, new Tokenizer($twig));
-
             // Resolve config
             $configResolver = new ConfigResolver($workingDir);
             $config = $configResolver->resolveConfig(
                 $input->getArgument('paths'),
                 $input->getOption('config')
             );
+
+            // Execute the linter.
+            $twig = new StubbedEnvironment();
+            $cacheManager = $config->getCacheManager();
+            $output->writeln(sprintf('Using cache file %s', $config->getCacheFile()));
+            $linter = new Linter($twig, new Tokenizer($twig), $cacheManager);
 
             // Build the report.
             $report = $linter->run(

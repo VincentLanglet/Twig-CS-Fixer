@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Config;
 
+use Composer\InstalledVersions;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use TwigCsFixer\Cache\CacheManagerInterface;
+use TwigCsFixer\Cache\Directory;
+use TwigCsFixer\Cache\DirectoryInterface;
+use TwigCsFixer\Cache\FileCacheManager;
+use TwigCsFixer\Cache\FileHandler;
+use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
@@ -20,12 +28,22 @@ final class Config
 
     private Finder $finder;
 
-    public function __construct(string $name = 'Default')
+    private string $cacheFile = '.twig-cs-fixer.cache';
+
+    private ?CacheManagerInterface $cacheManager = null;
+
+    private ?Directory $directory = null;
+
+    private string $cwd;
+
+    public function __construct(string $name = 'Default', ?string $cwd = null)
     {
         $this->name = $name;
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new Generic());
         $this->finder = new TwigCsFinder();
+        $workingDir = getcwd();
+        $this->cwd = $cwd ?? (false !== $workingDir ? $workingDir : __DIR__);
     }
 
     public function getName(): string
@@ -59,6 +77,51 @@ final class Config
     public function setFinder(Finder $finder): self
     {
         $this->finder = $finder;
+
+        return $this;
+    }
+
+    public function getCacheManager(): CacheManagerInterface
+    {
+        if (null === $this->cacheManager) {
+            $this->cacheManager = new FileCacheManager(
+                new FileHandler($this->getCacheFile()),
+                new Signature(
+                    \PHP_VERSION,
+                    InstalledVersions::getReference('vincentlanglet/twig-cs-fixer') ?? '0',
+                    $this->getRuleset()
+                ),
+                $this->getDirectory()
+            );
+        }
+
+        return $this->cacheManager;
+    }
+
+    public function getDirectory(): DirectoryInterface
+    {
+        if (null === $this->directory) {
+            $path = $this->getCacheFile();
+            $filesystem = new Filesystem();
+
+            $absolutePath = $filesystem->isAbsolutePath($path)
+                ? $path
+                : $this->cwd.\DIRECTORY_SEPARATOR.$path;
+
+            $this->directory = new Directory(\dirname($absolutePath));
+        }
+
+        return $this->directory;
+    }
+
+    public function getCacheFile(): string
+    {
+        return $this->cacheFile;
+    }
+
+    public function setCacheFile(string $cacheFile): self
+    {
+        $this->cacheFile = $cacheFile;
 
         return $this;
     }

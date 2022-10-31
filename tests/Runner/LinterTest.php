@@ -152,7 +152,7 @@ class LinterTest extends TestCase
 
         $linter = new Linter($env, $tokenizer);
 
-        self::expectExceptionMessage(sprintf('Cannot fix the file "%s".', $tmpFile));
+        self::expectExceptionMessage(sprintf('Cannot fix file "%s".', $tmpFile));
         $linter->run([new SplFileInfo($tmpFile)], $ruleset, true);
     }
 }
