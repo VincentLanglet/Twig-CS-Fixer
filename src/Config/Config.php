@@ -12,7 +12,6 @@ use TwigCsFixer\Cache\Directory;
 use TwigCsFixer\Cache\DirectoryInterface;
 use TwigCsFixer\Cache\FileCacheManager;
 use TwigCsFixer\Cache\FileHandler;
-use TwigCsFixer\Cache\NullCacheManager;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -29,7 +28,7 @@ final class Config
 
     private Finder $finder;
 
-    private ?string $cacheFile = '.twig-cs-fixer.cache';
+    private string $cacheFile = '.twig-cs-fixer.cache';
 
     private ?CacheManagerInterface $cacheManager = null;
 
@@ -85,21 +84,15 @@ final class Config
     public function getCacheManager(): CacheManagerInterface
     {
         if (null === $this->cacheManager) {
-            $cacheFile = $this->getCacheFile();
-
-            if (null === $cacheFile) {
-                $this->cacheManager = new NullCacheManager();
-            } else {
-                $this->cacheManager = new FileCacheManager(
-                    new FileHandler($cacheFile),
-                    new Signature(
-                        \PHP_VERSION,
-                        InstalledVersions::getReference('vincentlanglet/twig-cs-fixer') ?? '0',
-                        $this->getRuleset()
-                    ),
-                    $this->getDirectory()
-                );
-            }
+            $this->cacheManager = new FileCacheManager(
+                new FileHandler($this->getCacheFile()),
+                new Signature(
+                    \PHP_VERSION,
+                    InstalledVersions::getReference('vincentlanglet/twig-cs-fixer') ?? '0',
+                    $this->getRuleset()
+                ),
+                $this->getDirectory()
+            );
         }
 
         return $this->cacheManager;
@@ -109,15 +102,11 @@ final class Config
     {
         if (null === $this->directory) {
             $path = $this->getCacheFile();
-            if (null === $path) {
-                $absolutePath = $this->cwd;
-            } else {
-                $filesystem = new Filesystem();
+            $filesystem = new Filesystem();
 
-                $absolutePath = $filesystem->isAbsolutePath($path)
-                    ? $path
-                    : $this->cwd.\DIRECTORY_SEPARATOR.$path;
-            }
+            $absolutePath = $filesystem->isAbsolutePath($path)
+                ? $path
+                : $this->cwd.\DIRECTORY_SEPARATOR.$path;
 
             $this->directory = new Directory(\dirname($absolutePath));
         }
@@ -125,14 +114,11 @@ final class Config
         return $this->directory;
     }
 
-    public function getCacheFile(): ?string
+    public function getCacheFile(): string
     {
         return $this->cacheFile;
     }
 
-    /**
-     * @return $this
-     */
     public function setCacheFile(string $cacheFile): self
     {
         $this->cacheFile = $cacheFile;

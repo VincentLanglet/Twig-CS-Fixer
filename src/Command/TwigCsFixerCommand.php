@@ -52,7 +52,8 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
                 ),
-            ]);
+            ])
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -73,10 +74,7 @@ final class TwigCsFixerCommand extends Command
             // Execute the linter.
             $twig = new StubbedEnvironment();
             $cacheManager = $config->getCacheManager();
-            $cacheFile = $config->getCacheFile();
-            if (null !== $cacheFile) {
-                $output->writeln("Using cache file : {$cacheFile}");
-            }
+            $output->writeln(sprintf('Using cache file %s', $config->getCacheFile()));
             $linter = new Linter($twig, new Tokenizer($twig), $cacheManager);
 
             // Build the report.
