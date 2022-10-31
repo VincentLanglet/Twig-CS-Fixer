@@ -29,7 +29,7 @@ final class Config
 
     private Finder $finder;
 
-    private ?string $cacheFile = null;
+    private ?string $cacheFile = '.twig-cs-fixer.cache';
 
     private ?CacheManagerInterface $cacheManager = null;
 

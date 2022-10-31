@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
+use InvalidArgumentException;
+use JsonException;
 use Symfony\Component\Filesystem\Exception\IOException;
+use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Sniff\SniffInterface;
+use UnexpectedValueException;
 
 final class FileHandler implements FileHandlerInterface
 {
@@ -31,16 +36,15 @@ final class FileHandler implements FileHandlerInterface
             return null;
         }
 
-        return Cache::fromJson($content);
+        return $this->fromJson($content);
     }
 
     /**
      * @throws IOException
+     * @throws UnexpectedValueException
      */
     public function write(CacheInterface $cache): void
     {
-        $content = $cache->toJson();
-
         if (file_exists($this->file)) {
             if (is_dir($this->file)) {
                 throw new IOException(
@@ -75,7 +79,7 @@ final class FileHandler implements FileHandlerInterface
             @chmod($this->file, 0666);
         }
 
-        $bytesWritten = @file_put_contents($this->file, $content);
+        $bytesWritten = @file_put_contents($this->file, $this->toJson($cache));
 
         if (false === $bytesWritten) {
             $error = error_get_last();
@@ -86,6 +90,105 @@ final class FileHandler implements FileHandlerInterface
                 null,
                 $this->file
             );
+        }
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function fromJson(string $json): Cache
+    {
+        try {
+            $data = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+
+            if (!\is_array($data)) {
+                throw new InvalidArgumentException('Value needs to decode to an array.');
+            }
+        } catch (JsonException $e) {
+            throw new InvalidArgumentException(sprintf(
+                'Value needs to be a valid JSON string, got "%s", error: "%s".',
+                $json,
+                $e->getMessage()
+            ));
+        }
+
+        $requiredKeys = [
+            'php_version',
+            'fixer_version',
+            'sniffs',
+            'hashes',
+        ];
+
+        $missingKeys = array_diff_key(array_flip($requiredKeys), $data);
+
+        if (\count($missingKeys) > 0) {
+            throw new InvalidArgumentException(sprintf(
+                'JSON data is missing keys "%s"',
+                implode('", "', $missingKeys)
+            ));
+        }
+
+        if (!\is_array($data['hashes'])) {
+            throw new InvalidArgumentException('hashes must be an array.');
+        }
+
+        $ruleSet = new RuleSet();
+        if (\is_array($data['sniffs'])) {
+            /** @psalm-var class-string $sniffName */
+            foreach ($data['sniffs'] as $sniffName) {
+                if (!is_a($sniffName, SniffInterface::class, true)) {
+                    continue;
+                }
+                $ruleSet->addSniff(new $sniffName());
+            }
+        }
+
+        if (!\is_string($data['php_version'])) {
+            throw new InvalidArgumentException('PHP version must be a string.');
+        }
+
+        if (!\is_string($data['fixer_version'])) {
+            throw new InvalidArgumentException('PHP version must be a string.');
+        }
+
+        $signature = new Signature(
+            $data['php_version'],
+            $data['fixer_version'],
+            $ruleSet,
+        );
+
+        $cache = new Cache($signature);
+
+        /**
+         * @var string $file
+         * @var string $hash
+         */
+        foreach ($data['hashes'] as $file => $hash) {
+            $cache->set($file, $hash);
+        }
+
+        return $cache;
+    }
+
+    /**
+     * @throws UnexpectedValueException
+     */
+    private function toJson(CacheInterface $cache): string
+    {
+        $signature = $cache->getSignature();
+        try {
+            return json_encode([
+                'php_version'     => $signature->getPhpVersion(),
+                'fixer_version'   => $signature->getFixerVersion(),
+                'sniffs'          => array_keys($signature->getRuleset()->getSniffs()),
+                'hashes'          => $cache->getHashes(),
+            ], \JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $error = sprintf('Cannot encode cache signature to JSON, error: "%s".', $e->getMessage());
+            if (\in_array($e->getCode(), [\JSON_ERROR_UTF8, \JSON_ERROR_UTF16], true)) {
+                $error .= ' If you have non-UTF8 or non-UTF16 chars in your signature, like in license for `header_comment`, consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.';
+            }
+            throw new UnexpectedValueException($error);
         }
     }
 }

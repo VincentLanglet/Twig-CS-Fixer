@@ -12,6 +12,7 @@
     "bin": ["bin/twig-cs-fixer"],
     "require": {
         "php": ">=7.4",
+        "ext-json": "*",
         "ext-mbstring": "*",
         "symfony/console": "^5.4.9 || ^6.0",
         "symfony/finder": "^5.4 || ^6.0",

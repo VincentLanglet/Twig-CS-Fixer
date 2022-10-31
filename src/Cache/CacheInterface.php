@@ -10,11 +10,14 @@ interface CacheInterface
 
     public function has(string $file): bool;
 
-    public function get(string $file): ?int;
+    public function get(string $file): string;
 
-    public function set(string $file, int $hash): void;
+    public function set(string $file, string $hash): void;
 
     public function clear(string $file): void;
 
-    public function toJson(): string;
+    /**
+     * @return array<string, string>
+     */
+    public function getHashes(): array;
 }
