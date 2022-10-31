@@ -90,12 +90,16 @@ final class Linter
         foreach ($finder as $file) {
             $filePath = $file->getPathname();
             $contents = file_get_contents($filePath);
-            if (false === $contents || !$this->cacheManager->needFixing($filePath, $contents)) {
+            if (false === $contents) {
+                throw new Exception(sprintf('Cannot fix file "%s".', $filePath));
+            }
+
+            if (!$this->cacheManager->needFixing($filePath, $contents)) {
                 continue;
             }
 
             if (!$fixer->fixFile($filePath)) {
-                throw new Exception(sprintf('Cannot fix the file "%s".', $filePath));
+                throw new Exception(sprintf('Cannot fix file "%s".', $filePath));
             }
 
             $contents = $fixer->getContents();

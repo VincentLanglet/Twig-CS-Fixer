@@ -132,17 +132,32 @@ final class FileHandler implements FileHandlerInterface
             throw new InvalidArgumentException('hashes must be an array.');
         }
 
-        $ruleSet = new RuleSet();
-        if (\is_array($data['sniffs'])) {
-            /** @psalm-var class-string $sniffName */
-            foreach ($data['sniffs'] as $sniffName) {
-                if (!is_a($sniffName, SniffInterface::class, true)) {
-                    continue;
-                }
-                $ruleSet->addSniff(new $sniffName());
-            }
+        if (!\is_array($data['sniffs'])) {
+            throw new InvalidArgumentException('sniffs must be an array.');
         }
 
+        $ruleSet = new RuleSet();
+        foreach ($data['sniffs'] as $sniffOffset => $sniffName) {
+            if (!\is_string($sniffName)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Sniff #%d should be a string.',
+                    $sniffOffset
+                ));
+            }
+            if (!class_exists($sniffName)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Sniff class "%s" does not exist.',
+                    $sniffName
+                ));
+            }
+            if (!is_a($sniffName, SniffInterface::class, true)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Sniff class "%s" should implement TwigCsFixer\Sniff\SniffInterface.',
+                    $sniffName
+                ));
+            }
+            $ruleSet->addSniff(new $sniffName());
+        }
         if (!\is_string($data['php_version'])) {
             throw new InvalidArgumentException('PHP version must be a string.');
         }
