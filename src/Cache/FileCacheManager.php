@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache;
 
 use BadMethodCallException;
+use RuntimeException;
 
 /**
  * Class supports caching information about state of fixing files.
@@ -40,6 +41,9 @@ final class FileCacheManager implements CacheManagerInterface
         $this->readCache();
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function __destruct()
     {
         $this->writeCache();
@@ -92,6 +96,9 @@ final class FileCacheManager implements CacheManagerInterface
         $this->cache = $cache;
     }
 
+    /**
+     * @throws RuntimeException
+     */
     private function writeCache(): void
     {
         $this->handler->write($this->cache);
