@@ -86,12 +86,14 @@ class FileCacheManagerTest extends TestCase
         );
 
         $this->expectException(BadMethodCallException::class);
+        /** @psalm-suppress UnusedFunctionCall */
         serialize($cacheManager);
     }
 
     public function testCannotUnserialize(): void
     {
         $this->expectException(BadMethodCallException::class);
+        /** @psalm-suppress UnusedFunctionCall */
         unserialize('O:34:"TwigCsFixer\Cache\FileCacheManager":0:{}');
     }
 }
