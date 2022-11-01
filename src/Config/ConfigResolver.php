@@ -36,7 +36,7 @@ final class ConfigResolver
      * @throws RuntimeException
      */
     public function resolveConfig(
-        array $paths,
+        array $paths = [],
         ?string $configPath = null,
         bool $disableCache = false
     ): Config {

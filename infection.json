@@ -8,8 +8,8 @@
     "mutators": {
         "@default": true,
         "global-ignoreSourceCodeByRegex": [
-            "\\assert\\(.*",
-            "\\Assert\\:\\:.*",
+            "\\\\assert\\(.*",
+            "Assert\\:\\:.*",
             "throw new LogicException\\(.*"
         ]
     },

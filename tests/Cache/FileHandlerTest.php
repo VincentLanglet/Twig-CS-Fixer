@@ -93,5 +93,9 @@ class FileHandlerTest extends TestCase
         $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
         $content = file_get_contents($file);
         static::assertSame('{"php_version":"8.0","fixer_version":"1","sniffs":[],"hashes":[]}', $content);
+
+        $permissions = fileperms($file);
+        static::assertNotFalse($permissions);
+        static::assertSame('0666', substr(sprintf('%o', $permissions), -4));
     }
 }

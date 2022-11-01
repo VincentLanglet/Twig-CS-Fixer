@@ -14,6 +14,16 @@ use TwigCsFixer\Config\ConfigResolver;
 
 class ConfigResolverTest extends TestCase
 {
+    public function testResolveConfigDefaultValues(): void
+    {
+        $configResolver = new ConfigResolver(__DIR__.'/Fixtures/directoryWithoutConfig');
+        $config = $configResolver->resolveConfig();
+
+        static::assertGreaterThan(0, $config->getFinder()->count());
+        static::assertSame(Config::DEFAULT_CACHE_PATH, $config->getCacheFile());
+        static::assertInstanceOf(FileCacheManager::class, $config->getCacheManager());
+    }
+
     /**
      * @dataProvider resolveConfigDataProvider
      */
