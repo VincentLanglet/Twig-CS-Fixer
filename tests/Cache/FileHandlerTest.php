@@ -14,27 +14,43 @@ use TwigCsFixer\Ruleset\Ruleset;
 class FileHandlerTest extends TestCase
 {
     /**
-     * @dataProvider readDataProvider
+     * @dataProvider readFailureDataProvider
      */
-    public function testRead(string $file, bool $isFound): void
+    public function testReadFailure(string $file): void
     {
         $fileHandler = new FileHandler($file);
-
-        if ($isFound) {
-            static::assertNotNull($fileHandler->read());
-        } else {
-            static::assertNull($fileHandler->read());
-        }
+        static::assertNull($fileHandler->read());
     }
 
     /**
-     * @return iterable<array-key, array{string, bool}>
+     * @return iterable<array-key, array{string}>
      */
-    public function readDataProvider(): iterable
+    public function readFailureDataProvider(): iterable
     {
-        yield ['foo.php', false];
-        yield [__FILE__, false];
-        yield [__DIR__.\DIRECTORY_SEPARATOR.'Fixtures/cache', true];
+        yield ['foo.php'];
+        yield [__FILE__];
+    }
+
+    public function testReadFailurePermission(): void
+    {
+        $file = __DIR__.\DIRECTORY_SEPARATOR.'Fixtures/notReadable';
+        chmod($file, 0222);
+        $fileHandler = new FileHandler($file);
+
+        set_error_handler(function (): bool {
+            return true;
+        });
+        static::assertNull($fileHandler->read());
+        restore_error_handler();
+
+        // Restore permissions
+        chmod($file, 0644);
+    }
+
+    public function testReadSuccess(): void
+    {
+        $fileHandler = new FileHandler(__DIR__.\DIRECTORY_SEPARATOR.'Fixtures/readable');
+        static::assertNotNull($fileHandler->read());
     }
 
     /**
@@ -65,5 +81,19 @@ class FileHandlerTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
+
+        // Restore permissions
+        chmod($file, 0644);
+    }
+
+    public function testWriteSuccess(): void
+    {
+        $file = __DIR__.\DIRECTORY_SEPARATOR.'Fixtures/writable';
+        unlink($file);
+        $fileHandler = new FileHandler($file);
+
+        $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
+        $content = file_get_contents($file);
+        static::assertSame('{"php_version":"8.0","fixer_version":"1","sniffs":[],"hashes":[]}', $content);
     }
 }

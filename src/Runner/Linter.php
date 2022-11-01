@@ -60,10 +60,12 @@ final class Linter
             $report->addFile($filePath);
 
             $fileContent = file_get_contents($filePath);
-            if (false === $fileContent || $this->cacheManager->needFixing($filePath, $fileContent)) {
-                $this->setErrorHandler($report, $filePath);
-                $this->processTemplate($filePath, $ruleset, $report);
+            if (false !== $fileContent && !$this->cacheManager->needFixing($filePath, $fileContent)) {
+                continue;
             }
+
+            $this->setErrorHandler($report, $filePath);
+            $this->processTemplate($filePath, $ruleset, $report);
         }
         restore_error_handler();
 
@@ -91,11 +93,7 @@ final class Linter
         foreach ($finder as $file) {
             $filePath = $file->getPathname();
             $contents = file_get_contents($filePath);
-            if (false === $contents) {
-                throw new RuntimeException(sprintf('Cannot fix file "%s".', $filePath));
-            }
-
-            if (!$this->cacheManager->needFixing($filePath, $contents)) {
+            if (false !== $contents && !$this->cacheManager->needFixing($filePath, $contents)) {
                 continue;
             }
 

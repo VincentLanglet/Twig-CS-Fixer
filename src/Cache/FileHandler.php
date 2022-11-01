@@ -16,11 +16,6 @@ final class FileHandler implements FileHandlerInterface
         $this->file = $file;
     }
 
-    public function getFile(): string
-    {
-        return $this->file;
-    }
-
     public function read(): ?CacheInterface
     {
         if (!file_exists($this->file)) {
@@ -66,14 +61,6 @@ final class FileHandler implements FileHandlerInterface
             @chmod($this->file, 0666);
         }
 
-        $bytesWritten = @file_put_contents($this->file, CacheEncoder::toJson($cache));
-
-        if (false === $bytesWritten) {
-            $error = error_get_last();
-
-            throw new RuntimeException(
-                sprintf('Failed to write file "%s": "%s".', $this->file, $error['message'] ?? 'no reason available'),
-            );
-        }
+        file_put_contents($this->file, CacheEncoder::toJson($cache));
     }
 }

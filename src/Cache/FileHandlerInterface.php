@@ -8,8 +8,6 @@ use RuntimeException;
 
 interface FileHandlerInterface
 {
-    public function getFile(): string;
-
     public function read(): ?CacheInterface;
 
     /**
