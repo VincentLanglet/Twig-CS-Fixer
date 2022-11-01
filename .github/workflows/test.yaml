@@ -9,7 +9,7 @@ on:
 jobs:
     test:
         name: PHP ${{ matrix.php-version }} + ${{ matrix.dependencies }}
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
 
         strategy:
             matrix:
@@ -24,7 +24,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
             - name: Install PHP with extensions
               uses: shivammathur/setup-php@v2
