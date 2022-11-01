@@ -65,7 +65,7 @@ By default, the generic standard is enabled with the twig coding standard rules 
  - `TrailingSpaceSniff`: Ensure that files has no trailing spaces.
 
 If you want to use a custom standard and/or add/disable a sniff, you can provide your own configuration with
-a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class. For instance,
+a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
 ```php
 <?php
 
@@ -79,7 +79,7 @@ $config->setRuleset($ruleset);
 return $config;
 ```
 
-If your config is not located in your current directory, you can pass his path when running the command.
+If your config is not located in your current directory, you can pass his path when running the command:
 ```
 bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ```
@@ -89,7 +89,7 @@ bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 By default, all the `.twig` files in the current directory are linted, except the one in the `vendor` directory.
 
 If you want to lint a specific files/directory you can pass it as argument, but if you want a more sophisticated
-rule, you can configure it in the `.twig-cs-fixer.php` file. For instance,
+rule, you can configure it in the `.twig-cs-fixer.php` file:
 ```php
 <?php
 
@@ -101,3 +101,24 @@ $config->setFinder($finder);
 
 return $config;
 ```
+
+### Cache
+
+By default, the result of the command is cached in a `.twig-cs-fixer.cache` file so the subsequent runs are much
+faster. The cache is invalidated if a different php version, twig-cs-fixer version or ruleset is used.
+
+If you want to use a custom path for the cache file you can configure it in the `.twig-cs-fixer.php` file:
+```php
+<?php
+
+$config = new TwigCsFixer\Config\Config();
+$config->setCacheFile('tmp/.twig-cs-fixer.cache');
+
+return $config;
+```
+
+If you want to disable the cache once you can pass `--no-cache` when running the command:
+```
+bin/twig-cs-fixer lint --no-cache
+```
+If you want to completely disable the cache, just set the cache file to `null` in your config.
