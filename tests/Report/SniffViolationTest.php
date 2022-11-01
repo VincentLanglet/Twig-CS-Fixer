@@ -12,13 +12,13 @@ class SniffViolationTest extends TestCase
     public function testGetters(): void
     {
         $sniffViolation = new SniffViolation(SniffViolation::LEVEL_WARNING, 'message', 'filename', 42);
-        self::assertSame(SniffViolation::LEVEL_WARNING, $sniffViolation->getLevel());
-        self::assertSame('message', $sniffViolation->getMessage());
-        self::assertSame('filename', $sniffViolation->getFilename());
-        self::assertSame(42, $sniffViolation->getLine());
+        static::assertSame(SniffViolation::LEVEL_WARNING, $sniffViolation->getLevel());
+        static::assertSame('message', $sniffViolation->getMessage());
+        static::assertSame('filename', $sniffViolation->getFilename());
+        static::assertSame(42, $sniffViolation->getLine());
 
         $sniffViolation->setLinePosition(33);
-        self::assertSame(33, $sniffViolation->getLinePosition());
+        static::assertSame(33, $sniffViolation->getLinePosition());
     }
 
     /**
@@ -26,7 +26,7 @@ class SniffViolationTest extends TestCase
      */
     public function testGetLevelAsString(string $expected, int $level): void
     {
-        self::assertSame($expected, SniffViolation::getLevelAsString($level));
+        static::assertSame($expected, SniffViolation::getLevelAsString($level));
     }
 
     /**
@@ -51,7 +51,7 @@ class SniffViolationTest extends TestCase
      */
     public function testGetLevelAsInt(int $expected, string $level): void
     {
-        self::assertSame($expected, SniffViolation::getLevelAsInt($level));
+        static::assertSame($expected, SniffViolation::getLevelAsInt($level));
     }
 
     /**

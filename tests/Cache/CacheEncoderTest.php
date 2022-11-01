@@ -12,6 +12,7 @@ use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
+use UnexpectedValueException;
 
 class CacheEncoderTest extends TestCase
 {
@@ -44,17 +45,17 @@ class CacheEncoderTest extends TestCase
         $cache = CacheEncoder::fromJson('{"php_version":"7.4","fixer_version":"1.3","sniffs":["TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff","TwigCsFixer\\\\Sniff\\\\PunctuationSpacingSniff"],"hashes":{"folder/file.twig":"bnmdsa678dsa","anotherfolder/anotherfile.twig":"123bnmdsa678dsa"}}');
 
         $signature = $cache->getSignature();
-        self::assertEquals('7.4', $signature->getPhpVersion());
-        self::assertEquals('1.3', $signature->getFixerVersion());
-        self::assertCount(2, $cache->getHashes());
-        self::assertSame(
+        static::assertEquals('7.4', $signature->getPhpVersion());
+        static::assertEquals('1.3', $signature->getFixerVersion());
+        static::assertCount(2, $cache->getHashes());
+        static::assertSame(
             ['folder/file.twig' => 'bnmdsa678dsa', 'anotherfolder/anotherfile.twig' => '123bnmdsa678dsa'],
             $cache->getHashes()
         );
 
         $sniffs = $signature->getRuleset()->getSniffs();
-        self::assertCount(2, $sniffs);
-        self::assertSame(
+        static::assertCount(2, $sniffs);
+        static::assertSame(
             [OperatorSpacingSniff::class, PunctuationSpacingSniff::class],
             array_keys($sniffs)
         );
@@ -68,9 +69,19 @@ class CacheEncoderTest extends TestCase
         $signature = new Signature('7.4', '1.3', $ruleset);
         $cache = new Cache($signature);
 
-        self::assertSame(
+        static::assertSame(
             '{"php_version":"7.4","fixer_version":"1.3","sniffs":["TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff"],"hashes":[]}',
             CacheEncoder::toJson($cache)
         );
+    }
+
+    public function testToJsonError(): void
+    {
+        $ruleset = new Ruleset();
+        $signature = new Signature('7.4', "\xB1\x31", $ruleset);
+        $cache = new Cache($signature);
+
+        $this->expectException(UnexpectedValueException::class);
+        CacheEncoder::toJson($cache);
     }
 }

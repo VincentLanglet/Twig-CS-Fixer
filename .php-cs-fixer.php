@@ -50,6 +50,7 @@ $rules = [
         'sort_algorithm' => 'alpha',
         'imports_order'  => ['class', 'function', 'const'],
     ],
+    'php_unit_test_case_static_method_calls'           => true,
     'phpdoc_add_missing_param_annotation'              => true,
     'phpdoc_no_empty_return'                           => true,
 ];

@@ -40,7 +40,7 @@ abstract class AbstractSniffTestCase extends TestCase
             $ruleset->addSniff($sniff);
             $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
         } catch (Exception $exception) {
-            self::fail($exception->getMessage());
+            static::fail($exception->getMessage());
         }
 
         $fixedFile = substr($filePath, 0, -5).'.fixed.twig';
@@ -51,7 +51,7 @@ abstract class AbstractSniffTestCase extends TestCase
 
             $diff = TestHelper::generateDiff($fixer->getContents(), $fixedFile);
             if ('' !== $diff) {
-                self::fail($diff);
+                static::fail($diff);
             }
         }
 
@@ -67,13 +67,13 @@ abstract class AbstractSniffTestCase extends TestCase
                 if (null !== $line) {
                     $errorMessage = sprintf('Line %s: %s', $line, $errorMessage);
                 }
-                self::fail($errorMessage);
+                static::fail($errorMessage);
             }
 
             $messagePositions[] = [$message->getLine() ?? 0 => $message->getLinePosition()];
         }
 
-        self::assertSame($expects, $messagePositions);
+        static::assertSame($expects, $messagePositions);
     }
 
     private function generateFilePath(): string
@@ -81,7 +81,7 @@ abstract class AbstractSniffTestCase extends TestCase
         $class = new ReflectionClass(static::class);
         $className = $class->getShortName();
         $filename = $class->getFileName();
-        self::assertNotFalse($filename);
+        static::assertNotFalse($filename);
 
         $directory = \dirname($filename);
 

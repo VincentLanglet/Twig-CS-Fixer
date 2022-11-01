@@ -17,30 +17,30 @@ class StubbedEnvironmentTest extends TestCase
     {
         $env = new StubbedEnvironment();
 
-        self::assertInstanceOf(TwigFilter::class, $env->getFilter('foo'));
+        static::assertInstanceOf(TwigFilter::class, $env->getFilter('foo'));
     }
 
     public function testFunctionIsStubbed(): void
     {
         $env = new StubbedEnvironment();
 
-        self::assertInstanceOf(TwigFunction::class, $env->getFunction('foo'));
+        static::assertInstanceOf(TwigFunction::class, $env->getFunction('foo'));
     }
 
     public function testTestIsStubbed(): void
     {
         $env = new StubbedEnvironment();
 
-        self::assertInstanceOf(TwigTest::class, $env->getTest('foo'));
+        static::assertInstanceOf(TwigTest::class, $env->getTest('foo'));
 
-        self::assertNull($env->getTest('divisible')); // To not conflict with `divisible by`
-        self::assertNull($env->getTest('same')); // To not conflict with `same as`
+        static::assertNull($env->getTest('divisible')); // To not conflict with `divisible by`
+        static::assertNull($env->getTest('same')); // To not conflict with `same as`
     }
 
     public function testParse(): void
     {
         $content = file_get_contents(__DIR__.'/Fixtures/tags.html.twig');
-        self::assertNotFalse($content);
+        static::assertNotFalse($content);
 
         $env = new StubbedEnvironment();
         $source = new Source($content, 'tags.html.twig');

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Runner;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -29,7 +28,7 @@ class FixerTest extends TestCase
         $success = $fixer->fixFile(__DIR__.'/Fixtures/file_not_readable.twig');
         error_reporting($oldErrorLevel);
 
-        self::assertFalse($success);
+        static::assertFalse($success);
     }
 
     public function testInvalidFile(): void
@@ -39,7 +38,7 @@ class FixerTest extends TestCase
         $ruleset = new Ruleset();
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        self::assertFalse($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
+        static::assertFalse($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
     }
 
     public function testReplaceToken(): void
@@ -52,11 +51,6 @@ class FixerTest extends TestCase
         $sniff = new class () extends AbstractSniff {
             private bool $isAlreadyExecuted = false;
 
-            /**
-             * @param list<Token> $tokens
-             *
-             * @throws Exception
-             */
             protected function process(int $tokenPosition, array $tokens): void
             {
                 if ($this->isAlreadyExecuted) {
@@ -106,11 +100,6 @@ class FixerTest extends TestCase
         ]);
 
         $sniff = new class () extends AbstractSniff {
-            /**
-             * @param list<Token> $tokens
-             *
-             * @throws Exception
-             */
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
@@ -145,11 +134,6 @@ class FixerTest extends TestCase
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff1 = new class () extends AbstractSniff {
-            /**
-             * @param list<Token> $tokens
-             *
-             * @throws Exception
-             */
             protected function process(int $tokenPosition, array $tokens): void
             {
                 if ($tokenPosition > 0) {
@@ -167,11 +151,6 @@ class FixerTest extends TestCase
             }
         };
         $sniff2 = new class () extends AbstractSniff {
-            /**
-             * @param list<Token> $tokens
-             *
-             * @throws Exception
-             */
             protected function process(int $tokenPosition, array $tokens): void
             {
                 if ($tokenPosition > 0) {

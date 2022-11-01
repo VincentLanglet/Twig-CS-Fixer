@@ -39,8 +39,8 @@ class TextFormatterTest extends TestCase
         $textFormatter->display($report, $level);
 
         $text = $output->fetch();
-        self::assertStringContainsString($expected, $text);
-        self::assertStringContainsString('[ERROR]', $text);
+        static::assertStringContainsString($expected, $text);
+        static::assertStringContainsString('[ERROR]', $text);
     }
 
     /**
@@ -107,8 +107,8 @@ class TextFormatterTest extends TestCase
         $textFormatter->display($report);
 
         $text = $output->fetch();
-        self::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
-        self::assertStringContainsString('[OK]', $text);
+        static::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
+        static::assertStringContainsString('[OK]', $text);
     }
 
     /**
@@ -130,7 +130,7 @@ class TextFormatterTest extends TestCase
         $textFormatter->display($report);
 
         $text = $output->fetch();
-        self::assertStringContainsString($expected, $text);
+        static::assertStringContainsString($expected, $text);
     }
 
     /**

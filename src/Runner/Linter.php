@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Runner;
 
 use Exception;
+use RuntimeException;
 use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -37,7 +38,7 @@ final class Linter
     /**
      * @param iterable<SplFileInfo> $files
      *
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
     {
@@ -77,7 +78,7 @@ final class Linter
     /**
      * @param iterable<SplFileInfo> $finder
      *
-     * @throws Exception
+     * @throws RuntimeException
      */
     private function fix(iterable $finder, Ruleset $ruleset): void
     {
@@ -91,7 +92,7 @@ final class Linter
             $filePath = $file->getPathname();
             $contents = file_get_contents($filePath);
             if (false === $contents) {
-                throw new Exception(sprintf('Cannot fix file "%s".', $filePath));
+                throw new RuntimeException(sprintf('Cannot fix file "%s".', $filePath));
             }
 
             if (!$this->cacheManager->needFixing($filePath, $contents)) {
@@ -99,7 +100,7 @@ final class Linter
             }
 
             if (!$fixer->fixFile($filePath)) {
-                throw new Exception(sprintf('Cannot fix file "%s".', $filePath));
+                throw new RuntimeException(sprintf('Cannot fix file "%s".', $filePath));
             }
 
             $contents = $fixer->getContents();

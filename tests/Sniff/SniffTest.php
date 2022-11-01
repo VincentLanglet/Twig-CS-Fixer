@@ -19,11 +19,6 @@ final class SniffTest extends TestCase
         parent::setUp();
 
         $this->sniff = new class () extends AbstractSniff {
-            /**
-             * @param list<Token> $tokens
-             *
-             * @throws Exception
-             */
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $token = $tokens[$tokenPosition];
@@ -55,7 +50,10 @@ final class SniffTest extends TestCase
     public function testSniffWithoutReport(): void
     {
         self::expectException(Exception::class);
-        self::expectExceptionMessage('Sniff "TwigCsFixer\Sniff\AbstractSniff" is disabled.');
+        self::expectExceptionMessage(sprintf(
+            'Cannot add a message to the sniff "%s" without a report.',
+            AbstractSniff::class
+        ));
 
         $this->sniff->processFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]);
     }
@@ -68,8 +66,8 @@ final class SniffTest extends TestCase
         $this->sniff->enableReport($report);
         $this->sniff->processFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]);
 
-        self::assertSame(2, $report->getTotalWarnings());
-        self::assertSame(2, $report->getTotalErrors());
+        static::assertSame(2, $report->getTotalWarnings());
+        static::assertSame(2, $report->getTotalErrors());
     }
 
     public function testSniffWithReport2(): void
@@ -83,7 +81,7 @@ final class SniffTest extends TestCase
             new Token(Token::EOF_TYPE, 1, 0, 'fakeFile.html.twig'),
         ]);
 
-        self::assertSame(2, $report->getTotalWarnings());
-        self::assertSame(4, $report->getTotalErrors());
+        static::assertSame(2, $report->getTotalWarnings());
+        static::assertSame(4, $report->getTotalErrors());
     }
 }

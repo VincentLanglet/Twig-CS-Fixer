@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Sniff;
 
-use Exception;
+use BadMethodCallException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Runner\Fixer;
@@ -35,9 +35,6 @@ abstract class AbstractSniff implements SniffInterface
         $this->fixer = null;
     }
 
-    /**
-     * @param list<Token> $stream
-     */
     public function processFile(array $stream): void
     {
         foreach ($stream as $index => $token) {
@@ -115,41 +112,26 @@ abstract class AbstractSniff implements SniffInterface
         return $start - $i;
     }
 
-    /**
-     * @throws Exception
-     */
     protected function addWarning(string $message, Token $token): void
     {
         $this->addMessage(SniffViolation::LEVEL_WARNING, $message, $token);
     }
 
-    /**
-     * @throws Exception
-     */
     protected function addError(string $message, Token $token): void
     {
         $this->addMessage(SniffViolation::LEVEL_ERROR, $message, $token);
     }
 
-    /**
-     * @throws Exception
-     */
     protected function addFixableWarning(string $message, Token $token): ?Fixer
     {
         return $this->addFixableMessage(SniffViolation::LEVEL_WARNING, $message, $token);
     }
 
-    /**
-     * @throws Exception
-     */
     protected function addFixableError(string $message, Token $token): ?Fixer
     {
         return $this->addFixableMessage(SniffViolation::LEVEL_ERROR, $message, $token);
     }
 
-    /**
-     * @throws Exception
-     */
     private function addMessage(int $messageType, string $message, Token $token): void
     {
         $report = $this->report;
@@ -159,7 +141,9 @@ abstract class AbstractSniff implements SniffInterface
                 return;
             }
 
-            throw new Exception(sprintf('Sniff "%s" is disabled.', self::class));
+            throw new BadMethodCallException(
+                sprintf('Cannot add a message to the sniff "%s" without a report.', self::class)
+            );
         }
 
         $sniffViolation = new SniffViolation(
@@ -173,9 +157,6 @@ abstract class AbstractSniff implements SniffInterface
         $report->addMessage($sniffViolation);
     }
 
-    /**
-     * @throws Exception
-     */
     private function addFixableMessage(int $messageType, string $message, Token $token): ?Fixer
     {
         $this->addMessage($messageType, $message, $token);

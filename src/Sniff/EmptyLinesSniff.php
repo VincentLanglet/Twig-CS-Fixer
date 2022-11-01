@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Sniff;
 
-use Exception;
 use TwigCsFixer\Token\Token;
 
 /**
@@ -12,11 +11,6 @@ use TwigCsFixer\Token\Token;
  */
 final class EmptyLinesSniff extends AbstractSniff
 {
-    /**
-     * @param list<Token> $tokens
-     *
-     * @throws Exception
-     */
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];

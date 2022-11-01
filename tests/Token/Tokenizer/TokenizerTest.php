@@ -25,7 +25,7 @@ final class TokenizerTest extends TestCase
     {
         $content = file_get_contents($filePath);
         if (false === $content) {
-            self::fail(sprintf('Cannot read file path %s', $filePath));
+            static::fail(sprintf('Cannot read file path %s', $filePath));
         }
 
         $env = new StubbedEnvironment();
@@ -38,11 +38,11 @@ final class TokenizerTest extends TestCase
 
         $diff = TestHelper::generateDiff(implode('', $tokenValues), $filePath);
         if ('' !== $diff) {
-            self::fail($diff);
+            static::fail($diff);
         }
 
         $tokenTypes = array_map(static fn (Token $token): int => $token->getType(), $tokens);
-        self::assertSame($expectedTokenTypes, $tokenTypes);
+        static::assertSame($expectedTokenTypes, $tokenTypes);
     }
 
     /**
@@ -408,7 +408,7 @@ final class TokenizerTest extends TestCase
     {
         $content = file_get_contents($filePath);
         if (false === $content) {
-            self::fail(sprintf('Cannot read file path %s', $filePath));
+            static::fail(sprintf('Cannot read file path %s', $filePath));
         }
 
         $env = new StubbedEnvironment();

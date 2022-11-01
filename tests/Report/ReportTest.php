@@ -14,11 +14,11 @@ class ReportTest extends TestCase
     {
         $report = new Report();
 
-        self::assertSame(0, $report->getTotalNotices());
-        self::assertSame(0, $report->getTotalWarnings());
-        self::assertSame(0, $report->getTotalErrors());
-        self::assertSame([], $report->getFiles());
-        self::assertSame(0, $report->getTotalFiles());
+        static::assertSame(0, $report->getTotalNotices());
+        static::assertSame(0, $report->getTotalWarnings());
+        static::assertSame(0, $report->getTotalErrors());
+        static::assertSame([], $report->getFiles());
+        static::assertSame(0, $report->getTotalFiles());
     }
 
     public function testReport(): void
@@ -48,19 +48,19 @@ class ReportTest extends TestCase
         $report->addMessage($sniffViolation6);
         $report->addMessage($sniffViolation7);
 
-        self::assertSame(1, $report->getTotalNotices());
-        self::assertSame(2, $report->getTotalWarnings());
-        self::assertSame(4, $report->getTotalErrors());
-        self::assertSame([$file, $file2, $file3], $report->getFiles());
-        self::assertSame(3, $report->getTotalFiles());
+        static::assertSame(1, $report->getTotalNotices());
+        static::assertSame(2, $report->getTotalWarnings());
+        static::assertSame(4, $report->getTotalErrors());
+        static::assertSame([$file, $file2, $file3], $report->getFiles());
+        static::assertSame(3, $report->getTotalFiles());
 
-        self::assertSame([
+        static::assertSame([
             $file  => [$sniffViolation1, $sniffViolation2, $sniffViolation4, $sniffViolation7],
             $file2 => [$sniffViolation3, $sniffViolation5],
             $file3 => [$sniffViolation6],
         ], $report->getMessagesByFiles());
 
-        self::assertSame([
+        static::assertSame([
             $file  => [$sniffViolation4, $sniffViolation7],
             $file2 => [$sniffViolation5],
             $file3 => [$sniffViolation6],
