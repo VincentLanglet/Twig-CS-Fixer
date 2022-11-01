@@ -13,12 +13,12 @@
 This standard can be installed with the [Composer](https://getcomposer.org/) dependency manager.
 
 Add the coding standard as a dependency of your project
-```
+```bash
 composer require --dev vincentlanglet/twig-cs-fixer
 ```
 
 Then, use it!
-```
+```bash
 bin/twig-cs-fixer lint /path/to/code
 bin/twig-cs-fixer lint --fix /path/to/code
 ```
@@ -80,7 +80,7 @@ return $config;
 ```
 
 If your config is not located in your current directory, you can pass his path when running the command:
-```
+```bash
 bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ```
 
@@ -118,7 +118,7 @@ return $config;
 ```
 
 If you want to disable the cache once you can pass `--no-cache` when running the command:
-```
+```bash
 bin/twig-cs-fixer lint --no-cache
 ```
 If you want to completely disable the cache, just set the cache file to `null` in your config.
