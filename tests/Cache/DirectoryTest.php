@@ -27,6 +27,7 @@ class DirectoryTest extends TestCase
         yield ['', '/foo.php', '/foo.php'];
         yield ['', '\foo.php', '/foo.php'];
         yield ['directory', 'foo.php', 'foo.php'];
+        yield ['directory', 'directory.php', 'directory.php'];
         yield ['directory', 'directory/foo.php', 'foo.php'];
         yield ['directory', 'directory\foo.php', 'foo.php'];
         yield ['directory', '/foo.php', '/foo.php'];

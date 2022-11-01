@@ -82,6 +82,12 @@ class CacheEncoderTest extends TestCase
         $cache = new Cache($signature);
 
         $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage(
+            'Cannot encode cache signature to JSON, error:'
+            .' "Malformed UTF-8 characters, possibly incorrectly encoded".'
+            .' If you have non-UTF8 or non-UTF16 chars in your signature,'
+            .' consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.'
+        );
         CacheEncoder::toJson($cache);
     }
 }
