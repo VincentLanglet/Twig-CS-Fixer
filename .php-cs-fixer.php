@@ -29,6 +29,9 @@ $rules = [
     'increment_style'                                  => ['style' => 'post'],
     'no_trailing_whitespace_in_string'                 => false, // For string comparison in tests
     'phpdoc_summary'                                   => false,
+    'phpdoc_to_comment'                                => [
+        'ignored_tags' => ['psalm-suppress']
+    ],
     'single_line_throw'                                => false,
 
     // Added
