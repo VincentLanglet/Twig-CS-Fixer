@@ -4,16 +4,25 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Config;
 
+use Composer\InstalledVersions;
 use Exception;
 use LogicException;
 use Symfony\Component\Finder\Finder;
+use TwigCsFixer\Cache\CacheManagerInterface;
+use TwigCsFixer\Cache\Directory;
+use TwigCsFixer\Cache\FileCacheManager;
+use TwigCsFixer\Cache\FileHandler;
+use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\File\Finder as TwigCsFinder;
+use TwigCsFixer\Ruleset\Ruleset;
 
 /**
  * Resolve config from `.twig-cs-fixer.php` is provided
  */
 final class ConfigResolver
 {
+    private const PACKAGE_NAME = 'vincentlanglet/twig-cs-fixer';
+
     private string $workingDir;
 
     public function __construct(string $workingDir)
@@ -30,6 +39,11 @@ final class ConfigResolver
     {
         $config = $this->getConfig($configPath);
         $config->setFinder($this->resolveFinder($config->getFinder(), $paths));
+        $config->setCacheManager($this->resolveCacheManager(
+            $config->getCacheManager(),
+            $config->getCacheFile(),
+            $config->getRuleset()
+        ));
 
         return $config;
     }
@@ -106,6 +120,34 @@ final class ConfigResolver
         }
 
         return TwigCsFinder::create()->in($directories)->append($files);
+    }
+
+    public function resolveCacheManager(
+        ?CacheManagerInterface $cacheManager,
+        ?string $cacheFile,
+        Ruleset $ruleset
+    ): ?CacheManagerInterface {
+        if (null !== $cacheManager) {
+            return $cacheManager;
+        }
+
+        if (null === $cacheFile) {
+            return null;
+        }
+
+        $cacheFile = $this->isAbsolutePath($cacheFile)
+            ? $cacheFile
+            : $this->workingDir.\DIRECTORY_SEPARATOR.$cacheFile;
+
+        return new FileCacheManager(
+            new FileHandler($cacheFile),
+            new Signature(
+                \PHP_VERSION,
+                InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
+                $ruleset
+            ),
+            new Directory(\dirname($cacheFile))
+        );
     }
 
     private function isAbsolutePath(string $path): bool
