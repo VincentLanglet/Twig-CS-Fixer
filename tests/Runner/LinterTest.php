@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use TwigCsFixer\Cache\CacheManagerInterface;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -154,5 +155,34 @@ class LinterTest extends TestCase
 
         self::expectExceptionMessage(sprintf('Cannot fix file "%s".', $tmpFile));
         $linter->run([new SplFileInfo($tmpFile)], $ruleset, true);
+    }
+
+    public function testFileIsSkippedIfCached(): void
+    {
+        $env = new StubbedEnvironment();
+        $tokenizer = $this->createMock(TokenizerInterface::class);
+        $cacheManager = $this->createMock(CacheManagerInterface::class);
+        $ruleset = new Ruleset();
+
+        $linter = new Linter($env, $tokenizer, $cacheManager);
+
+        $cacheManager->method('needFixing')->willReturn(false);
+        $cacheManager->expects(static::never())->method('setFile');
+        $tokenizer->expects(static::never())->method('tokenize');
+        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
+    }
+
+    public function testFileIsNotSkippedIfNotCached(): void
+    {
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $cacheManager = $this->createMock(CacheManagerInterface::class);
+        $ruleset = new Ruleset();
+
+        $linter = new Linter($env, $tokenizer, $cacheManager);
+
+        $cacheManager->method('needFixing')->willReturn(true);
+        $cacheManager->expects(static::once())->method('setFile');
+        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
     }
 }

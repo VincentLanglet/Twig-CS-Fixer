@@ -104,8 +104,8 @@ return $config;
 
 ### Cache
 
-By default, the result of the command is cached in a `.twig-cs-fixer.cache` file so the subsequent runs are much
-faster. The cache is invalidated if a different php version, twig-cs-fixer version or ruleset is used.
+By default, the result of the run is cached in a `.twig-cs-fixer.cache` file so the subsequent runs are much
+faster. The cache is invalidated when a different php version, twig-cs-fixer version or ruleset is used.
 
 If you want to use a custom path for the cache file you can configure it in the `.twig-cs-fixer.php` file:
 ```php
@@ -117,7 +117,7 @@ $config->setCacheFile('tmp/.twig-cs-fixer.cache');
 return $config;
 ```
 
-If you want to disable the cache once you can pass `--no-cache` when running the command:
+If you want to disable the cache once, you can pass `--no-cache` when running the command:
 ```bash
 bin/twig-cs-fixer lint --no-cache
 ```
