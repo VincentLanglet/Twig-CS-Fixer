@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\CacheManagerInterface;
 use TwigCsFixer\Cache\FileCacheManager;
 use TwigCsFixer\Cache\NullCacheManager;
+use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 
 class ConfigResolverTest extends TestCase
@@ -122,10 +123,16 @@ class ConfigResolverTest extends TestCase
      *
      * @dataProvider resolveCacheManagerDataProvider
      */
-    public function testResolveCacheManager(string $configPath, ?string $expectedCacheManager): void
-    {
+    public function testResolveCacheManager(
+        ?string $configPath,
+        bool $disableCache,
+        ?string $expectedCacheFile,
+        ?string $expectedCacheManager
+    ): void {
         $configResolver = new ConfigResolver(__DIR__);
-        $config = $configResolver->resolveConfig([], $configPath);
+        $config = $configResolver->resolveConfig([], $configPath, $disableCache);
+
+        static::assertSame($expectedCacheFile, $config->getCacheFile());
 
         if (null === $expectedCacheManager) {
             static::assertNull($config->getCacheManager());
@@ -135,23 +142,32 @@ class ConfigResolverTest extends TestCase
     }
 
     /**
-     * @return iterable<array-key, array{string, class-string<CacheManagerInterface>|null}>
+     * @return iterable<array-key, array{string|null, bool, string|null, class-string<CacheManagerInterface>|null}>
      */
     public function resolveCacheManagerDataProvider(): iterable
     {
-        yield [
-            __DIR__.'/Fixtures/directoryWithCustomCacheManager/.twig-cs-fixer.php',
-            NullCacheManager::class,
-        ];
+        yield [null, false, Config::DEFAULT_CACHE_PATH,  FileCacheManager::class];
+        yield [null, true, null, null];
 
-        yield [
-            __DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.php',
-            FileCacheManager::class,
-        ];
+        $path = __DIR__.'/Fixtures/directoryWithCustomCacheManager/.twig-cs-fixer.php';
+        yield [$path, false, Config::DEFAULT_CACHE_PATH, NullCacheManager::class];
+        yield [$path, true, null, null];
 
-        yield [
-            __DIR__.'/Fixtures/directoryWithNoCacheFile/.twig-cs-fixer.php',
-            null,
-        ];
+        $path = __DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.php';
+        $cachePath = __DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.cache';
+        yield [$path, false, $cachePath, FileCacheManager::class];
+        yield [$path, true, null, null];
+
+        $path = __DIR__.'/Fixtures/directoryWithNoCacheFile/.twig-cs-fixer.php';
+        yield [$path, false, null, null];
+        yield [$path, true, null, null];
+    }
+
+    public function testResolveCacheManagerWithCacheDisabled(): void
+    {
+        $configResolver = new ConfigResolver(__DIR__);
+        $config = $configResolver->resolveConfig([], null, true);
+
+        static::assertNull($config->getCacheManager());
     }
 }

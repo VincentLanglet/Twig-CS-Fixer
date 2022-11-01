@@ -33,7 +33,7 @@ class FileHandlerTest extends TestCase
 
     public function testReadFailurePermission(): void
     {
-        $file = __DIR__.\DIRECTORY_SEPARATOR.'Fixtures/notReadable';
+        $file = __DIR__.'/Fixtures/notReadable';
         chmod($file, 0222);
         $fileHandler = new FileHandler($file);
 
@@ -47,7 +47,7 @@ class FileHandlerTest extends TestCase
 
     public function testReadSuccess(): void
     {
-        $fileHandler = new FileHandler(__DIR__.\DIRECTORY_SEPARATOR.'Fixtures/readable');
+        $fileHandler = new FileHandler(__DIR__.'/Fixtures/readable');
         static::assertNotNull($fileHandler->read());
     }
 
@@ -73,7 +73,7 @@ class FileHandlerTest extends TestCase
 
     public function testWriteFailurePermission(): void
     {
-        $file = __DIR__.\DIRECTORY_SEPARATOR.'Fixtures/notWritable';
+        $file = __DIR__.'/Fixtures/notWritable';
         chmod($file, 0444);
         $fileHandler = new FileHandler($file);
 
@@ -86,7 +86,7 @@ class FileHandlerTest extends TestCase
 
     public function testWriteSuccess(): void
     {
-        $file = __DIR__.\DIRECTORY_SEPARATOR.'Fixtures/writable';
+        $file = __DIR__.'/Fixtures/writable';
         unlink($file);
         $fileHandler = new FileHandler($file);
 
