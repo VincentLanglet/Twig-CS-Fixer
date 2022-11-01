@@ -15,13 +15,16 @@ use TwigCsFixer\Standard\Generic;
  */
 final class Config
 {
+    public const DEFAULT_PATH = '.twig-cs-fixer.php';
+    public const DEFAULT_CACHE_PATH = '.twig-cs-fixer.cache';
+
     private string $name;
 
     private Ruleset $ruleset;
 
     private Finder $finder;
 
-    private ?string $cacheFile = '.twig-cs-fixer.cache';
+    private ?string $cacheFile = self::DEFAULT_CACHE_PATH;
 
     private ?CacheManagerInterface $cacheManager = null;
 
