@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Config;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
+use TwigCsFixer\Cache\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -13,17 +14,13 @@ use TwigCsFixer\Standard\Generic;
 
 class ConfigTest extends TestCase
 {
-    public function testDefaultConfigHaveDefaultName(): void
+    public function testConfigName(): void
     {
         self::assertEquals('Default', (new Config())->getName());
-    }
-
-    public function testConfigGetName(): void
-    {
         self::assertEquals('Custom', (new Config('Custom'))->getName());
     }
 
-    public function testDefaultConfigHaveGenericStandard(): void
+    public function testConfigRuleset(): void
     {
         $config = new Config();
         $genericStandard = new Generic();
@@ -33,32 +30,41 @@ class ConfigTest extends TestCase
             array_values($genericStandard->getSniffs()),
             array_values($ruleset->getSniffs())
         );
-    }
 
-    public function testSetRulesetOverrideTheDefaultOne(): void
-    {
         $ruleset = new Ruleset();
-
-        $config = new Config();
         $config->setRuleset($ruleset);
-
         self::assertSame($ruleset, $config->getRuleset());
     }
 
-    public function testDefaultConfigHaveDefaultFinder(): void
+    public function testConfigFinder(): void
     {
         $config = new Config();
-
         self::assertInstanceOf(TwigCsFinder::class, $config->getFinder());
+
+        $finder = new Finder();
+        $config->setFinder($finder);
+        self::assertSame($finder, $config->getFinder());
     }
 
-    public function testSetFinderOverrideTheDefaultOne(): void
+    public function testConfigCacheManager(): void
     {
-        $finder = new Finder();
-
         $config = new Config();
-        $config->setFinder($finder);
+        self::assertNull($config->getCacheManager());
 
-        self::assertSame($finder, $config->getFinder());
+        $cacheManager = new NullCacheManager();
+        $config->setCacheManager($cacheManager);
+        self::assertSame($cacheManager, $config->getCacheManager());
+    }
+
+    public function testConfigCacheFile(): void
+    {
+        $config = new Config();
+        self::assertSame('.twig-cs-fixer.cache', $config->getCacheFile());
+
+        $config->setCacheFile('foo');
+        self::assertSame('foo', $config->getCacheFile());
+
+        $config->setCacheFile(null);
+        self::assertNull($config->getCacheFile());
     }
 }

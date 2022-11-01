@@ -71,11 +71,14 @@ final class TwigCsFixerCommand extends Command
                 $input->getOption('config')
             );
 
+            $cacheFile = $config->getCacheFile();
+            if (null !== $cacheFile) {
+                $output->writeln(sprintf('Using cache file %s', $cacheFile));
+            }
+
             // Execute the linter.
             $twig = new StubbedEnvironment();
-            $cacheManager = $config->getCacheManager();
-            $output->writeln(sprintf('Using cache file %s', $config->getCacheFile()));
-            $linter = new Linter($twig, new Tokenizer($twig), $cacheManager);
+            $linter = new Linter($twig, new Tokenizer($twig), $config->getCacheManager());
 
             // Build the report.
             $report = $linter->run(

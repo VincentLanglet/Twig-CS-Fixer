@@ -6,6 +6,9 @@ namespace TwigCsFixer\Tests\Config;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use TwigCsFixer\Cache\CacheManagerInterface;
+use TwigCsFixer\Cache\FileCacheManager;
+use TwigCsFixer\Cache\NullCacheManager;
 use TwigCsFixer\Config\ConfigResolver;
 
 class ConfigResolverTest extends TestCase
@@ -112,5 +115,43 @@ class ConfigResolverTest extends TestCase
         yield ['/a', '/a'];
         yield ['\\a', '\\a'];
         yield ['C:\WINDOWS', 'C:\WINDOWS'];
+    }
+
+    /**
+     * @param class-string<CacheManagerInterface>|null $expectedCacheManager
+     *
+     * @dataProvider resolveCacheManagerDataProvider
+     */
+    public function testResolveCacheManager(string $configPath, ?string $expectedCacheManager): void
+    {
+        $configResolver = new ConfigResolver(__DIR__);
+        $config = $configResolver->resolveConfig([], $configPath);
+
+        if (null === $expectedCacheManager) {
+            self::assertNull($config->getCacheManager());
+        } else {
+            self::assertInstanceOf($expectedCacheManager, $config->getCacheManager());
+        }
+    }
+
+    /**
+     * @return iterable<array-key, array{string, class-string<CacheManagerInterface>|null}>
+     */
+    public function resolveCacheManagerDataProvider(): iterable
+    {
+        yield [
+            __DIR__.'/Fixtures/directoryWithCustomCacheManager/.twig-cs-fixer.php',
+            NullCacheManager::class,
+        ];
+
+        yield [
+            __DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.php',
+            FileCacheManager::class,
+        ];
+
+        yield [
+            __DIR__.'/Fixtures/directoryWithNoCacheFile/.twig-cs-fixer.php',
+            null,
+        ];
     }
 }
