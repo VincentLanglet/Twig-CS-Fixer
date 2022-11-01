@@ -55,6 +55,15 @@ class FileHandlerTest extends TestCase
     {
         yield ['/fakeDir/foo.php'];
         yield [__DIR__];
-        yield [__DIR__.\DIRECTORY_SEPARATOR.'Fixtures/notWritable'];
+    }
+
+    public function testWriteFailurePermission(): void
+    {
+        $file = __DIR__.\DIRECTORY_SEPARATOR.'Fixtures/notWritable';
+        chmod($file, 0444);
+        $fileHandler = new FileHandler($file);
+
+        $this->expectException(RuntimeException::class);
+        $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
     }
 }
