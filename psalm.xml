@@ -30,7 +30,6 @@
         <classAndDescendants name="Error" />
     </ignoreExceptions>
     <issueHandlers>
-        <UnusedForeachValue errorLevel="suppress"/>
         <MissingThrowsDocblock errorLevel="suppress">
             <errorLevel type="suppress">
                 <directory name="tests"/>

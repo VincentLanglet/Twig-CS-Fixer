@@ -37,7 +37,7 @@ abstract class AbstractSniff implements SniffInterface
 
     public function processFile(array $stream): void
     {
-        foreach ($stream as $index => $token) {
+        foreach (array_keys($stream) as $index) {
             $this->process($index, $stream);
         }
     }
