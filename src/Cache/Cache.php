@@ -6,26 +6,29 @@ namespace TwigCsFixer\Cache;
 
 use LogicException;
 
-final class Cache implements CacheInterface
+final class Cache
 {
-    private SignatureInterface $signature;
+    private Signature $signature;
 
     /**
      * @var array<string, string>
      */
     private array $hashes = [];
 
-    public function __construct(SignatureInterface $signature)
+    public function __construct(Signature $signature)
     {
         $this->signature = $signature;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getHashes(): array
     {
         return $this->hashes;
     }
 
-    public function getSignature(): SignatureInterface
+    public function getSignature(): Signature
     {
         return $this->signature;
     }

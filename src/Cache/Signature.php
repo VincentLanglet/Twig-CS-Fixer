@@ -6,7 +6,7 @@ namespace TwigCsFixer\Cache;
 
 use TwigCsFixer\Ruleset\Ruleset;
 
-final class Signature implements SignatureInterface
+final class Signature
 {
     private string $phpVersion;
 
@@ -36,7 +36,7 @@ final class Signature implements SignatureInterface
         return $this->ruleset;
     }
 
-    public function equals(SignatureInterface $signature): bool
+    public function equals(self $signature): bool
     {
         return $this->phpVersion === $signature->getPhpVersion()
             && $this->fixerVersion === $signature->getFixerVersion()

@@ -8,10 +8,9 @@ use Composer\InstalledVersions;
 use LogicException;
 use RuntimeException;
 use Symfony\Component\Finder\Finder;
+use TwigCsFixer\Cache\CacheFileHandler;
 use TwigCsFixer\Cache\CacheManagerInterface;
-use TwigCsFixer\Cache\Directory;
 use TwigCsFixer\Cache\FileCacheManager;
-use TwigCsFixer\Cache\FileHandler;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -150,13 +149,12 @@ final class ConfigResolver
             : $this->workingDir.\DIRECTORY_SEPARATOR.$cacheFile;
 
         return new FileCacheManager(
-            new FileHandler($cacheFile),
+            new CacheFileHandler($cacheFile),
             new Signature(
                 \PHP_VERSION,
                 InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
                 $ruleset
-            ),
-            new Directory(\dirname($cacheFile))
+            )
         );
     }
 

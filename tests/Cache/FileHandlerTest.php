@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Cache;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use TwigCsFixer\Cache\Cache;
-use TwigCsFixer\Cache\FileHandler;
+use TwigCsFixer\Cache\CacheFileHandler;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Ruleset\Ruleset;
 
@@ -18,8 +18,8 @@ class FileHandlerTest extends TestCase
      */
     public function testReadFailure(string $file): void
     {
-        $fileHandler = new FileHandler($file);
-        static::assertNull($fileHandler->read());
+        $cacheFileHandler = new CacheFileHandler($file);
+        static::assertNull($cacheFileHandler->read());
     }
 
     /**
@@ -35,10 +35,10 @@ class FileHandlerTest extends TestCase
     {
         $file = __DIR__.'/Fixtures/notReadable';
         chmod($file, 0222);
-        $fileHandler = new FileHandler($file);
+        $cacheFileHandler = new CacheFileHandler($file);
 
         set_error_handler(fn (): bool => true);
-        static::assertNull($fileHandler->read());
+        static::assertNull($cacheFileHandler->read());
         restore_error_handler();
 
         // Restore permissions
@@ -47,8 +47,8 @@ class FileHandlerTest extends TestCase
 
     public function testReadSuccess(): void
     {
-        $fileHandler = new FileHandler(__DIR__.'/Fixtures/readable');
-        static::assertNotNull($fileHandler->read());
+        $cacheFileHandler = new CacheFileHandler(__DIR__.'/Fixtures/readable');
+        static::assertNotNull($cacheFileHandler->read());
     }
 
     /**
@@ -56,10 +56,10 @@ class FileHandlerTest extends TestCase
      */
     public function testWriteFailure(string $file): void
     {
-        $fileHandler = new FileHandler($file);
+        $cacheFileHandler = new CacheFileHandler($file);
 
         $this->expectException(RuntimeException::class);
-        $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
     }
 
     /**
@@ -75,10 +75,10 @@ class FileHandlerTest extends TestCase
     {
         $file = __DIR__.'/Fixtures/notWritable';
         chmod($file, 0444);
-        $fileHandler = new FileHandler($file);
+        $cacheFileHandler = new CacheFileHandler($file);
 
         $this->expectException(RuntimeException::class);
-        $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
 
         // Restore permissions
         chmod($file, 0644);
@@ -88,9 +88,9 @@ class FileHandlerTest extends TestCase
     {
         $file = __DIR__.'/Fixtures/writable';
         unlink($file);
-        $fileHandler = new FileHandler($file);
+        $cacheFileHandler = new CacheFileHandler($file);
 
-        $fileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
         $content = file_get_contents($file);
         static::assertSame('{"php_version":"8.0","fixer_version":"1","sniffs":[],"hashes":[]}', $content);
 

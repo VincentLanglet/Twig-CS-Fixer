@@ -21,22 +21,19 @@ use RuntimeException;
  */
 final class FileCacheManager implements CacheManagerInterface
 {
-    private FileHandlerInterface $handler;
+    private CacheFileHandlerInterface $handler;
 
-    private SignatureInterface $signature;
+    private Signature $signature;
 
-    private CacheInterface $cache;
+    private Cache $cache;
 
-    private DirectoryInterface $cacheDirectory;
+    private Directory $cacheDirectory;
 
-    public function __construct(
-        FileHandlerInterface $handler,
-        SignatureInterface $signature,
-        DirectoryInterface $cacheDirectory
-    ) {
+    public function __construct(CacheFileHandlerInterface $handler, Signature $signature)
+    {
         $this->handler = $handler;
         $this->signature = $signature;
-        $this->cacheDirectory = $cacheDirectory;
+        $this->cacheDirectory = new Directory(\dirname($handler->getFile()));
 
         $this->readCache();
     }

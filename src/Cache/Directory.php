@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-final class Directory implements DirectoryInterface
+final class Directory
 {
     private string $directoryName;
 

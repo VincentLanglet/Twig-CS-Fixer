@@ -7,9 +7,8 @@ namespace TwigCsFixer\Tests\Cache;
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
-use TwigCsFixer\Cache\Directory;
+use TwigCsFixer\Cache\CacheFileHandlerInterface;
 use TwigCsFixer\Cache\FileCacheManager;
-use TwigCsFixer\Cache\FileHandlerInterface;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Ruleset\Ruleset;
 
@@ -18,9 +17,8 @@ class FileCacheManagerTest extends TestCase
     public function testNeedFixing(): void
     {
         $cacheManager = new FileCacheManager(
-            $this->createStub(FileHandlerInterface::class),
-            new Signature('8.0', '1', new Ruleset()),
-            new Directory('')
+            $this->createStub(CacheFileHandlerInterface::class),
+            new Signature('8.0', '1', new Ruleset())
         );
 
         $file = 'foo.php';
@@ -40,14 +38,10 @@ class FileCacheManagerTest extends TestCase
         $cache = new Cache($signature);
         $cache->set($file, md5($content));
 
-        $fileHandler = $this->createStub(FileHandlerInterface::class);
-        $fileHandler->method('read')->willReturn($cache);
+        $cacheFileHandler = $this->createStub(CacheFileHandlerInterface::class);
+        $cacheFileHandler->method('read')->willReturn($cache);
 
-        $cacheManager = new FileCacheManager(
-            $fileHandler,
-            $signature,
-            new Directory('')
-        );
+        $cacheManager = new FileCacheManager($cacheFileHandler, $signature);
 
         $anotherFile = 'bar.php';
         $newContent = 'bar';
@@ -65,13 +59,12 @@ class FileCacheManagerTest extends TestCase
         $cache = new Cache(new Signature('8.0', '1', new Ruleset()));
         $cache->set($file, md5($content));
 
-        $fileHandler = $this->createStub(FileHandlerInterface::class);
-        $fileHandler->method('read')->willReturn($cache);
+        $cacheFileHandler = $this->createStub(CacheFileHandlerInterface::class);
+        $cacheFileHandler->method('read')->willReturn($cache);
 
         $cacheManager = new FileCacheManager(
-            $fileHandler,
-            new Signature('8.0', '1.1', new Ruleset()),
-            new Directory('')
+            $cacheFileHandler,
+            new Signature('8.0', '1.1', new Ruleset())
         );
 
         static::assertTrue($cacheManager->needFixing($file, $content));
@@ -80,9 +73,8 @@ class FileCacheManagerTest extends TestCase
     public function testCannotSerialize(): void
     {
         $cacheManager = new FileCacheManager(
-            $this->createStub(FileHandlerInterface::class),
-            new Signature('8.0', '1', new Ruleset()),
-            new Directory('')
+            $this->createStub(CacheFileHandlerInterface::class),
+            new Signature('8.0', '1', new Ruleset())
         );
 
         $this->expectException(BadMethodCallException::class);

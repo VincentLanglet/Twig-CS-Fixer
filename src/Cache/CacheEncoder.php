@@ -11,7 +11,7 @@ use TwigCsFixer\Sniff\SniffInterface;
 use UnexpectedValueException;
 use Webmozart\Assert\Assert;
 
-class CacheEncoder
+final class CacheEncoder
 {
     /**
      * @throws InvalidArgumentException
@@ -70,7 +70,7 @@ class CacheEncoder
     /**
      * @throws UnexpectedValueException
      */
-    public static function toJson(CacheInterface $cache): string
+    public static function toJson(Cache $cache): string
     {
         $signature = $cache->getSignature();
 
