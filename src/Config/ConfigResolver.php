@@ -122,7 +122,7 @@ final class ConfigResolver
         return TwigCsFinder::create()->in($directories)->append($files);
     }
 
-    public function resolveCacheManager(
+    private function resolveCacheManager(
         ?CacheManagerInterface $cacheManager,
         ?string $cacheFile,
         Ruleset $ruleset

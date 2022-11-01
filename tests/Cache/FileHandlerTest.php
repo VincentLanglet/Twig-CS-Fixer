@@ -37,9 +37,7 @@ class FileHandlerTest extends TestCase
         chmod($file, 0222);
         $fileHandler = new FileHandler($file);
 
-        set_error_handler(function (): bool {
-            return true;
-        });
+        set_error_handler(fn (): bool => true);
         static::assertNull($fileHandler->read());
         restore_error_handler();
 
