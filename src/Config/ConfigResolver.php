@@ -35,15 +35,24 @@ final class ConfigResolver
      *
      * @throws RuntimeException
      */
-    public function resolveConfig(array $paths, ?string $configPath = null): Config
-    {
+    public function resolveConfig(
+        array $paths,
+        ?string $configPath = null,
+        bool $disableCache = false
+    ): Config {
         $config = $this->getConfig($configPath);
         $config->setFinder($this->resolveFinder($config->getFinder(), $paths));
-        $config->setCacheManager($this->resolveCacheManager(
-            $config->getCacheManager(),
-            $config->getCacheFile(),
-            $config->getRuleset()
-        ));
+
+        if ($disableCache) {
+            $config->setCacheFile(null);
+            $config->setCacheManager(null);
+        } else {
+            $config->setCacheManager($this->resolveCacheManager(
+                $config->getCacheManager(),
+                $config->getCacheFile(),
+                $config->getRuleset()
+            ));
+        }
 
         return $config;
     }
@@ -61,8 +70,9 @@ final class ConfigResolver
             return $this->getConfigFromPath($configPath);
         }
 
-        if (file_exists($this->workingDir.\DIRECTORY_SEPARATOR.'.twig-cs-fixer.php')) {
-            return $this->getConfigFromPath($this->workingDir.\DIRECTORY_SEPARATOR.'.twig-cs-fixer.php');
+        $defaultPath = $this->workingDir.\DIRECTORY_SEPARATOR.Config::DEFAULT_PATH;
+        if (file_exists($defaultPath)) {
+            return $this->getConfigFromPath($defaultPath);
         }
 
         return new Config();

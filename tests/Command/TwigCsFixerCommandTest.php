@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests\Command;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TwigCsFixer\Command\TwigCsFixerCommand;
+use TwigCsFixer\Config\Config;
 
 final class TwigCsFixerCommandTest extends TestCase
 {
@@ -88,5 +89,36 @@ final class TwigCsFixerCommandTest extends TestCase
 
         static::assertStringStartsWith('Error: ', $commandTester->getDisplay());
         static::assertSame(1, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithCacheByDefault(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths' => [__DIR__.'/Fixtures/file.twig'],
+        ]);
+
+        static::assertStringContainsString(
+            sprintf('Using cache file "%s".', Config::DEFAULT_CACHE_PATH),
+            $commandTester->getDisplay()
+        );
+    }
+
+    public function testExecuteWithCacheDisabled(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths'      => [__DIR__.'/Fixtures/file.twig'],
+            '--no-cache' => true,
+        ]);
+
+        static::assertStringNotContainsString(
+            'Using cache file',
+            $commandTester->getDisplay()
+        );
     }
 }

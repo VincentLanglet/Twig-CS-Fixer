@@ -52,6 +52,12 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
                 ),
+                new InputOption(
+                    'no-cache',
+                    '',
+                    InputOption::VALUE_NONE,
+                    'Disable cache while running the fixer'
+                ),
             ])
         ;
     }
@@ -68,12 +74,13 @@ final class TwigCsFixerCommand extends Command
             $configResolver = new ConfigResolver($workingDir);
             $config = $configResolver->resolveConfig(
                 $input->getArgument('paths'),
-                $input->getOption('config')
+                $input->getOption('config'),
+                $input->getOption('no-cache')
             );
 
             $cacheFile = $config->getCacheFile();
             if (null !== $cacheFile) {
-                $output->writeln(sprintf('Using cache file %s', $cacheFile));
+                $output->writeln(sprintf('Using cache file "%s".', $cacheFile));
             }
 
             // Execute the linter.
