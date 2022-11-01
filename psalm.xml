@@ -3,7 +3,7 @@
        xmlns="https://getpsalm.org/schema/config"
        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
        errorLevel="1"
-       phpVersion="8.0"
+       phpVersion="8.1"
        strictBinaryOperands="true"
        rememberPropertyAssignmentsAfterCall="false"
        checkForThrowsDocblock="true"
