@@ -21,22 +21,22 @@ use Twig\TwigTest;
 /**
  * Provide stubs for all filters, functions, tests and tags that are not defined in twig's core.
  */
-class StubbedEnvironment extends Environment
+final class StubbedEnvironment extends Environment
 {
     /**
      * @var array<string, TwigFilter|null>
      */
-    protected array $stubFilters = [];
+    private array $stubFilters = [];
 
     /**
      * @var array<string, TwigFunction|null>
      */
-    protected array $stubFunctions = [];
+    private array $stubFunctions = [];
 
     /**
      * @var array<string, TwigTest|null>
      */
-    protected $stubTests = [
+    private array $stubTests = [
         'divisible' => null, // Allow 'divisible by'
         'same'      => null, // Allow 'same as'
     ];

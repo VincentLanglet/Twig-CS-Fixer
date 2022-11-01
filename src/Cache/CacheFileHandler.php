@@ -7,7 +7,7 @@ namespace TwigCsFixer\Cache;
 use InvalidArgumentException;
 use RuntimeException;
 
-final class FileHandler implements FileHandlerInterface
+final class CacheFileHandler implements CacheFileHandlerInterface
 {
     private string $file;
 
@@ -16,7 +16,12 @@ final class FileHandler implements FileHandlerInterface
         $this->file = $file;
     }
 
-    public function read(): ?CacheInterface
+    public function getFile(): string
+    {
+        return $this->file;
+    }
+
+    public function read(): ?Cache
     {
         if (!file_exists($this->file)) {
             return null;
@@ -34,7 +39,7 @@ final class FileHandler implements FileHandlerInterface
         }
     }
 
-    public function write(CacheInterface $cache): void
+    public function write(Cache $cache): void
     {
         if (file_exists($this->file)) {
             if (is_dir($this->file)) {
