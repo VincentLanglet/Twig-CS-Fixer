@@ -13,6 +13,9 @@ use Webmozart\Assert\Assert;
 
 class CacheEncoder
 {
+    /**
+     * @throws InvalidArgumentException
+     */
     public static function fromJson(string $json): Cache
     {
         try {

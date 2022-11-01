@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-use Symfony\Component\Filesystem\Exception\IOException;
+use InvalidArgumentException;
+use RuntimeException;
 
 final class FileHandler implements FileHandlerInterface
 {
@@ -31,38 +32,33 @@ final class FileHandler implements FileHandlerInterface
             return null;
         }
 
-        return CacheEncoder::fromJson($content);
+        try {
+            return CacheEncoder::fromJson($content);
+        } catch (InvalidArgumentException $e) {
+            return null;
+        }
     }
 
     public function write(CacheInterface $cache): void
     {
         if (file_exists($this->file)) {
             if (is_dir($this->file)) {
-                throw new IOException(
+                throw new RuntimeException(
                     sprintf('Cannot write cache file "%s" as the location exists as directory.', $this->file),
-                    0,
-                    null,
-                    $this->file
                 );
             }
 
             if (!is_writable($this->file)) {
-                throw new IOException(
+                throw new RuntimeException(
                     sprintf('Cannot write to file "%s" as it is not writable.', $this->file),
-                    0,
-                    null,
-                    $this->file
                 );
             }
         } else {
             $dir = \dirname($this->file);
 
             if (!is_dir($dir)) {
-                throw new IOException(
+                throw new RuntimeException(
                     sprintf('Directory of cache file "%s" does not exists.', $this->file),
-                    0,
-                    null,
-                    $this->file
                 );
             }
 
@@ -75,11 +71,8 @@ final class FileHandler implements FileHandlerInterface
         if (false === $bytesWritten) {
             $error = error_get_last();
 
-            throw new IOException(
-                sprintf('Failed to write file "%s", "%s".', $this->file, $error['message'] ?? 'no reason available'),
-                0,
-                null,
-                $this->file
+            throw new RuntimeException(
+                sprintf('Failed to write file "%s": "%s".', $this->file, $error['message'] ?? 'no reason available'),
             );
         }
     }

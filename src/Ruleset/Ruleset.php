@@ -61,6 +61,11 @@ final class Ruleset
 
     public function equals(self $ruleset): bool
     {
-        return array_keys($this->getSniffs()) === array_keys($ruleset->getSniffs());
+        $keys1 = array_keys($this->getSniffs());
+        $keys2 = array_keys($ruleset->getSniffs());
+        sort($keys1);
+        sort($keys2);
+
+        return $keys1 === $keys2;
     }
 }

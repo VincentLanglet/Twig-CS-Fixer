@@ -20,7 +20,7 @@ class GenericTest extends TestCase
     {
         $standard = new Generic();
 
-        self::assertEquals([
+        static::assertEquals([
             new BlankEOFSniff(),
             new DelimiterSpacingSniff(),
             new EmptyLinesSniff(),

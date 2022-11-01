@@ -21,7 +21,7 @@ class ConfigResolverTest extends TestCase
         $configResolver = new ConfigResolver($workingDir);
         $config = $configResolver->resolveConfig([], $configPath);
 
-        self::assertSame($configName, $config->getName());
+        static::assertSame($configName, $config->getName());
     }
 
     /**
@@ -66,7 +66,7 @@ class ConfigResolverTest extends TestCase
         $configResolver = new ConfigResolver(__DIR__);
         $config = $configResolver->resolveConfig($paths, $configPath);
 
-        self::assertCount($expectedCount, $config->getFinder());
+        static::assertCount($expectedCount, $config->getFinder());
     }
 
     /**
@@ -128,9 +128,9 @@ class ConfigResolverTest extends TestCase
         $config = $configResolver->resolveConfig([], $configPath);
 
         if (null === $expectedCacheManager) {
-            self::assertNull($config->getCacheManager());
+            static::assertNull($config->getCacheManager());
         } else {
-            self::assertInstanceOf($expectedCacheManager, $config->getCacheManager());
+            static::assertInstanceOf($expectedCacheManager, $config->getCacheManager());
         }
     }
 

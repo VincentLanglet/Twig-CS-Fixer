@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Sniff;
 
-use Exception;
 use TwigCsFixer\Token\Token;
 
 /**
@@ -12,11 +11,6 @@ use TwigCsFixer\Token\Token;
  */
 abstract class AbstractSpacingSniff extends AbstractSniff
 {
-    /**
-     * @param list<Token> $tokens
-     *
-     * @throws Exception
-     */
     protected function process(int $tokenPosition, array $tokens): void
     {
         $spaceAfter = $this->shouldHaveSpaceAfter($tokenPosition, $tokens);
@@ -43,8 +37,6 @@ abstract class AbstractSpacingSniff extends AbstractSniff
 
     /**
      * @param list<Token> $tokens
-     *
-     * @throws Exception
      */
     private function checkSpaceAfter(int $tokenPosition, array $tokens, int $expected): void
     {
@@ -85,8 +77,6 @@ abstract class AbstractSpacingSniff extends AbstractSniff
 
     /**
      * @param list<Token> $tokens
-     *
-     * @throws Exception
      */
     private function checkSpaceBefore(int $tokenPosition, array $tokens, int $expected): void
     {

@@ -33,16 +33,16 @@ class LinterTest extends TestCase
         error_reporting($oldErrorLevel);
 
         $messagesByFiles = $report->getMessagesByFiles();
-        self::assertCount(1, $messagesByFiles);
-        self::assertArrayHasKey($filePath, $messagesByFiles);
+        static::assertCount(1, $messagesByFiles);
+        static::assertArrayHasKey($filePath, $messagesByFiles);
 
         $messages = $messagesByFiles[$filePath];
-        self::assertCount(1, $messages);
+        static::assertCount(1, $messages);
 
         $message = $messages[0];
-        self::assertSame('Unable to read file.', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
-        self::assertSame($filePath, $message->getFilename());
+        static::assertSame('Unable to read file.', $message->getMessage());
+        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
     }
 
     public function testInvalidFilesAreReported(): void
@@ -58,16 +58,16 @@ class LinterTest extends TestCase
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
         $messagesByFiles = $report->getMessagesByFiles();
-        self::assertCount(1, $messagesByFiles);
-        self::assertArrayHasKey($filePath, $messagesByFiles);
+        static::assertCount(1, $messagesByFiles);
+        static::assertArrayHasKey($filePath, $messagesByFiles);
 
         $messages = $messagesByFiles[$filePath];
-        self::assertCount(1, $messages);
+        static::assertCount(1, $messages);
 
         $message = $messages[0];
-        self::assertSame('File is invalid: Error.', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
-        self::assertSame($filePath, $message->getFilename());
+        static::assertSame('File is invalid: Error.', $message->getMessage());
+        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
     }
 
     public function testUntokenizableFilesAreReported(): void
@@ -83,16 +83,16 @@ class LinterTest extends TestCase
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
         $messagesByFiles = $report->getMessagesByFiles();
-        self::assertCount(1, $messagesByFiles);
-        self::assertArrayHasKey($filePath, $messagesByFiles);
+        static::assertCount(1, $messagesByFiles);
+        static::assertArrayHasKey($filePath, $messagesByFiles);
 
         $messages = $messagesByFiles[$filePath];
-        self::assertCount(1, $messages);
+        static::assertCount(1, $messages);
 
         $message = $messages[0];
-        self::assertSame('Unable to tokenize file: Error.', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
-        self::assertSame($filePath, $message->getFilename());
+        static::assertSame('Unable to tokenize file: Error.', $message->getMessage());
+        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
     }
 
     public function testUserDeprecationAreReported(): void
@@ -113,16 +113,16 @@ class LinterTest extends TestCase
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
         $messagesByFiles = $report->getMessagesByFiles();
-        self::assertCount(1, $messagesByFiles);
-        self::assertArrayHasKey($filePath, $messagesByFiles);
+        static::assertCount(1, $messagesByFiles);
+        static::assertArrayHasKey($filePath, $messagesByFiles);
 
         $messages = $messagesByFiles[$filePath];
-        self::assertCount(1, $messages);
+        static::assertCount(1, $messages);
 
         $message = $messages[0];
-        self::assertSame('User Deprecation', $message->getMessage());
-        self::assertSame(SniffViolation::LEVEL_NOTICE, $message->getLevel());
-        self::assertSame($filePath, $message->getFilename());
+        static::assertSame('User Deprecation', $message->getMessage());
+        static::assertSame(SniffViolation::LEVEL_NOTICE, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
     }
 
     public function testEmptyRulesetCanBeFixed(): void

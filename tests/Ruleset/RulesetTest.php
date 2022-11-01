@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests\Ruleset;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Sniff\BlankEOFSniff;
+use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\StandardInterface;
@@ -16,7 +17,7 @@ class RulesetTest extends TestCase
     public function testStartWithNoSniff(): void
     {
         $ruleset = new Ruleset();
-        self::assertSame([], $ruleset->getSniffs());
+        static::assertSame([], $ruleset->getSniffs());
     }
 
     public function testAddAndRemoveSniff(): void
@@ -25,10 +26,10 @@ class RulesetTest extends TestCase
         $sniff = $this->createStub(SniffInterface::class);
 
         $ruleset->addSniff($sniff);
-        self::assertCount(1, $ruleset->getSniffs());
+        static::assertCount(1, $ruleset->getSniffs());
 
         $ruleset->removeSniff(\get_class($sniff));
-        self::assertCount(0, $ruleset->getSniffs());
+        static::assertCount(0, $ruleset->getSniffs());
     }
 
     public function testAddStandard(): void
@@ -42,6 +43,23 @@ class RulesetTest extends TestCase
         $standard->method('getSniffs')->willReturn([$sniff1, $sniff2]);
 
         $ruleset->addStandard($standard);
-        self::assertCount(2, $ruleset->getSniffs());
+        static::assertCount(2, $ruleset->getSniffs());
+    }
+
+    public function testEquals(): void
+    {
+        $ruleset1 = new Ruleset();
+        $ruleset1->addSniff(new TrailingSpaceSniff());
+        $ruleset2 = new Ruleset();
+        $ruleset2->addSniff(new OperatorSpacingSniff());
+
+        static::assertFalse($ruleset1->equals($ruleset2));
+        static::assertFalse($ruleset2->equals($ruleset1));
+
+        $ruleset1->addSniff(new OperatorSpacingSniff());
+        $ruleset2->addSniff(new TrailingSpaceSniff());
+
+        static::assertTrue($ruleset1->equals($ruleset2));
+        static::assertTrue($ruleset2->equals($ruleset1));
     }
 }

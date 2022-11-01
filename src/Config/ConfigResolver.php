@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace TwigCsFixer\Config;
 
 use Composer\InstalledVersions;
-use Exception;
 use LogicException;
+use RuntimeException;
 use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Cache\CacheManagerInterface;
 use TwigCsFixer\Cache\Directory;
@@ -33,7 +33,7 @@ final class ConfigResolver
     /**
      * @param string[] $paths
      *
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function resolveConfig(array $paths, ?string $configPath = null): Config
     {
@@ -49,7 +49,7 @@ final class ConfigResolver
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     private function getConfig(?string $configPath = null): Config
     {
@@ -69,17 +69,17 @@ final class ConfigResolver
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     private function getConfigFromPath(string $configPath): Config
     {
         if (!file_exists($configPath)) {
-            throw new Exception(sprintf('Cannot find the config file "%s".', $configPath));
+            throw new RuntimeException(sprintf('Cannot find the config file "%s".', $configPath));
         }
 
         $config = require $configPath;
         if (!$config instanceof Config) {
-            throw new Exception(sprintf('The config file must return a "%s" object.', Config::class));
+            throw new RuntimeException(sprintf('The config file must return a "%s" object.', Config::class));
         }
 
         return $config;

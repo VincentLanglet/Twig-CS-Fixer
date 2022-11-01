@@ -16,8 +16,8 @@ class ConfigTest extends TestCase
 {
     public function testConfigName(): void
     {
-        self::assertEquals('Default', (new Config())->getName());
-        self::assertEquals('Custom', (new Config('Custom'))->getName());
+        static::assertEquals('Default', (new Config())->getName());
+        static::assertEquals('Custom', (new Config('Custom'))->getName());
     }
 
     public function testConfigRuleset(): void
@@ -26,45 +26,45 @@ class ConfigTest extends TestCase
         $genericStandard = new Generic();
 
         $ruleset = $config->getRuleset();
-        self::assertEquals(
+        static::assertEquals(
             array_values($genericStandard->getSniffs()),
             array_values($ruleset->getSniffs())
         );
 
         $ruleset = new Ruleset();
         $config->setRuleset($ruleset);
-        self::assertSame($ruleset, $config->getRuleset());
+        static::assertSame($ruleset, $config->getRuleset());
     }
 
     public function testConfigFinder(): void
     {
         $config = new Config();
-        self::assertInstanceOf(TwigCsFinder::class, $config->getFinder());
+        static::assertInstanceOf(TwigCsFinder::class, $config->getFinder());
 
         $finder = new Finder();
         $config->setFinder($finder);
-        self::assertSame($finder, $config->getFinder());
+        static::assertSame($finder, $config->getFinder());
     }
 
     public function testConfigCacheManager(): void
     {
         $config = new Config();
-        self::assertNull($config->getCacheManager());
+        static::assertNull($config->getCacheManager());
 
         $cacheManager = new NullCacheManager();
         $config->setCacheManager($cacheManager);
-        self::assertSame($cacheManager, $config->getCacheManager());
+        static::assertSame($cacheManager, $config->getCacheManager());
     }
 
     public function testConfigCacheFile(): void
     {
         $config = new Config();
-        self::assertSame('.twig-cs-fixer.cache', $config->getCacheFile());
+        static::assertSame('.twig-cs-fixer.cache', $config->getCacheFile());
 
         $config->setCacheFile('foo');
-        self::assertSame('foo', $config->getCacheFile());
+        static::assertSame('foo', $config->getCacheFile());
 
         $config->setCacheFile(null);
-        self::assertNull($config->getCacheFile());
+        static::assertNull($config->getCacheFile());
     }
 }

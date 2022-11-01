@@ -19,11 +19,11 @@ final class TwigCsFixerCommandTest extends TestCase
             'paths' => [__DIR__.'/Fixtures'],
         ]);
 
-        self::assertStringContainsString(
+        static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
             $commandTester->getDisplay()
         );
-        self::assertSame(1, $commandTester->getStatusCode());
+        static::assertSame(1, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithConfig(): void
@@ -36,11 +36,11 @@ final class TwigCsFixerCommandTest extends TestCase
             '--config' => __DIR__.'/Fixtures/.twig-cs-fixer.php',
         ]);
 
-        self::assertStringContainsString(
+        static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $commandTester->getDisplay()
         );
-        self::assertSame(1, $commandTester->getStatusCode());
+        static::assertSame(1, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithSuccess(): void
@@ -52,11 +52,11 @@ final class TwigCsFixerCommandTest extends TestCase
             'paths' => [__DIR__.'/Fixtures/file.twig'],
         ]);
 
-        self::assertStringContainsString(
+        static::assertStringContainsString(
             '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
-        self::assertSame(0, $commandTester->getStatusCode());
+        static::assertSame(0, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithOptionFix(): void
@@ -69,11 +69,11 @@ final class TwigCsFixerCommandTest extends TestCase
             '--fix' => true,
         ]);
 
-        self::assertStringContainsString(
+        static::assertStringContainsString(
             '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
-        self::assertSame(0, $commandTester->getStatusCode());
+        static::assertSame(0, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithError(): void
@@ -86,7 +86,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '--config' => __DIR__.'/Fixtures/.config-not-found.php',
         ]);
 
-        self::assertStringStartsWith('Error: ', $commandTester->getDisplay());
-        self::assertSame(1, $commandTester->getStatusCode());
+        static::assertStringStartsWith('Error: ', $commandTester->getDisplay());
+        static::assertSame(1, $commandTester->getStatusCode());
     }
 }
