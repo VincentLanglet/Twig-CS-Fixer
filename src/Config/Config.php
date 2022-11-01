@@ -88,6 +88,8 @@ final class Config
     public function setCacheManager(?CacheManagerInterface $cacheManager): self
     {
         $this->cacheManager = $cacheManager;
+
+        return $this;
     }
 
     public function getCacheFile(): ?string
