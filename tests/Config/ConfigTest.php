@@ -74,13 +74,13 @@ class ConfigTest extends TestCase
     {
         $config = new Config();
 
-        self::assertSame([], $config->getTokenParsers());
+        static::assertSame([], $config->getTokenParsers());
 
         $tokenParser1 = new DumpTokenParser();
         $tokenParser2 = new TransTokenParser();
         $config->addTokenParser($tokenParser1);
         $config->addTokenParser($tokenParser2);
 
-        self::assertSame([$tokenParser1, $tokenParser2], $config->getTokenParsers());
+        static::assertSame([$tokenParser1, $tokenParser2], $config->getTokenParsers());
     }
 }

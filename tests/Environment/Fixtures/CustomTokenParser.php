@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Environment\Fixtures;
 
-use Symfony\Bridge\Twig\Node\DumpNode;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -12,6 +13,7 @@ class CustomTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         if (!$this->parser->getStream()->test(Token::BLOCK_END_TYPE)) {
+            /** @psalm-suppress InternalMethod */
             $this->parser->getExpressionParser()->parseMultitargetExpression();
         }
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);

@@ -68,7 +68,7 @@ class StubbedEnvironmentTest extends TestCase
     public function testParseWithCustomTag(): void
     {
         $content = file_get_contents(__DIR__.'/Fixtures/custom_tags.html.twig');
-        self::assertNotFalse($content);
+        static::assertNotFalse($content);
 
         $env = new StubbedEnvironment([new CustomTokenParser()]);
         $source = new Source($content, 'custom_tags.html.twig');
