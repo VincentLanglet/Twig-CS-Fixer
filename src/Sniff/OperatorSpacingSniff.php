@@ -29,6 +29,12 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
             return 0;
         }
 
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ':')) {
+            $relatedToken = $token->getRelatedToken();
+
+            return null !== $relatedToken && '?' === $relatedToken->getValue() ? 1 : 0;
+        }
+
         return 1;
     }
 
@@ -48,6 +54,12 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
 
         if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, '..')) {
             return 0;
+        }
+
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ':')) {
+            $relatedToken = $token->getRelatedToken();
+
+            return null !== $relatedToken && '?' === $relatedToken->getValue() ? 1 : 0;
         }
 
         return 1;

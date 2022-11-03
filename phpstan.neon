@@ -33,7 +33,7 @@ parameters:
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkUninitializedProperties: true
     checkMissingCallableSignature: true
-    # checkImplicitMixed: true # TODO PHPStan 1.9
+    checkImplicitMixed: true
 
     ignoreErrors:
         - # https://github.com/phpstan/phpstan-webmozart-assert/issues/150
