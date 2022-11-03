@@ -79,7 +79,7 @@ final class TwigCsFixerCommand extends Command
             );
 
             $cacheFile = $config->getCacheFile();
-            if (null !== $cacheFile) {
+            if (null !== $cacheFile && is_file($cacheFile)) {
                 $output->writeln(sprintf('Using cache file "%s".', $cacheFile));
             }
 
