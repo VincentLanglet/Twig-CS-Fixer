@@ -29,14 +29,14 @@ From the [official one](https://twig.symfony.com/doc/3.x/coding_standards.html).
 
 ### Delimiter spacing
 
-Adds a single space after a delimiter opening (`{{`, `{%` and `{#`)
+Ensures there is a single space after a delimiter opening (`{{`, `{%` and `{#`)
 and before a delimiter closing (`}}`, `%}` and `#}`).
 
 When using a whitespace control character, do not put any spaces between it and the delimiter.
 
 ### Operator spacing
 
-Adds a single space before and after the following operators:
+Ensures there is a single space before and after the following operators:
 comparison operators (`==`, `!=`, `<`, `>`, `>=`, `<=`), math operators (`+`, `-`, `/`, `*`, `%`, `//`, `**`),
 logic operators (`not`, `and`, `or`), `~`, `is`, `in`, and the ternary operator (`?:`).
 
@@ -44,7 +44,7 @@ Removes any space before and after the `..` operator.
 
 ### Punctuation spacing
 
-Adds a single space after `:` in hashes and `,` in arrays and hashes.
+Ensures there is a single space after `:` in hashes and `,` in arrays and hashes.
 
 Removes spaces after an opening parenthesis and before a closing parenthesis in expressions.
 
@@ -60,7 +60,7 @@ Removes spaces before and after opening and closing of arrays and hashes.
 
 By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
  - `BlankEOFSniff`: ensures that files end with one blank line.
- - `EmptyLinesSniff`: checks that 2 empty lines do not follow each other.
+ - `EmptyLinesSniff`: ensures that 2 empty lines do not follow each other.
  - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
  - `TrailingSpaceSniff`: ensures that files have no trailing spaces.
 
