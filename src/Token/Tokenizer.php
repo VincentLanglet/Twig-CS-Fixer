@@ -156,6 +156,13 @@ final class Tokenizer implements TokenizerInterface
         return array_filter($this->bracketsAndTernary, fn (Token $token): bool => '?' !== $token->getValue());
     }
 
+    private function isInTernary(): bool
+    {
+        $lastBracket = end($this->bracketsAndTernary);
+
+        return false !== $lastBracket && '?' === $lastBracket->getValue();
+    }
+
     /**
      * @psalm-return 0|1|2|3|4|5
      */
@@ -530,9 +537,9 @@ final class Tokenizer implements TokenizerInterface
         if ('?' === $operator) {
             $token = $this->pushToken(Token::OPERATOR_TYPE, $operator);
             $this->bracketsAndTernary[] = $token;
-        } elseif (':' === $operator) {
-            $ternary = array_pop($this->bracketsAndTernary);
-            $this->pushToken(Token::OPERATOR_TYPE, $operator, $ternary);
+        } elseif (':' === $operator && $this->isInTernary()) {
+            $bracket = array_pop($this->bracketsAndTernary);
+            $this->pushToken(Token::OPERATOR_TYPE, $operator, $bracket);
         } else {
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
         }
@@ -565,8 +572,7 @@ final class Tokenizer implements TokenizerInterface
     {
         $currentCode = $this->code[$this->cursor];
 
-        $lastBracket = end($this->bracketsAndTernary);
-        if (false !== $lastBracket && '?' === $lastBracket->getValue()) {
+        if ($this->isInTernary()) {
             if (':' === $currentCode) {
                 // This is a ternary instead
                 $this->lexOperator($currentCode);
@@ -583,6 +589,14 @@ final class Tokenizer implements TokenizerInterface
                 // This is maybe the end of the expression so start again.
                 return;
             }
+        }
+
+        $lastBracket = end($this->bracketsAndTernary);
+        if (':' === $currentCode && false !== $lastBracket && '[' === $lastBracket->getValue()) {
+            // This is a slice shortcut '[0:1]' instead
+            $this->lexOperator($currentCode);
+
+            return;
         }
 
         if (\in_array($currentCode, ['(', '[', '{'], true)) {
