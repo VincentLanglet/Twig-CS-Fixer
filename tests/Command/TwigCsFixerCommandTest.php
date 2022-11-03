@@ -96,6 +96,11 @@ final class TwigCsFixerCommandTest extends TestCase
         $command = new TwigCsFixerCommand();
 
         $commandTester = new CommandTester($command);
+
+        // Run two times to be sure to generate the cache.
+        $commandTester->execute([
+            'paths' => [__DIR__.'/Fixtures/file.twig'],
+        ]);
         $commandTester->execute([
             'paths' => [__DIR__.'/Fixtures/file.twig'],
         ]);
@@ -111,6 +116,12 @@ final class TwigCsFixerCommandTest extends TestCase
         $command = new TwigCsFixerCommand();
 
         $commandTester = new CommandTester($command);
+
+        // Run two times to be sure to generate the cache if we were using one.
+        $commandTester->execute([
+            'paths'      => [__DIR__.'/Fixtures/file.twig'],
+            '--no-cache' => true,
+        ]);
         $commandTester->execute([
             'paths'      => [__DIR__.'/Fixtures/file.twig'],
             '--no-cache' => true,
