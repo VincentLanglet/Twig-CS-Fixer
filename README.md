@@ -10,7 +10,7 @@
 
 ## Installation
 
-This standard can be installed with the [Composer](https://getcomposer.org/) dependency manager.
+This standard can be installed with [Composer](https://getcomposer.org/).
 
 Add the coding standard as a dependency of your project
 ```bash
@@ -29,40 +29,40 @@ From the [official one](https://twig.symfony.com/doc/3.x/coding_standards.html).
 
 ### Delimiter spacing
 
-Put one (and only one) space after the start of a delimiter (`{{`, `{%`, and `{#`)
-and before the end of a delimiter (`}}`, `%}`, and `#}`).
+Ensures there is a single space after a delimiter opening (`{{`, `{%` and `{#`)
+and before a delimiter closing (`}}`, `%}` and `#}`).
 
-When using the whitespace control character, do not put any spaces between it and the delimiter.
+When using a whitespace control character, do not put any spaces between it and the delimiter.
 
 ### Operator spacing
 
-Put one (and only one) space before and after the following operators:
+Ensures there is a single space before and after the following operators:
 comparison operators (`==`, `!=`, `<`, `>`, `>=`, `<=`), math operators (`+`, `-`, `/`, `*`, `%`, `//`, `**`),
 logic operators (`not`, `and`, `or`), `~`, `is`, `in`, and the ternary operator (`?:`).
 
-Do not put any spaces before and after the operator `..`.
+Removes any space before and after the `..` operator.
 
 ### Punctuation spacing
 
-Put one (and only one) space after the `:` sign in hashes and `,` in arrays and hashes.
+Ensures there is a single space after `:` in hashes and `,` in arrays and hashes.
 
-Do not put any spaces after an opening parenthesis and before a closing parenthesis in expressions.
+Removes spaces after an opening parenthesis and before a closing parenthesis in expressions.
 
-Do not put any spaces before and after the following operators: `|`, `.`, `[]`.
+Removes spaces before and after the following operators: `|`, `.`, `[]`.
 
-Do not put any spaces before and after the parenthesis used for filter and function calls.
+Removes spaces before and after parenthesis in filter and function calls.
 
-Do not put any spaces before and after the opening and the closing of arrays and hashes.
+Removes spaces before and after opening and closing of arrays and hashes.
 
 ## Custom configuration
 
 ### Standard
 
 By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
- - `BlankEOFSniff`: Ensure that files ends with one blank line.
- - `EmptyLinesSniff`: Checks that there are not 2 empty lines following each other.
- - `TrailingCommaSingleLineSniff`: Ensure that single-line arrays, objects and arguments list does not have a trailing comma.
- - `TrailingSpaceSniff`: Ensure that files has no trailing spaces.
+ - `BlankEOFSniff`: ensures that files end with one blank line.
+ - `EmptyLinesSniff`: ensures that 2 empty lines do not follow each other.
+ - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
+ - `TrailingSpaceSniff`: ensures that files have no trailing spaces.
 
 If you want to use a custom standard and/or add/disable a sniff, you can provide your own configuration with
 a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
@@ -79,16 +79,16 @@ $config->setRuleset($ruleset);
 return $config;
 ```
 
-If your config is not located in your current directory, you can pass his path when running the command:
+If your config is not located in your current directory, you can specify its path using `--config` when running the command:
 ```bash
 bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ```
 
 ### Files
 
-By default, all the `.twig` files in the current directory are linted, except the one in the `vendor` directory.
+By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.
 
-If you want to lint a specific files/directory you can pass it as argument, but if you want a more sophisticated
+If you want to lint specific files or directories you can pass them as argument. If you want a more sophisticated
 rule, you can configure it in the `.twig-cs-fixer.php` file:
 ```php
 <?php
@@ -104,21 +104,29 @@ return $config;
 
 ### Cache
 
-By default, the result of the run is cached in a `.twig-cs-fixer.cache` file so the subsequent runs are much
-faster. The cache is invalidated when a different php version, twig-cs-fixer version or ruleset is used.
+By default, cache is enabled and stored in `.twig-cs-fixer.cache`. Further runs are therefore much
+faster. Cache is invalidated when a different PHP version, twig-cs-fixer version or ruleset is used.
 
-If you want to use a custom path for the cache file you can configure it in the `.twig-cs-fixer.php` file:
+If you want a custom cache location you can configure it in `.twig-cs-fixer.php`:
 ```php
 <?php
 
 $config = new TwigCsFixer\Config\Config();
-$config->setCacheFile('tmp/.twig-cs-fixer.cache');
+$config->setCacheFile('/tmp/.twig-cs-fixer.cache');
 
 return $config;
 ```
 
-If you want to disable the cache once, you can pass `--no-cache` when running the command:
+To disable cache you can either pass `--no-cache` when running the command:
 ```bash
 bin/twig-cs-fixer lint --no-cache
 ```
-If you want to completely disable the cache, just set the cache file to `null` in your config.
+or set the cache file to `null` in your config:
+```php
+<?php
+
+$config = new TwigCsFixer\Config\Config();
+$config->setCacheFile(null);
+
+return $config;
+```
