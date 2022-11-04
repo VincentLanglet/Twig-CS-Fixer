@@ -6,9 +6,9 @@ namespace TwigCsFixer\Tests\Config;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Cache\CacheManagerInterface;
-use TwigCsFixer\Cache\FileCacheManager;
-use TwigCsFixer\Cache\NullCacheManager;
+use TwigCsFixer\Cache\Manager\CacheManagerInterface;
+use TwigCsFixer\Cache\Manager\FileCacheManager;
+use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 

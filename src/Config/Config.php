@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Config;
 
 use Symfony\Component\Finder\Finder;
-use TwigCsFixer\Cache\CacheManagerInterface;
+use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;

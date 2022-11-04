@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Cache;
+namespace TwigCsFixer\Tests\Cache\FileHandler;
 
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use TwigCsFixer\Cache\Cache;
-use TwigCsFixer\Cache\CacheFileHandler;
+use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Ruleset\Ruleset;
 

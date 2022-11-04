@@ -10,8 +10,8 @@ use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
-use TwigCsFixer\Cache\CacheManagerInterface;
-use TwigCsFixer\Cache\NullCacheManager;
+use TwigCsFixer\Cache\Manager\CacheManagerInterface;
+use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -28,8 +28,11 @@ final class Linter
 
     private CacheManagerInterface $cacheManager;
 
-    public function __construct(Environment $env, TokenizerInterface $tokenizer, ?CacheManagerInterface $cacheManager = null)
-    {
+    public function __construct(
+        Environment $env,
+        TokenizerInterface $tokenizer,
+        ?CacheManagerInterface $cacheManager = null
+    ) {
         $this->env = $env;
         $this->tokenizer = $tokenizer;
         $this->cacheManager = $cacheManager ?? new NullCacheManager();
@@ -60,7 +63,10 @@ final class Linter
             $report->addFile($filePath);
 
             $fileContent = file_get_contents($filePath);
-            if (false !== $fileContent && !$this->cacheManager->needFixing($filePath, $fileContent)) {
+            if (
+                false !== $fileContent
+                && !$this->cacheManager->needFixing($filePath, $fileContent)
+            ) {
                 continue;
             }
 

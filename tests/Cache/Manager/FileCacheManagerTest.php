@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Cache;
+namespace TwigCsFixer\Tests\Cache\Manager;
 
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
-use TwigCsFixer\Cache\CacheFileHandlerInterface;
-use TwigCsFixer\Cache\FileCacheManager;
+use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
+use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Ruleset\Ruleset;
 
@@ -86,6 +86,6 @@ class FileCacheManagerTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
         /** @psalm-suppress UnusedFunctionCall */
-        unserialize('O:34:"TwigCsFixer\Cache\FileCacheManager":0:{}');
+        unserialize('O:42:"TwigCsFixer\Cache\Manager\FileCacheManager":0:{}');
     }
 }

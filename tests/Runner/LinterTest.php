@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
-use TwigCsFixer\Cache\CacheManagerInterface;
+use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;

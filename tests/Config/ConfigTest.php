@@ -6,7 +6,7 @@ namespace TwigCsFixer\Tests\Config;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
-use TwigCsFixer\Cache\NullCacheManager;
+use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
