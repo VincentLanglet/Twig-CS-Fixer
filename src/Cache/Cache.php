@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache;
 
 use InvalidArgumentException;
-use LogicException;
 
 final class Cache
 {

@@ -30,7 +30,7 @@ $rules = [
     'no_trailing_whitespace_in_string'                 => false, // For string comparison in tests
     'phpdoc_summary'                                   => false,
     'phpdoc_to_comment'                                => [
-        'ignored_tags' => ['psalm-suppress']
+        'ignored_tags' => ['psalm-suppress'],
     ],
     'single_line_throw'                                => false,
 
@@ -58,7 +58,7 @@ $rules = [
     'phpdoc_no_empty_return'                           => true,
 ];
 
-$finder = PhpCsFixer\Finder::create()->in(__DIR__);
+$finder = PhpCsFixer\Finder::create()->in(__DIR__)->ignoreDotFiles(false);
 
 $config = new PhpCsFixer\Config();
 $config

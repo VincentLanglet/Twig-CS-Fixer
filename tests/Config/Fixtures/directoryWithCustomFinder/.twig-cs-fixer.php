@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 
