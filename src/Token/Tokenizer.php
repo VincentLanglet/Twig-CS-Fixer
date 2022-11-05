@@ -8,6 +8,7 @@ use LogicException;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Source;
+use Webmozart\Assert\Assert;
 
 /**
  * An override of Twig's Lexer to add whitespace and new line detection.
@@ -183,11 +184,7 @@ final class Tokenizer implements TokenizerInterface
 
     private function setStateParam(string $name, string $value): void
     {
-        if ([] === $this->state) {
-            // @codeCoverageIgnoreStart
-            throw new LogicException('Cannot update state without a current state.');
-            // @codeCoverageIgnoreEnd
-        }
+        Assert::notEmpty($this->state, 'Cannot update state without a current state.');
 
         $this->state[\count($this->state) - 1][1][$name] = $value;
     }
@@ -202,11 +199,8 @@ final class Tokenizer implements TokenizerInterface
 
     private function popState(): void
     {
-        if ([] === $this->state) {
-            // @codeCoverageIgnoreStart
-            throw new LogicException('Cannot pop state without a current state.');
-            // @codeCoverageIgnoreEnd
-        }
+        Assert::notEmpty($this->state, 'Cannot pop state without a current state.');
+
         array_pop($this->state);
     }
 
@@ -391,7 +385,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexInterpolation(): void
     {
         $bracket = end($this->bracketsAndTernary);
-        \assert(false !== $bracket); // Interpolation always start with a bracket.
+        Assert::notFalse($bracket, 'Interpolation always start with a bracket.');
 
         if (
             '#{' === $bracket->getValue()
@@ -441,7 +435,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexStart(): void
     {
         $tokenStart = $this->getTokenPosition();
-        \assert(null !== $tokenStart);
+        Assert::notNull($tokenStart, 'There is no token to lex.');
 
         if ('{#' === $tokenStart['match']) {
             $state = self::STATE_COMMENT;
