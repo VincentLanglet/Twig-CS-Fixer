@@ -61,7 +61,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @var array<array{int, array<string, string>}>
      *
-     * @psalm-var array<array{0|1|2|3|4|5, array<string, string>}>
+     * @phpstan-var array<array{0|1|2|3|4|5, array<string, string>}>
      */
     private array $state = [];
 
@@ -165,7 +165,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @psalm-return 0|1|2|3|4|5
+     * @phpstan-return 0|1|2|3|4|5
      */
     private function getState(): int
     {
@@ -175,7 +175,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @param array<string, string> $data
      *
-     * @psalm-param 0|1|2|3|4|5 $state
+     * @phpstan-param 0|1|2|3|4|5 $state
      */
     private function pushState(int $state, array $data = []): void
     {

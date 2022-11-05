@@ -103,16 +103,16 @@ final class TwigCsFixerCommand extends Command
 
         // Return a meaningful error code.
         if ($report->getTotalErrors() > 0) {
-            return 1;
+            return self::FAILURE;
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     private function fail(OutputInterface $output, string $message): int
     {
         $output->writeln("<error>Error: {$message}</error>");
 
-        return 1;
+        return self::FAILURE;
     }
 }
