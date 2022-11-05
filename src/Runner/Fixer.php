@@ -10,6 +10,7 @@ use Twig\Source;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Fixer will fix twig files against a set of rules.
@@ -275,12 +276,8 @@ final class Fixer
 
     private function revertToken(int $tokenPosition): void
     {
-        if (!isset($this->fixedTokens[$tokenPosition])) {
-            // @codeCoverageIgnoreStart
-            throw new LogicException('Nothing to revert at position');
-            // @codeCoverageIgnoreEnd
-        }
-        \assert(isset($this->tokens[$tokenPosition]));
+        $errorMessage = sprintf('Nothing to revert at position %s', $tokenPosition);
+        Assert::keyExists($this->fixedTokens, $tokenPosition, $errorMessage);
 
         $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
         unset($this->fixedTokens[$tokenPosition]);

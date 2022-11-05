@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Sniff;
 
 use TwigCsFixer\Token\Token;
+use Webmozart\Assert\Assert;
 
 /**
  * Ensure that single-line arrays, objects and arguments list does not have a trailing comma.
@@ -19,7 +20,7 @@ final class TrailingCommaSingleLineSniff extends AbstractSniff
         }
 
         $relatedToken = $token->getRelatedToken();
-        \assert(null !== $relatedToken); // A closer must have a related token.
+        Assert::notNull($relatedToken, 'A closer must have a related token.');
 
         if ($relatedToken->getLine() !== $token->getLine()) {
             // Multiline.
@@ -27,7 +28,7 @@ final class TrailingCommaSingleLineSniff extends AbstractSniff
         }
 
         $previousPosition = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
-        \assert(false !== $previousPosition); // A closer cannot be the first token.
+        Assert::notFalse($previousPosition, 'A closer cannot be the first token.');
 
         if (!$this->isTokenMatching($tokens[$previousPosition], Token::PUNCTUATION_TYPE, ',')) {
             return;

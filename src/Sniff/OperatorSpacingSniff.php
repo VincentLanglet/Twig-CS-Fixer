@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Sniff;
 
 use TwigCsFixer\Token\Token;
+use Webmozart\Assert\Assert;
 
 /**
  * Ensure there is one space before and after an operator except for '..'.
@@ -71,7 +72,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     private function isUnary(int $tokenPosition, array $tokens): bool
     {
         $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
-        \assert(false !== $previous); // An OPERATOR_TYPE cannot be the first non-empty token
+        Assert::notFalse($previous, 'An OPERATOR_TYPE cannot be the first non-empty token');
 
         $previousToken = $tokens[$previous];
 
