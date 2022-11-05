@@ -26,7 +26,7 @@ class ExceptionTypeResolver implements PHPStanExceptionTypeResolver
     public function isCheckedException(string $className, Scope $scope): bool
     {
         $namespace = $scope->getNamespace();
-        if (null !== $namespace && 0 === \strpos($namespace, 'TwigCsFixer\Tests')) {
+        if (null !== $namespace && 0 === strpos($namespace, 'TwigCsFixer\Tests')) {
             return false;
         }
 
