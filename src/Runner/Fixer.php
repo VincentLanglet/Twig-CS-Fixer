@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Runner;
 
 use Exception;
-use LogicException;
 use Twig\Source;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
