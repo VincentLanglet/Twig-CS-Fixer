@@ -79,8 +79,6 @@ class FixerTest extends TestCase
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'e'));
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'f'));
                 $fixer->endChangeset();
-
-                $this->isAlreadyExecuted = true;
             }
         };
 
@@ -180,5 +178,50 @@ class FixerTest extends TestCase
 
         // No change should be done (even if there is no conflict on token position 1)
         static::assertFileEquals($file, $tmpFile);
+    }
+
+    public function testAddContentMethods(): void
+    {
+        $tokenizer = $this->createStub(TokenizerInterface::class);
+        $tokenizer->method('tokenize')->willReturn([
+            new Token(Token::EOF_TYPE, 0, 0, __DIR__.'/Fixtures/file.twig'),
+        ]);
+
+        $sniff = new class () extends AbstractSniff {
+            private bool $isAlreadyExecuted = false;
+
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+                if ($this->isAlreadyExecuted) {
+                    return;
+                }
+                $this->isAlreadyExecuted = true;
+
+                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                if (null === $fixer) {
+                    return;
+                }
+
+                TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
+                TestCase::assertFalse($fixer->addContentBefore($tokenPosition, 'a'));
+                TestCase::assertFalse($fixer->addNewline($tokenPosition));
+                TestCase::assertFalse($fixer->addNewlineBefore($tokenPosition));
+
+                // True for changeset
+                $fixer->beginChangeset();
+                TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
+                TestCase::assertTrue($fixer->addContentBefore($tokenPosition, 'a'));
+                TestCase::assertTrue($fixer->addNewline($tokenPosition));
+                TestCase::assertTrue($fixer->addNewlineBefore($tokenPosition));
+                $fixer->endChangeset();
+            }
+        };
+
+        $ruleset = new Ruleset();
+        $ruleset->addSniff($sniff);
+
+        $fixer = new Fixer($ruleset, $tokenizer);
+        $sniff->enableFixer($fixer);
+        static::assertTrue($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
     }
 }
