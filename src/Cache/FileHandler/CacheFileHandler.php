@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Cache;
+namespace TwigCsFixer\Cache\FileHandler;
 
 use InvalidArgumentException;
 use RuntimeException;
+use TwigCsFixer\Cache\Cache;
+use TwigCsFixer\Cache\CacheEncoder;
 
 final class CacheFileHandler implements CacheFileHandlerInterface
 {

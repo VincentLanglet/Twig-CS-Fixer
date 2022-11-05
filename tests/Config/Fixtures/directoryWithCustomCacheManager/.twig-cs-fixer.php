@@ -1,6 +1,6 @@
 <?php
 
-use TwigCsFixer\Cache\NullCacheManager;
+use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 
 $config = new Config('Custom');

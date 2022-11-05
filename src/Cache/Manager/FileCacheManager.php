@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Cache;
+namespace TwigCsFixer\Cache\Manager;
 
 use BadMethodCallException;
 use RuntimeException;
+use TwigCsFixer\Cache\Cache;
+use TwigCsFixer\Cache\Directory;
+use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
+use TwigCsFixer\Cache\Signature;
 
 /**
  * Class supports caching information about state of fixing files.

@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Cache;
+namespace TwigCsFixer\Cache\FileHandler;
 
 use RuntimeException;
+use TwigCsFixer\Cache\Cache;
 
 interface CacheFileHandlerInterface
 {

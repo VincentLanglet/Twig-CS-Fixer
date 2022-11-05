@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Cache;
+namespace TwigCsFixer\Cache\Manager;
 
 final class NullCacheManager implements CacheManagerInterface
 {

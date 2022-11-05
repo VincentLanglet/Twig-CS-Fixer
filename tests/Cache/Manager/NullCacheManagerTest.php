@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Cache;
+namespace TwigCsFixer\Tests\Cache\Manager;
 
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Cache\NullCacheManager;
+use TwigCsFixer\Cache\Manager\NullCacheManager;
 
 class NullCacheManagerTest extends TestCase
 {
