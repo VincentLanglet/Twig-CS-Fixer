@@ -70,6 +70,18 @@ class FileCacheManagerTest extends TestCase
         static::assertTrue($cacheManager->needFixing($file, $content));
     }
 
+    public function testDestructWriteCache(): void
+    {
+        $cacheFileHandler = $this->createMock(CacheFileHandlerInterface::class);
+        $cacheFileHandler->expects(static::once())->method('write');
+
+        $cacheManager = new FileCacheManager(
+            $cacheFileHandler,
+            new Signature('8.0', '1.1', new Ruleset())
+        );
+        unset($cacheManager); // Trigger the __destruct method
+    }
+
     public function testCannotSerialize(): void
     {
         $cacheManager = new FileCacheManager(
