@@ -62,14 +62,10 @@ final class ConfigResolver
     private function getConfig(?string $configPath = null): Config
     {
         if (null !== $configPath) {
-            $configPath = $this->isAbsolutePath($configPath)
-                ? $configPath
-                : $this->workingDir.\DIRECTORY_SEPARATOR.$configPath;
-
-            return $this->getConfigFromPath($configPath);
+            return $this->getConfigFromPath($this->getAbsolutePath($configPath));
         }
 
-        $defaultPath = $this->workingDir.\DIRECTORY_SEPARATOR.Config::DEFAULT_PATH;
+        $defaultPath = $this->getAbsolutePath(Config::DEFAULT_PATH);
         if (file_exists($defaultPath)) {
             return $this->getConfigFromPath($defaultPath);
         }
@@ -82,7 +78,7 @@ final class ConfigResolver
      */
     private function getConfigFromPath(string $configPath): Config
     {
-        if (!file_exists($configPath)) {
+        if (!is_file($configPath)) {
             throw new RuntimeException(sprintf('Cannot find the config file "%s".', $configPath));
         }
 
@@ -144,12 +140,8 @@ final class ConfigResolver
             return null;
         }
 
-        $cacheFile = $this->isAbsolutePath($cacheFile)
-            ? $cacheFile
-            : $this->workingDir.\DIRECTORY_SEPARATOR.$cacheFile;
-
         return new FileCacheManager(
-            new CacheFileHandler($cacheFile),
+            new CacheFileHandler($this->getAbsolutePath($cacheFile)),
             new Signature(
                 \PHP_VERSION,
                 InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
@@ -158,12 +150,14 @@ final class ConfigResolver
         );
     }
 
-    private function isAbsolutePath(string $path): bool
+    private function getAbsolutePath(string $path): string
     {
-        return '' !== $path && (
+        $isAbsolutePath = '' !== $path && (
             '/' === $path[0]
             || '\\' === $path[0]
             || 1 === preg_match('#^[a-zA-Z]:\\\\#', $path)
         );
+
+        return $isAbsolutePath ? $path : $this->workingDir.\DIRECTORY_SEPARATOR.$path;
     }
 }

@@ -65,6 +65,7 @@ class ConfigResolverTest extends TestCase
         yield [__DIR__.'/Fixtures/directoryWithInvalidConfig', null];
         yield [__DIR__, 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
         yield [__DIR__, 'Fixtures/path/to/not/found/.twig-cs-fixer.php'];
+        yield [__DIR__, ''];
     }
 
     /**
