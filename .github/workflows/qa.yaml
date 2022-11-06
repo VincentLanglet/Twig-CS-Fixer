@@ -29,7 +29,7 @@ jobs:
                   composer-options: --prefer-dist --prefer-stable
 
             - name: Run PHPStan
-              run: vendor/bin/phpstan analyse
+              run: vendor/bin/phpstan analyse --no-progress --error-format=github
 
     psalm:
         name: Psalm
@@ -53,4 +53,4 @@ jobs:
                   composer-options: --prefer-dist --prefer-stable
 
             - name: Run PHP Code Sniffer
-              run: vendor/bin/psalm --shepherd
+              run: vendor/bin/psalm --no-progress --output-format=github --shepherd

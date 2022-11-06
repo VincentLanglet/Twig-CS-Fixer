@@ -115,11 +115,7 @@ final class TextFormatter
             $position++;
         } while ($position < $max);
 
-        foreach ($result as $index => $code) {
-            $result[$index] = substr($code, $indentCount);
-        }
-
-        return $result;
+        return array_map(fn (string $code): string => substr($code, $indentCount), $result);
     }
 
     private function formatErrorMessage(SniffViolation $message): string
