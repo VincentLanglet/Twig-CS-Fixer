@@ -20,7 +20,6 @@ parameters:
         uncheckedExceptionRegexes: []
         uncheckedExceptionClasses:
             - LogicException
-            - Error
         check:
             missingCheckedExceptionInThrows: true
             tooWideThrowType: true
@@ -34,11 +33,7 @@ parameters:
     checkUninitializedProperties: true
     checkMissingCallableSignature: true
     checkImplicitMixed: true
-
-    ignoreErrors:
-        - # https://github.com/phpstan/phpstan-webmozart-assert/issues/150
-            message: "#Call to static method Webmozart\\\\Assert\\\\Assert::implementsInterface\\(\\) with class-string and 'TwigCsFixer\\\\\\\\Sniff\\\\\\\\SniffInterface' will always evaluate to false.#"
-            path:    'src/Cache/CacheEncoder.php'
+    checkBenevolentUnionTypes: true
 
 services:
     exceptionTypeResolver:

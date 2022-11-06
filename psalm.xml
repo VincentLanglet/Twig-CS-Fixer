@@ -27,7 +27,6 @@
     </plugins>
     <ignoreExceptions>
         <classAndDescendants name="LogicException" />
-        <classAndDescendants name="Error" />
     </ignoreExceptions>
     <issueHandlers>
         <MissingThrowsDocblock errorLevel="suppress">
