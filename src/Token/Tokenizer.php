@@ -653,12 +653,19 @@ final class Tokenizer implements TokenizerInterface
 
         $regex = [];
         foreach ($lengthByOperator as $operator => $length) {
+            // An operator that ends with a character must be followed by
+            // a whitespace, a parenthesis, an opening map [ or sequence {
+            $r = preg_quote($operator, '/');
             if (ctype_alpha($operator[$length - 1])) {
-                $r = preg_quote($operator, '/').'(?=[\s()])';
-            } else {
-                $r = preg_quote($operator, '/');
+                $r .= '(?=[\s()\[{])';
             }
 
+            // An operator that begins with a character must not have a dot or pipe before
+            if (ctype_alpha($operator[0])) {
+                $r = '(?<![\.\|])'.$r;
+            }
+
+            // An operator with a space can be any amount of whitespaces
             $r = preg_replace('/\s+/', '\s+', $r);
 
             $regex[] = $r;
