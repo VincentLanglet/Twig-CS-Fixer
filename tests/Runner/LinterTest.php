@@ -10,6 +10,7 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Linter;
@@ -28,10 +29,7 @@ class LinterTest extends TestCase
         $linter = new Linter($env, $tokenizer);
         $filePath = __DIR__.'/Fixtures/file_not_readable.twig';
 
-        // Suppress the warning sent by `file_get_content` during the test.
-        $oldErrorLevel = error_reporting(\E_ALL ^ \E_WARNING);
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
-        error_reporting($oldErrorLevel);
 
         $messagesByFiles = $report->getMessagesByFiles();
         static::assertCount(1, $messagesByFiles);
@@ -75,7 +73,7 @@ class LinterTest extends TestCase
     {
         $env = new StubbedEnvironment();
         $tokenizer = $this->createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willThrowException(new SyntaxError('Error.'));
+        $tokenizer->method('tokenize')->willThrowException(new CannotTokenizeException('Error.'));
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
@@ -153,8 +151,19 @@ class LinterTest extends TestCase
 
         $linter = new Linter($env, $tokenizer);
 
-        self::expectExceptionMessage(sprintf('Cannot fix file "%s".', $tmpFile));
-        $linter->run([new SplFileInfo($tmpFile)], $ruleset, true);
+        $report = $linter->run([new SplFileInfo($tmpFile)], $ruleset, true);
+
+        $messagesByFiles = $report->getMessagesByFiles();
+        static::assertCount(1, $messagesByFiles);
+        static::assertArrayHasKey($tmpFile, $messagesByFiles);
+
+        $messages = $messagesByFiles[$tmpFile];
+        static::assertNotCount(0, $messages);
+
+        $message = $messages[0];
+        static::assertStringContainsString('Unable to fix file', $message->getMessage());
+        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame($tmpFile, $message->getFilename());
     }
 
     public function testFileIsSkippedIfCached(): void

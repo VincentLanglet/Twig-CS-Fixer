@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Sniff;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Sniff\AbstractSniff;
 use TwigCsFixer\Token\Token;
@@ -60,8 +61,7 @@ final class SniffTest extends TestCase
 
     public function testSniffWithReport(): void
     {
-        $report = new Report();
-        $report->addFile('fakeFile.html.twig');
+        $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
 
         $this->sniff->enableReport($report);
         $this->sniff->processFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]);
@@ -72,8 +72,7 @@ final class SniffTest extends TestCase
 
     public function testSniffWithReport2(): void
     {
-        $report = new Report();
-        $report->addFile('fakeFile.html.twig');
+        $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
 
         $this->sniff->enableReport($report);
         $this->sniff->processFile([

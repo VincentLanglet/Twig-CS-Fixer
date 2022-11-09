@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache\FileHandler;
 
 use InvalidArgumentException;
-use RuntimeException;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
+use TwigCsFixer\Exception\CannotWriteCacheException;
+use UnexpectedValueException;
 
 final class CacheFileHandler implements CacheFileHandlerInterface
 {
@@ -29,7 +30,7 @@ final class CacheFileHandler implements CacheFileHandlerInterface
             return null;
         }
 
-        $content = file_get_contents($this->file);
+        $content = @file_get_contents($this->file);
         if (false === $content) {
             return null;
         }
@@ -45,29 +46,27 @@ final class CacheFileHandler implements CacheFileHandlerInterface
     {
         if (file_exists($this->file)) {
             if (is_dir($this->file)) {
-                throw new RuntimeException(
-                    sprintf('Cannot write cache file "%s" as the location exists as directory.', $this->file),
-                );
+                throw CannotWriteCacheException::locationIsDirectory($this->file);
             }
 
             if (!is_writable($this->file)) {
-                throw new RuntimeException(
-                    sprintf('Cannot write to file "%s" as it is not writable.', $this->file),
-                );
+                throw CannotWriteCacheException::locationIsNotWritable($this->file);
             }
         } else {
             $dir = \dirname($this->file);
 
             if (!is_dir($dir)) {
-                throw new RuntimeException(
-                    sprintf('Directory of cache file "%s" does not exists.', $this->file),
-                );
+                throw CannotWriteCacheException::missingDirectory($this->file);
             }
 
             @touch($this->file);
             @chmod($this->file, 0666);
         }
 
-        file_put_contents($this->file, CacheEncoder::toJson($cache));
+        try {
+            file_put_contents($this->file, CacheEncoder::toJson($cache));
+        } catch (UnexpectedValueException $exception) {
+            throw CannotWriteCacheException::because($exception);
+        }
     }
 }

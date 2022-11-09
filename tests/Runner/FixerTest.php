@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Runner;
+namespace TwigCsFixer\Tests\Runner;
 
 use PHPUnit\Framework\TestCase;
-use Twig\Error\SyntaxError;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Sniff\AbstractSniff;
@@ -23,22 +24,23 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
 
-        // Suppress the warning sent by `file_get_content` during the test.
-        $oldErrorLevel = error_reporting(\E_ALL ^ \E_WARNING);
-        $success = $fixer->fixFile(__DIR__.'/Fixtures/file_not_readable.twig');
-        error_reporting($oldErrorLevel);
-
-        static::assertFalse($success);
+        $file = __DIR__.'/Fixtures/file_not_readable.twig';
+        $this->expectExceptionObject(CannotFixFileException::fileNotReadable($file));
+        $fixer->fixFile($file);
     }
 
     public function testInvalidFile(): void
     {
+        $exception = new CannotTokenizeException('Error.');
+
         $tokenizer = $this->createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willThrowException(new SyntaxError('Error.'));
+        $tokenizer->method('tokenize')->willThrowException($exception);
         $ruleset = new Ruleset();
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        static::assertFalse($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
+
+        $this->expectExceptionObject($exception);
+        $fixer->fixFile(__DIR__.'/Fixtures/file.twig');
     }
 
     public function testReplaceToken(): void
@@ -87,7 +89,7 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff->enableFixer($fixer);
-        static::assertTrue($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
+        $fixer->fixFile(__DIR__.'/Fixtures/file.twig');
     }
 
     public function testReplaceTokenIsDesignedAgainstInfiniteLoop(): void
@@ -118,7 +120,10 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff->enableFixer($fixer);
-        static::assertFalse($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
+
+        $file = __DIR__.'/Fixtures/file.twig';
+        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($file));
+        $fixer->fixFile($file);
     }
 
     public function testReplaceTokenIsDesignedAgainstConflict(): void
@@ -174,10 +179,14 @@ class FixerTest extends TestCase
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff1->enableFixer($fixer);
         $sniff2->enableFixer($fixer);
-        static::assertFalse($fixer->fixFile($tmpFile));
 
-        // No change should be done (even if there is no conflict on token position 1)
-        static::assertFileEquals($file, $tmpFile);
+        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($tmpFile));
+        try {
+            $fixer->fixFile($tmpFile);
+        } finally {
+            // No change should be done (even if there is no conflict on token position 1)
+            static::assertFileEquals($file, $tmpFile);
+        }
     }
 
     public function testAddContentMethods(): void
@@ -222,6 +231,6 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff->enableFixer($fixer);
-        static::assertTrue($fixer->fixFile(__DIR__.'/Fixtures/file.twig'));
+        $fixer->fixFile(__DIR__.'/Fixtures/file.twig');
     }
 }

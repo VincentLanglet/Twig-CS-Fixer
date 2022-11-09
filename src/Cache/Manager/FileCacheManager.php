@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache\Manager;
 
 use BadMethodCallException;
-use RuntimeException;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\Directory;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Exception\CannotWriteCacheException;
 
 /**
  * Class supports caching information about state of fixing files.
@@ -43,7 +43,7 @@ final class FileCacheManager implements CacheManagerInterface
     }
 
     /**
-     * @throws RuntimeException
+     * @throws CannotWriteCacheException
      */
     public function __destruct()
     {
@@ -98,7 +98,7 @@ final class FileCacheManager implements CacheManagerInterface
     }
 
     /**
-     * @throws RuntimeException
+     * @throws CannotWriteCacheException
      */
     private function writeCache(): void
     {

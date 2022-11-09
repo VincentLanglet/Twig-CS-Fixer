@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\Output;
@@ -24,8 +25,7 @@ class TextFormatterTest extends TestCase
         $textFormatter = new TextFormatter($input, $output);
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report();
-        $report->addFile($file);
+        $report = new Report([new SplFileInfo($file)]);
 
         $violation0 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice', $file, 1);
         $report->addMessage($violation0);
@@ -101,8 +101,7 @@ class TextFormatterTest extends TestCase
         $textFormatter = new TextFormatter($input, $output);
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report();
-        $report->addFile($file);
+        $report = new Report([new SplFileInfo($file)]);
 
         $textFormatter->display($report);
 
@@ -121,8 +120,7 @@ class TextFormatterTest extends TestCase
         $textFormatter = new TextFormatter($input, $output);
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report();
-        $report->addFile($file);
+        $report = new Report([new SplFileInfo($file)]);
 
         $violation = new SniffViolation($level, 'Message', $file, 1);
         $report->addMessage($violation);
