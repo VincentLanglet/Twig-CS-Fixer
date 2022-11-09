@@ -36,7 +36,7 @@ final class TextFormatter
                 $this->io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
             }
 
-            $content = file_get_contents($file);
+            $content = @file_get_contents($file);
             $rows = [];
             foreach ($fileMessages as $message) {
                 $formattedText = [];

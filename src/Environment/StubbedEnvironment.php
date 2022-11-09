@@ -79,7 +79,7 @@ final class StubbedEnvironment extends Environment
     public function getFilter($name): ?TwigFilter
     {
         if (!\array_key_exists($name, $this->stubFilters)) {
-            $this->stubFilters[$name] = new TwigFilter('stub');
+            $this->stubFilters[$name] = new TwigFilter($name);
         }
 
         return $this->stubFilters[$name];
@@ -91,7 +91,7 @@ final class StubbedEnvironment extends Environment
     public function getFunction($name): ?TwigFunction
     {
         if (!\array_key_exists($name, $this->stubFunctions)) {
-            $this->stubFunctions[$name] = new TwigFunction('stub');
+            $this->stubFunctions[$name] = new TwigFunction($name);
         }
 
         return $this->stubFunctions[$name];
@@ -103,7 +103,7 @@ final class StubbedEnvironment extends Environment
     public function getTest($name): ?TwigTest
     {
         if (!\array_key_exists($name, $this->stubTests)) {
-            $this->stubTests[$name] = new TwigTest('stub');
+            $this->stubTests[$name] = new TwigTest($name);
         }
 
         return $this->stubTests[$name];

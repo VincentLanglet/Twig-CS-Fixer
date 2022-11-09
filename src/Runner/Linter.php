@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Runner;
 
-use Exception;
-use RuntimeException;
 use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
+use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -40,15 +40,13 @@ final class Linter
 
     /**
      * @param iterable<SplFileInfo> $files
-     *
-     * @throws RuntimeException
      */
     public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
     {
-        $report = new Report();
+        $report = new Report($files);
 
         if ($fix) {
-            $this->fix($files, $ruleset);
+            $this->fix($files, $ruleset, $report);
         }
 
         foreach ($ruleset->getSniffs() as $sniff) {
@@ -59,10 +57,7 @@ final class Linter
         foreach ($files as $file) {
             $filePath = $file->getPathname();
 
-            // Add this file to the report.
-            $report->addFile($filePath);
-
-            $fileContent = file_get_contents($filePath);
+            $fileContent = @file_get_contents($filePath);
             if (
                 false !== $fileContent
                 && !$this->cacheManager->needFixing($filePath, $fileContent)
@@ -84,11 +79,9 @@ final class Linter
     }
 
     /**
-     * @param iterable<SplFileInfo> $finder
-     *
-     * @throws RuntimeException
+     * @param iterable<SplFileInfo> $files
      */
-    private function fix(iterable $finder, Ruleset $ruleset): void
+    private function fix(iterable $files, Ruleset $ruleset, Report $report): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -96,15 +89,23 @@ final class Linter
             $sniff->enableFixer($fixer);
         }
 
-        foreach ($finder as $file) {
+        foreach ($files as $file) {
             $filePath = $file->getPathname();
-            $contents = file_get_contents($filePath);
+            $contents = @file_get_contents($filePath);
             if (false !== $contents && !$this->cacheManager->needFixing($filePath, $contents)) {
                 continue;
             }
 
-            if (!$fixer->fixFile($filePath)) {
-                throw new RuntimeException(sprintf('Cannot fix file "%s".', $filePath));
+            try {
+                $fixer->fixFile($filePath);
+            } catch (CannotFixFileException|CannotTokenizeException $exception) {
+                $sniffViolation = new SniffViolation(
+                    SniffViolation::LEVEL_FATAL,
+                    sprintf('Unable to fix file: %s', $exception->getMessage()),
+                    $filePath
+                );
+
+                $report->addMessage($sniffViolation);
             }
 
             $contents = $fixer->getContents();
@@ -113,14 +114,14 @@ final class Linter
         }
     }
 
-    private function processTemplate(string $file, Ruleset $ruleset, Report $report): void
+    private function processTemplate(string $filePath, Ruleset $ruleset, Report $report): void
     {
-        $content = file_get_contents($file);
+        $content = @file_get_contents($filePath);
         if (false === $content) {
             $sniffViolation = new SniffViolation(
                 SniffViolation::LEVEL_FATAL,
                 'Unable to read file.',
-                $file
+                $filePath
             );
 
             $report->addMessage($sniffViolation);
@@ -128,17 +129,17 @@ final class Linter
             return;
         }
 
-        $twigSource = new Source($content, $file);
+        $twigSource = new Source($content, $filePath);
 
         // Tokenize + Parse.
         try {
             $this->env->parse($this->env->tokenize($twigSource));
-        } catch (Error $e) {
+        } catch (Error $error) {
             $sniffViolation = new SniffViolation(
                 SniffViolation::LEVEL_FATAL,
-                sprintf('File is invalid: %s', $e->getRawMessage()),
-                $file,
-                $e->getTemplateLine()
+                sprintf('File is invalid: %s', $error->getRawMessage()),
+                $filePath,
+                $error->getTemplateLine()
             );
 
             $report->addMessage($sniffViolation);
@@ -149,11 +150,11 @@ final class Linter
         // Tokenizer.
         try {
             $stream = $this->tokenizer->tokenize($twigSource);
-        } catch (Exception $exception) {
+        } catch (CannotTokenizeException $exception) {
             $sniffViolation = new SniffViolation(
                 SniffViolation::LEVEL_FATAL,
                 sprintf('Unable to tokenize file: %s', $exception->getMessage()),
-                $file
+                $filePath
             );
 
             $report->addMessage($sniffViolation);

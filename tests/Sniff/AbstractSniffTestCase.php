@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Sniff;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use SplFileInfo;
@@ -36,12 +35,8 @@ abstract class AbstractSniffTestCase extends TestCase
 
         $filePath ??= $this->generateFilePath();
 
-        try {
-            $ruleset->addSniff($sniff);
-            $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
-        } catch (Exception $exception) {
-            static::fail($exception->getMessage());
-        }
+        $ruleset->addSniff($sniff);
+        $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
         $fixedFile = substr($filePath, 0, -5).'.fixed.twig';
         if (file_exists($fixedFile)) {

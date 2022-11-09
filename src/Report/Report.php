@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Report;
 
 use InvalidArgumentException;
+use SplFileInfo;
 
 /**
  * Report contains all violations with stats.
@@ -21,21 +22,26 @@ final class Report
      */
     private array $messagesByFiles = [];
 
-    /**
-     * @var list<string>
-     */
-    private array $files = [];
-
     private int $totalNotices = 0;
 
     private int $totalWarnings = 0;
 
     private int $totalErrors = 0;
 
+    /**
+     * @param iterable<SplFileInfo> $files
+     */
+    public function __construct(iterable $files)
+    {
+        foreach ($files as $file) {
+            $this->messagesByFiles[$file->getPathname()] = [];
+        }
+    }
+
     public function addMessage(SniffViolation $sniffViolation): self
     {
         $filename = $sniffViolation->getFilename();
-        if (!\in_array($filename, $this->getFiles(), true)) {
+        if (!isset($this->messagesByFiles[$filename])) {
             throw new InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
@@ -77,23 +83,17 @@ final class Report
         ), $this->messagesByFiles);
     }
 
-    public function addFile(string $file): void
-    {
-        $this->files[] = $file;
-        $this->messagesByFiles[$file] = [];
-    }
-
     /**
      * @return list<string>
      */
     public function getFiles(): array
     {
-        return $this->files;
+        return array_keys($this->messagesByFiles);
     }
 
     public function getTotalFiles(): int
     {
-        return \count($this->files);
+        return \count($this->messagesByFiles);
     }
 
     public function getTotalNotices(): int

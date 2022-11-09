@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Runner;
 
-use Exception;
 use Twig\Source;
+use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
@@ -16,6 +17,8 @@ use Webmozart\Assert\Assert;
  */
 final class Fixer
 {
+    public const MAX_FIXER_ITERATION = 50;
+
     private int $loops = 0;
 
     private string $eolChar = "\n";
@@ -84,23 +87,23 @@ final class Fixer
         $this->tokenizer = $tokenizer;
     }
 
-    public function fixFile(string $file): bool
+    /**
+     * @throws CannotTokenizeException
+     * @throws CannotFixFileException
+     */
+    public function fixFile(string $file): void
     {
-        $contents = file_get_contents($file);
+        $contents = @file_get_contents($file);
         if (false === $contents) {
-            return false;
+            throw CannotFixFileException::fileNotReadable($file);
         }
 
         $this->loops = 0;
-        while ($this->loops < 50) {
+        while ($this->loops < self::MAX_FIXER_ITERATION) {
             $this->inConflict = false;
 
-            try {
-                $twigSource = new Source($contents, 'TwigCsFixer');
-                $stream = $this->tokenizer->tokenize($twigSource);
-            } catch (Exception $exception) {
-                return false;
-            }
+            $twigSource = new Source($contents, 'TwigCsFixer');
+            $stream = $this->tokenizer->tokenize($twigSource);
 
             $this->startFile($stream);
 
@@ -121,10 +124,8 @@ final class Fixer
         }
 
         if ($this->numFixes > 0) {
-            return false;
+            throw CannotFixFileException::infiniteLoop($file);
         }
-
-        return true;
     }
 
     public function getContents(): string

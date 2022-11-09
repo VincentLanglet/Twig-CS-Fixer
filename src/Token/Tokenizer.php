@@ -6,8 +6,8 @@ namespace TwigCsFixer\Token;
 
 use LogicException;
 use Twig\Environment;
-use Twig\Error\SyntaxError;
 use Twig\Source;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -83,7 +83,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @return list<Token>
      *
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     public function tokenize(Source $source): array
     {
@@ -127,7 +127,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         if (self::STATE_DATA !== $this->getState()) {
-            throw new SyntaxError('Error Processing Request.');
+            throw new CannotTokenizeException('Error Processing Request.');
         }
 
         $this->pushToken(Token::EOF_TYPE);
@@ -268,7 +268,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     private function lexExpression(): void
     {
@@ -296,12 +296,14 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartDqString();
         } else {
-            throw new SyntaxError(sprintf('Unexpected character "%s".', $currentCode), $this->line);
+            throw new CannotTokenizeException(
+                sprintf('Unexpected character "%s" at line %s.', $currentCode, $this->line)
+            );
         }
     }
 
     /**
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     private function lexBlock(): void
     {
@@ -319,7 +321,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     private function lexVariable(): void
     {
@@ -337,14 +339,14 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     private function lexComment(): void
     {
         preg_match(self::REGEX_COMMENT_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
         if (!isset($match[0])) {
-            throw new SyntaxError('Unclosed comment.', $this->line);
+            throw new CannotTokenizeException(sprintf('Unclosed comment at line %s.', $this->line));
         }
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
@@ -380,7 +382,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     private function lexInterpolation(): void
     {
@@ -560,7 +562,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws SyntaxError
+     * @throws CannotTokenizeException
      */
     private function lexPunctuation(): void
     {
@@ -598,14 +600,15 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary[] = $token;
         } elseif (\in_array($currentCode, [')', ']', '}'], true)) {
             if ([] === $this->bracketsAndTernary) {
-                throw new SyntaxError(sprintf('Unexpected "%s".', $currentCode), $this->line);
+                throw new CannotTokenizeException(
+                    sprintf('Unexpected "%s" at line %s.', $currentCode, $this->line)
+                );
             }
 
             $bracket = array_pop($this->bracketsAndTernary);
             if (strtr($bracket->getValue(), '([{', ')]}') !== $currentCode) {
-                throw new SyntaxError(
-                    sprintf('Unclosed "%s".', $bracket->getValue()),
-                    $bracket->getLine()
+                throw new CannotTokenizeException(
+                    sprintf('Unclosed "%s" at line %s.', $bracket->getValue(), $bracket->getLine())
                 );
             }
 

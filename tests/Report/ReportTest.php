@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 
@@ -12,7 +13,7 @@ class ReportTest extends TestCase
 {
     public function testReportDefaultState(): void
     {
-        $report = new Report();
+        $report = new Report([]);
 
         static::assertSame(0, $report->getTotalNotices());
         static::assertSame(0, $report->getTotalWarnings());
@@ -27,10 +28,11 @@ class ReportTest extends TestCase
         $file2 = 'file2.twig';
         $file3 = 'file3.twig';
 
-        $report = new Report();
-        $report->addFile($file);
-        $report->addFile($file2);
-        $report->addFile($file3);
+        $report = new Report([
+            new SplFileInfo($file),
+            new SplFileInfo($file2),
+            new SplFileInfo($file3),
+        ]);
 
         $sniffViolation1 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice', $file);
         $sniffViolation2 = new SniffViolation(SniffViolation::LEVEL_WARNING, 'Warning', $file);
@@ -69,8 +71,7 @@ class ReportTest extends TestCase
 
     public function testAddMessageForAnotherFile(): void
     {
-        $report = new Report();
-        $report->addFile('file.twig');
+        $report = new Report([new SplFileInfo('file.twig')]);
 
         self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->addMessage(new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Message', 'another_file.twig'));

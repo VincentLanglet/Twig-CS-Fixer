@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache\FileHandler;
 
-use RuntimeException;
 use TwigCsFixer\Cache\Cache;
+use TwigCsFixer\Exception\CannotWriteCacheException;
 
 interface CacheFileHandlerInterface
 {
@@ -14,7 +14,7 @@ interface CacheFileHandlerInterface
     public function read(): ?Cache;
 
     /**
-     * @throws RuntimeException
+     * @throws CannotWriteCacheException
      */
     public function write(Cache $cache): void;
 }
