@@ -31,7 +31,7 @@ class FixerTest extends TestCase
 
     public function testInvalidFile(): void
     {
-        $exception = new CannotTokenizeException('Error.');
+        $exception = CannotTokenizeException::unknownError();
 
         $tokenizer = $this->createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willThrowException($exception);
