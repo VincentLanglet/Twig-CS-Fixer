@@ -21,7 +21,7 @@ final class TrailingSpaceSniff extends AbstractSniff
         $previousToken = $tokens[$tokenPosition - 1] ?? null;
         if (
             null === $previousToken
-            || !$this->isTokenMatching($previousToken, Token::WHITESPACE_TOKENS + Token::TAB_TOKENS)
+            || !$this->isTokenMatching($previousToken, Token::INDENT_TOKENS)
         ) {
             return;
         }

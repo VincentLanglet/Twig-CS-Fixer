@@ -57,5 +57,11 @@ final class OperatorSpacingTest extends AbstractSniffTestCase
             [37 => 13],
             [37 => 13],
         ]);
+
+        $this->checkSniff(
+            new OperatorSpacingSniff(),
+            [],
+            __DIR__.'/OperatorSpacingTest2.twig'
+        );
     }
 }
