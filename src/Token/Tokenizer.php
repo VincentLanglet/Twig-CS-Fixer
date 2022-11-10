@@ -56,7 +56,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @var array<int, array{fullMatch: string, position: int, match: string}>
      */
-    private array $tokenPositions = [];
+    private array $expressionStarters = [];
 
     /**
      * @var array<array{int, array<string, string>}>
@@ -91,13 +91,16 @@ final class Tokenizer implements TokenizerInterface
         $this->preflightSource($this->code);
 
         while ($this->cursor < $this->end) {
-            $lastToken = $this->getTokenPosition();
-            $nextToken = $this->getTokenPosition(1);
+            $expressionStarter = $this->getExpressionStarter();
+            $nextExpressionStarter = $this->getExpressionStarter(1);
 
-            while (null !== $nextToken && $nextToken['position'] < $this->cursor) {
+            while (
+                null !== $nextExpressionStarter
+                && $nextExpressionStarter['position'] < $this->cursor
+            ) {
                 $this->moveCurrentPosition();
-                $lastToken = $nextToken;
-                $nextToken = $this->getTokenPosition(1);
+                $expressionStarter     = $nextExpressionStarter;
+                $nextExpressionStarter = $this->getExpressionStarter(1);
             }
 
             switch ($this->getState()) {
@@ -111,7 +114,10 @@ final class Tokenizer implements TokenizerInterface
                     $this->lexComment();
                     break;
                 case self::STATE_DATA:
-                    if (null !== $lastToken && $this->cursor === $lastToken['position']) {
+                    if (
+                        null !== $expressionStarter
+                        && $this->cursor === $expressionStarter['position']
+                    ) {
                         $this->lexStart();
                     } else {
                         $this->lexData();
@@ -206,34 +212,33 @@ final class Tokenizer implements TokenizerInterface
 
     private function preflightSource(string $code): void
     {
-        $tokenPositions = [];
-        preg_match_all(self::REGEX_EXPRESSION_START, $code, $tokenPositions, \PREG_OFFSET_CAPTURE);
-        /** @var array<0|1|2, array<0|1|2|3|4, array{string, int}>> $tokenPositions */
-        $tokenPositionsReworked = [];
-        foreach ($tokenPositions[0] as $index => $tokenFullMatch) {
-            $tokenPositionsReworked[$index] = [
+        preg_match_all(self::REGEX_EXPRESSION_START, $code, $match, \PREG_OFFSET_CAPTURE);
+
+        $expressionStartersReworked = [];
+        foreach ($match[0] as $index => $tokenFullMatch) {
+            $expressionStartersReworked[$index] = [
                 'fullMatch' => $tokenFullMatch[0],
                 'position'  => $tokenFullMatch[1],
-                'match'     => $tokenPositions[1][$index][0],
+                'match'     => $match[1][$index][0],
             ];
         }
 
-        $this->tokenPositions = $tokenPositionsReworked;
+        $this->expressionStarters = $expressionStartersReworked;
     }
 
     /**
      * @return array{fullMatch: string, position: int, match: string}|null
      */
-    private function getTokenPosition(int $offset = 0): ?array
+    private function getExpressionStarter(int $offset = 0): ?array
     {
         if (
-            [] === $this->tokenPositions
-            || !isset($this->tokenPositions[$this->currentPosition + $offset])
+            [] === $this->expressionStarters
+            || !isset($this->expressionStarters[$this->currentPosition + $offset])
         ) {
             return null;
         }
 
-        return $this->tokenPositions[$this->currentPosition + $offset];
+        return $this->expressionStarters[$this->currentPosition + $offset];
     }
 
     private function moveCurrentPosition(int $value = 1): void
@@ -306,7 +311,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexBlock(): void
     {
         preg_match(self::REGEX_BLOCK_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
-        /** @var array<int, array{string, int}> $match */
+
         if (isset($match[0]) && [] === $this->getBrackets()) {
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
@@ -324,7 +329,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexVariable(): void
     {
         preg_match(self::REGEX_VAR_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
-        /** @var array<int, array{string, int}> $match */
+
         if (isset($match[0]) && [] === $this->getBrackets()) {
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
@@ -342,7 +347,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexComment(): void
     {
         preg_match(self::REGEX_COMMENT_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
-        /** @var array<int, array{string, int}> $match */
+
         if (!isset($match[0])) {
             throw CannotTokenizeException::unclosedComment($this->line);
         }
@@ -402,9 +407,9 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexData(int $limit = 0): void
     {
-        $nextToken = $this->getTokenPosition();
-        if (0 === $limit && null !== $nextToken) {
-            $limit = $nextToken['position'];
+        $expressionStarter = $this->getExpressionStarter();
+        if (0 === $limit && null !== $expressionStarter) {
+            $limit = $expressionStarter['position'];
         }
 
         $currentCode = $this->code[$this->cursor];
@@ -434,27 +439,27 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexStart(): void
     {
-        $tokenStart = $this->getTokenPosition();
-        Assert::notNull($tokenStart, 'There is no token to lex.');
+        $expressionStarter = $this->getExpressionStarter();
+        Assert::notNull($expressionStarter, 'There is no token to lex.');
 
-        if ('{#' === $tokenStart['match']) {
+        if ('{#' === $expressionStarter['match']) {
             $state = self::STATE_COMMENT;
             $tokenType = Token::COMMENT_START_TYPE;
-        } elseif ('{%' === $tokenStart['match']) {
+        } elseif ('{%' === $expressionStarter['match']) {
             $state = self::STATE_BLOCK;
             $tokenType = Token::BLOCK_START_TYPE;
-        } elseif ('{{' === $tokenStart['match']) {
+        } elseif ('{{' === $expressionStarter['match']) {
             $state = self::STATE_VAR;
             $tokenType = Token::VAR_START_TYPE;
         } else {
             // @codeCoverageIgnoreStart
-            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $tokenStart['match']));
+            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
             // @codeCoverageIgnoreEnd
         }
 
-        $this->pushToken($tokenType, $tokenStart['fullMatch']);
+        $this->pushToken($tokenType, $expressionStarter['fullMatch']);
         $this->pushState($state);
-        $this->moveCursor($tokenStart['fullMatch']);
+        $this->moveCursor($expressionStarter['fullMatch']);
     }
 
     private function lexStartDqString(): void
