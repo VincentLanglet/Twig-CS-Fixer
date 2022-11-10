@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Cache\FileHandler;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Exception\CannotWriteCacheException;
 use TwigCsFixer\Ruleset\Ruleset;
 
-class FileHandlerTest extends TestCase
+class CacheFileHandlerTest extends TestCase
 {
     /**
      * @dataProvider readFailureDataProvider
@@ -35,11 +35,9 @@ class FileHandlerTest extends TestCase
     {
         $file = __DIR__.'/Fixtures/notReadable';
         chmod($file, 0222);
-        $cacheFileHandler = new CacheFileHandler($file);
 
-        set_error_handler(fn (): bool => true);
+        $cacheFileHandler = new CacheFileHandler($file);
         static::assertNull($cacheFileHandler->read());
-        restore_error_handler();
 
         // Restore permissions
         chmod($file, 0644);
@@ -51,24 +49,20 @@ class FileHandlerTest extends TestCase
         static::assertNotNull($cacheFileHandler->read());
     }
 
-    /**
-     * @dataProvider writeFailureDataProvider
-     */
-    public function testWriteFailure(string $file): void
+    public function testWriteFailureMissingDirectory(): void
     {
-        $cacheFileHandler = new CacheFileHandler($file);
+        $cacheFileHandler = new CacheFileHandler('/fakeDir/foo.php');
 
-        $this->expectException(RuntimeException::class);
+        $this->expectExceptionObject(CannotWriteCacheException::missingDirectory('/fakeDir/foo.php'));
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
     }
 
-    /**
-     * @return iterable<array-key, array{string}>
-     */
-    public function writeFailureDataProvider(): iterable
+    public function testWriteFailureInDirectory(): void
     {
-        yield ['/fakeDir/foo.php'];
-        yield [__DIR__];
+        $cacheFileHandler = new CacheFileHandler(__DIR__);
+
+        $this->expectExceptionObject(CannotWriteCacheException::locationIsDirectory(__DIR__));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
     }
 
     public function testWriteFailurePermission(): void
@@ -77,11 +71,20 @@ class FileHandlerTest extends TestCase
         chmod($file, 0444);
         $cacheFileHandler = new CacheFileHandler($file);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectExceptionObject(CannotWriteCacheException::locationIsNotWritable($file));
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
 
         // Restore permissions
         chmod($file, 0644);
+    }
+
+    public function testWriteFailureEncoding(): void
+    {
+        $file = __DIR__.'/Fixtures/writable';
+        $cacheFileHandler = new CacheFileHandler($file);
+
+        $this->expectException(CannotWriteCacheException::class);
+        $cacheFileHandler->write(new Cache(new Signature('8.0', "\xB1\x31", new Ruleset())));
     }
 
     public function testWriteSuccess(): void

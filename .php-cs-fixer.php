@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 $rules = [
     // Default
+    '@PHP74Migration'                                  => true,
+    '@PHP74Migration:risky'                            => true,
     '@PSR12'                                           => true,
     '@PSR12:risky'                                     => true,
     '@Symfony'                                         => true,
     '@Symfony:risky'                                   => true,
-    '@PHP74Migration'                                  => true,
-    '@PHP74Migration:risky'                            => true,
 
     // Override of the Symfony config
     'binary_operator_spaces'                           => [

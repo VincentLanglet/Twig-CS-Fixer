@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Config;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
+use TwigCsFixer\Exception\CannotResolveConfigException;
 
 class ConfigResolverTest extends TestCase
 {
@@ -53,7 +53,7 @@ class ConfigResolverTest extends TestCase
     {
         $configResolver = new ConfigResolver($workingDir);
 
-        self::expectException(Exception::class);
+        self::expectException(CannotResolveConfigException::class);
         $configResolver->resolveConfig([], $path);
     }
 
