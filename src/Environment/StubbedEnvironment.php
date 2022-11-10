@@ -7,7 +7,6 @@ namespace TwigCsFixer\Environment;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
-use Symfony\Bridge\Twig\TokenParser\TransChoiceTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Twig\Environment;
@@ -53,15 +52,6 @@ final class StubbedEnvironment extends Environment
         $this->addTokenParser(new StopwatchTokenParser(false));
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
-
-        // TODO: Remove when dropping support for symfony/twig-bridge@4.4
-        if (class_exists(TransChoiceTokenParser::class)) {
-            // @codeCoverageIgnoreStart
-            /** @var TokenParserInterface $transChoiceTokenParser */
-            $transChoiceTokenParser = new TransChoiceTokenParser();
-            $this->addTokenParser($transChoiceTokenParser);
-            // @codeCoverageIgnoreEnd
-        }
 
         // Optional dependency
         if (class_exists(CacheTokenParser::class)) {
