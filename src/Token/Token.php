@@ -48,12 +48,14 @@ final class Token
         self::COMMENT_TAB_TYPE => self::COMMENT_TAB_TYPE,
     ];
 
+    public const INDENT_TOKENS = self::WHITESPACE_TOKENS + self::TAB_TOKENS;
+
     public const EOL_TOKENS = [
         self::EOL_TYPE         => self::EOL_TYPE,
         self::COMMENT_EOL_TYPE => self::COMMENT_EOL_TYPE,
     ];
 
-    public const EMPTY_TOKENS = self::WHITESPACE_TOKENS + self::TAB_TOKENS + self::EOL_TOKENS + [
+    public const EMPTY_TOKENS = self::INDENT_TOKENS + self::EOL_TOKENS + [
         self::COMMENT_START_TYPE => self::COMMENT_START_TYPE,
         self::COMMENT_TEXT_TYPE  => self::COMMENT_TEXT_TYPE,
         self::COMMENT_END_TYPE   => self::COMMENT_END_TYPE,
