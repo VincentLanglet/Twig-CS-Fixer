@@ -447,10 +447,10 @@ final class TokenizerTest extends TestCase
      */
     public function tokenizeInvalidDataProvider(): iterable
     {
-        yield [__DIR__.'/TokenizerTestInvalid1.twig', 'Error Processing Request.'];
+        yield [__DIR__.'/TokenizerTestInvalid1.twig', 'The template is invalid.'];
         yield [__DIR__.'/TokenizerTestInvalid2.twig', 'Unexpected character "&" at line 4.'];
         yield [__DIR__.'/TokenizerTestInvalid3.twig', 'Unclosed "(" at line 1.'];
-        yield [__DIR__.'/TokenizerTestInvalid4.twig', 'Unexpected ")" at line 1.'];
+        yield [__DIR__.'/TokenizerTestInvalid4.twig', 'Unexpected character ")" at line 1.'];
         yield [__DIR__.'/TokenizerTestInvalid5.twig', 'Unexpected character "#" at line 1.'];
         yield [__DIR__.'/TokenizerTestInvalid6.twig', 'Unclosed comment at line 1.'];
     }

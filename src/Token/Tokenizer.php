@@ -127,7 +127,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         if (self::STATE_DATA !== $this->getState()) {
-            throw new CannotTokenizeException('Error Processing Request.');
+            throw CannotTokenizeException::unknownError();
         }
 
         $this->pushToken(Token::EOF_TYPE);
@@ -296,9 +296,7 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartDqString();
         } else {
-            throw new CannotTokenizeException(
-                sprintf('Unexpected character "%s" at line %s.', $currentCode, $this->line)
-            );
+            throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
         }
     }
 
@@ -346,7 +344,7 @@ final class Tokenizer implements TokenizerInterface
         preg_match(self::REGEX_COMMENT_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
         /** @var array<int, array{string, int}> $match */
         if (!isset($match[0])) {
-            throw new CannotTokenizeException(sprintf('Unclosed comment at line %s.', $this->line));
+            throw CannotTokenizeException::unclosedComment($this->line);
         }
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
@@ -600,16 +598,12 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary[] = $token;
         } elseif (\in_array($currentCode, [')', ']', '}'], true)) {
             if ([] === $this->bracketsAndTernary) {
-                throw new CannotTokenizeException(
-                    sprintf('Unexpected "%s" at line %s.', $currentCode, $this->line)
-                );
+                throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
             }
 
             $bracket = array_pop($this->bracketsAndTernary);
             if (strtr($bracket->getValue(), '([{', ')]}') !== $currentCode) {
-                throw new CannotTokenizeException(
-                    sprintf('Unclosed "%s" at line %s.', $bracket->getValue(), $bracket->getLine())
-                );
+                throw CannotTokenizeException::unclosedBracket($bracket->getValue(), $bracket->getLine());
             }
 
             $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode, $bracket);

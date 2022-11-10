@@ -73,7 +73,7 @@ class LinterTest extends TestCase
     {
         $env = new StubbedEnvironment();
         $tokenizer = $this->createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willThrowException(new CannotTokenizeException('Error.'));
+        $tokenizer->method('tokenize')->willThrowException(CannotTokenizeException::unknownError());
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
@@ -89,7 +89,7 @@ class LinterTest extends TestCase
         static::assertCount(1, $messages);
 
         $message = $messages[0];
-        static::assertSame('Unable to tokenize file: Error.', $message->getMessage());
+        static::assertSame('Unable to tokenize file: The template is invalid.', $message->getMessage());
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
     }
