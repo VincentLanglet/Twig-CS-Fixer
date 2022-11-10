@@ -99,7 +99,7 @@ final class Tokenizer implements TokenizerInterface
                 && $nextExpressionStarter['position'] < $this->cursor
             ) {
                 $this->moveCurrentPosition();
-                $expressionStarter     = $nextExpressionStarter;
+                $expressionStarter = $nextExpressionStarter;
                 $nextExpressionStarter = $this->getExpressionStarter(1);
             }
 

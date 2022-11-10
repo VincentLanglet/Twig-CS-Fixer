@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Token\Tokenizer;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
@@ -16,8 +16,6 @@ final class TokenizerTest extends TestCase
 {
     /**
      * @param array<int, int> $expectedTokenTypes
-     *
-     * @throws Exception
      *
      * @dataProvider tokenizeDataProvider
      */
@@ -423,8 +421,6 @@ final class TokenizerTest extends TestCase
     }
 
     /**
-     * @throws Exception
-     *
      * @dataProvider tokenizeInvalidDataProvider
      */
     public function testTokenizeInvalid(string $filePath, string $expectedMessage): void
@@ -438,6 +434,7 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
+        self::expectException(CannotTokenizeException::class);
         self::expectExceptionMessage($expectedMessage);
         $tokenizer->tokenize($source);
     }

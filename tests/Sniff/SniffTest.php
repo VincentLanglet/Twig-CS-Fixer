@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Sniff;
 
-use Exception;
+use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use TwigCsFixer\Report\Report;
@@ -50,7 +50,7 @@ final class SniffTest extends TestCase
 
     public function testSniffWithoutReport(): void
     {
-        self::expectException(Exception::class);
+        self::expectException(BadMethodCallException::class);
         self::expectExceptionMessage(sprintf(
             'Cannot add a message to the sniff "%s" without a report.',
             AbstractSniff::class
