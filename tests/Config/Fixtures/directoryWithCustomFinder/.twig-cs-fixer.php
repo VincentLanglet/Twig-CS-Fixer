@@ -6,7 +6,7 @@ use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 
 $finder = new TwigCsFinder();
-$finder->in('tests/Config/Fixtures/directoryWithCustomFinder');
+$finder->in(__DIR__);
 
 $config = new Config('Custom');
 $config->setFinder($finder);
