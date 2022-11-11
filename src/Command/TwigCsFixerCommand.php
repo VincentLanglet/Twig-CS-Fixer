@@ -64,9 +64,9 @@ final class TwigCsFixerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $workingDir = getcwd();
+        $workingDir = @getcwd();
         if (false === $workingDir) {
-            return $this->fail($output, 'Cannot get the current working directory.');
+            return $this->invalid($output, 'Cannot get the current working directory.');
         }
 
         try {
@@ -98,7 +98,7 @@ final class TwigCsFixerCommand extends Command
             $reporter = new TextFormatter($input, $output);
             $reporter->display($report, $input->getOption('level'));
         } catch (Throwable $exception) {
-            return $this->fail($output, $exception->getMessage());
+            return $this->invalid($output, $exception->getMessage());
         }
 
         // Return a meaningful error code.
@@ -109,10 +109,10 @@ final class TwigCsFixerCommand extends Command
         return self::SUCCESS;
     }
 
-    private function fail(OutputInterface $output, string $message): int
+    private function invalid(OutputInterface $output, string $message): int
     {
         $output->writeln("<error>Error: {$message}</error>");
 
-        return self::FAILURE;
+        return self::INVALID;
     }
 }

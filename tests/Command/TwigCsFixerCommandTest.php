@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use TwigCsFixer\Command\TwigCsFixerCommand;
 use TwigCsFixer\Config\Config;
@@ -24,7 +25,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
             $commandTester->getDisplay()
         );
-        static::assertSame(1, $commandTester->getStatusCode());
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithConfig(): void
@@ -41,7 +42,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $commandTester->getDisplay()
         );
-        static::assertSame(1, $commandTester->getStatusCode());
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithSuccess(): void
@@ -57,7 +58,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
-        static::assertSame(0, $commandTester->getStatusCode());
+        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithOptionFix(): void
@@ -74,7 +75,7 @@ final class TwigCsFixerCommandTest extends TestCase
             '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
             $commandTester->getDisplay()
         );
-        static::assertSame(0, $commandTester->getStatusCode());
+        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithError(): void
@@ -88,7 +89,7 @@ final class TwigCsFixerCommandTest extends TestCase
         ]);
 
         static::assertStringStartsWith('Error: ', $commandTester->getDisplay());
-        static::assertSame(1, $commandTester->getStatusCode());
+        static::assertSame(Command::INVALID, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithCacheByDefault(): void
@@ -109,6 +110,7 @@ final class TwigCsFixerCommandTest extends TestCase
             sprintf('Using cache file "%s".', Config::DEFAULT_CACHE_PATH),
             $commandTester->getDisplay()
         );
+        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithCacheDisabled(): void
@@ -131,5 +133,6 @@ final class TwigCsFixerCommandTest extends TestCase
             'Using cache file',
             $commandTester->getDisplay()
         );
+        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
     }
 }
