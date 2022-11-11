@@ -24,11 +24,13 @@ class FileTestCase extends TestCase
         $fixtureDir = $this->getDir().'/Fixtures';
         $tmpFixtures = $this->getTmpPath($fixtureDir);
 
-        $fs = new Filesystem();
-        $fs->remove($tmpFixtures);
+        if ($tmpFixtures !== $fixtureDir) {
+            $fs = new Filesystem();
+            $fs->remove($tmpFixtures);
 
-        if ($fs->exists($fixtureDir)) {
-            $fs->mirror($fixtureDir, $tmpFixtures);
+            if ($fs->exists($fixtureDir)) {
+                $fs->mirror($fixtureDir, $tmpFixtures);
+            }
         }
 
         $cwd = getcwd();
@@ -71,7 +73,11 @@ class FileTestCase extends TestCase
     {
         if (null === $this->tmp) {
             $tmp = realpath(sys_get_temp_dir().'/twig-cs-fixer');
-            static::assertNotFalse($tmp);
+
+            // On GitHub actions we cannot access the tmp dir
+            if (false === $tmp) {
+                $tmp = $this->getDir();
+            }
 
             $this->tmp = $tmp;
         }
