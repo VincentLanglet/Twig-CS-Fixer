@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Command;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use TwigCsFixer\Command\TwigCsFixerCommand;
 use TwigCsFixer\Config\Config;
+use TwigCsFixer\Tests\FileTestCase;
 
-final class TwigCsFixerCommandTest extends TestCase
+final class TwigCsFixerCommandTest extends FileTestCase
 {
     public function testExecuteWithPaths(): void
     {
@@ -18,7 +18,7 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths' => [__DIR__.'/Fixtures'],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
         ]);
 
         static::assertStringContainsString(
@@ -34,8 +34,8 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [__DIR__.'/Fixtures'],
-            '--config' => __DIR__.'/Fixtures/.twig-cs-fixer.php',
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer.php'),
         ]);
 
         static::assertStringContainsString(
@@ -51,7 +51,7 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths' => [__DIR__.'/Fixtures/file.twig'],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures/file.twig')],
         ]);
 
         static::assertStringContainsString(
@@ -67,7 +67,7 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths' => [__DIR__.'/Fixtures/file.twig'],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures/file.twig')],
             '--fix' => true,
         ]);
 
@@ -84,8 +84,8 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [__DIR__.'/Fixtures'],
-            '--config' => __DIR__.'/Fixtures/.config-not-found.php',
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.config-not-found.php'),
         ]);
 
         static::assertStringStartsWith('Error: ', $commandTester->getDisplay());
@@ -98,12 +98,14 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
 
+        $path = $this->getTmpPath(__DIR__.'/Fixtures/file.twig');
+
         // Run two times to be sure to generate the cache.
         $commandTester->execute([
-            'paths' => [__DIR__.'/Fixtures/file.twig'],
+            'paths' => [$path],
         ]);
         $commandTester->execute([
-            'paths' => [__DIR__.'/Fixtures/file.twig'],
+            'paths' => [$path],
         ]);
 
         static::assertStringContainsString(
@@ -119,13 +121,15 @@ final class TwigCsFixerCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
 
+        $path = $this->getTmpPath(__DIR__.'/Fixtures/file.twig');
+
         // Run two times to be sure to generate the cache if we were using one.
         $commandTester->execute([
-            'paths'      => [__DIR__.'/Fixtures/file.twig'],
+            'paths'      => [$path],
             '--no-cache' => true,
         ]);
         $commandTester->execute([
-            'paths'      => [__DIR__.'/Fixtures/file.twig'],
+            'paths'      => [$path],
             '--no-cache' => true,
         ]);
 

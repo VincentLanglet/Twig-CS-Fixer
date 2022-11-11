@@ -10,8 +10,9 @@ use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Tests\FileTestCase;
 
-class CacheFileHandlerTest extends TestCase
+class CacheFileHandlerTest extends FileTestCase
 {
     /**
      * @dataProvider readFailureDataProvider
@@ -33,19 +34,18 @@ class CacheFileHandlerTest extends TestCase
 
     public function testReadFailurePermission(): void
     {
-        $file = __DIR__.'/Fixtures/notReadable';
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/notReadable');
         chmod($file, 0222);
 
         $cacheFileHandler = new CacheFileHandler($file);
         static::assertNull($cacheFileHandler->read());
-
-        // Restore permissions
-        chmod($file, 0644);
     }
 
     public function testReadSuccess(): void
     {
-        $cacheFileHandler = new CacheFileHandler(__DIR__.'/Fixtures/readable');
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/readable');
+
+        $cacheFileHandler = new CacheFileHandler($file);
         static::assertNotNull($cacheFileHandler->read());
     }
 
@@ -59,28 +59,26 @@ class CacheFileHandlerTest extends TestCase
 
     public function testWriteFailureInDirectory(): void
     {
-        $cacheFileHandler = new CacheFileHandler(__DIR__);
+        $dir = $this->getTmpPath(__DIR__.'/Fixtures');
+        $cacheFileHandler = new CacheFileHandler($dir);
 
-        $this->expectExceptionObject(CannotWriteCacheException::locationIsDirectory(__DIR__));
+        $this->expectExceptionObject(CannotWriteCacheException::locationIsDirectory($dir));
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
     }
 
     public function testWriteFailurePermission(): void
     {
-        $file = __DIR__.'/Fixtures/notWritable';
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/notWritable');
         chmod($file, 0444);
         $cacheFileHandler = new CacheFileHandler($file);
 
         $this->expectExceptionObject(CannotWriteCacheException::locationIsNotWritable($file));
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', new Ruleset())));
-
-        // Restore permissions
-        chmod($file, 0644);
     }
 
     public function testWriteFailureEncoding(): void
     {
-        $file = __DIR__.'/Fixtures/writable';
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/writable');
         $cacheFileHandler = new CacheFileHandler($file);
 
         $this->expectException(CannotWriteCacheException::class);
@@ -89,7 +87,7 @@ class CacheFileHandlerTest extends TestCase
 
     public function testWriteSuccess(): void
     {
-        $file = __DIR__.'/Fixtures/writable';
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/writable');
         unlink($file);
         $cacheFileHandler = new CacheFileHandler($file);
 

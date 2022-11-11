@@ -11,11 +11,12 @@ use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Sniff\AbstractSniff;
+use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 
-class FixerTest extends TestCase
+class FixerTest extends FileTestCase
 {
     public function testUnreadableFile(): void
     {
@@ -24,7 +25,7 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
 
-        $file = __DIR__.'/Fixtures/file_not_readable.twig';
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/file_not_readable.twig');
         $this->expectExceptionObject(CannotFixFileException::fileNotReadable($file));
         $fixer->fixFile($file);
     }
@@ -40,14 +41,16 @@ class FixerTest extends TestCase
         $fixer = new Fixer($ruleset, $tokenizer);
 
         $this->expectExceptionObject($exception);
-        $fixer->fixFile(__DIR__.'/Fixtures/file.twig');
+        $fixer->fixFile($this->getTmpPath(__DIR__.'/Fixtures/file.twig'));
     }
 
     public function testReplaceToken(): void
     {
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/file.twig');
+
         $tokenizer = $this->createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturn([
-            new Token(Token::EOF_TYPE, 0, 0, __DIR__.'/Fixtures/file.twig'),
+            new Token(Token::EOF_TYPE, 0, 0, $file),
         ]);
 
         $sniff = new class () extends AbstractSniff {
@@ -89,14 +92,16 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff->enableFixer($fixer);
-        $fixer->fixFile(__DIR__.'/Fixtures/file.twig');
+        $fixer->fixFile($file);
     }
 
     public function testReplaceTokenIsDesignedAgainstInfiniteLoop(): void
     {
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/file.twig');
+
         $tokenizer = $this->createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturn([
-            new Token(Token::EOF_TYPE, 0, 0, __DIR__.'/Fixtures/file.twig'),
+            new Token(Token::EOF_TYPE, 0, 0, $file),
         ]);
 
         $sniff = new class () extends AbstractSniff {
@@ -121,18 +126,14 @@ class FixerTest extends TestCase
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff->enableFixer($fixer);
 
-        $file = __DIR__.'/Fixtures/file.twig';
         $this->expectExceptionObject(CannotFixFileException::infiniteLoop($file));
         $fixer->fixFile($file);
     }
 
     public function testReplaceTokenIsDesignedAgainstConflict(): void
     {
-        // Avoid mutation-testing to modify the file
-        $file = __DIR__.'/Fixtures/file.twig';
-        $tmpFile = sys_get_temp_dir().'/file.twig';
-        $copySuccessful = copy($file, $tmpFile);
-        static::assertTrue($copySuccessful);
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/file.twig');
+        $initialContent = file_get_contents($file);
 
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
@@ -180,20 +181,22 @@ class FixerTest extends TestCase
         $sniff1->enableFixer($fixer);
         $sniff2->enableFixer($fixer);
 
-        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($tmpFile));
+        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($file));
         try {
-            $fixer->fixFile($tmpFile);
+            $fixer->fixFile($file);
         } finally {
             // No change should be done (even if there is no conflict on token position 1)
-            static::assertFileEquals($file, $tmpFile);
+            static::assertSame($initialContent, file_get_contents($file));
         }
     }
 
     public function testAddContentMethods(): void
     {
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/file.twig');
+
         $tokenizer = $this->createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturn([
-            new Token(Token::EOF_TYPE, 0, 0, __DIR__.'/Fixtures/file.twig'),
+            new Token(Token::EOF_TYPE, 0, 0, $file),
         ]);
 
         $sniff = new class () extends AbstractSniff {
@@ -231,6 +234,6 @@ class FixerTest extends TestCase
 
         $fixer = new Fixer($ruleset, $tokenizer);
         $sniff->enableFixer($fixer);
-        $fixer->fixFile(__DIR__.'/Fixtures/file.twig');
+        $fixer->fixFile($file);
     }
 }
