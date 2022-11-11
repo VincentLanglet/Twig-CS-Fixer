@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache\FileHandler;
 
-use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Signature;

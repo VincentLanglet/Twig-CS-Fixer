@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Exception;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use TwigCsFixer\Exception\CannotFixFileException;
 
 class CannotFixFileExceptionTest extends TestCase

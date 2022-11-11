@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests;
 
 use InvalidArgumentException;
@@ -9,9 +11,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FileTestCase extends TestCase
 {
-    private const TMP_DIR = 'twig-cs-fixer';
-
     private string $cwd;
+
+    private ?string $tmp = null;
 
     private ?string $dir = null;
 
@@ -45,23 +47,35 @@ class FileTestCase extends TestCase
 
     protected function getTmpPath(string $path): string
     {
-        if (strpos($path, $this->getDir()) !== 0) {
+        if (0 !== strpos($path, $this->getDir())) {
             throw new InvalidArgumentException(sprintf('The path "%s" is not supported', $path));
         }
 
-        return str_replace($this->getDir(), realpath('/tmp/'.self::TMP_DIR), $path);
+        return str_replace($this->getDir(), $this->getTmp(), $path);
     }
 
     private function getDir(): string
     {
-        if ($this->dir === null) {
+        if (null === $this->dir) {
             $reflectionClass = new ReflectionClass($this);
             $fileName = $reflectionClass->getFileName();
             static::assertNotFalse($fileName);
 
-            $this->dir = dirname($fileName);
+            $this->dir = \dirname($fileName);
         }
 
         return $this->dir;
+    }
+
+    private function getTmp(): string
+    {
+        if (null === $this->tmp) {
+            $tmp = realpath(sys_get_temp_dir().'/twig-cs-fixer');
+            static::assertNotFalse($tmp);
+
+            $this->tmp = $tmp;
+        }
+
+        return $this->tmp;
     }
 }

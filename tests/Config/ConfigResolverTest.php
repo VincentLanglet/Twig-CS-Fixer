@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Config;
 
-use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
