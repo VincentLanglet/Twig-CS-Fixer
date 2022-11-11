@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
 final class TwigCsFixerTest extends FileTestCase

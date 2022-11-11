@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Exception;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
-use TwigCsFixer\Exception\CannotFixFileException;
-use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 
 class CannotWriteCacheExceptionTest extends TestCase
