@@ -16,22 +16,14 @@ final class SniffViolation
     public const LEVEL_ERROR = 2;
     public const LEVEL_FATAL = 3;
 
-    private int $level;
-
-    private string $message;
-
-    private ?int $line;
-
     private ?int $linePosition = null;
 
-    private string $filename;
-
-    public function __construct(int $level, string $message, string $filename, ?int $line = null)
-    {
-        $this->level = $level;
-        $this->message = $message;
-        $this->line = $line;
-        $this->filename = $filename;
+    public function __construct(
+        private int $level,
+        private string $message,
+        private string $filename,
+        private ?int $line = null
+    ) {
     }
 
     public function getLevel(): int
@@ -41,18 +33,13 @@ final class SniffViolation
 
     public static function getLevelAsString(int $level): string
     {
-        switch ($level) {
-            case self::LEVEL_NOTICE:
-                return Report::MESSAGE_TYPE_NOTICE;
-            case self::LEVEL_WARNING:
-                return Report::MESSAGE_TYPE_WARNING;
-            case self::LEVEL_ERROR:
-                return Report::MESSAGE_TYPE_ERROR;
-            case self::LEVEL_FATAL:
-                return Report::MESSAGE_TYPE_FATAL;
-            default:
-                throw new InvalidArgumentException(sprintf('Level "%s" is not supported.', $level));
-        }
+        return match ($level) {
+            self::LEVEL_NOTICE  => Report::MESSAGE_TYPE_NOTICE,
+            self::LEVEL_WARNING => Report::MESSAGE_TYPE_WARNING,
+            self::LEVEL_ERROR   => Report::MESSAGE_TYPE_ERROR,
+            self::LEVEL_FATAL   => Report::MESSAGE_TYPE_FATAL,
+            default             => throw new InvalidArgumentException(sprintf('Level "%s" is not supported.', $level)),
+        };
     }
 
     public static function getLevelAsInt(string $level): int

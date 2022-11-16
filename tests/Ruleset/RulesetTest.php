@@ -28,7 +28,7 @@ class RulesetTest extends TestCase
         $ruleset->addSniff($sniff);
         static::assertCount(1, $ruleset->getSniffs());
 
-        $ruleset->removeSniff(\get_class($sniff));
+        $ruleset->removeSniff($sniff::class);
         static::assertCount(0, $ruleset->getSniffs());
     }
 

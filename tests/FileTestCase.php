@@ -49,7 +49,7 @@ class FileTestCase extends TestCase
 
     protected function getTmpPath(string $path): string
     {
-        if (0 !== strpos($path, $this->getDir())) {
+        if (!str_starts_with($path, $this->getDir())) {
             throw new InvalidArgumentException(sprintf('The path "%s" is not supported', $path));
         }
 

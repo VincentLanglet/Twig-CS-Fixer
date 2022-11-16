@@ -51,7 +51,7 @@ abstract class AbstractSniff implements SniffInterface
      * @param int|int[]       $type
      * @param string|string[] $value
      */
-    protected function isTokenMatching(Token $token, $type, $value = []): bool
+    protected function isTokenMatching(Token $token, int|array $type, string|array $value = []): bool
     {
         if (!\is_array($type)) {
             $type = [$type];
@@ -67,10 +67,8 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param int|int[]   $type
      * @param list<Token> $tokens
-     *
-     * @return int|false
      */
-    protected function findNext($type, array $tokens, int $start, bool $exclude = false)
+    protected function findNext(int|array $type, array $tokens, int $start, bool $exclude = false): int|false
     {
         $i = 0;
 
@@ -91,10 +89,8 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param int|int[]   $type
      * @param list<Token> $tokens
-     *
-     * @return int|false
      */
-    protected function findPrevious($type, array $tokens, int $start, bool $exclude = false)
+    protected function findPrevious(int|array $type, array $tokens, int $start, bool $exclude = false): int|false
     {
         $i = 0;
 

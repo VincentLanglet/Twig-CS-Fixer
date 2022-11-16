@@ -30,7 +30,7 @@ final class Ruleset
      */
     public function addSniff(SniffInterface $sniff): self
     {
-        $this->sniffs[\get_class($sniff)] = $sniff;
+        $this->sniffs[$sniff::class] = $sniff;
 
         return $this;
     }

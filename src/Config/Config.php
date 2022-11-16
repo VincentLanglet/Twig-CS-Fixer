@@ -19,8 +19,6 @@ final class Config
     public const DEFAULT_PATH = '.twig-cs-fixer.php';
     public const DEFAULT_CACHE_PATH = '.twig-cs-fixer.cache';
 
-    private string $name;
-
     private Ruleset $ruleset;
 
     private Finder $finder;
@@ -34,9 +32,8 @@ final class Config
      */
     private array $tokenParsers = [];
 
-    public function __construct(string $name = 'Default')
+    public function __construct(private string $name = 'Default')
     {
-        $this->name = $name;
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new Generic());
         $this->finder = new TwigCsFinder();

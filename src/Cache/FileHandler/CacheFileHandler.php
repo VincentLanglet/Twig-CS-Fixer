@@ -12,11 +12,8 @@ use UnexpectedValueException;
 
 final class CacheFileHandler implements CacheFileHandlerInterface
 {
-    private string $file;
-
-    public function __construct(string $file)
+    public function __construct(private string $file)
     {
-        $this->file = $file;
     }
 
     public function getFile(): string
@@ -37,7 +34,7 @@ final class CacheFileHandler implements CacheFileHandlerInterface
 
         try {
             return CacheEncoder::fromJson($content);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             return null;
         }
     }
