@@ -6,11 +6,8 @@ namespace TwigCsFixer\Cache;
 
 final class Directory
 {
-    private string $directoryName;
-
-    public function __construct(string $directoryName)
+    public function __construct(private string $directoryName)
     {
-        $this->directoryName = $directoryName;
     }
 
     public function getRelativePathTo(string $file): string

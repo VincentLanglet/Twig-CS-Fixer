@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 $rules = [
     // Default
-    '@PHP74Migration'                                  => true,
-    '@PHP74Migration:risky'                            => true,
+    '@PHP80Migration'                                  => true,
+    '@PHP80Migration:risky'                            => true,
     '@PSR12'                                           => true,
     '@PSR12:risky'                                     => true,
     '@Symfony'                                         => true,

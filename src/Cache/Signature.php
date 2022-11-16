@@ -8,17 +8,11 @@ use TwigCsFixer\Ruleset\Ruleset;
 
 final class Signature
 {
-    private string $phpVersion;
-
-    private string $fixerVersion;
-
-    private Ruleset $ruleset;
-
-    public function __construct(string $phpVersion, string $fixerVersion, Ruleset $ruleset)
-    {
-        $this->phpVersion = $phpVersion;
-        $this->fixerVersion = $fixerVersion;
-        $this->ruleset = $ruleset;
+    public function __construct(
+        private string $phpVersion,
+        private string $fixerVersion,
+        private Ruleset $ruleset
+    ) {
     }
 
     public function getPhpVersion(): string

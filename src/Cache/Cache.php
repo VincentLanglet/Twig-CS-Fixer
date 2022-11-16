@@ -8,16 +8,13 @@ use InvalidArgumentException;
 
 final class Cache
 {
-    private Signature $signature;
-
     /**
      * @var array<string, string>
      */
     private array $hashes = [];
 
-    public function __construct(Signature $signature)
+    public function __construct(private Signature $signature)
     {
-        $this->signature = $signature;
     }
 
     /**

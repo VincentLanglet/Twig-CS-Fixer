@@ -16,17 +16,14 @@ use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 
 /**
- * Resolve config from `.twig-cs-fixer.php` is provided
+ * Resolve config from `.twig-cs-fixer.php` if provided
  */
 final class ConfigResolver
 {
     private const PACKAGE_NAME = 'vincentlanglet/twig-cs-fixer';
 
-    private string $workingDir;
-
-    public function __construct(string $workingDir)
+    public function __construct(private string $workingDir)
     {
-        $this->workingDir = $workingDir;
     }
 
     /**
@@ -98,7 +95,7 @@ final class ConfigResolver
         $nestedFinder = null;
         try {
             $nestedFinder = $finder->getIterator();
-        } catch (LogicException $exception) {
+        } catch (LogicException) {
             // Only way to know if in() method has not been called
         }
 

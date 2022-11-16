@@ -23,7 +23,7 @@ final class TestHelper
         }
 
         $cwd = $cwd.\DIRECTORY_SEPARATOR;
-        if (0 === strpos($filePath, $cwd)) {
+        if (str_starts_with($filePath, $cwd)) {
             $filename = substr($filePath, \strlen($cwd));
         } else {
             $filename = $filePath;
@@ -66,16 +66,11 @@ final class TestHelper
         $diff = [];
         foreach ($diffLines as $line) {
             if (isset($line[0])) {
-                switch ($line[0]) {
-                    case '-':
-                        $diff[] = "\033[31m{$line}\033[0m";
-                        break;
-                    case '+':
-                        $diff[] = "\033[32m{$line}\033[0m";
-                        break;
-                    default:
-                        $diff[] = $line;
-                }
+                $diff[] = match ($line[0]) {
+                    '-'     => "\033[31m{$line}\033[0m",
+                    '+'     => "\033[32m{$line}\033[0m",
+                    default => $line,
+                };
             }
         }
 
