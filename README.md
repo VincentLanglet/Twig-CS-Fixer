@@ -13,14 +13,16 @@
 This standard can be installed with [Composer](https://getcomposer.org/).
 
 Add the coding standard as a dependency of your project
+
 ```bash
 composer require --dev vincentlanglet/twig-cs-fixer
 ```
 
 Then, use it!
+
 ```bash
-bin/twig-cs-fixer lint /path/to/code
-bin/twig-cs-fixer lint --fix /path/to/code
+vendor/bin/twig-cs-fixer lint /path/to/code
+vendor/bin/twig-cs-fixer lint --fix /path/to/code
 ```
 
 ## Twig Coding Standard Rules
@@ -59,6 +61,7 @@ Removes spaces before and after opening and closing of arrays and hashes.
 ### Standard
 
 By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
+
  - `BlankEOFSniff`: ensures that files end with one blank line.
  - `EmptyLinesSniff`: ensures that 2 empty lines do not follow each other.
  - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
@@ -66,6 +69,7 @@ By default, the generic standard is enabled with the twig coding standard rules 
 
 If you want to use a custom standard and/or add/disable a sniff, you can provide your own configuration with
 a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
+
 ```php
 <?php
 
@@ -80,8 +84,9 @@ return $config;
 ```
 
 If your config is not located in your current directory, you can specify its path using `--config` when running the command:
+
 ```bash
-bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
+vendor/bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ```
 
 ### Files
@@ -90,6 +95,7 @@ By default, all `.twig` files in the current directory are linted, except the on
 
 If you want to lint specific files or directories you can pass them as argument. If you want a more sophisticated
 rule, you can configure it in the `.twig-cs-fixer.php` file:
+
 ```php
 <?php
 
@@ -108,6 +114,7 @@ By default, cache is enabled and stored in `.twig-cs-fixer.cache`. Further runs 
 faster. Cache is invalidated when a different PHP version, twig-cs-fixer version or ruleset is used.
 
 If you want a custom cache location you can configure it in `.twig-cs-fixer.php`:
+
 ```php
 <?php
 
@@ -118,10 +125,13 @@ return $config;
 ```
 
 To disable cache you can either pass `--no-cache` when running the command:
+
 ```bash
-bin/twig-cs-fixer lint --no-cache
+vendor/bin/twig-cs-fixer lint --no-cache
 ```
+
 or set the cache file to `null` in your config:
+
 ```php
 <?php
 
