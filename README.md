@@ -19,6 +19,7 @@ composer require --dev vincentlanglet/twig-cs-fixer
 ```
 
 Then, use it!
+
 ```bash
 vendor/bin/twig-cs-fixer lint /path/to/code
 vendor/bin/twig-cs-fixer lint --fix /path/to/code
