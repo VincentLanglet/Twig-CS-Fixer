@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use PhpCsFixer\Finder;
+use PhpCsFixer\Config;
+
 $rules = [
     // Default
     '@PHP80Migration'                                  => true,
@@ -58,9 +61,9 @@ $rules = [
     'phpdoc_no_empty_return'                           => true,
 ];
 
-$finder = PhpCsFixer\Finder::create()->in(__DIR__)->ignoreDotFiles(false);
+$finder = Finder::create()->in(__DIR__)->ignoreDotFiles(false);
 
-$config = new PhpCsFixer\Config();
+$config = new Config();
 $config
     ->setFinder($finder)
     ->setRiskyAllowed(true)

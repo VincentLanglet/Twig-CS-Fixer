@@ -8,19 +8,10 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Exceptions\DefaultExceptionTypeResolver;
 use PHPStan\Rules\Exceptions\ExceptionTypeResolver as PHPStanExceptionTypeResolver;
 
-/**
- * Class ExceptionTypeResolver
- */
 class ExceptionTypeResolver implements PHPStanExceptionTypeResolver
 {
-    /**
-     * @var DefaultExceptionTypeResolver
-     */
-    private $defaultExceptionTypeResolver;
-
-    public function __construct(DefaultExceptionTypeResolver $defaultExceptionTypeResolver)
+    public function __construct(private DefaultExceptionTypeResolver $defaultExceptionTypeResolver)
     {
-        $this->defaultExceptionTypeResolver = $defaultExceptionTypeResolver;
     }
 
     public function isCheckedException(string $className, Scope $scope): bool
