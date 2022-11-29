@@ -17,7 +17,6 @@ parameters:
     parallel:
         maximumNumberOfProcesses: 4
     exceptions:
-        uncheckedExceptionRegexes: []
         uncheckedExceptionClasses:
             - LogicException
         check:
