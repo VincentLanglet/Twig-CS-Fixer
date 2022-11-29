@@ -74,8 +74,15 @@ a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
 <?php
 
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
+// You can load a whole standard
 $ruleset->addStandard(new TwigCsFixer\Standard\Generic());
+// You can manually remove sniff by classname
 $ruleset->removeSniff(TwigCsFixer\Sniff\EmptyLinesSniff::class);
+// You can add/override sniff with a custom config
+$ruleset->addSniff(new TwigCsFixer\Sniff\PunctuationSpacingSniff(
+    ['}' => 1],
+    ['{' => 1],
+));
 
 $config = new TwigCsFixer\Config\Config();
 $config->setRuleset($ruleset);

@@ -32,6 +32,28 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     ];
 
     /**
+     * @var array<string, int|null>
+     */
+    private array $spaceBeforeConfig;
+
+    /**
+     * @var array<string, int|null>
+     */
+    private array $spaceAfterConfig;
+
+    /**
+     * @param array<string, int|null> $spaceBeforeOverride
+     * @param array<string, int|null> $spaceAfterOverride
+     */
+    public function __construct(
+        array $spaceBeforeOverride = [],
+        array $spaceAfterOverride = []
+    ) {
+        $this->spaceBeforeConfig = array_merge(self::SPACE_BEFORE, $spaceBeforeOverride);
+        $this->spaceAfterConfig = array_merge(self::SPACE_AFTER, $spaceAfterOverride);
+    }
+
+    /**
      * @param list<Token> $tokens
      */
     protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
@@ -41,7 +63,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
             return null;
         }
 
-        return self::SPACE_BEFORE[$token->getValue()] ?? null;
+        return $this->spaceBeforeConfig[$token->getValue()] ?? null;
     }
 
     /**
@@ -63,6 +85,6 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
             return null;
         }
 
-        return self::SPACE_AFTER[$token->getValue()] ?? null;
+        return $this->spaceAfterConfig[$token->getValue()] ?? null;
     }
 }

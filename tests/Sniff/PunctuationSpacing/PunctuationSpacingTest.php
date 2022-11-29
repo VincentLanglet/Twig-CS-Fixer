@@ -29,4 +29,30 @@ final class PunctuationSpacingTest extends AbstractSniffTestCase
             [7 => 15],
         ]);
     }
+
+    public function testSniffWithConfig(): void
+    {
+        $this->checkSniff(
+            new PunctuationSpacingSniff(
+                [
+                    ')' => 1,
+                    '}' => 1,
+                    ']' => null,
+                    ':' => null,
+                    ',' => null,
+                    '|' => 1,
+                ],
+                [
+                    '(' => 1,
+                    '{' => null,
+                    '[' => null,
+                    ':' => null,
+                    ',' => 1,
+                    '|' => 1,
+                ]
+            ),
+            [],
+            __DIR__.'/PunctuationSpacingTest.config.twig'
+        );
+    }
 }
