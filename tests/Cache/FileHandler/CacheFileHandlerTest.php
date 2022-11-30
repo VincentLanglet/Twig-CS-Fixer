@@ -10,7 +10,7 @@ use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 use TwigCsFixer\Tests\FileTestCase;
 
-class CacheFileHandlerTest extends FileTestCase
+final class CacheFileHandlerTest extends FileTestCase
 {
     /**
      * @dataProvider readFailureDataProvider

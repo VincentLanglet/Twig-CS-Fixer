@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Exception\CannotFixFileException;
 
-class CannotFixFileExceptionTest extends TestCase
+final class CannotFixFileExceptionTest extends TestCase
 {
     public function testException(): void
     {

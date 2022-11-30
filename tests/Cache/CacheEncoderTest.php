@@ -12,7 +12,7 @@ use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Exception\CannotJsonEncodeException;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 
-class CacheEncoderTest extends TestCase
+final class CacheEncoderTest extends TestCase
 {
     /**
      * @dataProvider fromJsonFailureDataProvider

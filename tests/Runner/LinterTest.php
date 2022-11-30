@@ -18,7 +18,7 @@ use TwigCsFixer\Tests\Runner\Fixtures\BuggySniff;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 
-class LinterTest extends TestCase
+final class LinterTest extends TestCase
 {
     public function testUnreadableFilesAreReported(): void
     {

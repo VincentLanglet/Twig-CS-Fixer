@@ -7,7 +7,7 @@ namespace TwigCsFixer\Exception;
 use RuntimeException;
 use Throwable;
 
-class CannotTokenizeException extends RuntimeException
+final class CannotTokenizeException extends RuntimeException
 {
     private function __construct(string $message, int $code = 0, ?Throwable $previous = null)
     {

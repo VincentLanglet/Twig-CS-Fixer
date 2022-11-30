@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\Signature;
 
-class CacheTest extends TestCase
+final class CacheTest extends TestCase
 {
     public function testCache(): void
     {

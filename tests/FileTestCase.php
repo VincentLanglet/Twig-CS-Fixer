@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FileTestCase extends TestCase
+abstract class FileTestCase extends TestCase
 {
     private string $cwd;
 

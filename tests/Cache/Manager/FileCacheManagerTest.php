@@ -11,7 +11,7 @@ use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Signature;
 
-class FileCacheManagerTest extends TestCase
+final class FileCacheManagerTest extends TestCase
 {
     public function testNeedFixing(): void
     {

@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Exception\CannotTokenizeException;
 
-class CannotTokenizeExceptionTest extends TestCase
+final class CannotTokenizeExceptionTest extends TestCase
 {
     public function testException(): void
     {

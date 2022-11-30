@@ -13,7 +13,7 @@ use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Tests\Environment\Fixtures\CustomTokenParser;
 
-class StubbedEnvironmentTest extends TestCase
+final class StubbedEnvironmentTest extends TestCase
 {
     public function testFilterIsStubbed(): void
     {

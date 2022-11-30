@@ -14,7 +14,7 @@ use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\Generic;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testConfigName(): void
     {

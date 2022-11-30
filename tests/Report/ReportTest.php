@@ -9,7 +9,7 @@ use SplFileInfo;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 
-class ReportTest extends TestCase
+final class ReportTest extends TestCase
 {
     public function testReportDefaultState(): void
     {

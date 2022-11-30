@@ -8,7 +8,7 @@ use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
-class CustomTokenParser extends AbstractTokenParser
+final class CustomTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token): Node
     {

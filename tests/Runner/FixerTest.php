@@ -16,7 +16,7 @@ use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 
-class FixerTest extends FileTestCase
+final class FixerTest extends FileTestCase
 {
     public function testUnreadableFile(): void
     {
