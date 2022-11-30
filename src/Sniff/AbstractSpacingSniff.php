@@ -13,8 +13,8 @@ abstract class AbstractSpacingSniff extends AbstractSniff
 {
     protected function process(int $tokenPosition, array $tokens): void
     {
-        $spaceAfter = $this->shouldHaveSpaceAfter($tokenPosition, $tokens);
-        $spaceBefore = $this->shouldHaveSpaceBefore($tokenPosition, $tokens);
+        $spaceAfter = $this->getSpaceAfter($tokenPosition, $tokens);
+        $spaceBefore = $this->getSpaceBefore($tokenPosition, $tokens);
 
         if (null !== $spaceAfter) {
             $this->checkSpaceAfter($tokenPosition, $tokens, $spaceAfter);
@@ -28,12 +28,12 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     /**
      * @param list<Token> $tokens
      */
-    abstract protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int;
+    abstract protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int;
 
     /**
      * @param list<Token> $tokens
      */
-    abstract protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int;
+    abstract protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int;
 
     /**
      * @param list<Token> $tokens

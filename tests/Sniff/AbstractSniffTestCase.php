@@ -19,11 +19,6 @@ use TwigCsFixer\Token\Tokenizer;
 abstract class AbstractSniffTestCase extends TestCase
 {
     /**
-     * Should call $this->checkSniff(new Sniff(), [...]);
-     */
-    abstract public function testSniff(): void;
-
-    /**
      * @param array<array<int, int>> $expects
      */
     protected function checkSniff(SniffInterface $sniff, array $expects, ?string $filePath = null): void

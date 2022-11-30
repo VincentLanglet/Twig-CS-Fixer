@@ -18,7 +18,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     /**
      * @param list<Token> $tokens
      */
-    protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
         if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, self::NO_SPACE_BEFORE)) {
@@ -31,7 +31,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     /**
      * @param list<Token> $tokens
      */
-    protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
 
@@ -42,7 +42,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
         if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, self::ONE_SPACE_AFTER)) {
             // We cannot add one space after, if the next token need zero space before: `[1,2,3,]`.
             $nextPosition = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
-            if (false !== $nextPosition && null !== $this->shouldHaveSpaceBefore($nextPosition, $tokens)) {
+            if (false !== $nextPosition && null !== $this->getSpaceBefore($nextPosition, $tokens)) {
                 return null;
             }
 

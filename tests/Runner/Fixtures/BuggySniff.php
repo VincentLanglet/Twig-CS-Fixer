@@ -15,7 +15,7 @@ class BuggySniff extends AbstractSpacingSniff
     /**
      * @param array<int, Token> $tokens
      */
-    protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
         if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, [']'])) {
@@ -28,7 +28,7 @@ class BuggySniff extends AbstractSpacingSniff
     /**
      * @param array<int, Token> $tokens
      */
-    protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
         if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, [','])) {

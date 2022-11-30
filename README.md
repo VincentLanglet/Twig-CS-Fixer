@@ -48,13 +48,13 @@ Removes any space before and after the `..` operator.
 
 Ensures there is a single space after `:` in hashes and `,` in arrays and hashes.
 
-Removes spaces after an opening parenthesis and before a closing parenthesis in expressions.
+Removes any space after an opening parenthesis and before a closing parenthesis in expressions.
 
-Removes spaces before and after the following operators: `|`, `.`, `[]`.
+Removes any space before and after the following operators: `|`, `.`, `[]`.
 
-Removes spaces before and after parenthesis in filter and function calls.
+Removes any space before and after parenthesis in filter and function calls.
 
-Removes spaces before and after opening and closing of arrays and hashes.
+Removes any space before and after opening and closing of arrays and hashes.
 
 ## Custom configuration
 
@@ -137,6 +137,19 @@ or set the cache file to `null` in your config:
 
 $config = new TwigCsFixer\Config\Config();
 $config->setCacheFile(null);
+
+return $config;
+```
+
+### Token parser
+
+If you're using custom token parsers, they can be added in your config:
+
+```php
+<?php
+
+$config = new TwigCsFixer\Config\Config();
+$config->addTokenParser(new App\Twig\CustomTokenParser());
 
 return $config;
 ```
