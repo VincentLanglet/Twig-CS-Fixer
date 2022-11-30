@@ -72,14 +72,14 @@ class FileTestCase extends TestCase
     private function getTmp(): string
     {
         if (null === $this->tmp) {
-            $tmp = realpath(sys_get_temp_dir().'/twig-cs-fixer');
+            $tmp = realpath(sys_get_temp_dir());
 
             // On GitHub actions we cannot access the tmp dir
             if (false === $tmp) {
-                $tmp = $this->getDir();
+                $this->tmp = $this->getDir();
+            } else {
+                $this->tmp = $tmp.'/twig-cs-fixer';
             }
-
-            $this->tmp = $tmp;
         }
 
         return $this->tmp;

@@ -15,7 +15,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     /**
      * @param list<Token> $tokens
      */
-    protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
         if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
@@ -42,7 +42,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     /**
      * @param list<Token> $tokens
      */
-    protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
         if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
