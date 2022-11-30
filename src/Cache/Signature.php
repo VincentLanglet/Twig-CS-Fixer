@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-use TwigCsFixer\Ruleset\Ruleset;
-
 final class Signature
 {
     public function __construct(
         private string $phpVersion,
         private string $fixerVersion,
-        private Ruleset $ruleset
+        private string $ruleset
     ) {
     }
 
@@ -25,7 +23,7 @@ final class Signature
         return $this->fixerVersion;
     }
 
-    public function getRuleset(): Ruleset
+    public function getRuleset(): string
     {
         return $this->ruleset;
     }
@@ -34,6 +32,6 @@ final class Signature
     {
         return $this->phpVersion === $signature->getPhpVersion()
             && $this->fixerVersion === $signature->getFixerVersion()
-            && $this->ruleset->equals($signature->getRuleset());
+            && $this->ruleset === $signature->getRuleset();
     }
 }

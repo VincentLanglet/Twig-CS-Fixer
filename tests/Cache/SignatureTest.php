@@ -6,19 +6,16 @@ namespace TwigCsFixer\Tests\Cache;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Signature;
-use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
 
 class SignatureTest extends TestCase
 {
     public function testSignature(): void
     {
-        $ruleSet = new Ruleset();
-        $signature = new Signature('8.0', '1', $ruleSet);
+        $signature = new Signature('8.0', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
 
         static::assertSame('8.0', $signature->getPhpVersion());
         static::assertSame('1', $signature->getFixerVersion());
-        static::assertSame($ruleSet, $signature->getRuleset());
+        static::assertSame('{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}', $signature->getRuleset());
     }
 
     /**
@@ -35,22 +32,16 @@ class SignatureTest extends TestCase
      */
     public function equalsDataProvider(): iterable
     {
-        $ruleSet1 = new Ruleset();
-        $ruleSet1->addSniff(new OperatorSpacingSniff());
-        $ruleSet2 = new Ruleset();
-        $ruleSet3 = new Ruleset();
-        $ruleSet3->addSniff(new OperatorSpacingSniff());
-
-        $signature1 = new Signature('8.0', '1', $ruleSet1);
-        $signature2 = new Signature('8.1', '1', $ruleSet1);
-        $signature3 = new Signature('8.0', '2', $ruleSet1);
-        $signature4 = new Signature('8.0', '1', $ruleSet2);
-        $signature5 = new Signature('8.0', '1', $ruleSet3);
+        $signature1 = new Signature('8.0', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
+        $signature2 = new Signature('8.0', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
+        $signature3 = new Signature('8.1', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
+        $signature4 = new Signature('8.0', '2', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
+        $signature5 = new Signature('8.0', '1', '');
 
         yield [$signature1, $signature1, true];
-        yield [$signature1, $signature2, false];
+        yield [$signature1, $signature2, true];
         yield [$signature1, $signature3, false];
         yield [$signature1, $signature4, false];
-        yield [$signature1, $signature5, true];
+        yield [$signature1, $signature5, false];
     }
 }

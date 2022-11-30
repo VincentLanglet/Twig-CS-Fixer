@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Ruleset;
 
+use JsonException;
+use TwigCsFixer\Exception\CannotJsonEncodeException;
+use TwigCsFixer\Sniff\ConfigurableSniffInterface;
 use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Standard\StandardInterface;
 
@@ -16,6 +19,25 @@ final class Ruleset
      * @var array<class-string<SniffInterface>, SniffInterface>
      */
     private array $sniffs = [];
+
+    /**
+     * @throws CannotJsonEncodeException
+     */
+    public function serialize(): string
+    {
+        $sniffs = [];
+        foreach ($this->getSniffs() as $sniff) {
+            $sniffs[$sniff::class] = $sniff instanceof ConfigurableSniffInterface
+                ? $sniff->getConfiguration()
+                : null;
+        }
+
+        try {
+            return json_encode($sniffs, \JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            throw CannotJsonEncodeException::because($exception);
+        }
+    }
 
     /**
      * @return array<class-string<SniffInterface>, SniffInterface>
@@ -57,15 +79,5 @@ final class Ruleset
         }
 
         return $this;
-    }
-
-    public function equals(self $ruleset): bool
-    {
-        $keys1 = array_keys($this->getSniffs());
-        $keys2 = array_keys($ruleset->getSniffs());
-        sort($keys1);
-        sort($keys2);
-
-        return $keys1 === $keys2;
     }
 }

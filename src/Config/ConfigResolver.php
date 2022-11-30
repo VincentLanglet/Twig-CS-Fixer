@@ -11,6 +11,7 @@ use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Exception\CannotJsonEncodeException;
 use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -30,6 +31,7 @@ final class ConfigResolver
      * @param string[] $paths
      *
      * @throws CannotResolveConfigException
+     * @throws CannotJsonEncodeException
      */
     public function resolveConfig(
         array $paths = [],
@@ -124,6 +126,9 @@ final class ConfigResolver
         return TwigCsFinder::create()->in($directories)->append($files);
     }
 
+    /**
+     *  @throws CannotJsonEncodeException
+     */
     private function resolveCacheManager(
         ?CacheManagerInterface $cacheManager,
         ?string $cacheFile,
@@ -142,7 +147,7 @@ final class ConfigResolver
             new Signature(
                 \PHP_VERSION,
                 InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
-                $ruleset
+                $ruleset->serialize()
             )
         );
     }
