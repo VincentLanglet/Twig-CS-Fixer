@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Ruleset;
 
 use PHPUnit\Framework\TestCase;
+use TwigCsFixer\Exception\CannotJsonEncodeException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Sniff\BlankEOFSniff;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
+use TwigCsFixer\Sniff\ConfigurableSniffInterface;
 use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\StandardInterface;
@@ -36,7 +37,7 @@ class RulesetTest extends TestCase
     {
         $ruleset = new Ruleset();
 
-        // Using real sniff to have different classFQN
+        // Using real sniff to have different class name
         $sniff1 = new BlankEOFSniff();
         $sniff2 = new TrailingSpaceSniff();
         $standard = $this->createStub(StandardInterface::class);
@@ -46,20 +47,22 @@ class RulesetTest extends TestCase
         static::assertCount(2, $ruleset->getSniffs());
     }
 
-    public function testEquals(): void
+    public function testSerialize(): void
     {
-        $ruleset1 = new Ruleset();
-        $ruleset1->addSniff(new TrailingSpaceSniff());
-        $ruleset2 = new Ruleset();
-        $ruleset2->addSniff(new OperatorSpacingSniff());
+        $ruleset = new Ruleset();
+        $ruleset->addSniff(new BlankEOFSniff());
 
-        static::assertFalse($ruleset1->equals($ruleset2));
-        static::assertFalse($ruleset2->equals($ruleset1));
+        static::assertSame('{"TwigCsFixer\\\\Sniff\\\\BlankEOFSniff":null}', $ruleset->serialize());
+    }
 
-        $ruleset1->addSniff(new OperatorSpacingSniff());
-        $ruleset2->addSniff(new TrailingSpaceSniff());
+    public function testSerializeException(): void
+    {
+        $ruleset = new Ruleset();
+        $sniff = $this->createStub(ConfigurableSniffInterface::class);
+        $sniff->method('getConfiguration')->willReturn(["\xB1\x31"]);
+        $ruleset->addSniff($sniff);
 
-        static::assertTrue($ruleset1->equals($ruleset2));
-        static::assertTrue($ruleset2->equals($ruleset1));
+        $this->expectException(CannotJsonEncodeException::class);
+        $ruleset->serialize();
     }
 }

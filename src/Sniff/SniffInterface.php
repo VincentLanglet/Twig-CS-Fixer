@@ -8,9 +8,6 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Token\Token;
 
-/**
- * Interface for all sniffs.
- */
 interface SniffInterface
 {
     /**
