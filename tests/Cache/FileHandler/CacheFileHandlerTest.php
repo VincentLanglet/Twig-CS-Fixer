@@ -52,7 +52,7 @@ class CacheFileHandlerTest extends FileTestCase
         $cacheFileHandler = new CacheFileHandler('/fakeDir/foo.php');
 
         $this->expectExceptionObject(CannotWriteCacheException::missingDirectory('/fakeDir/foo.php'));
-        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', '')));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
     }
 
     public function testWriteFailureInDirectory(): void
@@ -61,7 +61,7 @@ class CacheFileHandlerTest extends FileTestCase
         $cacheFileHandler = new CacheFileHandler($dir);
 
         $this->expectExceptionObject(CannotWriteCacheException::locationIsDirectory($dir));
-        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', '')));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
     }
 
     public function testWriteFailurePermission(): void
@@ -71,7 +71,7 @@ class CacheFileHandlerTest extends FileTestCase
         $cacheFileHandler = new CacheFileHandler($file);
 
         $this->expectExceptionObject(CannotWriteCacheException::locationIsNotWritable($file));
-        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', '')));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
     }
 
     public function testWriteFailureEncoding(): void
@@ -80,7 +80,7 @@ class CacheFileHandlerTest extends FileTestCase
         $cacheFileHandler = new CacheFileHandler($file);
 
         $this->expectException(CannotWriteCacheException::class);
-        $cacheFileHandler->write(new Cache(new Signature('8.0', "\xB1\x31", '')));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', "\xB1\x31", [])));
     }
 
     public function testWriteSuccess(): void
@@ -89,9 +89,9 @@ class CacheFileHandlerTest extends FileTestCase
         unlink($file);
         $cacheFileHandler = new CacheFileHandler($file);
 
-        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', '')));
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
         $content = file_get_contents($file);
-        static::assertSame('{"php_version":"8.0","fixer_version":"1","ruleset":"","hashes":[]}', $content);
+        static::assertSame('{"php_version":"8.0","fixer_version":"1","sniffs":[],"hashes":[]}', $content);
 
         $permissions = fileperms($file);
         static::assertNotFalse($permissions);

@@ -6,16 +6,44 @@ namespace TwigCsFixer\Tests\Cache;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Sniff\ConfigurableSniffInterface;
+use TwigCsFixer\Sniff\OperatorSpacingSniff;
+use TwigCsFixer\Sniff\SniffInterface;
 
 class SignatureTest extends TestCase
 {
     public function testSignature(): void
     {
-        $signature = new Signature('8.0', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
+        $signature = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
 
         static::assertSame('8.0', $signature->getPhpVersion());
         static::assertSame('1', $signature->getFixerVersion());
-        static::assertSame('{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}', $signature->getRuleset());
+        static::assertSame([OperatorSpacingSniff::class => null], $signature->getSniffs());
+    }
+
+    public function testSignatureFromRuleset(): void
+    {
+        $ruleset = new Ruleset();
+
+        $sniff = $this->createStub(SniffInterface::class);
+        $ruleset->addSniff($sniff);
+
+        $configurableSniff = $this->createStub(ConfigurableSniffInterface::class);
+        $configurableSniff->method('getConfiguration')->willReturn(['a' => 1]);
+        $ruleset->addSniff($configurableSniff);
+
+        $signature = Signature::fromRuleset('8.0', '1', $ruleset);
+
+        static::assertSame('8.0', $signature->getPhpVersion());
+        static::assertSame('1', $signature->getFixerVersion());
+        static::assertSame(
+            [
+                $sniff::class             => null,
+                $configurableSniff::class => ['a' => 1],
+            ],
+            $signature->getSniffs()
+        );
     }
 
     /**
@@ -32,11 +60,11 @@ class SignatureTest extends TestCase
      */
     public function equalsDataProvider(): iterable
     {
-        $signature1 = new Signature('8.0', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
-        $signature2 = new Signature('8.0', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
-        $signature3 = new Signature('8.1', '1', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
-        $signature4 = new Signature('8.0', '2', '{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null}');
-        $signature5 = new Signature('8.0', '1', '');
+        $signature1 = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
+        $signature2 = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
+        $signature3 = new Signature('8.1', '1', [OperatorSpacingSniff::class => null]);
+        $signature4 = new Signature('8.0', '2', [OperatorSpacingSniff::class => null]);
+        $signature5 = new Signature('8.0', '1', []);
 
         yield [$signature1, $signature1, true];
         yield [$signature1, $signature2, true];

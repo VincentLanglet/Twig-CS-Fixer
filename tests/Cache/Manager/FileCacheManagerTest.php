@@ -17,7 +17,7 @@ class FileCacheManagerTest extends TestCase
     {
         $cacheManager = new FileCacheManager(
             $this->createStub(CacheFileHandlerInterface::class),
-            new Signature('8.0', '1', '')
+            new Signature('8.0', '1', [])
         );
 
         $file = 'foo.php';
@@ -33,7 +33,7 @@ class FileCacheManagerTest extends TestCase
         $file = 'foo.php';
         $content = 'foo';
 
-        $signature = new Signature('8.0', '1', '');
+        $signature = new Signature('8.0', '1', []);
         $cache = new Cache($signature);
         $cache->set($file, md5($content));
 
@@ -55,7 +55,7 @@ class FileCacheManagerTest extends TestCase
         $file = 'foo.php';
         $content = 'foo';
 
-        $cache = new Cache(new Signature('8.0', '1', ''));
+        $cache = new Cache(new Signature('8.0', '1', []));
         $cache->set($file, md5($content));
 
         $cacheFileHandler = $this->createStub(CacheFileHandlerInterface::class);
@@ -63,7 +63,7 @@ class FileCacheManagerTest extends TestCase
 
         $cacheManager = new FileCacheManager(
             $cacheFileHandler,
-            new Signature('8.0', '1.1', '')
+            new Signature('8.0', '1.1', [])
         );
 
         static::assertTrue($cacheManager->needFixing($file, $content));
@@ -76,7 +76,7 @@ class FileCacheManagerTest extends TestCase
 
         $cacheManager = new FileCacheManager(
             $cacheFileHandler,
-            new Signature('8.0', '1.1', '')
+            new Signature('8.0', '1.1', [])
         );
         unset($cacheManager); // Trigger the __destruct method
     }
@@ -85,7 +85,7 @@ class FileCacheManagerTest extends TestCase
     {
         $cacheManager = new FileCacheManager(
             $this->createStub(CacheFileHandlerInterface::class),
-            new Signature('8.0', '1', '')
+            new Signature('8.0', '1', [])
         );
 
         $this->expectException(BadMethodCallException::class);

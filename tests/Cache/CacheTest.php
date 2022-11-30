@@ -13,7 +13,7 @@ class CacheTest extends TestCase
 {
     public function testCache(): void
     {
-        $signature = new Signature('7.4', '1', '');
+        $signature = new Signature('7.4', '1', []);
         $cache = new Cache($signature);
         static::assertSame($signature, $cache->getSignature());
         static::assertSame([], $cache->getHashes());
@@ -50,7 +50,7 @@ class CacheTest extends TestCase
     {
         $this->expectException(LogicException::class);
 
-        $signature = new Signature('7.4', '1', '');
+        $signature = new Signature('7.4', '1', []);
         $cache = new Cache($signature);
         $cache->get('notFound');
     }
