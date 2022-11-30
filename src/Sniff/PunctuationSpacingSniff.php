@@ -11,9 +11,24 @@ use TwigCsFixer\Token\Token;
  */
 final class PunctuationSpacingSniff extends AbstractSpacingSniff
 {
-    private const NO_SPACE_BEFORE = [')', ']', '}', ':', '.', ',', '|'];
-    private const NO_SPACE_AFTER = ['(', '[', '{', '.', '|'];
-    private const ONE_SPACE_AFTER = [':', ','];
+    private const SPACE_BEFORE = [
+        ')' => 0,
+        ']' => 0,
+        '}' => 0,
+        ':' => 0,
+        '.' => 0,
+        ',' => 0,
+        '|' => 0,
+    ];
+    private const SPACE_AFTER = [
+        '(' => 0,
+        '[' => 0,
+        '{' => 0,
+        '.' => 0,
+        '|' => 0,
+        ':' => 1,
+        ',' => 1,
+    ];
 
     /**
      * @param list<Token> $tokens
@@ -21,11 +36,11 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
-        if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, self::NO_SPACE_BEFORE)) {
-            return 0;
+        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE)) {
+            return null;
         }
 
-        return null;
+        return self::SPACE_BEFORE[$token->getValue()] ?? null;
     }
 
     /**
@@ -35,20 +50,16 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, self::NO_SPACE_AFTER)) {
-            return 0;
+        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE)) {
+            return null;
         }
 
-        if ($this->isTokenMatching($token, Token::PUNCTUATION_TYPE, self::ONE_SPACE_AFTER)) {
-            // We cannot add one space after, if the next token need zero space before: `[1,2,3,]`.
-            $nextPosition = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
-            if (false !== $nextPosition && null !== $this->getSpaceBefore($nextPosition, $tokens)) {
-                return null;
-            }
-
-            return 1;
+        // We cannot change spaces after a token, if the next one has a constraint: `[1,2,3,]`.
+        $nextPosition = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
+        if (false !== $nextPosition && null !== $this->getSpaceBefore($nextPosition, $tokens)) {
+            return null;
         }
 
-        return null;
+        return self::SPACE_AFTER[$token->getValue()] ?? null;
     }
 }
