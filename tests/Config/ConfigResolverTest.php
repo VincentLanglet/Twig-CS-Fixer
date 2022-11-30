@@ -12,7 +12,7 @@ use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\Tests\FileTestCase;
 
-class ConfigResolverTest extends FileTestCase
+final class ConfigResolverTest extends FileTestCase
 {
     public function testResolveConfigDefaultValues(): void
     {

@@ -617,14 +617,6 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $this->moveCursor($currentCode);
-
-        // Avoid parsing object key with operator name like `foo.in` as an operator
-        if (
-            '.' === $currentCode
-            && 1 === preg_match(self::REGEX_NAME, $this->code, $match, 0, $this->cursor)
-        ) {
-            $this->lexName($match[0]);
-        }
     }
 
     private function lexString(string $string): void

@@ -8,7 +8,7 @@ use JsonException;
 use Throwable;
 use UnexpectedValueException;
 
-class CannotJsonEncodeException extends UnexpectedValueException
+final class CannotJsonEncodeException extends UnexpectedValueException
 {
     private function __construct(string $message, int $code = 0, ?Throwable $previous = null)
     {

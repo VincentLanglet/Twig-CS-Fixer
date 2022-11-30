@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Sniff;
 
 use TwigCsFixer\Token\Token;
+use Webmozart\Assert\Assert;
 
 /**
  * Ensure there is no space before and after a punctuation except for ':' and ','.
@@ -54,9 +55,11 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
             return null;
         }
 
-        // We cannot change spaces after a token, if the next one has a constraint: `[1,2,3,]`.
         $nextPosition = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
-        if (false !== $nextPosition && null !== $this->getSpaceBefore($nextPosition, $tokens)) {
+        Assert::notFalse($nextPosition, 'A PUNCTUATION_TYPE cannot be the last non-empty token');
+
+        // We cannot change spaces after a token, if the next one has a constraint: `[1,2,3,]`.
+        if (null !== $this->getSpaceBefore($nextPosition, $tokens)) {
             return null;
         }
 

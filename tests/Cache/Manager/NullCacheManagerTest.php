@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Cache\Manager;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
 
-class NullCacheManagerTest extends TestCase
+final class NullCacheManagerTest extends TestCase
 {
     public function testNeedFixing(): void
     {

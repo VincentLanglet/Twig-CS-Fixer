@@ -8,7 +8,7 @@ use JsonException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Exception\CannotJsonEncodeException;
 
-class CannotJsonEncodeExceptionTest extends TestCase
+final class CannotJsonEncodeExceptionTest extends TestCase
 {
     /**
      * @dataProvider exceptionDataProvider

@@ -11,7 +11,7 @@ use TwigCsFixer\Sniff\ConfigurableSniffInterface;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\SniffInterface;
 
-class SignatureTest extends TestCase
+final class SignatureTest extends TestCase
 {
     public function testSignature(): void
     {

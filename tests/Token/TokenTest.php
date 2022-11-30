@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Token;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Token\Token;
 
-class TokenTest extends TestCase
+final class TokenTest extends TestCase
 {
     public function testGetters(): void
     {

@@ -11,7 +11,7 @@ use TwigCsFixer\Sniff\SniffInterface;
 use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\StandardInterface;
 
-class RulesetTest extends TestCase
+final class RulesetTest extends TestCase
 {
     public function testStartWithNoSniff(): void
     {

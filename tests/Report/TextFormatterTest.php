@@ -13,7 +13,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Report\TextFormatter;
 
-class TextFormatterTest extends TestCase
+final class TextFormatterTest extends TestCase
 {
     /**
      * @dataProvider displayDataProvider

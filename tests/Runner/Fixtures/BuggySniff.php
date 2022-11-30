@@ -10,7 +10,7 @@ use TwigCsFixer\Token\Token;
 /**
  * This Sniff is buggy because it can't decide how to solve `,]`.
  */
-class BuggySniff extends AbstractSpacingSniff
+final class BuggySniff extends AbstractSpacingSniff
 {
     /**
      * @param array<int, Token> $tokens

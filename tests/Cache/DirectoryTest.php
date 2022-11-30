@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Cache;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Directory;
 
-class DirectoryTest extends TestCase
+final class DirectoryTest extends TestCase
 {
     /**
      * @dataProvider getRelativePathToDataProvider

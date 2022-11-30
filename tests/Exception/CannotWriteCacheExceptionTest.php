@@ -8,7 +8,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 
-class CannotWriteCacheExceptionTest extends TestCase
+final class CannotWriteCacheExceptionTest extends TestCase
 {
     public function testException(): void
     {

@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Exception;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Exception\CannotResolveConfigException;
 
-class CannotResolveConfigExceptionTest extends TestCase
+final class CannotResolveConfigExceptionTest extends TestCase
 {
     public function testException(): void
     {

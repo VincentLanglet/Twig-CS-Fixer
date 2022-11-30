@@ -16,7 +16,7 @@ use TwigCsFixer\Sniff\TrailingSpaceSniff;
 /**
  * Default standard for twig.
  */
-class Generic implements StandardInterface
+final class Generic implements StandardInterface
 {
     /**
      * @return SniffInterface[]
