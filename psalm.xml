@@ -13,6 +13,7 @@
        inferPropertyTypesFromConstructor="false"
        findUnusedPsalmSuppress="true"
        cacheDirectory="/tmp/psalm"
+       findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src"/>

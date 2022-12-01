@@ -165,19 +165,15 @@ final class Linter
     private function setErrorHandler(Report $report, string $file): void
     {
         set_error_handler(static function (int $type, string $message) use ($report, $file): bool {
-            if (\E_USER_DEPRECATED === $type) {
-                $sniffViolation = new SniffViolation(
-                    SniffViolation::LEVEL_NOTICE,
-                    $message,
-                    $file
-                );
+            $sniffViolation = new SniffViolation(
+                SniffViolation::LEVEL_NOTICE,
+                $message,
+                $file
+            );
 
-                $report->addMessage($sniffViolation);
+            $report->addMessage($sniffViolation);
 
-                return true;
-            }
-
-            return false;
-        });
+            return true;
+        }, \E_USER_DEPRECATED);
     }
 }

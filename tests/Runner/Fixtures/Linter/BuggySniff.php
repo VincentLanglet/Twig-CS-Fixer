@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Runner\Fixtures;
+namespace TwigCsFixer\Tests\Runner\Fixtures\Linter;
 
 use TwigCsFixer\Sniff\AbstractSpacingSniff;
 use TwigCsFixer\Token\Token;
