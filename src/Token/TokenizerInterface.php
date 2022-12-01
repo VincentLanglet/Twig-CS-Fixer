@@ -7,9 +7,6 @@ namespace TwigCsFixer\Token;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
 
-/**
- * Interface for Tokenizer.
- */
 interface TokenizerInterface
 {
     /**

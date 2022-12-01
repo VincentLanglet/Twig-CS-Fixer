@@ -10,9 +10,6 @@ use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Token\Token;
 
-/**
- * Base for all sniff.
- */
 abstract class AbstractSniff implements SniffInterface
 {
     protected ?Report $report = null;
