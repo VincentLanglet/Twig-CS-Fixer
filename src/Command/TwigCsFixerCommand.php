@@ -10,12 +10,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
+use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\TextFormatter;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
+use Webmozart\Assert\Assert;
 
 /**
  * TwigCsFixer stands for "Twig Code Sniffer Fixer" and will check twig template of your project.
@@ -64,55 +67,56 @@ final class TwigCsFixerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $workingDir = @getcwd();
-        if (false === $workingDir) {
-            return $this->invalid($output, 'Cannot get the current working directory.');
-        }
-
         try {
-            // Resolve config
-            $configResolver = new ConfigResolver($workingDir);
-            $config = $configResolver->resolveConfig(
-                $input->getArgument('paths'),
-                $input->getOption('config'),
-                $input->getOption('no-cache')
-            );
-
-            $cacheFile = $config->getCacheFile();
-            if (null !== $cacheFile && is_file($cacheFile)) {
-                $output->writeln(sprintf('Using cache file "%s".', $cacheFile));
-            }
-
-            // Execute the linter.
-            $twig = new StubbedEnvironment($config->getTokenParsers());
-            $linter = new Linter($twig, new Tokenizer($twig), $config->getCacheManager());
-
-            // Build the report.
-            $report = $linter->run(
-                $config->getFinder(),
-                $config->getRuleset(),
-                $input->getOption('fix')
-            );
-
-            // Format the output.
-            $reporter = new TextFormatter($input, $output);
-            $reporter->display($report, $input->getOption('level'));
+            $config = $this->resolveConfig($input, $output);
+            $report = $this->runLinter($config, $input, $output);
         } catch (Throwable $exception) {
-            return $this->invalid($output, $exception->getMessage());
+            $output->writeln(sprintf('<error>Error: %s</error>', $exception->getMessage()));
+
+            return self::INVALID;
         }
 
-        // Return a meaningful error code.
-        if ($report->getTotalErrors() > 0) {
-            return self::FAILURE;
-        }
-
-        return self::SUCCESS;
+        return 0 === $report->getTotalErrors() ? self::SUCCESS : self::FAILURE;
     }
 
-    private function invalid(OutputInterface $output, string $message): int
+    /**
+     * @throws CannotResolveConfigException
+     */
+    private function resolveConfig(InputInterface $input, OutputInterface $output): Config
     {
-        $output->writeln("<error>Error: {$message}</error>");
+        $workingDir = @getcwd();
+        Assert::notFalse($workingDir, 'Cannot get the current working directory.');
 
-        return self::INVALID;
+        $configResolver = new ConfigResolver($workingDir);
+
+        $config = $configResolver->resolveConfig(
+            $input->getArgument('paths'),
+            $input->getOption('config'),
+            $input->getOption('no-cache')
+        );
+
+        $cacheFile = $config->getCacheFile();
+        if (null !== $cacheFile && is_file($cacheFile)) {
+            $output->writeln(sprintf('Using cache file "%s".', $cacheFile));
+        }
+
+        return $config;
+    }
+
+    private function runLinter(Config $config, InputInterface $input, OutputInterface $output): Report
+    {
+        $twig = new StubbedEnvironment($config->getTokenParsers());
+        $linter = new Linter($twig, new Tokenizer($twig), $config->getCacheManager());
+
+        $report = $linter->run(
+            $config->getFinder(),
+            $config->getRuleset(),
+            $input->getOption('fix')
+        );
+
+        $reporter = new TextFormatter($input, $output);
+        $reporter->display($report, $input->getOption('level'));
+
+        return $report;
     }
 }
