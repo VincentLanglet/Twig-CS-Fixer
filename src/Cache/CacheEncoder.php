@@ -17,7 +17,7 @@ final class CacheEncoder
     public static function fromJson(string $json): Cache
     {
         try {
-            $data = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+            $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw new InvalidArgumentException(sprintf(
                 'Value needs to be a valid JSON string, got "%s", error: "%s".',
