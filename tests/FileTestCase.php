@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\Assert\Assert;
 
 abstract class FileTestCase extends TestCase
 {
@@ -34,7 +35,7 @@ abstract class FileTestCase extends TestCase
         }
 
         $cwd = getcwd();
-        static::assertNotFalse($cwd);
+        Assert::notFalse($cwd);
 
         $this->cwd = $cwd;
         chdir($this->getTmpPath($this->getDir()));
@@ -61,7 +62,7 @@ abstract class FileTestCase extends TestCase
         if (null === $this->dir) {
             $reflectionClass = new ReflectionClass($this);
             $fileName = $reflectionClass->getFileName();
-            static::assertNotFalse($fileName);
+            Assert::notFalse($fileName);
 
             $this->dir = \dirname($fileName);
         }

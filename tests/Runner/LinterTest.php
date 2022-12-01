@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
-use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -14,11 +13,12 @@ use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Linter;
-use TwigCsFixer\Tests\Runner\Fixtures\BuggySniff;
+use TwigCsFixer\Tests\FileTestCase;
+use TwigCsFixer\Tests\Runner\Fixtures\Linter\BuggySniff;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 
-final class LinterTest extends TestCase
+final class LinterTest extends FileTestCase
 {
     public function testUnreadableFilesAreReported(): void
     {
@@ -27,7 +27,7 @@ final class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $filePath = __DIR__.'/Fixtures/file_not_readable.twig';
+        $filePath = __DIR__.'/Fixtures/Linter/file_not_readable.twig';
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
@@ -52,7 +52,7 @@ final class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $filePath = __DIR__.'/Fixtures/file.twig';
+        $filePath = __DIR__.'/Fixtures/Linter/file.twig';
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
@@ -77,7 +77,7 @@ final class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $filePath = __DIR__.'/Fixtures/file.twig';
+        $filePath = __DIR__.'/Fixtures/Linter/file.twig';
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
@@ -107,7 +107,7 @@ final class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $filePath = __DIR__.'/Fixtures/file.twig';
+        $filePath = __DIR__.'/Fixtures/Linter/file.twig';
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
 
@@ -133,16 +133,12 @@ final class LinterTest extends TestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
+        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/Linter/file.twig')], $ruleset, true);
     }
 
     public function testBuggyRulesetCannotBeFixed(): void
     {
-        // Avoid mutation-testing to modify the file
-        $file = __DIR__.'/Fixtures/file.twig';
-        $tmpFile = sys_get_temp_dir().'/file.twig';
-        $copySuccessful = copy($file, $tmpFile);
-        static::assertTrue($copySuccessful);
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -151,19 +147,19 @@ final class LinterTest extends TestCase
 
         $linter = new Linter($env, $tokenizer);
 
-        $report = $linter->run([new SplFileInfo($tmpFile)], $ruleset, true);
+        $report = $linter->run([new SplFileInfo($file)], $ruleset, true);
 
         $messagesByFiles = $report->getMessagesByFiles();
         static::assertCount(1, $messagesByFiles);
-        static::assertArrayHasKey($tmpFile, $messagesByFiles);
+        static::assertArrayHasKey($file, $messagesByFiles);
 
-        $messages = $messagesByFiles[$tmpFile];
+        $messages = $messagesByFiles[$file];
         static::assertNotCount(0, $messages);
 
         $message = $messages[0];
         static::assertStringContainsString('Unable to fix file', $message->getMessage());
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
-        static::assertSame($tmpFile, $message->getFilename());
+        static::assertSame($file, $message->getFilename());
     }
 
     public function testFileIsSkippedIfCached(): void
@@ -178,7 +174,7 @@ final class LinterTest extends TestCase
         $cacheManager->method('needFixing')->willReturn(false);
         $cacheManager->expects(static::never())->method('setFile');
         $tokenizer->expects(static::never())->method('tokenize');
-        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
+        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/Linter/file.twig')], $ruleset, true);
     }
 
     public function testFileIsNotSkippedIfNotCached(): void
@@ -192,6 +188,6 @@ final class LinterTest extends TestCase
 
         $cacheManager->method('needFixing')->willReturn(true);
         $cacheManager->expects(static::once())->method('setFile');
-        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/file.twig')], $ruleset, true);
+        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/Linter/file.twig')], $ruleset, true);
     }
 }
