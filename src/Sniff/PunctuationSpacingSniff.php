@@ -10,7 +10,7 @@ use Webmozart\Assert\Assert;
 /**
  * Ensure there is no space before and after a punctuation except for ':' and ','.
  */
-final class PunctuationSpacingSniff extends AbstractSpacingSniff
+final class PunctuationSpacingSniff extends AbstractSpacingSniff implements ConfigurableSniffInterface
 {
     private const SPACE_BEFORE = [
         ')' => 0,
@@ -51,6 +51,14 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     ) {
         $this->spaceBeforeConfig = array_merge(self::SPACE_BEFORE, $spaceBeforeOverride);
         $this->spaceAfterConfig = array_merge(self::SPACE_AFTER, $spaceAfterOverride);
+    }
+
+    public function getConfiguration(): array
+    {
+        return [
+            'before' => $this->spaceBeforeConfig,
+            'after'  => $this->spaceAfterConfig,
+        ];
     }
 
     /**
