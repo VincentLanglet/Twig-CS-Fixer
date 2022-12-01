@@ -6,9 +6,6 @@ namespace TwigCsFixer\File;
 
 use Symfony\Component\Finder\Finder as BaseFinder;
 
-/**
- * Default configuration of Finder.
- */
 final class Finder extends BaseFinder
 {
     public function __construct()

@@ -28,7 +28,7 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Run unit tests with PHPUnit
+            - name: Run tests with PHPUnit
               run: vendor/bin/phpunit --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
 
             - name: Run Infection

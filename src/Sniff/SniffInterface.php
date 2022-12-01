@@ -19,7 +19,7 @@ interface SniffInterface
     public function enableFixer(Fixer $fixer): void;
 
     /**
-     * It is usually disabled when the processing is over, it will reset the sniff internal values for next check.
+     * It is usually disabled when the processing is over, it will reset the sniff internal values for next checks.
      */
     public function disable(): void;
 

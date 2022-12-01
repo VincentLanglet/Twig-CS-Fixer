@@ -39,7 +39,7 @@ jobs:
                   dependency-versions: ${{ matrix.dependencies }}
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Run unit tests with PHPUnit
+            - name: Run tests with PHPUnit
               run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
             - name: Send coverage to Codecov

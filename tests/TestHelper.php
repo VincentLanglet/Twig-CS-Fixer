@@ -6,9 +6,6 @@ namespace TwigCsFixer\Tests;
 
 use LogicException;
 
-/**
- * Helper for tests.
- */
 final class TestHelper
 {
     /**
