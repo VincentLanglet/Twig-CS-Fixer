@@ -2,7 +2,7 @@
 
 ## Composer
 composer.lock
-vendor/
+/vendor/
 
 ## Phpunit
 .coverage/
