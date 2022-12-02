@@ -14,6 +14,28 @@ use TwigCsFixer\Token\Tokenizer;
 
 final class TokenizerTest extends TestCase
 {
+    public function testTokens(): void
+    {
+        $filePath = __DIR__.'/TokenizerTest1.twig';
+        $content = file_get_contents($filePath);
+        if (false === $content) {
+            static::fail(sprintf('Cannot read file path %s', $filePath));
+        }
+
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $source = new Source($content, $filePath);
+
+        static::assertEquals(
+            [
+                new Token(Token::TEXT_TYPE, 1, 0, $filePath, '<div>test</div>'),
+                new Token(Token::EOL_TYPE, 1, 15, $filePath, "\n"),
+                new Token(Token::EOF_TYPE, 2, 1, $filePath),
+            ],
+            $tokenizer->tokenize($source)
+        );
+    }
+
     /**
      * @param array<int, int> $expectedTokenTypes
      *
