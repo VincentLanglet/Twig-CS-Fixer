@@ -51,11 +51,8 @@ final class Linter
         foreach ($files as $file) {
             $filePath = $file->getPathname();
 
-            $fileContent = @file_get_contents($filePath);
-            if (
-                false !== $fileContent
-                && !$this->cacheManager->needFixing($filePath, $fileContent)
-            ) {
+            $content = @file_get_contents($filePath);
+            if (false !== $content && !$this->cacheManager->needFixing($filePath, $content)) {
                 continue;
             }
 
@@ -85,8 +82,11 @@ final class Linter
 
         foreach ($files as $file) {
             $filePath = $file->getPathname();
-            $contents = @file_get_contents($filePath);
-            if (false !== $contents && !$this->cacheManager->needFixing($filePath, $contents)) {
+            $content = @file_get_contents($filePath);
+
+            // When the file is not found we're skipping the fix
+            // The error will already be reported by the linter
+            if (false === $content || !$this->cacheManager->needFixing($filePath, $content)) {
                 continue;
             }
 

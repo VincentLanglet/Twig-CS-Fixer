@@ -12,6 +12,8 @@ use Webmozart\Assert\Assert;
 
 abstract class FileTestCase extends TestCase
 {
+    private ?Filesystem $filesystem = null;
+
     private string $cwd;
 
     private ?string $tmp = null;
@@ -26,11 +28,10 @@ abstract class FileTestCase extends TestCase
         $tmpFixtures = $this->getTmpPath($fixtureDir);
 
         if ($tmpFixtures !== $fixtureDir) {
-            $fs = new Filesystem();
-            $fs->remove($tmpFixtures);
+            $this->getFilesystem()->remove($tmpFixtures);
 
-            if ($fs->exists($fixtureDir)) {
-                $fs->mirror($fixtureDir, $tmpFixtures);
+            if ($this->getFilesystem()->exists($fixtureDir)) {
+                $this->getFilesystem()->mirror($fixtureDir, $tmpFixtures);
             }
         }
 
@@ -46,6 +47,15 @@ abstract class FileTestCase extends TestCase
         parent::tearDown();
 
         chdir($this->cwd);
+    }
+
+    protected function getFilesystem(): Filesystem
+    {
+        if (null === $this->filesystem) {
+            $this->filesystem = new Filesystem();
+        }
+
+        return $this->filesystem;
     }
 
     protected function getTmpPath(string $path): string

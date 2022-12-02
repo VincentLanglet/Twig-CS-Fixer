@@ -88,6 +88,7 @@ final class Tokenizer implements TokenizerInterface
     public function tokenize(Source $source): array
     {
         $this->resetState($source);
+        $this->pushState(self::STATE_DATA);
         $this->preflightSource($this->code);
 
         while ($this->cursor < $this->end) {
@@ -175,7 +176,9 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getState(): int
     {
-        return \count($this->state) > 0 ? $this->state[\count($this->state) - 1][0] : self::STATE_DATA;
+        Assert::notEmpty($this->state, 'No state was pushed.');
+
+        return $this->state[\count($this->state) - 1][0];
     }
 
     /**
@@ -190,7 +193,7 @@ final class Tokenizer implements TokenizerInterface
 
     private function setStateParam(string $name, string $value): void
     {
-        Assert::notEmpty($this->state, 'Cannot update state without a current state.');
+        Assert::notEmpty($this->state, 'Cannot set state params without a current state.');
 
         $this->state[\count($this->state) - 1][1][$name] = $value;
     }
@@ -200,7 +203,9 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getStateParams(): array
     {
-        return \count($this->state) > 0 ? $this->state[\count($this->state) - 1][1] : [];
+        Assert::notEmpty($this->state, 'Cannot get state params without a current state.');
+
+        return $this->state[\count($this->state) - 1][1];
     }
 
     private function popState(): void
@@ -423,7 +428,7 @@ final class Tokenizer implements TokenizerInterface
             $value = $match[0];
 
             // Stop if cursor reaches the next token start.
-            if (0 !== $limit && $limit <= ($this->cursor + \strlen($value))) {
+            if (0 !== $limit) {
                 $value = substr($value, 0, $limit - $this->cursor);
             }
 
@@ -579,11 +584,8 @@ final class Tokenizer implements TokenizerInterface
                 return;
             }
             if (\in_array($currentCode, [',', ')', ']', '}'], true)) {
-                // Because {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
-                do {
-                    array_pop($this->bracketsAndTernary);
-                    $lastBracket = end($this->bracketsAndTernary);
-                } while (false !== $lastBracket && '?' === $lastBracket->getValue());
+                // Because {{ (foo ? 'yes') }} is the same as {{ (foo ? 'yes' : '') }}
+                array_pop($this->bracketsAndTernary);
 
                 // This is maybe the end of the expression so start again.
                 return;
@@ -650,7 +652,7 @@ final class Tokenizer implements TokenizerInterface
             // An operator that ends with a character must be followed by
             // a whitespace, a parenthesis, an opening map [ or sequence {
             $r = preg_quote($operator, '/');
-            if (ctype_alpha($operator[$length - 1])) {
+            if (ctype_alpha($operator[-1])) {
                 $r .= '(?=[\s()\[{])';
             }
 

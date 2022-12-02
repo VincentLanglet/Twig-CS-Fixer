@@ -102,20 +102,16 @@ final class TextFormatter
         $max = min(\count($lines), $line + 1);
 
         $result = [];
-        $indentCount = null;
+        $indents = [];
 
         do {
-            if (1 !== preg_match('/^[\s\t]+/', $lines[$position], $match)) {
-                $indentCount = 0;
-            } elseif (null === $indentCount || \strlen($match[0]) < $indentCount) {
-                $indentCount = \strlen($match[0]);
-            }
-
+            preg_match('/^[\s\t]+/', $lines[$position], $match);
+            $indents[] = \strlen($match[0] ?? '');
             $result[$position + 1] = $lines[$position];
             $position++;
         } while ($position < $max);
 
-        return array_map(fn (string $code): string => substr($code, $indentCount), $result);
+        return array_map(fn (string $code): string => substr($code, min($indents)), $result);
     }
 
     private function formatErrorMessage(SniffViolation $message): string
