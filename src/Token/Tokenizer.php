@@ -29,6 +29,7 @@ final class Tokenizer implements TokenizerInterface
     private const REGEX_BLOCK_END = '/(?:-|~)?(?:%})/A';
     private const REGEX_COMMENT_END = '/(?:-|~)?(?:#})/'; // Must not be anchored
     private const REGEX_VAR_END = '/(?:-|~)?(?:}})/A';
+    private const REGEX_VERBATIM_END = '/{%(-|~)?(\s*)?endverbatim(\s*)?(-|~)?%}/A';
     private const REGEX_INTERPOLATION_START = '/#{/A';
     private const REGEX_INTERPOLATION_END = '/}/A';
 
@@ -46,7 +47,7 @@ final class Tokenizer implements TokenizerInterface
 
     private int $line = 1;
 
-    private int $currentPosition = 0;
+    private int $currentExpressionStarter = 0;
 
     /**
      * @var list<Token>
@@ -69,6 +70,8 @@ final class Tokenizer implements TokenizerInterface
      * @var list<Token>
      */
     private array $bracketsAndTernary = [];
+
+    private bool $isVerbatim = false;
 
     private string $code = '';
 
@@ -99,7 +102,7 @@ final class Tokenizer implements TokenizerInterface
                 null !== $nextExpressionStarter
                 && $nextExpressionStarter['position'] < $this->cursor
             ) {
-                $this->moveCurrentPosition();
+                $this->moveCurrentExpressionStarter();
                 $expressionStarter = $nextExpressionStarter;
                 $nextExpressionStarter = $this->getExpressionStarter(1);
             }
@@ -146,7 +149,7 @@ final class Tokenizer implements TokenizerInterface
     {
         $this->cursor = 0;
         $this->line = 1;
-        $this->currentPosition = 0;
+        $this->currentExpressionStarter = 0;
         $this->tokens = [];
         $this->state = [];
         $this->bracketsAndTernary = [];
@@ -198,14 +201,11 @@ final class Tokenizer implements TokenizerInterface
         $this->state[\count($this->state) - 1][1][$name] = $value;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private function getStateParams(): array
+    private function getStateParam(string $name): ?string
     {
         Assert::notEmpty($this->state, 'Cannot get state params without a current state.');
 
-        return $this->state[\count($this->state) - 1][1];
+        return $this->state[\count($this->state) - 1][1][$name] ?? null;
     }
 
     private function popState(): void
@@ -238,17 +238,17 @@ final class Tokenizer implements TokenizerInterface
     {
         if (
             [] === $this->expressionStarters
-            || !isset($this->expressionStarters[$this->currentPosition + $offset])
+            || !isset($this->expressionStarters[$this->currentExpressionStarter + $offset])
         ) {
             return null;
         }
 
-        return $this->expressionStarters[$this->currentPosition + $offset];
+        return $this->expressionStarters[$this->currentExpressionStarter + $offset];
     }
 
-    private function moveCurrentPosition(int $value = 1): void
+    private function moveCurrentExpressionStarter(int $value = 1): void
     {
-        $this->currentPosition += $value;
+        $this->currentExpressionStarter += $value;
     }
 
     private function moveCursor(string $value): void
@@ -321,7 +321,9 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
-            $this->moveCurrentPosition();
+            $this->moveCurrentExpressionStarter();
+
+            $this->isVerbatim = 'verbatim' === $this->getStateParam('tag');
             $this->popState();
         } else {
             $this->lexExpression();
@@ -339,7 +341,7 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
-            $this->moveCurrentPosition();
+            $this->moveCurrentExpressionStarter();
             $this->popState();
         } else {
             $this->lexExpression();
@@ -359,7 +361,7 @@ final class Tokenizer implements TokenizerInterface
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
-            $this->moveCurrentPosition();
+            $this->moveCurrentExpressionStarter();
             $this->popState();
         } else {
             // Parse as text until the end position.
@@ -446,6 +448,17 @@ final class Tokenizer implements TokenizerInterface
     {
         $expressionStarter = $this->getExpressionStarter();
         Assert::notNull($expressionStarter, 'There is no token to lex.');
+
+        if ($this->isVerbatim) {
+            if (1 !== preg_match(self::REGEX_VERBATIM_END, $this->code, $match, 0, $this->cursor)) {
+                $this->moveCurrentExpressionStarter();
+                $this->lexData();
+
+                return;
+            }
+
+            $this->isVerbatim = false;
+        }
 
         if ('{#' === $expressionStarter['match']) {
             $state = self::STATE_COMMENT;
@@ -553,7 +566,7 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexName(string $name): void
     {
-        if (self::STATE_BLOCK === $this->getState() && !isset($this->getStateParams()['tag'])) {
+        if (self::STATE_BLOCK === $this->getState() && null === $this->getStateParam('tag')) {
             $this->pushToken(Token::BLOCK_TAG_TYPE, $name);
             $this->setStateParam('tag', $name);
         } else {
