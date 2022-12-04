@@ -55,7 +55,7 @@ final class Tokenizer implements TokenizerInterface
     private array $tokens = [];
 
     /**
-     * @var array<int, array{fullMatch: string, position: int, match: string}>
+     * @var list<array{fullMatch: string, position: int, match: string}>
      */
     private array $expressionStarters = [];
 
@@ -99,43 +99,34 @@ final class Tokenizer implements TokenizerInterface
         $oldBracketAndTernary = $this->bracketsAndTernary;
 
         while ($this->cursor < $this->end) {
-            $expressionStarter = $this->getExpressionStarter();
-            $nextExpressionStarter = $this->getExpressionStarter(1);
-
-            while (
-                null !== $nextExpressionStarter
-                && $nextExpressionStarter['position'] < $this->cursor
-            ) {
-                $this->moveCurrentExpressionStarter();
-                $expressionStarter = $nextExpressionStarter;
-                $nextExpressionStarter = $this->getExpressionStarter(1);
-            }
-
             switch ($this->getState()) {
+                case self::STATE_DATA:
+                    $expressionStarter = $this->getExpressionStarter();
+                    if (
+                        null === $expressionStarter
+                        || $this->cursor < $expressionStarter['position']
+                    ) {
+                        $this->lexData();
+                    } elseif ($this->cursor === $expressionStarter['position']) {
+                        $this->lexStart();
+                    } else {
+                        $this->moveCurrentExpressionStarter();
+                    }
+                    break;
                 case self::STATE_BLOCK:
                     $this->lexBlock();
                     break;
                 case self::STATE_VAR:
                     $this->lexVariable();
                     break;
-                case self::STATE_COMMENT:
-                    $this->lexComment();
-                    break;
-                case self::STATE_DATA:
-                    if (
-                        null !== $expressionStarter
-                        && $this->cursor === $expressionStarter['position']
-                    ) {
-                        $this->lexStart();
-                    } else {
-                        $this->lexData();
-                    }
-                    break;
                 case self::STATE_DQ_STRING:
                     $this->lexDqString();
                     break;
                 case self::STATE_INTERPOLATION:
                     $this->lexInterpolation();
+                    break;
+                case self::STATE_COMMENT:
+                    $this->lexComment();
                     break;
             }
 
@@ -239,7 +230,7 @@ final class Tokenizer implements TokenizerInterface
 
         $expressionStartersReworked = [];
         foreach ($match[0] as $index => $tokenFullMatch) {
-            $expressionStartersReworked[$index] = [
+            $expressionStartersReworked[] = [
                 'fullMatch' => $tokenFullMatch[0],
                 'position'  => $tokenFullMatch[1],
                 'match'     => $match[1][$index][0],
@@ -252,21 +243,16 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @return array{fullMatch: string, position: int, match: string}|null
      */
-    private function getExpressionStarter(int $offset = 0): ?array
+    private function getExpressionStarter(): ?array
     {
-        if (
-            [] === $this->expressionStarters
-            || !isset($this->expressionStarters[$this->currentExpressionStarter + $offset])
-        ) {
-            return null;
-        }
-
-        return $this->expressionStarters[$this->currentExpressionStarter + $offset];
+        return $this->expressionStarters[$this->currentExpressionStarter] ?? null;
     }
 
-    private function moveCurrentExpressionStarter(int $value = 1): void
+    private function moveCurrentExpressionStarter(): void
     {
-        $this->currentExpressionStarter += $value;
+        Assert::notNull($this->getExpressionStarter(), 'There is no more expression starters');
+
+        $this->currentExpressionStarter++;
     }
 
     private function moveCursor(string $value): void
@@ -339,7 +325,6 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
-            $this->moveCurrentExpressionStarter();
 
             $this->isVerbatim = 'verbatim' === $this->getStateParam('tag');
             $this->popState();
@@ -359,7 +344,6 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
-            $this->moveCurrentExpressionStarter();
             $this->popState();
         } else {
             $this->lexExpression();
@@ -379,7 +363,6 @@ final class Tokenizer implements TokenizerInterface
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
-            $this->moveCurrentExpressionStarter();
             $this->popState();
         } else {
             // Parse as text until the end position.
@@ -447,7 +430,7 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
 
-            // Stop if cursor reaches the next token start.
+            // Stop if cursor reaches the next expression starter.
             if (0 !== $limit) {
                 $value = substr($value, 0, $limit - $this->cursor);
             }
@@ -465,17 +448,16 @@ final class Tokenizer implements TokenizerInterface
     private function lexStart(): void
     {
         $expressionStarter = $this->getExpressionStarter();
-        Assert::notNull($expressionStarter, 'There is no token to lex.');
+        Assert::notNull($expressionStarter, 'There is no expression starter to lex.');
 
-        if ($this->isVerbatim) {
-            if (1 !== preg_match(self::REGEX_VERBATIM_END, $this->code, $match, 0, $this->cursor)) {
-                // Skip this expression starter since we're still in verbatim mode
-                $this->moveCurrentExpressionStarter();
+        if (
+            $this->isVerbatim
+            && 1 !== preg_match(self::REGEX_VERBATIM_END, $this->code, $match, 0, $this->cursor)
+        ) {
+            // Skip this expression starter since we're still in verbatim mode
+            $this->moveCurrentExpressionStarter();
 
-                return;
-            }
-
-            $this->isVerbatim = false;
+            return;
         }
 
         if ('{#' === $expressionStarter['match']) {
