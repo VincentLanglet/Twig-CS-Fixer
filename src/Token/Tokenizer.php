@@ -94,6 +94,10 @@ final class Tokenizer implements TokenizerInterface
         $this->pushState(self::STATE_DATA);
         $this->preflightSource($this->code);
 
+        $oldCursor = $this->cursor;
+        $oldCurrentExpressionStarter = $this->currentExpressionStarter;
+        $oldBracketAndTernary = $this->bracketsAndTernary;
+
         while ($this->cursor < $this->end) {
             $expressionStarter = $this->getExpressionStarter();
             $nextExpressionStarter = $this->getExpressionStarter(1);
@@ -134,6 +138,20 @@ final class Tokenizer implements TokenizerInterface
                     $this->lexInterpolation();
                     break;
             }
+
+            if (
+                $oldCursor === $this->cursor
+                && $oldCurrentExpressionStarter === $this->currentExpressionStarter
+                && $oldBracketAndTernary === $this->bracketsAndTernary
+            ) {
+                // @codeCoverageIgnoreStart
+                throw new LogicException('Infinite loop');
+                // @codeCoverageIgnoreEnd
+            }
+
+            $oldCursor = $this->cursor;
+            $oldCurrentExpressionStarter = $this->currentExpressionStarter;
+            $oldBracketAndTernary = $this->bracketsAndTernary;
         }
 
         if (self::STATE_DATA !== $this->getState()) {
@@ -451,8 +469,8 @@ final class Tokenizer implements TokenizerInterface
 
         if ($this->isVerbatim) {
             if (1 !== preg_match(self::REGEX_VERBATIM_END, $this->code, $match, 0, $this->cursor)) {
+                // Skip this expression starter since we're still in verbatim mode
                 $this->moveCurrentExpressionStarter();
-                $this->lexData();
 
                 return;
             }
