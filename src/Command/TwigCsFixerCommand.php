@@ -16,6 +16,7 @@ use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\TextFormatter;
+use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
 use Webmozart\Assert\Assert;
@@ -106,12 +107,13 @@ final class TwigCsFixerCommand extends Command
     private function runLinter(Config $config, InputInterface $input, OutputInterface $output): Report
     {
         $twig = new StubbedEnvironment($config->getTokenParsers());
-        $linter = new Linter($twig, new Tokenizer($twig), $config->getCacheManager());
+        $tokenizer = new Tokenizer($twig);
+        $linter = new Linter($twig, $tokenizer, $config->getCacheManager());
 
         $report = $linter->run(
             $config->getFinder(),
             $config->getRuleset(),
-            $input->getOption('fix')
+            $input->getOption('fix') ? new Fixer($tokenizer) : null
         );
 
         $reporter = new TextFormatter($input, $output);

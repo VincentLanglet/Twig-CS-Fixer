@@ -17,7 +17,7 @@ use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
 use Webmozart\Assert\Assert;
 
-final class FixerTest extends FileTestCase
+final class FixerTest extends TestCase
 {
     public function testInvalidFile(): void
     {
@@ -27,10 +27,10 @@ final class FixerTest extends FileTestCase
         $tokenizer->method('tokenize')->willThrowException($exception);
         $ruleset = new Ruleset();
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
         $this->expectExceptionObject($exception);
-        $fixer->fixFile($this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig'));
+        $fixer->fixFile('', $ruleset);
     }
 
     public function testValidFile(): void
@@ -41,8 +41,8 @@ final class FixerTest extends FileTestCase
         ]);
 
         $ruleset = new Ruleset();
-        $fixer = new Fixer($ruleset, $tokenizer);
-        $fixer->fixFile('');
+        $fixer = new Fixer($tokenizer);
+        $fixer->fixFile('', $ruleset);
     }
 
     public function testReplaceToken(): void
@@ -86,9 +86,9 @@ final class FixerTest extends FileTestCase
         $ruleset = new Ruleset();
         $ruleset->addSniff($sniff);
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
-        static::assertSame('a', $fixer->fixFile(''));
+        static::assertSame('a', $fixer->fixFile('', $ruleset));
     }
 
     public function testReplaceTokenIsDesignedAgainstInfiniteLoop(): void
@@ -123,11 +123,11 @@ final class FixerTest extends FileTestCase
         $ruleset = new Ruleset();
         $ruleset->addSniff($sniff);
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
         $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
 
-        static::assertSame('a', $fixer->fixFile(''));
+        static::assertSame('a', $fixer->fixFile('', $ruleset));
         static::assertSame(Fixer::MAX_FIXER_ITERATION, $sniff->getExecuted());
     }
 
@@ -175,10 +175,10 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff1);
         $ruleset->addSniff($sniff2);
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
         $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
-        $fixer->fixFile('test');
+        $fixer->fixFile('test', $ruleset);
     }
 
     public function testReplaceTokenIsDesignedAgainstConflict2(): void
@@ -225,10 +225,10 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff1);
         $ruleset->addSniff($sniff2);
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
         $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
-        $fixer->fixFile('test');
+        $fixer->fixFile('test', $ruleset);
     }
 
     public function testAddContentMethods(): void
@@ -268,9 +268,9 @@ final class FixerTest extends FileTestCase
         $ruleset = new Ruleset();
         $ruleset->addSniff($sniff);
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
-        static::assertSame('a', $fixer->fixFile(''));
+        static::assertSame('a', $fixer->fixFile('', $ruleset));
     }
 
     public function testAddContentMethodsWithChangeset(): void
@@ -304,14 +304,8 @@ final class FixerTest extends FileTestCase
         $ruleset = new Ruleset();
         $ruleset->addSniff($sniff);
 
-        $fixer = new Fixer($ruleset, $tokenizer);
+        $fixer = new Fixer($tokenizer);
 
-        static::assertSame("\nba\n", $fixer->fixFile(''));
-    }
-
-    private function resetFile(string $path, string $content = ''): void
-    {
-        $success = file_put_contents($path, $content);
-        Assert::notFalse($success);
+        static::assertSame("\nba\n", $fixer->fixFile('', $ruleset));
     }
 }

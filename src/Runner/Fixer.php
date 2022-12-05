@@ -77,17 +77,15 @@ final class Fixer
      */
     private int $numFixes = 0;
 
-    public function __construct(
-        private Ruleset $ruleset,
-        private TokenizerInterface $tokenizer
-    ) {
+    public function __construct(private TokenizerInterface $tokenizer)
+    {
     }
 
     /**
      * @throws CannotTokenizeException
      * @throws CannotFixFileException
      */
-    public function fixFile(string $content): string
+    public function fixFile(string $content, Ruleset $ruleset): string
     {
         $this->loops = 0;
         while ($this->loops < self::MAX_FIXER_ITERATION) {
@@ -98,7 +96,7 @@ final class Fixer
 
             $this->startFile($stream);
 
-            $sniffs = $this->ruleset->getSniffs();
+            $sniffs = $ruleset->getSniffs();
             foreach ($sniffs as $sniff) {
                 $sniff->fixFile($stream, $this);
             }

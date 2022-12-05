@@ -31,14 +31,14 @@ abstract class AbstractSniffTestCase extends TestCase
         $filePath ??= $this->generateFilePath();
 
         $ruleset->addSniff($sniff);
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
+        $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
 
         $fixedFile = substr($filePath, 0, -5).'.fixed.twig';
         if (file_exists($fixedFile)) {
             $content = file_get_contents($filePath);
-            $fixer = new Fixer($ruleset, $tokenizer);
+            $fixer = new Fixer($tokenizer);
 
-            $diff = TestHelper::generateDiff($fixer->fixFile($content), $fixedFile);
+            $diff = TestHelper::generateDiff($fixer->fixFile($content, $ruleset), $fixedFile);
             if ('' !== $diff) {
                 static::fail($diff);
             }
