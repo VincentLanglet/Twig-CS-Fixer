@@ -97,6 +97,7 @@ final class Linter
             if (null !== $fixer) {
                 try {
                     $content = $fixer->fixFile($content, $ruleset);
+                    file_put_contents($filePath, $content);
                 } catch (CannotFixFileException|CannotTokenizeException $exception) {
                     $sniffViolation = new SniffViolation(
                         SniffViolation::LEVEL_FATAL,
@@ -113,7 +114,10 @@ final class Linter
                 $sniff->lintFile($stream, $report);
             }
 
-            $this->cacheManager->setFile($filePath, $content);
+            // TODO: Add the ability to cache result for files with errors
+            if ([] === $report->getMessages($filePath)) {
+                $this->cacheManager->setFile($filePath, $content);
+            }
         }
 
         return $report;

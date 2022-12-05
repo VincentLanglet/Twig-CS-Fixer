@@ -56,17 +56,31 @@ final class ReportTest extends TestCase
         static::assertSame([$file, $file2, $file3], $report->getFiles());
         static::assertSame(3, $report->getTotalFiles());
 
-        static::assertSame([
-            $file  => [$sniffViolation1, $sniffViolation2, $sniffViolation4, $sniffViolation7],
-            $file2 => [$sniffViolation3, $sniffViolation5],
-            $file3 => [$sniffViolation6],
-        ], $report->getMessagesByFiles());
+        static::assertSame(
+            [$sniffViolation1, $sniffViolation2, $sniffViolation4, $sniffViolation7],
+            $report->getMessages($file)
+        );
+        static::assertSame(
+            [$sniffViolation3, $sniffViolation5],
+            $report->getMessages($file2)
+        );
+        static::assertSame(
+            [$sniffViolation6],
+            $report->getMessages($file3)
+        );
 
-        static::assertSame([
-            $file  => [$sniffViolation4, $sniffViolation7],
-            $file2 => [$sniffViolation5],
-            $file3 => [$sniffViolation6],
-        ], $report->getMessagesByFiles(Report::MESSAGE_TYPE_ERROR));
+        static::assertSame(
+            [$sniffViolation4, $sniffViolation7],
+            $report->getMessages($file, Report::MESSAGE_TYPE_ERROR)
+        );
+        static::assertSame(
+            [$sniffViolation5],
+            $report->getMessages($file2, Report::MESSAGE_TYPE_ERROR)
+        );
+        static::assertSame(
+            [$sniffViolation6],
+            $report->getMessages($file3, Report::MESSAGE_TYPE_ERROR)
+        );
     }
 
     public function testAddMessageForAnotherFile(): void

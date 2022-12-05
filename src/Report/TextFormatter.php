@@ -28,10 +28,8 @@ final class TextFormatter
 
     public function display(Report $report, ?string $level = null): void
     {
-        $messages = $report->getMessagesByFiles($level);
-
         foreach ($report->getFiles() as $file) {
-            $fileMessages = $messages[$file];
+            $fileMessages = $report->getMessages($file, $level);
             if (\count($fileMessages) > 0) {
                 $this->io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
             }

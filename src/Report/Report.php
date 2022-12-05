@@ -67,20 +67,26 @@ final class Report
     }
 
     /**
-     * @return array<string, list<SniffViolation>>
+     * @return list<SniffViolation>
      */
-    public function getMessagesByFiles(?string $level = null): array
+    public function getMessages(string $filename, ?string $level = null): array
     {
-        if (null === $level) {
-            return $this->messagesByFiles;
+        if (!isset($this->messagesByFiles[$filename])) {
+            throw new InvalidArgumentException(
+                sprintf('The file "%s" is not handled by this report.', $filename)
+            );
         }
 
-        return array_map(static fn (array $messages): array => array_values(
+        if (null === $level) {
+            return $this->messagesByFiles[$filename];
+        }
+
+        return array_values(
             array_filter(
-                $messages,
+                $this->messagesByFiles[$filename],
                 static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level)
             )
-        ), $this->messagesByFiles);
+        );
     }
 
     /**
