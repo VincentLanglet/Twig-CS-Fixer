@@ -59,10 +59,9 @@ final class Linter
                 continue;
             }
 
-            $twigSource = new Source($content, $filePath);
-
-            // Tokenize + Parse.
+            // Validate the file with twig parser.
             try {
+                $twigSource = new Source($content, $filePath);
                 $this->env->parse($this->env->tokenize($twigSource));
             } catch (Error $error) {
                 $sniffViolation = new SniffViolation(
@@ -77,9 +76,35 @@ final class Linter
                 continue;
             }
 
-            // Tokenizer.
+            if (null !== $fixer) {
+                try {
+                    $content = $fixer->fixFile($content, $ruleset);
+                    file_put_contents($filePath, $content);
+                } catch (CannotTokenizeException $exception) {
+                    $sniffViolation = new SniffViolation(
+                        SniffViolation::LEVEL_FATAL,
+                        sprintf('Unable to tokenize file: %s', $exception->getMessage()),
+                        $filePath
+                    );
+
+                    $report->addMessage($sniffViolation);
+
+                    continue;
+                } catch (CannotFixFileException $exception) {
+                    $sniffViolation = new SniffViolation(
+                        SniffViolation::LEVEL_FATAL,
+                        sprintf('Unable to fix file: %s', $exception->getMessage()),
+                        $filePath
+                    );
+
+                    $report->addMessage($sniffViolation);
+                }
+            }
+
+            // Tokenize file in order to lint.
             $this->setErrorHandler($report, $filePath);
             try {
+                $twigSource = new Source($content, $filePath);
                 $stream = $this->tokenizer->tokenize($twigSource);
             } catch (CannotTokenizeException $exception) {
                 $sniffViolation = new SniffViolation(
@@ -93,21 +118,6 @@ final class Linter
                 continue;
             }
             restore_error_handler();
-
-            if (null !== $fixer) {
-                try {
-                    $content = $fixer->fixFile($content, $ruleset);
-                    file_put_contents($filePath, $content);
-                } catch (CannotFixFileException|CannotTokenizeException $exception) {
-                    $sniffViolation = new SniffViolation(
-                        SniffViolation::LEVEL_FATAL,
-                        sprintf('Unable to fix file: %s', $exception->getMessage()),
-                        $filePath
-                    );
-
-                    $report->addMessage($sniffViolation);
-                }
-            }
 
             $sniffs = $ruleset->getSniffs();
             foreach ($sniffs as $sniff) {

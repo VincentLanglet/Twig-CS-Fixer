@@ -83,7 +83,7 @@ final class Fixer implements FixerInterface
     public function fixFile(string $content, Ruleset $ruleset): string
     {
         $this->loops = 0;
-        while ($this->loops < self::MAX_FIXER_ITERATION) {
+        do {
             $this->inConflict = false;
 
             $twigSource = new Source($content, 'TwigCsFixer');
@@ -97,21 +97,17 @@ final class Fixer implements FixerInterface
             }
 
             $this->loops++;
-
-            if (0 === $this->numFixes && !$this->inConflict) {
-                // Nothing left to do.
-                break;
-            }
-
-            // Only needed once file content has changed.
             $content = $this->getContent();
-        }
+        } while (
+            (0 !== $this->numFixes || $this->inConflict)
+            && $this->loops < self::MAX_FIXER_ITERATION
+        );
 
         if ($this->numFixes > 0) {
             throw CannotFixFileException::infiniteLoop();
         }
 
-        return $this->getContent();
+        return $content;
     }
 
     /**
