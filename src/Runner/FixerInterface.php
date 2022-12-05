@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Runner;
 
 use TwigCsFixer\Exception\CannotFixFileException;

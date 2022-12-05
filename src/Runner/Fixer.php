@@ -6,7 +6,6 @@ namespace TwigCsFixer\Runner;
 
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
-use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;

@@ -80,7 +80,7 @@ final class LinterTest extends FileTestCase
 
     public function testUntokenizableFilesAreReported(): void
     {
-        $filePath  = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
         $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
 
         $env = new StubbedEnvironment();
@@ -89,7 +89,7 @@ final class LinterTest extends FileTestCase
         $call = 0;
         $tokenizer->method('tokenize')->willReturnCallback(
             static function () use (&$call): array {
-                if ($call === 0) {
+                if (0 === $call) {
                     $call++;
                     throw CannotTokenizeException::unknownError();
                 }
@@ -166,8 +166,6 @@ final class LinterTest extends FileTestCase
     }
 
     /**
-     * @param CannotFixFileException|CannotTokenizeException $exception
-     *
      * @dataProvider buggyFixesAreReportedDataProvider
      */
     public function testBuggyFixesAreReported(
