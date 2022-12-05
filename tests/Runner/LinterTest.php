@@ -45,11 +45,7 @@ final class LinterTest extends FileTestCase
             $ruleset,
         );
 
-        $messagesByFiles = $report->getMessagesByFiles();
-        static::assertCount(2, $messagesByFiles);
-        static::assertArrayHasKey($filePath, $messagesByFiles);
-
-        $messages = $messagesByFiles[$fileNotReadablePath];
+        $messages = $report->getMessages($fileNotReadablePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -57,7 +53,7 @@ final class LinterTest extends FileTestCase
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($fileNotReadablePath, $message->getFilename());
 
-        static::assertCount(0, $messagesByFiles[$filePath]);
+        static::assertCount(0, $report->getMessages($filePath));
     }
 
     public function testInvalidFilesAreReported(): void
@@ -72,11 +68,7 @@ final class LinterTest extends FileTestCase
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
 
-        $messagesByFiles = $report->getMessagesByFiles();
-        static::assertCount(1, $messagesByFiles);
-        static::assertArrayHasKey($filePath, $messagesByFiles);
-
-        $messages = $messagesByFiles[$filePath];
+        $messages = $report->getMessages($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -97,11 +89,7 @@ final class LinterTest extends FileTestCase
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
 
-        $messagesByFiles = $report->getMessagesByFiles();
-        static::assertCount(1, $messagesByFiles);
-        static::assertArrayHasKey($filePath, $messagesByFiles);
-
-        $messages = $messagesByFiles[$filePath];
+        $messages = $report->getMessages($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -127,11 +115,7 @@ final class LinterTest extends FileTestCase
 
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
 
-        $messagesByFiles = $report->getMessagesByFiles();
-        static::assertCount(1, $messagesByFiles);
-        static::assertArrayHasKey($filePath, $messagesByFiles);
-
-        $messages = $messagesByFiles[$filePath];
+        $messages = $report->getMessages($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -157,7 +141,7 @@ final class LinterTest extends FileTestCase
 
     public function testBuggyRulesetCannotBeFixed(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -167,19 +151,15 @@ final class LinterTest extends FileTestCase
         $linter = new Linter($env, $tokenizer);
         $fixer = new Fixer($tokenizer);
 
-        $report = $linter->run([new SplFileInfo($file)], $ruleset, $fixer);
+        $report = $linter->run([new SplFileInfo($filePath)], $ruleset, $fixer);
 
-        $messagesByFiles = $report->getMessagesByFiles();
-        static::assertCount(1, $messagesByFiles);
-        static::assertArrayHasKey($file, $messagesByFiles);
-
-        $messages = $messagesByFiles[$file];
+        $messages = $report->getMessages($filePath);
         static::assertNotCount(0, $messages);
 
         $message = $messages[0];
         static::assertStringContainsString('Unable to fix file', $message->getMessage());
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
-        static::assertSame($file, $message->getFilename());
+        static::assertSame($filePath, $message->getFilename());
     }
 
     public function testFileIsSkippedIfCached(): void

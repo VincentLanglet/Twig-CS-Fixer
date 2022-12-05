@@ -44,7 +44,7 @@ abstract class AbstractSniffTestCase extends TestCase
             }
         }
 
-        $messages = $report->getMessagesByFiles()[$filePath];
+        $messages = $report->getMessages($filePath);
 
         /** @var array<array<int, int>> $messagePositions */
         $messagePositions = [];
