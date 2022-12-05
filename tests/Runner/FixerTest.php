@@ -11,11 +11,9 @@ use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Sniff\AbstractSniff;
-use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
-use Webmozart\Assert\Assert;
 
 final class FixerTest extends TestCase
 {

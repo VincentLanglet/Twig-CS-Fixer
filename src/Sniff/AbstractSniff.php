@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Sniff;
 
-use BadMethodCallException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
 use TwigCsFixer\Runner\Fixer;

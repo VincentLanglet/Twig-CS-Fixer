@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Sniff;
 
-use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use TwigCsFixer\Report\Report;
