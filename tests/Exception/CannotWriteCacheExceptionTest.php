@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Exception;
 
-use Exception;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 
@@ -12,10 +12,14 @@ final class CannotWriteCacheExceptionTest extends TestCase
 {
     public function testException(): void
     {
-        $previous = new Exception('Error', 42);
-        $exception = CannotWriteCacheException::because($previous);
-        static::assertSame($previous->getMessage(), $exception->getMessage());
+        $previous = new JsonException('Error', 42);
+        $exception = CannotWriteCacheException::jsonException($previous);
+        static::assertSame(
+            'Cannot encode cache to JSON, error: "Error".',
+            $exception->getMessage()
+        );
         static::assertSame($previous->getCode(), $exception->getCode());
+        static::assertSame($previous, $exception->getPrevious());
 
         $exception = CannotWriteCacheException::locationIsDirectory('file');
         static::assertSame(

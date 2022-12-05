@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
+use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
@@ -250,5 +251,24 @@ final class FixerTest extends TestCase
         yield ['foo', "\nbfooa\n"];
         yield ["\n", "\nb\na\n"];
         yield ["\r", "\rb\ra\r"];
+    }
+
+    public function testBeginChangesetException(): void
+    {
+        $tokenizer = new Tokenizer(new StubbedEnvironment());
+        $fixer = new Fixer($tokenizer);
+
+        $fixer->beginChangeset();
+        $this->expectException(BadMethodCallException::class);
+        $fixer->beginChangeset();
+    }
+
+    public function testEndChangesetException(): void
+    {
+        $tokenizer = new Tokenizer(new StubbedEnvironment());
+        $fixer = new Fixer($tokenizer);
+
+        $this->expectException(BadMethodCallException::class);
+        $fixer->endChangeset();
     }
 }

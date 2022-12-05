@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Sniff;
 
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Runner\Fixer;
+use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
 
 interface SniffInterface
@@ -20,5 +20,5 @@ interface SniffInterface
     /**
      * @param list<Token> $stream
      */
-    public function fixFile(array $stream, Fixer $fixer): void;
+    public function fixFile(array $stream, FixerInterface $fixer): void;
 }

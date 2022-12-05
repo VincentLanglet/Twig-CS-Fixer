@@ -127,7 +127,7 @@ final class LinterTest extends FileTestCase
         $tokenizer = $this->createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturnCallback(static function (): array {
             @trigger_error('Default');
-            @trigger_error('User Deprecation', \E_USER_DEPRECATED);
+            trigger_error('User Deprecation', \E_USER_DEPRECATED);
 
             return [];
         });
@@ -173,19 +173,39 @@ final class LinterTest extends FileTestCase
         string $expectedMessage
     ): void {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
+        $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
         $ruleset = new Ruleset();
 
+        $call = 0;
         $fixer = $this->createStub(FixerInterface::class);
-        $fixer->method('fixFile')->willThrowException($exception);
+        $fixer->method('fixFile')->willReturnCallback(
+            static function () use (&$call, $exception): string {
+                if (0 === $call) {
+                    $call++;
+                    throw $exception;
+                }
 
-        $linter = new Linter($env, $tokenizer);
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset, $fixer);
+                return '';
+            }
+        );
+
+        $cacheManager = $this->createMock(CacheManagerInterface::class);
+        $cacheManager->method('needFixing')->willReturn(true);
+        // Ensure the second file is fixed and cached
+        $cacheManager->expects(static::once())->method('setFile')->with($filePath2);
+
+        $linter = new Linter($env, $tokenizer, $cacheManager);
+        $report = $linter->run(
+            [new SplFileInfo($filePath), new SplFileInfo($filePath2)],
+            $ruleset,
+            $fixer
+        );
 
         $messages = $report->getMessages($filePath);
-        static::assertNotCount(0, $messages);
+        static::assertCount(1, $messages);
 
         $message = $messages[0];
         static::assertStringContainsString($expectedMessage, $message->getMessage());

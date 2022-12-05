@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Cache;
 
 use InvalidArgumentException;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
 use TwigCsFixer\Cache\Signature;
-use TwigCsFixer\Exception\CannotJsonEncodeException;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 
 final class CacheEncoderTest extends TestCase
@@ -71,13 +71,7 @@ final class CacheEncoderTest extends TestCase
         $signature = new Signature('7.4', "\xB1\x31", []);
         $cache = new Cache($signature);
 
-        $this->expectException(CannotJsonEncodeException::class);
-        $this->expectExceptionMessage(
-            'Cannot encode to JSON, error:'
-            .' "Malformed UTF-8 characters, possibly incorrectly encoded".'
-            .' If you have non-UTF8 or non-UTF16 chars in your signature,'
-            .' consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.'
-        );
+        $this->expectException(JsonException::class);
         CacheEncoder::toJson($cache);
     }
 }

@@ -29,6 +29,7 @@ $rules = [
         'space_before_parenthesis'     => true,
         'single_line'                  => true,
     ], // To be PSR12
+    'error_suppression'                                => false,
     'increment_style'                                  => ['style' => 'post'],
     'no_trailing_whitespace_in_string'                 => false, // For string comparison in tests
     'phpdoc_summary'                                   => false,

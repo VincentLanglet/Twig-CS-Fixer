@@ -63,7 +63,6 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             $token
         );
 
-        // Only linting currently.
         if (null === $fixer) {
             return;
         }
@@ -103,7 +102,6 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             $token
         );
 
-        // Only linting currently.
         if (null === $fixer) {
             return;
         }

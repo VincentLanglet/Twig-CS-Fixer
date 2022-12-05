@@ -6,7 +6,6 @@ namespace TwigCsFixer\Cache;
 
 use InvalidArgumentException;
 use JsonException;
-use TwigCsFixer\Exception\CannotJsonEncodeException;
 use Webmozart\Assert\Assert;
 
 final class CacheEncoder
@@ -56,21 +55,17 @@ final class CacheEncoder
     }
 
     /**
-     * @throws CannotJsonEncodeException
+     * @throws JsonException
      */
     public static function toJson(Cache $cache): string
     {
         $signature = $cache->getSignature();
 
-        try {
-            return json_encode([
-                'php_version'   => $signature->getPhpVersion(),
-                'fixer_version' => $signature->getFixerVersion(),
-                'sniffs'        => $signature->getSniffs(),
-                'hashes'        => $cache->getHashes(),
-            ], \JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
-            throw CannotJsonEncodeException::because($exception);
-        }
+        return json_encode([
+            'php_version'   => $signature->getPhpVersion(),
+            'fixer_version' => $signature->getFixerVersion(),
+            'sniffs'        => $signature->getSniffs(),
+            'hashes'        => $cache->getHashes(),
+        ], \JSON_THROW_ON_ERROR);
     }
 }

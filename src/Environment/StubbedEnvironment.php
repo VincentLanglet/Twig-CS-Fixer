@@ -49,7 +49,7 @@ final class StubbedEnvironment extends Environment
 
         $this->addTokenParser(new DumpTokenParser());
         $this->addTokenParser(new FormThemeTokenParser());
-        $this->addTokenParser(new StopwatchTokenParser(false));
+        $this->addTokenParser(new StopwatchTokenParser(true));
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
 
