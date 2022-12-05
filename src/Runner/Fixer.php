@@ -15,7 +15,7 @@ use Webmozart\Assert\Assert;
 /**
  * Fixer will fix twig files against a set of rules.
  */
-final class Fixer
+final class Fixer implements FixerInterface
 {
     public const MAX_FIXER_ITERATION = 50;
 
@@ -81,10 +81,6 @@ final class Fixer
     {
     }
 
-    /**
-     * @throws CannotTokenizeException
-     * @throws CannotFixFileException
-     */
     public function fixFile(string $content, Ruleset $ruleset): string
     {
         $this->loops = 0;
