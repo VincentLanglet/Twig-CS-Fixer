@@ -173,7 +173,7 @@ final class FixerTest extends TestCase
 
             protected function process(int $tokenPosition, array $tokens): void
             {
-                if ($this->isAlreadyExecuted || $tokens[$tokenPosition]->getValue() !== 'sniff') {
+                if ($this->isAlreadyExecuted || 'sniff' !== $tokens[$tokenPosition]->getValue()) {
                     return;
                 }
                 $this->isAlreadyExecuted = true;
@@ -202,7 +202,10 @@ final class FixerTest extends TestCase
         static::assertSame('test 2 2', $fixer->fixFile('test test test', $ruleset));
     }
 
-    public function testAddContentMethods(): void
+    /**
+     * @dataProvider addContentMethodsDataProvider
+     */
+    public function testAddContentMethods(string $content, string $expected): void
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
@@ -221,12 +224,6 @@ final class FixerTest extends TestCase
                     return;
                 }
 
-                TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
-                TestCase::assertFalse($fixer->addContentBefore($tokenPosition, 'a'));
-                TestCase::assertFalse($fixer->addNewline($tokenPosition));
-                TestCase::assertFalse($fixer->addNewlineBefore($tokenPosition));
-
-                // True for changeset
                 $fixer->beginChangeset();
                 TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
                 TestCase::assertTrue($fixer->addContentBefore($tokenPosition, 'b'));
@@ -241,42 +238,17 @@ final class FixerTest extends TestCase
 
         $fixer = new Fixer($tokenizer);
 
-        static::assertSame('a', $fixer->fixFile('', $ruleset));
+        static::assertSame($expected, $fixer->fixFile($content, $ruleset));
     }
 
-    public function testAddContentMethodsWithChangeset(): void
+    /**
+     * @return iterable<array-key, array{string, string}>
+     */
+    public function addContentMethodsDataProvider(): iterable
     {
-        $tokenizer = new Tokenizer(new StubbedEnvironment());
-
-        $sniff = new class () extends AbstractSniff {
-            private bool $isAlreadyExecuted = false;
-
-            protected function process(int $tokenPosition, array $tokens): void
-            {
-                if ($this->isAlreadyExecuted) {
-                    return;
-                }
-                $this->isAlreadyExecuted = true;
-
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
-                if (null === $fixer) {
-                    return;
-                }
-
-                $fixer->beginChangeset();
-                TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
-                TestCase::assertTrue($fixer->addContentBefore($tokenPosition, 'b'));
-                TestCase::assertTrue($fixer->addNewline($tokenPosition));
-                TestCase::assertTrue($fixer->addNewlineBefore($tokenPosition));
-                $fixer->endChangeset();
-            }
-        };
-
-        $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff);
-
-        $fixer = new Fixer($tokenizer);
-
-        static::assertSame("\nba\n", $fixer->fixFile('', $ruleset));
+        yield ['', "\nba\n"];
+        yield ['foo', "\nbfooa\n"];
+        yield ["\n", "\nb\na\n"];
+        yield ["\r", "\rb\ra\r"];
     }
 }

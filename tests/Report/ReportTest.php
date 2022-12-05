@@ -90,4 +90,12 @@ final class ReportTest extends TestCase
         self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->addMessage(new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Message', 'another_file.twig'));
     }
+
+    public function testGetMessageForAnotherFile(): void
+    {
+        $report = new Report([new SplFileInfo('file.twig')]);
+
+        self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
+        $report->getMessages('another_file.twig');
+    }
 }

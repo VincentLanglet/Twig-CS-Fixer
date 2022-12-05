@@ -163,7 +163,7 @@ final class Tokenizer implements TokenizerInterface
         $this->state = [];
         $this->bracketsAndTernary = [];
 
-        $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
+        $this->code = $source->getCode();
         $this->end = \strlen($this->code);
         $this->filename = $source->getName();
     }
@@ -425,7 +425,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (\PHP_EOL === $currentCode) {
+        } elseif (1 === preg_match("/\r\n?|\n/", $currentCode)) {
             $this->lexEOL();
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
