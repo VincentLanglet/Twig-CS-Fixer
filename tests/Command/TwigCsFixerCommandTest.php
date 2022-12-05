@@ -12,39 +12,6 @@ use TwigCsFixer\Tests\FileTestCase;
 
 final class TwigCsFixerCommandTest extends FileTestCase
 {
-    public function testExecuteWithPaths(): void
-    {
-        $command = new TwigCsFixerCommand();
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
-        ]);
-
-        static::assertStringContainsString(
-            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
-            $commandTester->getDisplay()
-        );
-        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
-    }
-
-    public function testExecuteWithConfig(): void
-    {
-        $command = new TwigCsFixerCommand();
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
-            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer.php'),
-        ]);
-
-        static::assertStringContainsString(
-            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
-            $commandTester->getDisplay()
-        );
-        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
-    }
-
     public function testExecuteWithSuccess(): void
     {
         $command = new TwigCsFixerCommand();
@@ -76,6 +43,56 @@ final class TwigCsFixerCommandTest extends FileTestCase
             $commandTester->getDisplay()
         );
         static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithReportErrors(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
+        ]);
+
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
+            $commandTester->getDisplay()
+        );
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithReportErrorsFixed(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--fix' => true,
+        ]);
+
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
+            $commandTester->getDisplay()
+        );
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithConfig(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer.php'),
+        ]);
+
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
+            $commandTester->getDisplay()
+        );
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
     }
 
     public function testExecuteWithError(): void

@@ -169,7 +169,8 @@ final class LinterTest extends FileTestCase
      * @dataProvider buggyFixesAreReportedDataProvider
      */
     public function testBuggyFixesAreReported(
-        CannotFixFileException|CannotTokenizeException $exception
+        CannotFixFileException|CannotTokenizeException $exception,
+        string $expectedMessage
     ): void {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
@@ -187,7 +188,7 @@ final class LinterTest extends FileTestCase
         static::assertNotCount(0, $messages);
 
         $message = $messages[0];
-        static::assertStringContainsString('Unable to fix file', $message->getMessage());
+        static::assertStringContainsString($expectedMessage, $message->getMessage());
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
     }
@@ -197,8 +198,8 @@ final class LinterTest extends FileTestCase
      */
     public function buggyFixesAreReportedDataProvider(): iterable
     {
-        yield [CannotFixFileException::infiniteLoop()];
-        yield [CannotTokenizeException::unknownError()];
+        yield [CannotFixFileException::infiniteLoop(), 'Unable to fix file'];
+        yield [CannotTokenizeException::unknownError(), 'Unable to tokenize file'];
     }
 
     public function testFileIsSkippedIfCached(): void
