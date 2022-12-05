@@ -70,7 +70,7 @@ final class FixerTest extends TestCase
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'c'));
                 $fixer->endChangeset();
 
-                // False if you replace mutiple times the same token
+                // False if you replace multiple times the same token
                 TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'd'));
 
                 // Still true for changeset
@@ -94,8 +94,6 @@ final class FixerTest extends TestCase
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff = new class () extends AbstractSniff {
-            private int $executed = 0;
-
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
@@ -104,17 +102,6 @@ final class FixerTest extends TestCase
                 }
 
                 $fixer->replaceToken($tokenPosition, 'a');
-
-                $fixer->beginChangeset();
-                $fixer->replaceToken($tokenPosition, 'b');
-                $fixer->endChangeset();
-
-                $this->executed++;
-            }
-
-            public function getExecuted(): int
-            {
-                return $this->executed;
             }
         };
 
@@ -124,9 +111,7 @@ final class FixerTest extends TestCase
         $fixer = new Fixer($tokenizer);
 
         $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
-
-        static::assertSame('a', $fixer->fixFile('', $ruleset));
-        static::assertSame(Fixer::MAX_FIXER_ITERATION, $sniff->getExecuted());
+        $fixer->fixFile('', $ruleset);
     }
 
     public function testReplaceTokenIsDesignedAgainstConflict(): void
@@ -134,37 +119,75 @@ final class FixerTest extends TestCase
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff1 = new class () extends AbstractSniff {
+            private bool $isAlreadyExecuted = false;
+
             protected function process(int $tokenPosition, array $tokens): void
             {
-                if ($tokenPosition > 0) {
+                if ($this->isAlreadyExecuted) {
                     return;
                 }
+                $this->isAlreadyExecuted = true;
 
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
                 if (null === $fixer) {
                     return;
                 }
 
-                $fixer->beginChangeset();
-                $fixer->replaceToken($tokenPosition, 'a');
-                $fixer->endChangeset();
+                $fixer->replaceToken($tokenPosition, 'sniff');
             }
         };
         $sniff2 = new class () extends AbstractSniff {
+            private int $error = 0;
+
             protected function process(int $tokenPosition, array $tokens): void
             {
                 if ($tokenPosition > 0) {
                     return;
                 }
 
+                if (
+                    str_starts_with($tokens[$tokenPosition]->getValue(), 'test')
+                    || is_numeric($tokens[$tokenPosition + 2]->getValue())
+                    || is_numeric($tokens[$tokenPosition + 4]->getValue())
+                ) {
+                    return;
+                }
+
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $this->error++;
                 if (null === $fixer) {
                     return;
                 }
 
                 $fixer->beginChangeset();
-                $fixer->replaceToken($tokenPosition + 1, 'b');
-                $fixer->replaceToken($tokenPosition, 'b');
+                $fixer->replaceToken($tokenPosition + 2, (string) $this->error);
+                // Order matter, to check we revert the previous change
+                $fixer->replaceToken($tokenPosition, 'test');
+                // And to check we're not applying the next change
+                $fixer->replaceToken($tokenPosition + 4, (string) $this->error);
+                $fixer->endChangeset();
+            }
+        };
+        $sniff3 = new class () extends AbstractSniff {
+            private bool $isAlreadyExecuted = false;
+
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+                if ($this->isAlreadyExecuted || $tokens[$tokenPosition]->getValue() !== 'sniff') {
+                    return;
+                }
+                $this->isAlreadyExecuted = true;
+
+                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                if (null === $fixer) {
+                    return;
+                }
+
+                // On the first execution, a conflict is created by sniff 1 and 2
+                // So the fixer won't try to fix anything else
+                TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
+                $fixer->beginChangeset();
+                TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
                 $fixer->endChangeset();
             }
         };
@@ -172,61 +195,11 @@ final class FixerTest extends TestCase
         $ruleset = new Ruleset();
         $ruleset->addSniff($sniff1);
         $ruleset->addSniff($sniff2);
+        $ruleset->addSniff($sniff3);
 
         $fixer = new Fixer($tokenizer);
 
-        $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
-        $fixer->fixFile('test', $ruleset);
-    }
-
-    public function testReplaceTokenIsDesignedAgainstConflict2(): void
-    {
-        $tokenizer = new Tokenizer(new StubbedEnvironment());
-
-        $sniff1 = new class () extends AbstractSniff {
-            protected function process(int $tokenPosition, array $tokens): void
-            {
-                if ($tokenPosition > 0) {
-                    return;
-                }
-
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
-                if (null === $fixer) {
-                    return;
-                }
-
-                $fixer->beginChangeset();
-                $fixer->replaceToken($tokenPosition, 'a');
-                $fixer->endChangeset();
-            }
-        };
-        $sniff2 = new class () extends AbstractSniff {
-            protected function process(int $tokenPosition, array $tokens): void
-            {
-                if ($tokenPosition > 0) {
-                    return;
-                }
-
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
-                if (null === $fixer) {
-                    return;
-                }
-
-                $fixer->beginChangeset();
-                $fixer->replaceToken($tokenPosition + 1, 'b');
-                $fixer->replaceToken($tokenPosition, 'b');
-                $fixer->endChangeset();
-            }
-        };
-
-        $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff1);
-        $ruleset->addSniff($sniff2);
-
-        $fixer = new Fixer($tokenizer);
-
-        $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
-        $fixer->fixFile('test', $ruleset);
+        static::assertSame('test 2 2', $fixer->fixFile('test test test', $ruleset));
     }
 
     public function testAddContentMethods(): void

@@ -134,21 +134,18 @@ final class Fixer implements FixerInterface
 
         $this->inChangeset = false;
 
-        $success = true;
         $applied = [];
         foreach ($this->changeset as $tokenPosition => $content) {
             $success = $this->replaceToken($tokenPosition, $content);
             if (!$success) {
+                // Rolling back all changes.
+                foreach ($applied as $appliedTokenPosition) {
+                    $this->revertToken($appliedTokenPosition);
+                }
                 break;
             }
-            $applied[] = $tokenPosition;
-        }
 
-        if (!$success) {
-            // Rolling back all changes.
-            foreach ($applied as $tokenPosition) {
-                $this->revertToken($tokenPosition);
-            }
+            $applied[] = $tokenPosition;
         }
 
         $this->changeset = [];

@@ -72,7 +72,6 @@ final class Linter
                 );
 
                 $report->addMessage($sniffViolation);
-
                 continue;
             }
 
@@ -88,7 +87,6 @@ final class Linter
                     );
 
                     $report->addMessage($sniffViolation);
-
                     continue;
                 } catch (CannotFixFileException $exception) {
                     $sniffViolation = new SniffViolation(
@@ -114,7 +112,6 @@ final class Linter
                 );
 
                 $report->addMessage($sniffViolation);
-
                 continue;
             }
             restore_error_handler();

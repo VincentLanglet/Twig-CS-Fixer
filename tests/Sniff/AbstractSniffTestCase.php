@@ -36,6 +36,7 @@ abstract class AbstractSniffTestCase extends TestCase
         $fixedFile = substr($filePath, 0, -5).'.fixed.twig';
         if (file_exists($fixedFile)) {
             $content = file_get_contents($filePath);
+            static::assertNotFalse($content);
             $fixer = new Fixer($tokenizer);
 
             $diff = TestHelper::generateDiff($fixer->fixFile($content, $ruleset), $fixedFile);
