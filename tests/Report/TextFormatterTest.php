@@ -110,6 +110,68 @@ final class TextFormatterTest extends TestCase
         static::assertStringContainsString('[OK]', $text);
     }
 
+    public function testDisplayMultipleFiles(): void
+    {
+        $input = new ArrayInput([]);
+        $output = new BufferedOutput();
+        $textFormatter = new TextFormatter($input, $output);
+
+        $file = __DIR__.'/Fixtures/file.twig';
+        $file2 = __DIR__.'/Fixtures/file2.twig';
+
+        $report = new Report([new SplFileInfo($file), new SplFileInfo($file2)]);
+        $violation = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3);
+        $report->addMessage($violation);
+
+        $textFormatter->display($report);
+
+        static::assertStringContainsString(
+            sprintf(
+                <<<EOD
+                     KO %s/Fixtures/file.twig
+                     ------- ----------------------------------- 
+                      ERROR   2    |     {# Some text line 2 #}  
+                              3    | {# Some text line 3 #}      
+                              >>   | Error                       
+                              4    |                             
+                     ------- ----------------------------------- 
+                    
+                     [ERROR] Files linted: 2, notices: 0, warnings: 0, errors: 1
+                    EOD,
+                __DIR__
+            ),
+            $output->fetch()
+        );
+    }
+
+    public function testDisplayNotFoundFile(): void
+    {
+        $input = new ArrayInput([]);
+        $output = new BufferedOutput();
+        $textFormatter = new TextFormatter($input, $output);
+
+        $file = __DIR__.'/Fixtures/fileNotFound.twig';
+
+        $report = new Report([new SplFileInfo($file)]);
+        $violation = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 1);
+        $report->addMessage($violation);
+
+        $textFormatter->display($report);
+
+        static::assertStringContainsString(
+            sprintf(
+                <<<EOD
+                     KO %s/Fixtures/fileNotFound.twig
+                     ------- -------------- 
+                      ERROR   >>   | Error  
+                     ------- -------------- 
+                    EOD,
+                __DIR__
+            ),
+            $output->fetch()
+        );
+    }
+
     /**
      * @dataProvider displayBlockDataProvider
      */

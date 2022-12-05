@@ -12,7 +12,9 @@ final class EmptyLinesTest extends AbstractSniffTestCase
     public function testSniff(): void
     {
         $this->checkSniff(new EmptyLinesSniff(), [
-            [3 => 1],
+            [2 => 1],
+            [5  => 1],
+            [10 => 1],
         ]);
     }
 }

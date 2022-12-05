@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache\FileHandler;
 
 use InvalidArgumentException;
+use JsonException;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
-use TwigCsFixer\Exception\CannotJsonEncodeException;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 
 final class CacheFileHandler implements CacheFileHandlerInterface
@@ -62,8 +62,8 @@ final class CacheFileHandler implements CacheFileHandlerInterface
 
         try {
             file_put_contents($this->file, CacheEncoder::toJson($cache));
-        } catch (CannotJsonEncodeException $exception) {
-            throw CannotWriteCacheException::because($exception);
+        } catch (JsonException $exception) {
+            throw CannotWriteCacheException::jsonException($exception);
         }
     }
 }

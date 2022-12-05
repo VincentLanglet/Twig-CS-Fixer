@@ -6,14 +6,14 @@ namespace TwigCsFixer\Sniff;
 
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\SniffViolation;
-use TwigCsFixer\Runner\Fixer;
+use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
 
 abstract class AbstractSniff implements SniffInterface
 {
     private ?Report $report = null;
 
-    private ?Fixer $fixer = null;
+    private ?FixerInterface $fixer = null;
 
     public function lintFile(array $stream, Report $report): void
     {
@@ -25,7 +25,7 @@ abstract class AbstractSniff implements SniffInterface
         }
     }
 
-    public function fixFile(array $stream, Fixer $fixer): void
+    public function fixFile(array $stream, FixerInterface $fixer): void
     {
         $this->report = null;
         $this->fixer = $fixer;
@@ -111,12 +111,12 @@ abstract class AbstractSniff implements SniffInterface
         $this->addMessage(SniffViolation::LEVEL_ERROR, $message, $token);
     }
 
-    protected function addFixableWarning(string $message, Token $token): ?Fixer
+    protected function addFixableWarning(string $message, Token $token): ?FixerInterface
     {
         return $this->addFixableMessage(SniffViolation::LEVEL_WARNING, $message, $token);
     }
 
-    protected function addFixableError(string $message, Token $token): ?Fixer
+    protected function addFixableError(string $message, Token $token): ?FixerInterface
     {
         return $this->addFixableMessage(SniffViolation::LEVEL_ERROR, $message, $token);
     }
@@ -140,7 +140,7 @@ abstract class AbstractSniff implements SniffInterface
         $report->addMessage($sniffViolation);
     }
 
-    private function addFixableMessage(int $messageType, string $message, Token $token): ?Fixer
+    private function addFixableMessage(int $messageType, string $message, Token $token): ?FixerInterface
     {
         $this->addMessage($messageType, $message, $token);
 

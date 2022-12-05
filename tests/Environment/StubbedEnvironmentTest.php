@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Environment;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Twig\Node\DumpNode;
+use Symfony\Bridge\Twig\Node\FormThemeNode;
+use Symfony\Bridge\Twig\Node\StopwatchNode;
+use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
+use Symfony\Bridge\Twig\Node\TransNode;
+use Twig\Extra\Cache\Node\CacheNode;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
+use Twig\Node\TextNode;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -47,7 +54,18 @@ final class StubbedEnvironmentTest extends TestCase
         $env = new StubbedEnvironment();
         $source = new Source($content, 'tags.html.twig');
 
-        $env->parse($env->tokenize($source));
+        $nodes = $env->parse($env->tokenize($source));
+
+        $body = $nodes->getNode('body')->getNode('0');
+        static::assertInstanceOf(FormThemeNode::class, $body->getNode('0'));
+        static::assertInstanceOf(TextNode::class, $body->getNode('1'));
+        static::assertInstanceOf(DumpNode::class, $body->getNode('2'));
+        static::assertInstanceOf(TextNode::class, $body->getNode('3'));
+        static::assertInstanceOf(StopwatchNode::class, $body->getNode('4'));
+        static::assertInstanceOf(TextNode::class, $body->getNode('5'));
+        static::assertInstanceOf(TransDefaultDomainNode::class, $body->getNode('6'));
+        static::assertInstanceOf(TextNode::class, $body->getNode('7'));
+        static::assertInstanceOf(TransNode::class, $body->getNode('8'));
     }
 
     public function testParseCacheTag(): void
@@ -62,7 +80,9 @@ final class StubbedEnvironmentTest extends TestCase
         $env = new StubbedEnvironment();
         $source = new Source($content, 'tags.html.twig');
 
-        $env->parse($env->tokenize($source));
+        $nodes = $env->parse($env->tokenize($source));
+        $body = $nodes->getNode('body');
+        static::assertInstanceOf(CacheNode::class, $body->getNode('0'));
     }
 
     public function testParseWithCustomTag(): void

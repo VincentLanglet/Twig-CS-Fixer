@@ -42,7 +42,6 @@ final class BlankEOFSniff extends AbstractSniff
             $token
         );
 
-        // Only linting currently.
         if (null === $fixer) {
             return;
         }

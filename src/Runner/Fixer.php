@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Runner;
 
+use BadMethodCallException;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Ruleset\Ruleset;
@@ -71,11 +72,6 @@ final class Fixer implements FixerInterface
      */
     private bool $inConflict = false;
 
-    /**
-     * The number of fixes that have been performed.
-     */
-    private int $numFixes = 0;
-
     public function __construct(private TokenizerInterface $tokenizer)
     {
     }
@@ -98,54 +94,51 @@ final class Fixer implements FixerInterface
 
             $this->loops++;
             $content = $this->getContent();
+            $numFixes = \count($this->fixedTokens);
         } while (
-            (0 !== $this->numFixes || $this->inConflict)
+            (0 !== $numFixes || $this->inConflict)
             && $this->loops < self::MAX_FIXER_ITERATION
         );
 
-        if ($this->numFixes > 0) {
+        if ($numFixes > 0) {
             throw CannotFixFileException::infiniteLoop();
         }
 
         return $content;
     }
 
-    /**
-     * Start recording actions for a changeset.
-     */
     public function beginChangeset(): void
     {
-        if ($this->inConflict) {
-            return;
+        if ($this->inChangeset) {
+            throw new BadMethodCallException('Already in changeset.');
         }
 
         $this->changeset = [];
         $this->inChangeset = true;
     }
 
-    /**
-     * Stop recording actions for a changeset, and apply logged changes.
-     */
     public function endChangeset(): void
     {
-        if ($this->inConflict) {
-            return;
+        if (!$this->inChangeset) {
+            throw new BadMethodCallException('There is no current changeset.');
         }
 
         $this->inChangeset = false;
 
-        $applied = [];
-        foreach ($this->changeset as $tokenPosition => $content) {
-            $success = $this->replaceToken($tokenPosition, $content);
-            if (!$success) {
-                // Rolling back all changes.
-                foreach ($applied as $appliedTokenPosition) {
-                    $this->revertToken($appliedTokenPosition);
+        if (!$this->inConflict) {
+            $applied = [];
+            foreach ($this->changeset as $tokenPosition => $content) {
+                $success = $this->replaceToken($tokenPosition, $content);
+                if (!$success) {
+                    // Rolling back all changes.
+                    foreach ($applied as $appliedTokenPosition) {
+                        $this->revertToken($appliedTokenPosition);
+                    }
+                    break;
                 }
-                break;
-            }
 
-            $applied[] = $tokenPosition;
+                $applied[] = $tokenPosition;
+            }
         }
 
         $this->changeset = [];
@@ -188,7 +181,6 @@ final class Fixer implements FixerInterface
 
         $this->fixedTokens[$tokenPosition] = $this->tokens[$tokenPosition];
         $this->tokens[$tokenPosition] = $content;
-        $this->numFixes++;
 
         return true;
     }
@@ -226,7 +218,6 @@ final class Fixer implements FixerInterface
      */
     private function startFile(array $tokens): void
     {
-        $this->numFixes = 0;
         $this->fixedTokens = [];
 
         $this->tokens = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
@@ -260,6 +251,5 @@ final class Fixer implements FixerInterface
 
         $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
         unset($this->fixedTokens[$tokenPosition]);
-        $this->numFixes--;
     }
 }
