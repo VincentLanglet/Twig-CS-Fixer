@@ -19,18 +19,6 @@ use Webmozart\Assert\Assert;
 
 final class FixerTest extends FileTestCase
 {
-    public function testUnreadableFile(): void
-    {
-        $tokenizer = $this->createStub(TokenizerInterface::class);
-        $ruleset = new Ruleset();
-
-        $fixer = new Fixer($ruleset, $tokenizer);
-
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/file_not_readable.twig');
-        $this->expectExceptionObject(CannotFixFileException::fileNotReadable($file));
-        $fixer->fixFile($file);
-    }
-
     public function testInvalidFile(): void
     {
         $exception = CannotTokenizeException::unknownError();
@@ -47,24 +35,18 @@ final class FixerTest extends FileTestCase
 
     public function testValidFile(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file);
-
         $tokenizer = $this->createMock(TokenizerInterface::class);
         $tokenizer->expects(static::once())->method('tokenize')->willReturn([
-            new Token(Token::EOF_TYPE, 0, 0, $file),
+            new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
         ]);
 
         $ruleset = new Ruleset();
         $fixer = new Fixer($ruleset, $tokenizer);
-        $fixer->fixFile($file);
+        $fixer->fixFile('');
     }
 
     public function testReplaceToken(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file);
-
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff = new class () extends AbstractSniff {
@@ -105,17 +87,12 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff);
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        $sniff->enableFixer($fixer);
-        $fixer->fixFile($file);
 
-        static::assertSame('a', $fixer->getContents());
+        static::assertSame('a', $fixer->fixFile(''));
     }
 
     public function testReplaceTokenIsDesignedAgainstInfiniteLoop(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file);
-
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff = new class () extends AbstractSniff {
@@ -147,20 +124,15 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff);
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        $sniff->enableFixer($fixer);
 
-        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($file));
-        $fixer->fixFile($file);
+        $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
 
-        static::assertSame('a', $fixer->getContents());
+        static::assertSame('a', $fixer->fixFile(''));
         static::assertSame(Fixer::MAX_FIXER_ITERATION, $sniff->getExecuted());
     }
 
     public function testReplaceTokenIsDesignedAgainstConflict(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file, 'test'); // This test require a non-empty file
-
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff1 = new class () extends AbstractSniff {
@@ -204,23 +176,13 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff2);
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        $sniff1->enableFixer($fixer);
-        $sniff2->enableFixer($fixer);
 
-        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($file));
-        try {
-            $fixer->fixFile($file);
-        } finally {
-            // No change should be done (even if there is no conflict on token position 1)
-            static::assertSame('test', file_get_contents($file));
-        }
+        $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
+        $fixer->fixFile('test');
     }
 
     public function testReplaceTokenIsDesignedAgainstConflict2(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file, 'test'); // This test require a non-empty file
-
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff1 = new class () extends AbstractSniff {
@@ -264,23 +226,13 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff2);
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        $sniff1->enableFixer($fixer);
-        $sniff2->enableFixer($fixer);
 
-        $this->expectExceptionObject(CannotFixFileException::infiniteLoop($file));
-        try {
-            $fixer->fixFile($file);
-        } finally {
-            // No change should be done (even if there is no conflict on token position 1)
-            static::assertSame('test', file_get_contents($file));
-        }
+        $this->expectExceptionObject(CannotFixFileException::infiniteLoop());
+        $fixer->fixFile('test');
     }
 
     public function testAddContentMethods(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file);
-
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff = new class () extends AbstractSniff {
@@ -317,17 +269,12 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff);
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        $sniff->enableFixer($fixer);
-        $fixer->fixFile($file);
 
-        static::assertSame('a', $fixer->getContents());
+        static::assertSame('a', $fixer->fixFile(''));
     }
 
     public function testAddContentMethodsWithChangeset(): void
     {
-        $file = $this->getTmpPath(__DIR__.'/Fixtures/Fixer/emptyFile.twig');
-        $this->resetFile($file);
-
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $sniff = new class () extends AbstractSniff {
@@ -358,10 +305,8 @@ final class FixerTest extends FileTestCase
         $ruleset->addSniff($sniff);
 
         $fixer = new Fixer($ruleset, $tokenizer);
-        $sniff->enableFixer($fixer);
-        $fixer->fixFile($file);
 
-        static::assertSame("\nba\n", $fixer->getContents());
+        static::assertSame("\nba\n", $fixer->fixFile(''));
     }
 
     private function resetFile(string $path, string $content = ''): void

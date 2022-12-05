@@ -29,10 +29,15 @@ final class LinterTest extends FileTestCase
 
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
+        $cacheManager = $this->createMock(CacheManagerInterface::class);
+        $cacheManager->method('needFixing')->willReturn(true);
+        // Ensure the second file is fixed and cached
+        $cacheManager->expects(static::once())->method('setFile')->with($filePath);
+
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
         $ruleset = new Ruleset();
-        $linter = new Linter($env, $tokenizer);
+        $linter = new Linter($env, $tokenizer, $cacheManager);
 
         $report = $linter->run(
             [new SplFileInfo($fileNotReadablePath), new SplFileInfo($filePath)],
@@ -90,7 +95,7 @@ final class LinterTest extends FileTestCase
         $linter = new Linter($env, $tokenizer);
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset, false);
+        $report = $linter->run([new SplFileInfo($filePath)], $ruleset, true);
 
         $messagesByFiles = $report->getMessagesByFiles();
         static::assertCount(1, $messagesByFiles);

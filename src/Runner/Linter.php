@@ -38,128 +38,86 @@ final class Linter
     public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
     {
         $report = new Report($files);
-
-        if ($fix) {
-            $this->fix($files, $ruleset, $report);
-        }
-
-        foreach ($ruleset->getSniffs() as $sniff) {
-            $sniff->enableReport($report);
-        }
+        $fixer = new Fixer($ruleset, $this->tokenizer);
 
         // Process
         foreach ($files as $file) {
             $filePath = $file->getPathname();
 
             $content = @file_get_contents($filePath);
-            if (false !== $content && !$this->cacheManager->needFixing($filePath, $content)) {
-                continue;
-            }
-
-            $this->setErrorHandler($report, $filePath);
-            $this->processTemplate($filePath, $ruleset, $report);
-        }
-        restore_error_handler();
-
-        // tearDown
-        foreach ($ruleset->getSniffs() as $sniff) {
-            $sniff->disable();
-        }
-
-        return $report;
-    }
-
-    /**
-     * @param iterable<SplFileInfo> $files
-     */
-    private function fix(iterable $files, Ruleset $ruleset, Report $report): void
-    {
-        $fixer = new Fixer($ruleset, $this->tokenizer);
-
-        foreach ($ruleset->getSniffs() as $sniff) {
-            $sniff->enableFixer($fixer);
-        }
-
-        foreach ($files as $file) {
-            $filePath = $file->getPathname();
-            $content = @file_get_contents($filePath);
-
-            // When the file is not found we're skipping the fix
-            // The error will already be reported by the linter
-            if (false === $content || !$this->cacheManager->needFixing($filePath, $content)) {
-                continue;
-            }
-
-            try {
-                $fixer->fixFile($filePath);
-            } catch (CannotFixFileException|CannotTokenizeException $exception) {
+            if (false === $content) {
                 $sniffViolation = new SniffViolation(
                     SniffViolation::LEVEL_FATAL,
-                    sprintf('Unable to fix file: %s', $exception->getMessage()),
+                    'Unable to read file.',
                     $filePath
                 );
 
                 $report->addMessage($sniffViolation);
+                continue;
             }
 
-            $contents = $fixer->getContents();
-            file_put_contents($filePath, $contents);
-            $this->cacheManager->setFile($filePath, $contents);
+            if (!$this->cacheManager->needFixing($filePath, $content)) {
+                continue;
+            }
+
+            $twigSource = new Source($content, $filePath);
+
+            // Tokenize + Parse.
+            try {
+                $this->env->parse($this->env->tokenize($twigSource));
+            } catch (Error $error) {
+                $sniffViolation = new SniffViolation(
+                    SniffViolation::LEVEL_FATAL,
+                    sprintf('File is invalid: %s', $error->getRawMessage()),
+                    $filePath,
+                    $error->getTemplateLine()
+                );
+
+                $report->addMessage($sniffViolation);
+
+                continue;
+            }
+
+            // Tokenizer.
+            $this->setErrorHandler($report, $filePath);
+            try {
+                $stream = $this->tokenizer->tokenize($twigSource);
+            } catch (CannotTokenizeException $exception) {
+                $sniffViolation = new SniffViolation(
+                    SniffViolation::LEVEL_FATAL,
+                    sprintf('Unable to tokenize file: %s', $exception->getMessage()),
+                    $filePath
+                );
+
+                $report->addMessage($sniffViolation);
+
+                continue;
+            }
+            restore_error_handler();
+
+            if ($fix) {
+                try {
+                    $content = $fixer->fixFile($content);
+                } catch (CannotFixFileException|CannotTokenizeException $exception) {
+                    $sniffViolation = new SniffViolation(
+                        SniffViolation::LEVEL_FATAL,
+                        sprintf('Unable to fix file: %s', $exception->getMessage()),
+                        $filePath
+                    );
+
+                    $report->addMessage($sniffViolation);
+                }
+            }
+
+            $sniffs = $ruleset->getSniffs();
+            foreach ($sniffs as $sniff) {
+                $sniff->lintFile($stream, $report);
+            }
+
+            $this->cacheManager->setFile($filePath, $content);
         }
-    }
 
-    private function processTemplate(string $filePath, Ruleset $ruleset, Report $report): void
-    {
-        $content = @file_get_contents($filePath);
-        if (false === $content) {
-            $sniffViolation = new SniffViolation(
-                SniffViolation::LEVEL_FATAL,
-                'Unable to read file.',
-                $filePath
-            );
-
-            $report->addMessage($sniffViolation);
-
-            return;
-        }
-
-        $twigSource = new Source($content, $filePath);
-
-        // Tokenize + Parse.
-        try {
-            $this->env->parse($this->env->tokenize($twigSource));
-        } catch (Error $error) {
-            $sniffViolation = new SniffViolation(
-                SniffViolation::LEVEL_FATAL,
-                sprintf('File is invalid: %s', $error->getRawMessage()),
-                $filePath,
-                $error->getTemplateLine()
-            );
-
-            $report->addMessage($sniffViolation);
-
-            return;
-        }
-
-        // Tokenizer.
-        try {
-            $stream = $this->tokenizer->tokenize($twigSource);
-        } catch (CannotTokenizeException $exception) {
-            $sniffViolation = new SniffViolation(
-                SniffViolation::LEVEL_FATAL,
-                sprintf('Unable to tokenize file: %s', $exception->getMessage()),
-                $filePath
-            );
-
-            $report->addMessage($sniffViolation);
-
-            return;
-        }
-
-        $sniffs = $ruleset->getSniffs();
-        foreach ($sniffs as $sniff) {
-            $sniff->processFile($stream);
-        }
+        return $report;
     }
 
     private function setErrorHandler(Report $report, string $file): void

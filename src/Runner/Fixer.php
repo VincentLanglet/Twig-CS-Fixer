@@ -87,25 +87,20 @@ final class Fixer
      * @throws CannotTokenizeException
      * @throws CannotFixFileException
      */
-    public function fixFile(string $file): void
+    public function fixFile(string $content): string
     {
-        $contents = @file_get_contents($file);
-        if (false === $contents) {
-            throw CannotFixFileException::fileNotReadable($file);
-        }
-
         $this->loops = 0;
         while ($this->loops < self::MAX_FIXER_ITERATION) {
             $this->inConflict = false;
 
-            $twigSource = new Source($contents, 'TwigCsFixer');
+            $twigSource = new Source($content, 'TwigCsFixer');
             $stream = $this->tokenizer->tokenize($twigSource);
 
             $this->startFile($stream);
 
             $sniffs = $this->ruleset->getSniffs();
             foreach ($sniffs as $sniff) {
-                $sniff->processFile($stream);
+                $sniff->fixFile($stream, $this);
             }
 
             $this->loops++;
@@ -116,17 +111,14 @@ final class Fixer
             }
 
             // Only needed once file content has changed.
-            $contents = $this->getContents();
+            $content = $this->getContent();
         }
 
         if ($this->numFixes > 0) {
-            throw CannotFixFileException::infiniteLoop($file);
+            throw CannotFixFileException::infiniteLoop();
         }
-    }
 
-    public function getContents(): string
-    {
-        return implode('', $this->tokens);
+        return $this->getContent();
     }
 
     /**
@@ -253,8 +245,13 @@ final class Fixer
 
         $this->tokens = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
 
-        preg_match("/\r\n?|\n/", $this->getContents(), $matches);
+        preg_match("/\r\n?|\n/", $this->getContent(), $matches);
         $this->eolChar = $matches[0] ?? "\n";
+    }
+
+    private function getContent(): string
+    {
+        return implode('', $this->tokens);
     }
 
     /**
