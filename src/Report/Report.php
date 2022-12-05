@@ -77,7 +77,6 @@ final class Report
             );
         }
 
-
         if (null === $level) {
             return $this->messagesByFiles[$filename];
         }
