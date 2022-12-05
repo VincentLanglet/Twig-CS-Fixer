@@ -35,7 +35,7 @@ final class Linter
     /**
      * @param iterable<SplFileInfo> $files
      */
-    public function run(iterable $files, Ruleset $ruleset, ?Fixer $fixer = null): Report
+    public function run(iterable $files, Ruleset $ruleset, ?FixerInterface $fixer = null): Report
     {
         $report = new Report($files);
 
@@ -114,7 +114,9 @@ final class Linter
                 $sniff->lintFile($stream, $report);
             }
 
-            // TODO: Add the ability to cache result for files with errors
+            // Only cache the file if there is no error in order to
+            // - still see the errors when running again the linter
+            // - still having the possibility to fix the file
             if ([] === $report->getMessages($filePath)) {
                 $this->cacheManager->setFile($filePath, $content);
             }
