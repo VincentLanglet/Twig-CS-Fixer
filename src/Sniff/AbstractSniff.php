@@ -12,28 +12,25 @@ use TwigCsFixer\Token\Token;
 
 abstract class AbstractSniff implements SniffInterface
 {
-    protected ?Report $report = null;
+    private ?Report $report = null;
 
     private ?Fixer $fixer = null;
 
-    public function enableReport(Report $report): void
+    public function lintFile(array $stream, Report $report): void
     {
         $this->report = $report;
+        $this->fixer = null;
+
+        foreach (array_keys($stream) as $index) {
+            $this->process($index, $stream);
+        }
     }
 
-    public function enableFixer(Fixer $fixer): void
-    {
-        $this->fixer = $fixer;
-    }
-
-    public function disable(): void
+    public function fixFile(array $stream, Fixer $fixer): void
     {
         $this->report = null;
-        $this->fixer = null;
-    }
+        $this->fixer = $fixer;
 
-    public function processFile(array $stream): void
-    {
         foreach (array_keys($stream) as $index) {
             $this->process($index, $stream);
         }
@@ -129,14 +126,8 @@ abstract class AbstractSniff implements SniffInterface
     {
         $report = $this->report;
         if (null === $report) {
-            if (null !== $this->fixer) {
-                // We are fixing the file, ignore this
-                return;
-            }
-
-            throw new BadMethodCallException(
-                sprintf('Cannot add a message to the sniff "%s" without a report.', self::class)
-            );
+            // We are fixing the file.
+            return;
         }
 
         $sniffViolation = new SniffViolation(

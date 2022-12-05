@@ -11,20 +11,14 @@ use TwigCsFixer\Token\Token;
 interface SniffInterface
 {
     /**
-     * Once the sniff is enabled, it will be registered and executed when a template is tokenized or parsed.
      * Messages will be added to the given `$report` object.
+     *
+     * @param list<Token> $stream
      */
-    public function enableReport(Report $report): void;
-
-    public function enableFixer(Fixer $fixer): void;
-
-    /**
-     * It is usually disabled when the processing is over, it will reset the sniff internal values for next checks.
-     */
-    public function disable(): void;
+    public function lintFile(array $stream, Report $report): void;
 
     /**
      * @param list<Token> $stream
      */
-    public function processFile(array $stream): void;
+    public function fixFile(array $stream, Fixer $fixer): void;
 }

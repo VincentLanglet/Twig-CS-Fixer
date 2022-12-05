@@ -48,23 +48,11 @@ final class SniffTest extends TestCase
         };
     }
 
-    public function testSniffWithoutReport(): void
-    {
-        self::expectException(BadMethodCallException::class);
-        self::expectExceptionMessage(sprintf(
-            'Cannot add a message to the sniff "%s" without a report.',
-            AbstractSniff::class
-        ));
-
-        $this->sniff->processFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]);
-    }
-
     public function testSniffWithReport(): void
     {
         $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
 
-        $this->sniff->enableReport($report);
-        $this->sniff->processFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]);
+        $this->sniff->lintFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')], $report);
 
         static::assertSame(2, $report->getTotalWarnings());
         static::assertSame(2, $report->getTotalErrors());
@@ -74,11 +62,10 @@ final class SniffTest extends TestCase
     {
         $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
 
-        $this->sniff->enableReport($report);
-        $this->sniff->processFile([
+        $this->sniff->lintFile([
             new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig'),
             new Token(Token::EOF_TYPE, 1, 0, 'fakeFile.html.twig'),
-        ]);
+        ], $report);
 
         static::assertSame(2, $report->getTotalWarnings());
         static::assertSame(4, $report->getTotalErrors());

@@ -14,13 +14,8 @@ final class CannotFixFileException extends RuntimeException
         parent::__construct($message, $code, $previous);
     }
 
-    public static function fileNotReadable(string $path): self
+    public static function infiniteLoop(): self
     {
-        return new self(sprintf('Cannot read the content of the file "%s".', $path));
-    }
-
-    public static function infiniteLoop(string $path): self
-    {
-        return new self(sprintf('Too many iteration while trying to fix file "%s".', $path));
+        return new self('Too many iteration while trying to fix file.');
     }
 }
