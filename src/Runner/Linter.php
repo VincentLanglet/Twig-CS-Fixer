@@ -35,10 +35,9 @@ final class Linter
     /**
      * @param iterable<SplFileInfo> $files
      */
-    public function run(iterable $files, Ruleset $ruleset, bool $fix): Report
+    public function run(iterable $files, Ruleset $ruleset, ?Fixer $fixer = null): Report
     {
         $report = new Report($files);
-        $fixer = new Fixer($ruleset, $this->tokenizer);
 
         // Process
         foreach ($files as $file) {
@@ -95,9 +94,9 @@ final class Linter
             }
             restore_error_handler();
 
-            if ($fix) {
+            if (null !== $fixer) {
                 try {
-                    $content = $fixer->fixFile($content);
+                    $content = $fixer->fixFile($content, $ruleset);
                 } catch (CannotFixFileException|CannotTokenizeException $exception) {
                     $sniffViolation = new SniffViolation(
                         SniffViolation::LEVEL_FATAL,
