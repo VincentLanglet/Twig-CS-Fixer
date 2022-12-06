@@ -18,18 +18,13 @@ final class BlankEOFSniff extends AbstractSniff
             return;
         }
 
-        $i = 0;
-        while (
-            isset($tokens[$tokenPosition - ($i + 1)])
-            && $this->isTokenMatching($tokens[$tokenPosition - ($i + 1)], Token::EOL_TYPE)
-        ) {
-            $i++;
-        }
-
-        if ($tokenPosition === $i) {
+        $previous = $this->findPrevious(Token::EOL_TYPE, $tokens, $tokenPosition - 1, true);
+        if (false === $previous) {
             // If all previous tokens are EOL_TYPE, we have to count one more
-            // since there is no EOL token used for the previous non-empty line
-            $i++;
+            // since $tokenPosition start at 0
+            $i = $tokenPosition + 1;
+        } else {
+            $i = $tokenPosition - $previous - 1;
         }
 
         // Only 0 or 2+ blank lines are reported.
