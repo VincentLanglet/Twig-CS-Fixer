@@ -143,7 +143,7 @@ final class Linter
 
             $report->addMessage($sniffViolation);
 
-            return true;
+            return false;
         }, \E_USER_DEPRECATED);
     }
 }
