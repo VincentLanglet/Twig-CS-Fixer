@@ -24,7 +24,7 @@ final class CacheFileHandlerTest extends FileTestCase
     /**
      * @return iterable<array-key, array{string}>
      */
-    public function readFailureDataProvider(): iterable
+    public static function readFailureDataProvider(): iterable
     {
         yield ['foo.php'];
         yield [__FILE__];

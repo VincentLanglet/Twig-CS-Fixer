@@ -245,7 +245,7 @@ final class FixerTest extends TestCase
     /**
      * @return iterable<array-key, array{string, string}>
      */
-    public function addContentMethodsDataProvider(): iterable
+    public static function addContentMethodsDataProvider(): iterable
     {
         yield ['', "\nba\n"];
         yield ['foo', "\nbfooa\n"];

@@ -32,7 +32,7 @@ final class SniffViolationTest extends TestCase
     /**
      * @return iterable<array-key, array{string, int}>
      */
-    public function getLevelAsStringDataProvider(): iterable
+    public static function getLevelAsStringDataProvider(): iterable
     {
         yield ['NOTICE', 0];
         yield ['WARNING', 1];
@@ -57,7 +57,7 @@ final class SniffViolationTest extends TestCase
     /**
      * @return iterable<array-key, array{int, string}>
      */
-    public function getLevelAsIntDataProvider(): iterable
+    public static function getLevelAsIntDataProvider(): iterable
     {
         yield [0, 'NOTICE'];
         yield [0, 'notice'];

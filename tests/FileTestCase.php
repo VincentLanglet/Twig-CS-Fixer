@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\Filesystem\Filesystem;
@@ -61,7 +60,7 @@ abstract class FileTestCase extends TestCase
     protected function getTmpPath(string $path): string
     {
         if (!str_starts_with($path, $this->getDir())) {
-            throw new InvalidArgumentException(sprintf('The path "%s" is not supported', $path));
+            return $path;
         }
 
         return str_replace($this->getDir(), $this->getTmp(), $path);

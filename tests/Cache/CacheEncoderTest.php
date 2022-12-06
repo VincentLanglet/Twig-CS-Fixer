@@ -26,7 +26,7 @@ final class CacheEncoderTest extends TestCase
     /**
      * @return iterable<array-key, array{string}>
      */
-    public function fromJsonFailureDataProvider(): iterable
+    public static function fromJsonFailureDataProvider(): iterable
     {
         yield [''];
         yield ['null'];

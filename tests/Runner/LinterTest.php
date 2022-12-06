@@ -216,7 +216,7 @@ final class LinterTest extends FileTestCase
     /**
      * @return iterable<array-key, array{CannotFixFileException|CannotTokenizeException, string}>
      */
-    public function buggyFixesAreReportedDataProvider(): iterable
+    public static function buggyFixesAreReportedDataProvider(): iterable
     {
         yield [CannotFixFileException::infiniteLoop(), 'Unable to fix file'];
         yield [CannotTokenizeException::unknownError(), 'Unable to tokenize file'];

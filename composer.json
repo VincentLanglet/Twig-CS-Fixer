@@ -32,6 +32,8 @@
         "psalm/plugin-phpunit": "^0.16.1",
         "psalm/plugin-symfony": "^4.0.0",
         "rector/rector": "^0.14.8",
+        "symfony/filesystem": "^5.4 || ^6.0",
+        "symfony/process": "^5.4 || ^6.0",
         "twig/cache-extra": "^3.2",
         "vimeo/psalm": "^4.30.0"
     },
