@@ -6,6 +6,9 @@ namespace TwigCsFixer\Tests\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use TwigCsFixer\Cache\Cache;
+use TwigCsFixer\Cache\CacheEncoder;
+use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Command\TwigCsFixerCommand;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Tests\FileTestCase;
@@ -155,5 +158,112 @@ final class TwigCsFixerCommandTest extends FileTestCase
             $commandTester->getDisplay()
         );
         static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithCacheFile(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache.php'),
+        ]);
+
+        // Result with no ruleset
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
+            $commandTester->getDisplay()
+        );
+
+        $cachePath = $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer.cache');
+        $cacheContent = file_get_contents($cachePath);
+        static::assertNotFalse($cacheContent);
+
+        // Save the hashes in order to rewrite manually the cache later
+        $hashes = CacheEncoder::fromJson($cacheContent)->getHashes();
+
+        $commandTester->execute([
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
+        ]);
+
+        // Result with standard ruleset
+        // It's different even with the same cache file
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
+            $commandTester->getDisplay()
+        );
+
+        $cacheContent = file_get_contents($cachePath);
+        static::assertNotFalse($cacheContent);
+
+        $cache = CacheEncoder::fromJson($cacheContent);
+        foreach ($hashes as $file => $hash) {
+            $cache->set($file, $hash);
+        }
+
+        // Save the signature for later tests
+        $signature = $cache->getSignature();
+
+        // We're manually rewriting the cache in order to simulate valid files
+        file_put_contents($cachePath, CacheEncoder::toJson($cache));
+
+        $commandTester->execute([
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
+        ]);
+
+        // We get the same result as with no ruleset because of the cache
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
+            $commandTester->getDisplay()
+        );
+
+        $newCache = new Cache(new Signature(
+            '0',
+            $signature->getFixerVersion(),
+            $signature->getSniffs(),
+        ));
+        foreach ($hashes as $file => $hash) {
+            $newCache->set($file, $hash);
+        }
+
+        // We're manually rewriting the cache with a different php version
+        file_put_contents($cachePath, CacheEncoder::toJson($newCache));
+
+        $commandTester->execute([
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
+        ]);
+
+        // We get back the real result because of the different php version
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
+            $commandTester->getDisplay()
+        );
+
+        $newCache = new Cache(new Signature(
+            $signature->getPhpVersion(),
+            '0',
+            $signature->getSniffs(),
+        ));
+        foreach ($hashes as $file => $hash) {
+            $newCache->set($file, $hash);
+        }
+
+        // We're manually rewriting the cache with a different fixer version
+        file_put_contents($cachePath, CacheEncoder::toJson($newCache));
+
+        $commandTester->execute([
+            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
+        ]);
+
+        // We get back the real result because of the different fixer version
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
+            $commandTester->getDisplay()
+        );
     }
 }
