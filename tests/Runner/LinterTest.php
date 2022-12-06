@@ -134,7 +134,11 @@ final class LinterTest extends FileTestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
+
+        ob_start();
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
+        static::assertEquals('', ob_get_contents());
+        ob_end_clean();
 
         // Ensure the error handler is restored.
         @trigger_error('User Deprecation 2', \E_USER_DEPRECATED);
