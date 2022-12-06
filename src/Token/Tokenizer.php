@@ -25,16 +25,16 @@ final class Tokenizer implements TokenizerInterface
     private const SQ_STRING_PART = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
     private const DQ_STRING_PART = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
 
-    private const REGEX_EXPRESSION_START = '/({%|{#|{{)(-|~)?/';
-    private const REGEX_BLOCK_END = '/(?:-|~)?(?:%})/A';
-    private const REGEX_COMMENT_END = '/(?:-|~)?(?:#})/'; // Must not be anchored
-    private const REGEX_VAR_END = '/(?:-|~)?(?:}})/A';
-    private const REGEX_VERBATIM_END = '/{%(-|~)?(\s*)?endverbatim(\s*)?(-|~)?%}/A';
+    private const REGEX_EXPRESSION_START = '/({%|{#|{{)[-~]?/';
+    private const REGEX_BLOCK_END = '/[-~]?%}/A';
+    private const REGEX_COMMENT_END = '/[-~]?#}/'; // Must not be anchored
+    private const REGEX_VAR_END = '/[-~]?}}/A';
+    private const REGEX_VERBATIM_END = '/{%[-~]?\s*?endverbatim\s*?[-~]?%}/A';
     private const REGEX_INTERPOLATION_START = '/#{/A';
     private const REGEX_INTERPOLATION_END = '/}/A';
 
     private const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    private const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?/A';
+    private const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][+\-][0-9]+)?/A';
     private const REGEX_STRING = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
     private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PART.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
@@ -64,7 +64,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @var array<array{int, array<string, string>}>
      *
-     * @phpstan-var array<array{0|1|2|3|4|5, array<string, string>}>
+     * @phpstan-var array<array{int<0, 5>, array<string, string>}>
      */
     private array $state = [];
 
@@ -186,7 +186,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @phpstan-return 0|1|2|3|4|5
+     * @phpstan-return int<0, 5>
      */
     private function getState(): int
     {
@@ -198,7 +198,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @param array<string, string> $data
      *
-     * @phpstan-param 0|1|2|3|4|5 $state
+     * @phpstan-param int<0, 5> $state
      */
     private function pushState(int $state, array $data = []): void
     {
