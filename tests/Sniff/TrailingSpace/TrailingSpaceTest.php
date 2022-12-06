@@ -34,7 +34,7 @@ final class TrailingSpaceTest extends AbstractSniffTestCase
         );
 
         $this->checkSniff(new TrailingSpaceSniff(), [
-            [1 => 1],
+            [1 => 2],
         ], __DIR__.'/TrailingSpaceTest.empty2.twig');
     }
 }

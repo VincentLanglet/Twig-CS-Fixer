@@ -12,8 +12,8 @@ final class OperatorSpacingTest extends AbstractSniffTestCase
     public function testSniff(): void
     {
         $this->checkSniff(new OperatorSpacingSniff(), [
-            [1 => 4],
-            [1  => 4],
+            [1 => 5],
+            [1  => 5],
             [2  => 5],
             [2  => 5],
             [3  => 5],

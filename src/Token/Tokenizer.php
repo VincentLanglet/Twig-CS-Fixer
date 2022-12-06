@@ -264,23 +264,20 @@ final class Tokenizer implements TokenizerInterface
         $this->currentExpressionStarter++;
     }
 
-    private function moveCursor(string $value): void
-    {
-        $this->cursor += \strlen($value);
-        $this->line += substr_count($value, "\n");
-    }
-
     private function pushToken(int $type, string $value = '', ?Token $relatedToken = null): Token
     {
         $token = new Token(
             $type,
             $this->line,
-            $this->cursor - $this->lastEOL,
+            $this->cursor + 1 - $this->lastEOL,
             $this->filename,
             $value,
             $relatedToken
         );
         $this->tokens[] = $token;
+
+        $this->cursor += \strlen($value);
+        $this->line += substr_count($value, "\n");
 
         return $token;
     }
@@ -328,7 +325,6 @@ final class Tokenizer implements TokenizerInterface
         if (isset($match[0]) && [] === $this->getBrackets()) {
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
-            $this->moveCursor($match[0][0]);
 
             $this->isVerbatim = 'verbatim' === $this->getStateParam('tag');
             $this->popState();
@@ -347,7 +343,6 @@ final class Tokenizer implements TokenizerInterface
         if (isset($match[0]) && [] === $this->getBrackets()) {
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
-            $this->moveCursor($match[0][0]);
             $this->popState();
         } else {
             $this->lexExpression();
@@ -366,7 +361,6 @@ final class Tokenizer implements TokenizerInterface
         }
         if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
-            $this->moveCursor($match[0][0]);
             $this->popState();
         } else {
             // Parse as text until the end position.
@@ -383,12 +377,10 @@ final class Tokenizer implements TokenizerInterface
             && '' !== $match[0]
         ) {
             $this->pushToken(Token::STRING_TYPE, $match[0]);
-            $this->moveCursor($match[0]);
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $bracket = array_pop($this->bracketsAndTernary);
             $this->popState();
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0], $bracket);
-            $this->moveCursor($match[0]);
         } else {
             // @codeCoverageIgnoreStart
             throw new LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
@@ -410,7 +402,6 @@ final class Tokenizer implements TokenizerInterface
         ) {
             $bracket = array_pop($this->bracketsAndTernary);
             $this->pushToken(Token::INTERPOLATION_END_TYPE, $match[0], $bracket);
-            $this->moveCursor($match[0]);
             $this->popState();
         } else {
             $this->lexExpression();
@@ -443,8 +434,6 @@ final class Tokenizer implements TokenizerInterface
             } else {
                 $this->pushToken(Token::TEXT_TYPE, $value);
             }
-
-            $this->moveCursor($value);
         }
     }
 
@@ -478,14 +467,12 @@ final class Tokenizer implements TokenizerInterface
 
         $this->pushToken($tokenType, $expressionStarter['fullMatch']);
         $this->pushState($state);
-        $this->moveCursor($expressionStarter['fullMatch']);
     }
 
     private function lexStartDqString(): void
     {
         $token = $this->pushToken(Token::DQ_STRING_START_TYPE, '"');
         $this->pushState(self::STATE_DQ_STRING);
-        $this->moveCursor('"');
         $this->bracketsAndTernary[] = $token;
     }
 
@@ -493,19 +480,16 @@ final class Tokenizer implements TokenizerInterface
     {
         $token = $this->pushToken(Token::INTERPOLATION_START_TYPE, '#{');
         $this->pushState(self::STATE_INTERPOLATION);
-        $this->moveCursor('#{');
         $this->bracketsAndTernary[] = $token;
     }
 
     private function lexTab(): void
     {
-        $currentCode = $this->code[$this->cursor];
         $whitespace = '';
-
-        while (preg_match('/\t/', $currentCode)) {
-            $whitespace .= $currentCode;
-            $this->moveCursor($currentCode);
-            $currentCode = $this->code[$this->cursor];
+        $cursor = $this->cursor;
+        while (preg_match('/\t/', $this->code[$cursor])) {
+            $whitespace .= $this->code[$cursor];
+            $cursor++;
         }
 
         if (self::STATE_COMMENT === $this->getState()) {
@@ -517,13 +501,11 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexWhitespace(): void
     {
-        $currentCode = $this->code[$this->cursor];
         $whitespace = '';
-
-        while (' ' === $currentCode) {
-            $whitespace .= $currentCode;
-            $this->moveCursor($currentCode);
-            $currentCode = $this->code[$this->cursor];
+        $cursor = $this->cursor;
+        while (' ' === $this->code[$cursor]) {
+            $whitespace .= $this->code[$cursor];
+            $cursor++;
         }
 
         if (self::STATE_COMMENT === $this->getState()) {
@@ -542,13 +524,11 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $this->lastEOL = $this->cursor;
-        $this->moveCursor($this->code[$this->cursor]);
     }
 
     private function lexArrowFunction(): void
     {
         $this->pushToken(Token::ARROW_TYPE, '=>');
-        $this->moveCursor('=>');
     }
 
     private function lexOperator(string $operator): void
@@ -562,8 +542,6 @@ final class Tokenizer implements TokenizerInterface
         } else {
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
         }
-
-        $this->moveCursor($operator);
     }
 
     private function lexName(string $name): void
@@ -574,14 +552,11 @@ final class Tokenizer implements TokenizerInterface
         } else {
             $this->pushToken(Token::NAME_TYPE, $name);
         }
-
-        $this->moveCursor($name);
     }
 
     private function lexNumber(string $numberAsString): void
     {
         $this->pushToken(Token::NUMBER_TYPE, $numberAsString);
-        $this->moveCursor($numberAsString);
     }
 
     /**
@@ -638,14 +613,11 @@ final class Tokenizer implements TokenizerInterface
         } else {
             $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
         }
-
-        $this->moveCursor($currentCode);
     }
 
     private function lexString(string $string): void
     {
         $this->pushToken(Token::STRING_TYPE, $string);
-        $this->moveCursor($string);
     }
 
     private function getOperatorRegex(Environment $env): string

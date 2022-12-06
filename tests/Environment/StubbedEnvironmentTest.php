@@ -19,6 +19,7 @@ use Twig\TwigFunction;
 use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Tests\Environment\Fixtures\CustomTokenParser;
+use TwigCsFixer\Tests\Environment\Fixtures\CustomTwigExtension;
 
 final class StubbedEnvironmentTest extends TestCase
 {
@@ -74,7 +75,7 @@ final class StubbedEnvironmentTest extends TestCase
             static::markTestSkipped('The cache tag was added in Twig 3.2.');
         }
 
-        $content = file_get_contents(__DIR__.'/Fixtures/cacheTag.html.twig');
+        $content = file_get_contents(__DIR__.'/Fixtures/cache_tag.html.twig');
         static::assertNotFalse($content);
 
         $env = new StubbedEnvironment();
@@ -85,12 +86,23 @@ final class StubbedEnvironmentTest extends TestCase
         static::assertInstanceOf(CacheNode::class, $body->getNode('0'));
     }
 
-    public function testParseWithCustomTag(): void
+    public function testParseWithCustomTokenParser(): void
     {
         $content = file_get_contents(__DIR__.'/Fixtures/custom_tags.html.twig');
         static::assertNotFalse($content);
 
-        $env = new StubbedEnvironment([new CustomTokenParser()]);
+        $env = new StubbedEnvironment([], [new CustomTokenParser()]);
+        $source = new Source($content, 'custom_tags.html.twig');
+
+        $env->parse($env->tokenize($source));
+    }
+
+    public function testParseWithCustomTwigExtension(): void
+    {
+        $content = file_get_contents(__DIR__.'/Fixtures/custom_tags.html.twig');
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment([new CustomTwigExtension()]);
         $source = new Source($content, 'custom_tags.html.twig');
 
         $env->parse($env->tokenize($source));

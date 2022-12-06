@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Symfony\Component\Finder\Finder;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\DebugExtension;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
@@ -82,5 +84,19 @@ final class ConfigTest extends TestCase
         $config->addTokenParser($tokenParser2);
 
         static::assertSame([$tokenParser1, $tokenParser2], $config->getTokenParsers());
+    }
+
+    public function testConfigTwigExtensions(): void
+    {
+        $config = new Config();
+
+        static::assertSame([], $config->getTwigExtensions());
+
+        $twigExtension = new CoreExtension();
+        $twigExtension2 = new DebugExtension();
+        $config->addTwigExtension($twigExtension);
+        $config->addTwigExtension($twigExtension2);
+
+        static::assertSame([$twigExtension, $twigExtension2], $config->getTwigExtensions());
     }
 }

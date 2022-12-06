@@ -9,18 +9,17 @@ use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Tests\TestHelper;
+use TwigCsFixer\Tests\Token\Tokenizer\Fixtures\CustomTwigExtension;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 
 final class TokenizerTest extends TestCase
 {
-    public function testTokens(): void
+    public function testTokenize(): void
     {
-        $filePath = __DIR__.'/TokenizerTest1.twig';
+        $filePath = __DIR__.'/Fixtures/test1.twig';
         $content = file_get_contents($filePath);
-        if (false === $content) {
-            static::fail(sprintf('Cannot read file path %s', $filePath));
-        }
+        static::assertNotFalse($content);
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -28,8 +27,41 @@ final class TokenizerTest extends TestCase
 
         static::assertEquals(
             [
-                new Token(Token::TEXT_TYPE, 1, 0, $filePath, '<div>test</div>'),
-                new Token(Token::EOL_TYPE, 1, 15, $filePath, "\n"),
+                new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
+                new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
+                new Token(Token::EOF_TYPE, 2, 1, $filePath),
+            ],
+            $tokenizer->tokenize($source)
+        );
+    }
+
+    public function testTokenizeWithCustomOperators(): void
+    {
+        $filePath = __DIR__.'/Fixtures/custom_operators.twig';
+        $content = file_get_contents($filePath);
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment([new CustomTwigExtension()]);
+        $tokenizer = new Tokenizer($env);
+        $source = new Source($content, $filePath);
+
+        static::assertEquals(
+            [
+                new Token(Token::VAR_START_TYPE, 1, 1, $filePath, '{{'),
+                new Token(Token::WHITESPACE_TYPE, 1, 3, $filePath, ' '),
+                new Token(Token::OPERATOR_TYPE, 1, 4, $filePath, 'n0t'),
+                new Token(Token::WHITESPACE_TYPE, 1, 7, $filePath, ' '),
+                new Token(Token::NAME_TYPE, 1, 8, $filePath, 'foo'),
+                new Token(Token::PUNCTUATION_TYPE, 1, 11, $filePath, '.'),
+                new Token(Token::NAME_TYPE, 1, 12, $filePath, 'n0t'),
+                new Token(Token::WHITESPACE_TYPE, 1, 15, $filePath, ' '),
+                new Token(Token::OPERATOR_TYPE, 1, 16, $filePath, '+sum'),
+                new Token(Token::WHITESPACE_TYPE, 1, 20, $filePath, ' '),
+                new Token(Token::OPERATOR_TYPE, 1, 21, $filePath, '+'),
+                new Token(Token::NAME_TYPE, 1, 22, $filePath, 'sumVariable'),
+                new Token(Token::WHITESPACE_TYPE, 1, 33, $filePath, ' '),
+                new Token(Token::VAR_END_TYPE, 1, 34, $filePath, '}}'),
+                new Token(Token::EOL_TYPE, 1, 36, $filePath, "\n"),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
             $tokenizer->tokenize($source)
@@ -41,12 +73,10 @@ final class TokenizerTest extends TestCase
      *
      * @dataProvider tokenizeDataProvider
      */
-    public function testTokenize(string $filePath, array $expectedTokenTypes): void
+    public function testTokenizeTypes(string $filePath, array $expectedTokenTypes): void
     {
         $content = file_get_contents($filePath);
-        if (false === $content) {
-            static::fail(sprintf('Cannot read file path %s', $filePath));
-        }
+        static::assertNotFalse($content);
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -71,7 +101,7 @@ final class TokenizerTest extends TestCase
     public function tokenizeDataProvider(): iterable
     {
         yield [
-            __DIR__.'/TokenizerTest1.twig',
+            __DIR__.'/Fixtures/test1.twig',
             [
                 0 => Token::TEXT_TYPE,
                 1 => Token::EOL_TYPE,
@@ -80,7 +110,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest2.twig',
+            __DIR__.'/Fixtures/test2.twig',
             [
                 0  => Token::VAR_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -112,7 +142,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest3.twig',
+            __DIR__.'/Fixtures/test3.twig',
             [
                 0  => Token::VAR_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -212,7 +242,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest4.twig',
+            __DIR__.'/Fixtures/test4.twig',
             [
                 0  => Token::VAR_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -251,7 +281,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest5.twig',
+            __DIR__.'/Fixtures/test5.twig',
             [
                 0  => Token::BLOCK_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -302,7 +332,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest6.twig',
+            __DIR__.'/Fixtures/test6.twig',
             [
                 0  => Token::BLOCK_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -323,7 +353,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest7.twig',
+            __DIR__.'/Fixtures/test7.twig',
             [
                 0  => Token::COMMENT_START_TYPE,
                 1  => Token::COMMENT_EOL_TYPE,
@@ -346,7 +376,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest8.twig',
+            __DIR__.'/Fixtures/test8.twig',
             [
                 0  => Token::TAB_TYPE,
                 1  => Token::COMMENT_START_TYPE,
@@ -372,7 +402,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest9.twig',
+            __DIR__.'/Fixtures/test9.twig',
             [
                 0  => Token::COMMENT_START_TYPE,
                 1  => Token::COMMENT_WHITESPACE_TYPE,
@@ -397,7 +427,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest10.twig',
+            __DIR__.'/Fixtures/test10.twig',
             [
                 0  => Token::VAR_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -420,7 +450,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest11.twig',
+            __DIR__.'/Fixtures/test11.twig',
             [
                 0  => Token::VAR_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -443,7 +473,7 @@ final class TokenizerTest extends TestCase
         ];
 
         yield [
-            __DIR__.'/TokenizerTest12.twig',
+            __DIR__.'/Fixtures/test12.twig',
             [
                 0  => Token::BLOCK_START_TYPE,
                 1  => Token::WHITESPACE_TYPE,
@@ -514,9 +544,7 @@ final class TokenizerTest extends TestCase
     public function testTokenizeInvalid(string $filePath, string $expectedMessage): void
     {
         $content = file_get_contents($filePath);
-        if (false === $content) {
-            static::fail(sprintf('Cannot read file path %s', $filePath));
-        }
+        static::assertNotFalse($content);
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -532,12 +560,12 @@ final class TokenizerTest extends TestCase
      */
     public function tokenizeInvalidDataProvider(): iterable
     {
-        yield [__DIR__.'/TokenizerTestInvalid1.twig', 'The template is invalid.'];
-        yield [__DIR__.'/TokenizerTestInvalid2.twig', 'Unexpected character "&" at line 4.'];
-        yield [__DIR__.'/TokenizerTestInvalid3.twig', 'Unclosed "(" at line 1.'];
-        yield [__DIR__.'/TokenizerTestInvalid4.twig', 'Unexpected character ")" at line 1.'];
-        yield [__DIR__.'/TokenizerTestInvalid5.twig', 'Unexpected character "#" at line 1.'];
-        yield [__DIR__.'/TokenizerTestInvalid6.twig', 'Unclosed comment at line 1.'];
-        yield [__DIR__.'/TokenizerTestInvalid7.twig', 'Unexpected character ":" at line 1.'];
+        yield [__DIR__.'/Fixtures/invalid1.twig', 'The template is invalid.'];
+        yield [__DIR__.'/Fixtures/invalid2.twig', 'Unexpected character "&" at line 4.'];
+        yield [__DIR__.'/Fixtures/invalid3.twig', 'Unclosed "(" at line 1.'];
+        yield [__DIR__.'/Fixtures/invalid4.twig', 'Unexpected character ")" at line 1.'];
+        yield [__DIR__.'/Fixtures/invalid5.twig', 'Unexpected character "#" at line 1.'];
+        yield [__DIR__.'/Fixtures/invalid6.twig', 'Unclosed comment at line 1.'];
+        yield [__DIR__.'/Fixtures/invalid7.twig', 'Unexpected character ":" at line 1.'];
     }
 }

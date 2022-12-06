@@ -106,7 +106,10 @@ final class TwigCsFixerCommand extends Command
 
     private function runLinter(Config $config, InputInterface $input, OutputInterface $output): Report
     {
-        $twig = new StubbedEnvironment($config->getTokenParsers());
+        $twig = new StubbedEnvironment(
+            $config->getTwigExtensions(),
+            $config->getTokenParsers()
+        );
         $tokenizer = new Tokenizer($twig);
         $linter = new Linter($twig, $tokenizer, $config->getCacheManager());
 
