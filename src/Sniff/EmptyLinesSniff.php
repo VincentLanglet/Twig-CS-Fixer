@@ -57,7 +57,7 @@ final class EmptyLinesSniff extends AbstractSniff
         $i = min($i, $tokenPosition);
 
         $fixer->beginChangeset();
-        while ($i > 1 || $i === $tokenPosition) {
+        while ($i >= 2 || $i === $tokenPosition) {
             $fixer->replaceToken($tokenPosition - $i, '');
             $i--;
         }

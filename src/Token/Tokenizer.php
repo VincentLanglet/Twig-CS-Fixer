@@ -43,6 +43,8 @@ final class Tokenizer implements TokenizerInterface
 
     private int $cursor = 0;
 
+    private int $lastEOL = 0;
+
     private ?int $end = null;
 
     private int $line = 1;
@@ -101,13 +103,12 @@ final class Tokenizer implements TokenizerInterface
         while ($this->cursor < $this->end) {
             switch ($this->getState()) {
                 case self::STATE_DATA:
-                    $expressionStarter = $this->getExpressionStarter();
                     if (
-                        null === $expressionStarter
-                        || $this->cursor < $expressionStarter['position']
+                        !$this->hasExpressionStarter()
+                        || $this->cursor < $this->getExpressionStarter()['position']
                     ) {
                         $this->lexData();
-                    } elseif ($this->cursor === $expressionStarter['position']) {
+                    } elseif ($this->cursor === $this->getExpressionStarter()['position']) {
                         $this->lexStart();
                     } else {
                         $this->moveCurrentExpressionStarter();
@@ -157,6 +158,7 @@ final class Tokenizer implements TokenizerInterface
     private function resetState(Source $source): void
     {
         $this->cursor = 0;
+        $this->lastEOL = 0;
         $this->line = 1;
         $this->currentExpressionStarter = 0;
         $this->tokens = [];
@@ -240,17 +242,24 @@ final class Tokenizer implements TokenizerInterface
         $this->expressionStarters = $expressionStartersReworked;
     }
 
-    /**
-     * @return array{fullMatch: string, position: int, match: string}|null
-     */
-    private function getExpressionStarter(): ?array
+    private function hasExpressionStarter(): bool
     {
-        return $this->expressionStarters[$this->currentExpressionStarter] ?? null;
+        return isset($this->expressionStarters[$this->currentExpressionStarter]);
+    }
+
+    /**
+     * @return array{fullMatch: string, position: int, match: string}
+     */
+    private function getExpressionStarter(): array
+    {
+        Assert::true($this->hasExpressionStarter(), 'There is no more expression starters');
+
+        return $this->expressionStarters[$this->currentExpressionStarter];
     }
 
     private function moveCurrentExpressionStarter(): void
     {
-        Assert::notNull($this->getExpressionStarter(), 'There is no more expression starters');
+        Assert::true($this->hasExpressionStarter(), 'There is no more expression starters');
 
         $this->currentExpressionStarter++;
     }
@@ -263,15 +272,10 @@ final class Tokenizer implements TokenizerInterface
 
     private function pushToken(int $type, string $value = '', ?Token $relatedToken = null): Token
     {
-        $strrpos = strrpos(substr($this->code, 0, $this->cursor), \PHP_EOL);
-        if (false === $strrpos) {
-            $strrpos = 0;
-        }
-
         $token = new Token(
             $type,
             $this->line,
-            $this->cursor - $strrpos,
+            $this->cursor - $this->lastEOL,
             $this->filename,
             $value,
             $relatedToken
@@ -293,7 +297,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (\PHP_EOL === $currentCode) {
+        } elseif (1 === preg_match("/\r\n?|\n/", $currentCode)) {
             $this->lexEOL();
         } elseif ('=' === $currentCode && '>' === $nextToken) {
             $this->lexArrowFunction();
@@ -415,9 +419,8 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexData(int $limit = 0): void
     {
-        $expressionStarter = $this->getExpressionStarter();
-        if (0 === $limit && null !== $expressionStarter) {
-            $limit = $expressionStarter['position'];
+        if (0 === $limit && $this->hasExpressionStarter()) {
+            $limit = $this->getExpressionStarter()['position'];
         }
 
         $currentCode = $this->code[$this->cursor];
@@ -447,9 +450,6 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexStart(): void
     {
-        $expressionStarter = $this->getExpressionStarter();
-        Assert::notNull($expressionStarter, 'There is no expression starter to lex.');
-
         if (
             $this->isVerbatim
             && 1 !== preg_match(self::REGEX_VERBATIM_END, $this->code, $match, 0, $this->cursor)
@@ -460,6 +460,7 @@ final class Tokenizer implements TokenizerInterface
             return;
         }
 
+        $expressionStarter = $this->getExpressionStarter();
         if ('{#' === $expressionStarter['match']) {
             $state = self::STATE_COMMENT;
             $tokenType = Token::COMMENT_START_TYPE;
@@ -540,6 +541,7 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::EOL_TYPE, $this->code[$this->cursor]);
         }
 
+        $this->lastEOL = $this->cursor;
         $this->moveCursor($this->code[$this->cursor]);
     }
 
@@ -605,14 +607,6 @@ final class Tokenizer implements TokenizerInterface
             }
         }
 
-        $lastBracket = end($this->bracketsAndTernary);
-        if (':' === $currentCode && false !== $lastBracket && '[' === $lastBracket->getValue()) {
-            // This is a slice shortcut '[0:1]' instead
-            $this->lexOperator($currentCode);
-
-            return;
-        }
-
         if (\in_array($currentCode, ['(', '[', '{'], true)) {
             $token = $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
             $this->bracketsAndTernary[] = $token;
@@ -627,6 +621,20 @@ final class Tokenizer implements TokenizerInterface
             }
 
             $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode, $bracket);
+        } elseif (':' === $currentCode) {
+            if ([] === $this->bracketsAndTernary) {
+                throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
+            }
+
+            $bracket = end($this->bracketsAndTernary);
+            if ('[' === $bracket->getValue()) {
+                // This is a slice shortcut '[0:1]' instead
+                $this->lexOperator($currentCode);
+
+                return;
+            }
+
+            $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
         } else {
             $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
         }
@@ -643,17 +651,12 @@ final class Tokenizer implements TokenizerInterface
     private function getOperatorRegex(Environment $env): string
     {
         /** @psalm-suppress InternalMethod */
-        $unaryOperators = $env->getUnaryOperators();
+        $unaryOperators = array_keys($env->getUnaryOperators());
         /** @psalm-suppress InternalMethod */
-        $binaryOperators = $env->getBinaryOperators();
+        $binaryOperators = array_keys($env->getBinaryOperators());
 
         /** @var string[] $operators */
-        $operators = array_merge(
-            ['=', '?', '?:'],
-            array_keys($unaryOperators),
-            array_keys($binaryOperators)
-        );
-
+        $operators = ['=', '?', '?:', ...$unaryOperators, ...$binaryOperators];
         $lengthByOperator = [];
         foreach ($operators as $operator) {
             $lengthByOperator[$operator] = \strlen($operator);

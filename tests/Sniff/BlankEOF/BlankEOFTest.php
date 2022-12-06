@@ -23,5 +23,9 @@ final class BlankEOFTest extends AbstractSniffTestCase
     public function testSniffForEmptyFile(): void
     {
         $this->checkSniff(new BlankEOFSniff(), [], __DIR__.'/BlankEOFTest.empty.twig');
+
+        $this->checkSniff(new BlankEOFSniff(), [
+            [3 => 1],
+        ], __DIR__.'/BlankEOFTest.empty2.twig');
     }
 }

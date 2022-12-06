@@ -191,22 +191,23 @@ final class TokenizerTest extends TestCase
                 74 => Token::NAME_TYPE,
                 75 => Token::PUNCTUATION_TYPE,
                 76 => Token::WHITESPACE_TYPE,
-                77 => Token::NUMBER_TYPE,
-                78 => Token::PUNCTUATION_TYPE,
-                79 => Token::WHITESPACE_TYPE,
-                80 => Token::BLOCK_END_TYPE,
-                81 => Token::EOL_TYPE,
-                82 => Token::VAR_START_TYPE,
-                83 => Token::WHITESPACE_TYPE,
-                84 => Token::NAME_TYPE,
-                85 => Token::WHITESPACE_TYPE,
-                86 => Token::OPERATOR_TYPE,
-                87 => Token::WHITESPACE_TYPE,
-                88 => Token::STRING_TYPE,
-                89 => Token::WHITESPACE_TYPE,
-                90 => Token::VAR_END_TYPE,
-                91 => Token::EOL_TYPE,
-                92 => Token::EOF_TYPE,
+                77 => Token::OPERATOR_TYPE,
+                78 => Token::NUMBER_TYPE,
+                79 => Token::PUNCTUATION_TYPE,
+                80 => Token::WHITESPACE_TYPE,
+                81 => Token::BLOCK_END_TYPE,
+                82 => Token::EOL_TYPE,
+                83 => Token::VAR_START_TYPE,
+                84 => Token::WHITESPACE_TYPE,
+                85 => Token::NAME_TYPE,
+                86 => Token::WHITESPACE_TYPE,
+                87 => Token::OPERATOR_TYPE,
+                88 => Token::WHITESPACE_TYPE,
+                89 => Token::STRING_TYPE,
+                90 => Token::WHITESPACE_TYPE,
+                91 => Token::VAR_END_TYPE,
+                92 => Token::EOL_TYPE,
+                93 => Token::EOF_TYPE,
             ],
         ];
 
@@ -537,5 +538,6 @@ final class TokenizerTest extends TestCase
         yield [__DIR__.'/TokenizerTestInvalid4.twig', 'Unexpected character ")" at line 1.'];
         yield [__DIR__.'/TokenizerTestInvalid5.twig', 'Unexpected character "#" at line 1.'];
         yield [__DIR__.'/TokenizerTestInvalid6.twig', 'Unclosed comment at line 1.'];
+        yield [__DIR__.'/TokenizerTestInvalid7.twig', 'Unexpected character ":" at line 1.'];
     }
 }
