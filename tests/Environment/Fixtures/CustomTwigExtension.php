@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Environment\Fixtures;
 
+use Twig\ExpressionParser;
 use Twig\Extension\ExtensionInterface;
 use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Unary\AbstractUnary;
@@ -38,7 +39,7 @@ final class CustomTwigExtension implements ExtensionInterface
     }
 
     /**
-     * @phpstan-return array{
+     * @return array{
      *     array<string, array{precedence: int, class: class-string<AbstractUnary>}>,
      *     array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
      * }
