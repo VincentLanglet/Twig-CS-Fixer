@@ -17,14 +17,14 @@ interface FixerInterface
     public function fixFile(string $content, Ruleset $ruleset): string;
 
     /**
-     * Start recording actions for a changeset.
+     * Start recording actions for a change set.
      */
-    public function beginChangeset(): void;
+    public function beginChangeSet(): void;
 
     /**
-     * Stop recording actions for a changeset, and apply logged changes.
+     * Stop recording actions for a change set, and apply logged changes.
      */
-    public function endChangeset(): void;
+    public function endChangeSet(): void;
 
     public function replaceToken(int $tokenPosition, string $content): bool;
 

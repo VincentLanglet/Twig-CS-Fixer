@@ -52,12 +52,12 @@ final class BlankEOFSniff extends AbstractSniff
         if (0 === $i) {
             $fixer->addNewlineBefore($tokenPosition);
         } else {
-            $fixer->beginChangeset();
+            $fixer->beginChangeSet();
             while ($i >= 2 || $i === $tokenPosition) {
                 $fixer->replaceToken($tokenPosition - $i, '');
                 $i--;
             }
-            $fixer->endChangeset();
+            $fixer->endChangeSet();
         }
     }
 }
