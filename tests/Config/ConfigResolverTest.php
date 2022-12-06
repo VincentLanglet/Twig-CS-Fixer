@@ -30,7 +30,11 @@ final class ConfigResolverTest extends FileTestCase
      */
     public function testResolveConfig(string $workingDir, ?string $configPath, string $configName): void
     {
-        $configResolver = new ConfigResolver($workingDir);
+        if (null !== $configPath) {
+            $configPath = $this->getTmpPath($configPath);
+        }
+
+        $configResolver = new ConfigResolver($this->getTmpPath($workingDir));
         $config = $configResolver->resolveConfig([], $configPath);
 
         static::assertSame($configName, $config->getName());
@@ -39,12 +43,12 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @return iterable<array-key, array{string, string|null, string}>
      */
-    public function resolveConfigDataProvider(): iterable
+    public static function resolveConfigDataProvider(): iterable
     {
-        yield [$this->getTmpPath(__DIR__.'/Fixtures/directoryWithoutConfig'), null, 'Default'];
-        yield [$this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomRuleset'), null, 'Custom'];
-        yield [$this->getTmpPath(__DIR__), 'Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
-        yield ['/tmp', $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php'), 'Custom'];
+        yield [__DIR__.'/Fixtures/directoryWithoutConfig', null, 'Default'];
+        yield [__DIR__.'/Fixtures/directoryWithCustomRuleset', null, 'Custom'];
+        yield [__DIR__, 'Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
+        yield ['/tmp', __DIR__.'/Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
     }
 
     /**
@@ -52,7 +56,7 @@ final class ConfigResolverTest extends FileTestCase
      */
     public function testResolveConfigException(string $workingDir, ?string $path): void
     {
-        $configResolver = new ConfigResolver($workingDir);
+        $configResolver = new ConfigResolver($this->getTmpPath($workingDir));
 
         self::expectException(CannotResolveConfigException::class);
         $configResolver->resolveConfig([], $path);
@@ -61,12 +65,12 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @return iterable<array-key, array{string, string|null}>
      */
-    public function resolveConfigExceptionDataProvider(): iterable
+    public static function resolveConfigExceptionDataProvider(): iterable
     {
-        yield [$this->getTmpPath(__DIR__.'/Fixtures/directoryWithInvalidConfig'), null];
-        yield [$this->getTmpPath(__DIR__), 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
-        yield [$this->getTmpPath(__DIR__), 'Fixtures/path/to/not/found/.twig-cs-fixer.php'];
-        yield [$this->getTmpPath(__DIR__), ''];
+        yield [__DIR__.'/Fixtures/directoryWithInvalidConfig', null];
+        yield [__DIR__, 'Fixtures/directoryWithInvalidConfig/.twig-cs-fixer.php'];
+        yield [__DIR__, 'Fixtures/path/to/not/found/.twig-cs-fixer.php'];
+        yield [__DIR__, ''];
     }
 
     /**
@@ -77,7 +81,10 @@ final class ConfigResolverTest extends FileTestCase
     public function testResolveFinder(array $paths, string $configPath, int $expectedCount): void
     {
         $configResolver = new ConfigResolver($this->getTmpPath(__DIR__));
-        $config = $configResolver->resolveConfig($paths, $configPath);
+        $config = $configResolver->resolveConfig(
+            array_map([$this, 'getTmpPath'], $paths),
+            $this->getTmpPath($configPath)
+        );
 
         static::assertCount($expectedCount, $config->getFinder());
     }
@@ -85,23 +92,23 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @return iterable<array-key, array{array<string>, string, int}>
      */
-    public function resolveFinderDataProvider(): iterable
+    public static function resolveFinderDataProvider(): iterable
     {
         yield [
             [],
-            $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomFinder/.twig-cs-fixer.php'),
+            __DIR__.'/Fixtures/directoryWithCustomFinder/.twig-cs-fixer.php',
             0,
         ];
 
         yield [
-            [$this->getTmpPath(__DIR__.'/Fixtures/directoryWithFile')],
-            $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomFinder/.twig-cs-fixer.php'),
+            [__DIR__.'/Fixtures/directoryWithFile'],
+            __DIR__.'/Fixtures/directoryWithCustomFinder/.twig-cs-fixer.php',
             1,
         ];
 
         yield [
-            [$this->getTmpPath(__DIR__.'/Fixtures/directoryWithFile')],
-            $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomFinder2/.twig-cs-fixer.php'),
+            [__DIR__.'/Fixtures/directoryWithFile'],
+            __DIR__.'/Fixtures/directoryWithCustomFinder2/.twig-cs-fixer.php',
             2,
         ];
     }
@@ -120,7 +127,7 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @return iterable<array-key, array{string, string}>
      */
-    public function configPathIsCorrectlyGeneratedDataProvider(): iterable
+    public static function configPathIsCorrectlyGeneratedDataProvider(): iterable
     {
         yield ['/tmp/path/not/found/', ''];
         yield ['/tmp/path/not/found/a', 'a'];
@@ -141,6 +148,13 @@ final class ConfigResolverTest extends FileTestCase
         ?string $expectedCacheFile,
         ?string $expectedCacheManager
     ): void {
+        if (null !== $configPath) {
+            $configPath = $this->getTmpPath($configPath);
+        }
+        if (null !== $expectedCacheFile) {
+            $expectedCacheFile = $this->getTmpPath($expectedCacheFile);
+        }
+
         $configResolver = new ConfigResolver($this->getTmpPath(__DIR__));
         $config = $configResolver->resolveConfig([], $configPath, $disableCache);
 
@@ -156,21 +170,21 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @return iterable<array-key, array{string|null, bool, string|null, class-string<CacheManagerInterface>|null}>
      */
-    public function resolveCacheManagerDataProvider(): iterable
+    public static function resolveCacheManagerDataProvider(): iterable
     {
         yield [null, false, Config::DEFAULT_CACHE_PATH,  FileCacheManager::class];
         yield [null, true, null, null];
 
-        $path = $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomCacheManager/.twig-cs-fixer.php');
+        $path = __DIR__.'/Fixtures/directoryWithCustomCacheManager/.twig-cs-fixer.php';
         yield [$path, false, Config::DEFAULT_CACHE_PATH, NullCacheManager::class];
         yield [$path, true, null, null];
 
-        $path = $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.php');
-        $cachePath = $this->getTmpPath(__DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.cache');
+        $path = __DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.php';
+        $cachePath = __DIR__.'/Fixtures/directoryWithCustomCacheFile/.twig-cs-fixer.cache';
         yield [$path, false, $cachePath, FileCacheManager::class];
         yield [$path, true, null, null];
 
-        $path = $this->getTmpPath(__DIR__.'/Fixtures/directoryWithNoCacheFile/.twig-cs-fixer.php');
+        $path = __DIR__.'/Fixtures/directoryWithNoCacheFile/.twig-cs-fixer.php';
         yield [$path, false, null, null];
         yield [$path, true, null, null];
     }

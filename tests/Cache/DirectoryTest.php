@@ -21,7 +21,7 @@ final class DirectoryTest extends TestCase
     /**
      * @return iterable<array-key, array{string, string, string}>
      */
-    public function getRelativePathToDataProvider(): iterable
+    public static function getRelativePathToDataProvider(): iterable
     {
         yield ['', 'foo.php', 'foo.php'];
         yield ['', '/foo.php', '/foo.php'];

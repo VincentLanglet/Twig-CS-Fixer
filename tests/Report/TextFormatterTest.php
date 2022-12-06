@@ -46,7 +46,7 @@ final class TextFormatterTest extends TestCase
     /**
      * @return iterable<array-key, array{string, string|null}>
      */
-    public function displayDataProvider(): iterable
+    public static function displayDataProvider(): iterable
     {
         yield [
             sprintf(
@@ -196,7 +196,7 @@ final class TextFormatterTest extends TestCase
     /**
      * @return iterable<array-key, array{string, int}>
      */
-    public function displayBlockDataProvider(): iterable
+    public static function displayBlockDataProvider(): iterable
     {
         yield ['[OK] Files linted: 1, notices: 1, warnings: 0, errors: 0', SniffViolation::LEVEL_NOTICE];
         yield ['[WARNING] Files linted: 1, notices: 0, warnings: 1, errors: 0', SniffViolation::LEVEL_WARNING];

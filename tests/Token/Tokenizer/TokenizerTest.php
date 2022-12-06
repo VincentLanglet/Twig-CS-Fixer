@@ -98,7 +98,7 @@ final class TokenizerTest extends TestCase
     /**
      * @return iterable<array-key, array{string, array<int, int>}>
      */
-    public function tokenizeDataProvider(): iterable
+    public static function tokenizeDataProvider(): iterable
     {
         yield [
             __DIR__.'/Fixtures/test1.twig',
@@ -558,7 +558,7 @@ final class TokenizerTest extends TestCase
     /**
      * @return iterable<array-key, array{string, string}>
      */
-    public function tokenizeInvalidDataProvider(): iterable
+    public static function tokenizeInvalidDataProvider(): iterable
     {
         yield [__DIR__.'/Fixtures/invalid1.twig', 'The template is invalid.'];
         yield [__DIR__.'/Fixtures/invalid2.twig', 'Unexpected character "&" at line 4.'];

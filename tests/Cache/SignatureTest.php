@@ -58,7 +58,7 @@ final class SignatureTest extends TestCase
     /**
      * @return iterable<array-key, array{Signature, Signature, bool}>
      */
-    public function equalsDataProvider(): iterable
+    public static function equalsDataProvider(): iterable
     {
         $signature1 = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
         $signature2 = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
