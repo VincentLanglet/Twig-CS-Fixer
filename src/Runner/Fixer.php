@@ -54,18 +54,18 @@ final class Fixer implements FixerInterface
     private array $oldTokenValues = [];
 
     /**
-     * A list of tokens that have been fixed during a changeset.
+     * A list of tokens that have been fixed during a change set.
      *
-     * All changes in changeset must be able to be applied, or else the entire changeset is rejected.
+     * All changes in change set must be able to be applied, or else the entire change set is rejected.
      *
      * @var array<int, string>
      */
-    private array $changeset = [];
+    private array $changeSet = [];
 
     /**
-     * Is there an open changeset.
+     * Is there an open change set.
      */
-    private bool $inChangeset = false;
+    private bool $inChangeSet = false;
 
     /**
      * Is the current fixing loop in conflict?
@@ -107,27 +107,27 @@ final class Fixer implements FixerInterface
         return $content;
     }
 
-    public function beginChangeset(): void
+    public function beginChangeSet(): void
     {
-        if ($this->inChangeset) {
-            throw new BadMethodCallException('Already in changeset.');
+        if ($this->inChangeSet) {
+            throw new BadMethodCallException('Already in change set.');
         }
 
-        $this->changeset = [];
-        $this->inChangeset = true;
+        $this->changeSet = [];
+        $this->inChangeSet = true;
     }
 
-    public function endChangeset(): void
+    public function endChangeSet(): void
     {
-        if (!$this->inChangeset) {
-            throw new BadMethodCallException('There is no current changeset.');
+        if (!$this->inChangeSet) {
+            throw new BadMethodCallException('There is no current change set.');
         }
 
-        $this->inChangeset = false;
+        $this->inChangeSet = false;
 
         if (!$this->inConflict) {
             $applied = [];
-            foreach ($this->changeset as $tokenPosition => $content) {
+            foreach ($this->changeSet as $tokenPosition => $content) {
                 $success = $this->replaceToken($tokenPosition, $content);
                 if (!$success) {
                     // Rolling back all changes.
@@ -141,7 +141,7 @@ final class Fixer implements FixerInterface
             }
         }
 
-        $this->changeset = [];
+        $this->changeSet = [];
     }
 
     public function replaceToken(int $tokenPosition, string $content): bool
@@ -150,12 +150,12 @@ final class Fixer implements FixerInterface
             return false;
         }
 
-        if (!$this->inChangeset && isset($this->fixedTokens[$tokenPosition])) {
+        if (!$this->inChangeSet && isset($this->fixedTokens[$tokenPosition])) {
             return false;
         }
 
-        if ($this->inChangeset) {
-            $this->changeset[$tokenPosition] = $content;
+        if ($this->inChangeSet) {
+            $this->changeSet[$tokenPosition] = $content;
 
             return true;
         }
@@ -232,13 +232,13 @@ final class Fixer implements FixerInterface
     }
 
     /**
-     * This function takes changesets into account so should be used
+     * This function takes change sets into account so should be used
      * instead of directly accessing the token array.
      */
     private function getTokenContent(int $tokenPosition): string
     {
-        if ($this->inChangeset && isset($this->changeset[$tokenPosition])) {
-            return $this->changeset[$tokenPosition];
+        if ($this->inChangeSet && isset($this->changeSet[$tokenPosition])) {
+            return $this->changeSet[$tokenPosition];
         }
 
         return $this->tokens[$tokenPosition];

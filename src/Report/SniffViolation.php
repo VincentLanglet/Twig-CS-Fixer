@@ -38,24 +38,23 @@ final class SniffViolation
             self::LEVEL_WARNING => Report::MESSAGE_TYPE_WARNING,
             self::LEVEL_ERROR   => Report::MESSAGE_TYPE_ERROR,
             self::LEVEL_FATAL   => Report::MESSAGE_TYPE_FATAL,
-            default             => throw new InvalidArgumentException(sprintf('Level "%s" is not supported.', $level)),
+            default             => throw new InvalidArgumentException(
+                sprintf('Level "%s" is not supported.', $level)
+            ),
         };
     }
 
     public static function getLevelAsInt(string $level): int
     {
-        switch (strtoupper($level)) {
-            case Report::MESSAGE_TYPE_NOTICE:
-                return self::LEVEL_NOTICE;
-            case Report::MESSAGE_TYPE_WARNING:
-                return self::LEVEL_WARNING;
-            case Report::MESSAGE_TYPE_ERROR:
-                return self::LEVEL_ERROR;
-            case Report::MESSAGE_TYPE_FATAL:
-                return self::LEVEL_FATAL;
-            default:
-                throw new InvalidArgumentException(sprintf('Level "%s" is not supported.', $level));
-        }
+        return match (strtoupper($level)) {
+            Report::MESSAGE_TYPE_NOTICE  => self::LEVEL_NOTICE,
+            Report::MESSAGE_TYPE_WARNING => self::LEVEL_WARNING,
+            Report::MESSAGE_TYPE_ERROR   => self::LEVEL_ERROR,
+            Report::MESSAGE_TYPE_FATAL   => self::LEVEL_FATAL,
+            default                      => throw new InvalidArgumentException(
+                sprintf('Level "%s" is not supported.', $level)
+            ),
+        };
     }
 
     public function getMessage(): string

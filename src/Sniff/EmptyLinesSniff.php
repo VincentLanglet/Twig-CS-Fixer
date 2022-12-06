@@ -56,11 +56,11 @@ final class EmptyLinesSniff extends AbstractSniff
         // Because we added manually extra empty lines to the count
         $i = min($i, $tokenPosition);
 
-        $fixer->beginChangeset();
+        $fixer->beginChangeSet();
         while ($i >= 2 || $i === $tokenPosition) {
             $fixer->replaceToken($tokenPosition - $i, '');
             $i--;
         }
-        $fixer->endChangeset();
+        $fixer->endChangeSet();
     }
 }

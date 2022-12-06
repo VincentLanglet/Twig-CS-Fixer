@@ -65,20 +65,20 @@ final class FixerTest extends TestCase
 
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'a'));
 
-                // True for changeset
-                $fixer->beginChangeset();
+                // True for change set
+                $fixer->beginChangeSet();
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'b'));
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'c'));
-                $fixer->endChangeset();
+                $fixer->endChangeSet();
 
                 // False if you replace multiple times the same token
                 TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'd'));
 
-                // Still true for changeset
-                $fixer->beginChangeset();
+                // Still true for change set
+                $fixer->beginChangeSet();
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'e'));
                 TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'f'));
-                $fixer->endChangeset();
+                $fixer->endChangeSet();
             }
         };
 
@@ -160,13 +160,13 @@ final class FixerTest extends TestCase
                     return;
                 }
 
-                $fixer->beginChangeset();
+                $fixer->beginChangeSet();
                 $fixer->replaceToken($tokenPosition + 2, (string) $this->error);
                 // Order matter, to check we revert the previous change
                 $fixer->replaceToken($tokenPosition, 'test');
                 // And to check we're not applying the next change
                 $fixer->replaceToken($tokenPosition + 4, (string) $this->error);
-                $fixer->endChangeset();
+                $fixer->endChangeSet();
             }
         };
         $sniff3 = new class () extends AbstractSniff {
@@ -187,9 +187,9 @@ final class FixerTest extends TestCase
                 // On the first execution, a conflict is created by sniff 1 and 2
                 // So the fixer won't try to fix anything else
                 TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
-                $fixer->beginChangeset();
+                $fixer->beginChangeSet();
                 TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
-                $fixer->endChangeset();
+                $fixer->endChangeSet();
             }
         };
 
@@ -225,12 +225,12 @@ final class FixerTest extends TestCase
                     return;
                 }
 
-                $fixer->beginChangeset();
+                $fixer->beginChangeSet();
                 TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
                 TestCase::assertTrue($fixer->addContentBefore($tokenPosition, 'b'));
                 TestCase::assertTrue($fixer->addNewline($tokenPosition));
                 TestCase::assertTrue($fixer->addNewlineBefore($tokenPosition));
-                $fixer->endChangeset();
+                $fixer->endChangeSet();
             }
         };
 
@@ -253,22 +253,22 @@ final class FixerTest extends TestCase
         yield ["\r", "\rb\ra\r"];
     }
 
-    public function testBeginChangesetException(): void
+    public function testBeginChangeSetException(): void
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
         $fixer = new Fixer($tokenizer);
 
-        $fixer->beginChangeset();
+        $fixer->beginChangeSet();
         $this->expectException(BadMethodCallException::class);
-        $fixer->beginChangeset();
+        $fixer->beginChangeSet();
     }
 
-    public function testEndChangesetException(): void
+    public function testEndChangeSetException(): void
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
         $fixer = new Fixer($tokenizer);
 
         $this->expectException(BadMethodCallException::class);
-        $fixer->endChangeset();
+        $fixer->endChangeSet();
     }
 }
