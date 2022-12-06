@@ -39,7 +39,7 @@ final class CustomTwigExtension implements ExtensionInterface
     }
 
     /**
-     * @phpstan-return array{
+     * @return array{
      *     array<string, array{precedence: int, class: class-string<AbstractUnary>}>,
      *     array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
      * }

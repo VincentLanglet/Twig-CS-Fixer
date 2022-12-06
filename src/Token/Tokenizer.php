@@ -62,9 +62,7 @@ final class Tokenizer implements TokenizerInterface
     private array $expressionStarters = [];
 
     /**
-     * @var array<array{int, array<string, string>}>
-     *
-     * @phpstan-var array<array{int<0, 5>, array<string, string>}>
+     * @var array<array{int<0, 5>, array<string, string>}>
      */
     private array $state = [];
 
@@ -186,7 +184,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @phpstan-return int<0, 5>
+     * @return int<0, 5>
      */
     private function getState(): int
     {
@@ -196,9 +194,8 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
+     * @param int<0, 5>             $state
      * @param array<string, string> $data
-     *
-     * @phpstan-param int<0, 5> $state
      */
     private function pushState(int $state, array $data = []): void
     {
