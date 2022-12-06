@@ -8,6 +8,7 @@
          convertDeprecationsToExceptions="true"
          failOnRisky="true"
          beStrictAboutOutputDuringTests="true"
+         stderr="true"
 >
     <testsuites>
         <testsuite name="all">
