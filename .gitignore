@@ -12,9 +12,6 @@ composer.lock
 ## PhpCs
 .php-cs-fixer.cache
 
-## TwigCs
-.twig-cs-fixer.cache
-
 ## Infection
 infection.log
 infection.html
