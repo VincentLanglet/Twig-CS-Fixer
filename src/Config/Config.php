@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Config;
 
 use Symfony\Component\Finder\Finder;
+use Twig\Extension\ExtensionInterface;
 use Twig\TokenParser\TokenParserInterface;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\File\Finder as TwigCsFinder;
@@ -26,6 +27,11 @@ final class Config
     private ?string $cacheFile = self::DEFAULT_CACHE_PATH;
 
     private ?CacheManagerInterface $cacheManager = null;
+
+    /**
+     * @var list<ExtensionInterface>
+     */
+    private array $twigExtensions = [];
 
     /**
      * @var list<TokenParserInterface>
@@ -99,6 +105,24 @@ final class Config
         $this->cacheFile = $cacheFile;
 
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addTwigExtension(ExtensionInterface $extension): self
+    {
+        $this->twigExtensions[] = $extension;
+
+        return $this;
+    }
+
+    /**
+     * @return list<ExtensionInterface>
+     */
+    public function getTwigExtensions(): array
+    {
+        return $this->twigExtensions;
     }
 
     /**

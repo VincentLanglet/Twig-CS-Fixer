@@ -36,7 +36,7 @@ abstract class FileTestCase extends TestCase
         }
 
         $cwd = getcwd();
-        Assert::notFalse($cwd);
+        Assert::notFalse($cwd); // Avoid doing a phpunit assertion
 
         $this->cwd = $cwd;
         chdir($this->getTmpPath($this->getDir()));
@@ -72,7 +72,7 @@ abstract class FileTestCase extends TestCase
         if (null === $this->dir) {
             $reflectionClass = new ReflectionClass($this);
             $fileName = $reflectionClass->getFileName();
-            Assert::notFalse($fileName);
+            Assert::notFalse($fileName); // Avoid doing a phpunit assertion
 
             $this->dir = \dirname($fileName);
         }

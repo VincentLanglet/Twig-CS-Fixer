@@ -10,6 +10,7 @@ use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Twig\Environment;
+use Twig\Extension\ExtensionInterface;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 use Twig\Loader\ArrayLoader;
 use Twig\TokenParser\TokenParserInterface;
@@ -41,10 +42,13 @@ final class StubbedEnvironment extends Environment
     ];
 
     /**
+     * @param ExtensionInterface[]   $customTwigExtensions
      * @param TokenParserInterface[] $customTokenParsers
      */
-    public function __construct(array $customTokenParsers = [])
-    {
+    public function __construct(
+        array $customTwigExtensions = [],
+        array $customTokenParsers = []
+    ) {
         parent::__construct(new ArrayLoader());
 
         $this->addTokenParser(new DumpTokenParser());
@@ -56,6 +60,10 @@ final class StubbedEnvironment extends Environment
         // Optional dependency
         if (class_exists(CacheTokenParser::class)) {
             $this->addTokenParser(new CacheTokenParser());
+        }
+
+        foreach ($customTwigExtensions as $customTwigExtension) {
+            $this->addExtension($customTwigExtension);
         }
 
         foreach ($customTokenParsers as $customTokenParser) {
