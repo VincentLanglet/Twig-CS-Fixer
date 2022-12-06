@@ -18,10 +18,9 @@ final class TrailingSpaceSniff extends AbstractSniff
             return;
         }
 
-        $previousToken = $tokens[$tokenPosition - 1] ?? null;
         if (
-            null === $previousToken
-            || !$this->isTokenMatching($previousToken, Token::INDENT_TOKENS)
+            !isset($tokens[$tokenPosition - 1])
+            || !$this->isTokenMatching($tokens[$tokenPosition - 1], Token::INDENT_TOKENS)
         ) {
             return;
         }

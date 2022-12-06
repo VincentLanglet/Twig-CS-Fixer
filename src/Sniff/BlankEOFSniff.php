@@ -13,13 +13,7 @@ final class BlankEOFSniff extends AbstractSniff
 {
     protected function process(int $tokenPosition, array $tokens): void
     {
-        // Doesn't apply for empty files.
-        if (0 === $tokenPosition) {
-            return;
-        }
-
         $token = $tokens[$tokenPosition];
-
         if (!$this->isTokenMatching($token, Token::EOF_TYPE)) {
             return;
         }
@@ -29,6 +23,12 @@ final class BlankEOFSniff extends AbstractSniff
             isset($tokens[$tokenPosition - ($i + 1)])
             && $this->isTokenMatching($tokens[$tokenPosition - ($i + 1)], Token::EOL_TYPE)
         ) {
+            $i++;
+        }
+
+        if ($tokenPosition === $i) {
+            // If all previous tokens are EOL_TYPE, we have to count one more
+            // since there is no EOL token used for the previous non-empty line
             $i++;
         }
 
@@ -46,11 +46,14 @@ final class BlankEOFSniff extends AbstractSniff
             return;
         }
 
+        // Because we added manually extra empty lines to the count
+        $i = min($i, $tokenPosition);
+
         if (0 === $i) {
             $fixer->addNewlineBefore($tokenPosition);
         } else {
             $fixer->beginChangeset();
-            while ($i >= 2) {
+            while ($i >= 2 || $i === $tokenPosition) {
                 $fixer->replaceToken($tokenPosition - $i, '');
                 $i--;
             }
