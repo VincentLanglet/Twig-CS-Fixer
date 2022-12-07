@@ -13,7 +13,6 @@
         "php": ">=8.0",
         "ext-ctype": "*",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "composer-runtime-api": "^2.0.0",
         "symfony/console": "^5.4.9 || ^6.0",
         "symfony/finder": "^5.4 || ^6.0",
@@ -24,6 +23,7 @@
     "require-dev": {
         "ergebnis/composer-normalize": "^2.29",
         "friendsofphp/php-cs-fixer": "^3.13.0",
+        "icanhazstring/composer-unused": "^0.8.5",
         "infection/infection": "^0.26.16",
         "maglnet/composer-require-checker": "^3.8 || ^4.3",
         "phpstan/phpstan": "^1.9.1",

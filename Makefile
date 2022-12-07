@@ -29,3 +29,7 @@ rector:
 checker:
 	vendor/bin/composer-require-checker
 .PHONY: composer
+
+unused:
+	vendor/bin/composer-unused
+.PHONY: composer

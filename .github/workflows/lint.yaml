@@ -56,28 +56,3 @@ jobs:
 
             - name: Rector
               run: vendor/bin/rector --no-progress-bar --dry-run
-
-    composer-normalize:
-        name: Composer-normalize
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
-
-            - name: Install PHP with extensions
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  coverage: none
-                  tools: composer:v2
-                  ini-file: development
-
-            - name: Install Composer dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  dependency-versions: highest
-                  composer-options: --prefer-dist --prefer-stable
-
-            - name: Composer normalize
-              run: composer normalize --dry-run
