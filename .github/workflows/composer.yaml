@@ -81,3 +81,14 @@ jobs:
 
             - name: Composer unused
               run: vendor/bin/composer-unused
+
+    security-checker:
+        name: Security checker
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Security checker
+              uses: symfonycorp/security-checker-action@v4
