@@ -32,18 +32,18 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff implements Conf
     ];
 
     /**
-     * @var array<string, int|null>
+     * @var array<string, int|array{default: int|null, byPreviousValue: array<string, int|null>}|null>
      */
     private array $spaceBeforeConfig;
 
     /**
-     * @var array<string, int|null>
+     * @var array<string, int|array{default: int|null, byNextValue: array<string, int|null>}|null>
      */
     private array $spaceAfterConfig;
 
     /**
-     * @param array<string, int|null> $spaceBeforeOverride
-     * @param array<string, int|null> $spaceAfterOverride
+     * @param array<string, int|array{default: int|null, byPreviousValue: array<string, int|null>}|null> $spaceBeforeOverride
+     * @param array<string, int|array{default: int|null, byNextValue: array<string, int|null>}|null>     $spaceAfterOverride
      */
     public function __construct(
         array $spaceBeforeOverride = [],
@@ -71,7 +71,20 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff implements Conf
             return null;
         }
 
-        return $this->spaceBeforeConfig[$token->getValue()] ?? null;
+        $result = $this->spaceBeforeConfig[$token->getValue()] ?? null;
+        if (!\is_array($result)) {
+            return $result;
+        }
+
+        $previousPosition = $this->findPrevious(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition - 1, true);
+        Assert::notFalse($previousPosition, 'A PUNCTUATION_TYPE cannot be the first non-empty token');
+
+        $previous = $tokens[$previousPosition];
+        if (\array_key_exists($previous->getValue(), $result['byPreviousValue'])) {
+            return $result['byPreviousValue'][$previous->getValue()];
+        }
+
+        return $result['default'];
     }
 
     /**
@@ -93,6 +106,16 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff implements Conf
             return null;
         }
 
-        return $this->spaceAfterConfig[$token->getValue()] ?? null;
+        $result = $this->spaceAfterConfig[$token->getValue()] ?? null;
+        if (!\is_array($result)) {
+            return $result;
+        }
+
+        $next = $tokens[$nextPosition];
+        if (\array_key_exists($next->getValue(), $result['byNextValue'])) {
+            return $result['byNextValue'][$next->getValue()];
+        }
+
+        return $result['default'];
     }
 }

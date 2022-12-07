@@ -36,7 +36,7 @@ final class PunctuationSpacingTest extends AbstractSniffTestCase
             new PunctuationSpacingSniff(
                 [
                     ')' => 1,
-                    '}' => 1,
+                    '}' => ['default' => 1, 'byPreviousValue' => ['{' => 0]],
                     ']' => null,
                     ':' => null,
                     ',' => null,
@@ -44,7 +44,7 @@ final class PunctuationSpacingTest extends AbstractSniffTestCase
                 ],
                 [
                     '(' => 1,
-                    '{' => null,
+                    '{' => ['default' => 1, 'byNextValue' => ['}' => 0]],
                     '[' => null,
                     ':' => null,
                     ',' => 1,
