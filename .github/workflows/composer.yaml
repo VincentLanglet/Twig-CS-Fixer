@@ -1,4 +1,4 @@
-name: QA
+name: Composer
 
 on:
     push:
@@ -7,12 +7,12 @@ on:
     pull_request:
 
 jobs:
-    phpstan:
-        name: PHPStan
+    normalize:
+        name: Normalize
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout
+            - name: Checkout code
               uses: actions/checkout@v3
 
             - name: Install PHP with extensions
@@ -29,15 +29,15 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Run PHPStan
-              run: vendor/bin/phpstan analyse --no-progress --error-format=github
+            - name: Composer normalize
+              run: composer normalize --dry-run
 
-    psalm:
-        name: Psalm
+    require-checker:
+        name: Require-checker
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout
+            - name: Checkout code
               uses: actions/checkout@v3
 
             - name: Install PHP with extensions
@@ -54,5 +54,30 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Run PHP Code Sniffer
-              run: vendor/bin/psalm --no-progress --output-format=github --shepherd
+            - name: Composer require checker
+              run: vendor/bin/composer-require-checker
+
+    unused:
+        name: Unused
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  coverage: none
+                  tools: composer:v2
+                  ini-file: development
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  dependency-versions: highest
+                  composer-options: --prefer-dist --prefer-stable
+
+            - name: Composer unused
+              run: vendor/bin/composer-unused
