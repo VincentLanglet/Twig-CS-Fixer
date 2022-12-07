@@ -36,7 +36,8 @@ final class PunctuationSpacingTest extends AbstractSniffTestCase
             new PunctuationSpacingSniff(
                 [
                     ')' => 1,
-                    '}' => ['default' => 1, 'byPreviousValue' => ['{' => 0]],
+                    // `'{' => null` is used to check `byNextValue` works too
+                    '}' => ['default' => 1, 'byPreviousValue' => ['{' => null]],
                     ']' => null,
                     ':' => null,
                     ',' => null,
@@ -53,6 +54,34 @@ final class PunctuationSpacingTest extends AbstractSniffTestCase
             ),
             [],
             __DIR__.'/PunctuationSpacingTest.config.twig'
+        );
+    }
+
+    public function testSniffConfiguration(): void
+    {
+        $before = [
+            ')' => 1,
+            ']' => null,
+            '}' => ['default' => 1, 'byPreviousValue' => ['{' => 0]],
+            ':' => null,
+            ',' => null,
+            '|' => 1,
+            '.' => 0,
+        ];
+        $after = [
+            '(' => 1,
+            '[' => null,
+            '{' => ['default' => 1, 'byNextValue' => ['}' => 0]],
+            ':' => null,
+            ',' => 1,
+            '|' => 1,
+            '.' => 0,
+        ];
+        $sniff = new PunctuationSpacingSniff($before, $after);
+
+        static::assertEquals(
+            ['before' => $before, 'after' => $after],
+            $sniff->getConfiguration()
         );
     }
 }
