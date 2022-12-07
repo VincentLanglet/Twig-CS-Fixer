@@ -25,3 +25,7 @@ psalm:
 rector:
 	vendor/bin/rector
 .PHONY: rector
+
+checker:
+	vendor/bin/composer-require-checker
+.PHONY: composer

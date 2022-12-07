@@ -1,19 +1,20 @@
 {
     "name": "vincentlanglet/twig-cs-fixer",
-    "type": "coding-standard",
     "description": "A tool to automatically fix Twig code style",
-    "homepage": "https://github.com/VincentLanglet/Twig-CS-Fixer",
     "license": "MIT",
+    "type": "coding-standard",
     "authors": [
         {
             "name": "Vincent Langlet"
         }
     ],
-    "bin": ["bin/twig-cs-fixer"],
+    "homepage": "https://github.com/VincentLanglet/Twig-CS-Fixer",
     "require": {
         "php": ">=8.0",
+        "ext-ctype": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "composer-runtime-api": "^2.0.0",
         "symfony/console": "^5.4.9 || ^6.0",
         "symfony/finder": "^5.4 || ^6.0",
         "symfony/twig-bridge": "^5.4 || ^6.0",
@@ -21,8 +22,10 @@
         "webmozart/assert": "^1.9.1"
     },
     "require-dev": {
+        "ergebnis/composer-normalize": "^2.29",
         "friendsofphp/php-cs-fixer": "^3.13.0",
         "infection/infection": "^0.26.16",
+        "maglnet/composer-require-checker": "^3.8 || ^4.3",
         "phpstan/phpstan": "^1.9.1",
         "phpstan/phpstan-phpunit": "^1.2.2",
         "phpstan/phpstan-strict-rules": "^1.4.4",
@@ -37,12 +40,6 @@
         "twig/cache-extra": "^3.2",
         "vimeo/psalm": "^4.30.0"
     },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "infection/extension-installer": true
-        }
-    },
     "autoload": {
         "psr-4": {
             "TwigCsFixer\\": "src/"
@@ -53,5 +50,15 @@
             "TwigCsFixer\\PHPStan\\": ".phpstan/",
             "TwigCsFixer\\Tests\\": "tests/"
         }
+    },
+    "bin": [
+        "bin/twig-cs-fixer"
+    ],
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
     }
 }
