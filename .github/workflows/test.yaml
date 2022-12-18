@@ -40,6 +40,10 @@ jobs:
                   dependency-versions: ${{ matrix.dependencies }}
                   composer-options: --prefer-dist --prefer-stable
 
+            - name: Validate lowest dependencies
+              run: vendor/bin/validate-prefer-lowest
+              if: ${{ matrix.dependencies == 'lowest' }}
+
             - name: Run tests with PHPUnit
               run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
