@@ -21,6 +21,7 @@
         "webmozart/assert": "^1.9.1"
     },
     "require-dev": {
+        "dereuromark/composer-prefer-lowest": "^0.1.10",
         "ergebnis/composer-normalize": "^2.29",
         "friendsofphp/php-cs-fixer": "^3.13.0",
         "icanhazstring/composer-unused": "^0.8.5",
