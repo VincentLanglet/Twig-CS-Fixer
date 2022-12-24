@@ -13,12 +13,12 @@ interface SniffInterface
     /**
      * Messages will be added to the given `$report` object.
      *
-     * @param list<Token> $stream
+     * @param array<int, Token> $stream
      */
     public function lintFile(array $stream, Report $report): void;
 
     /**
-     * @param list<Token> $stream
+     * @param array<int, Token> $stream
      */
     public function fixFile(array $stream, FixerInterface $fixer): void;
 }

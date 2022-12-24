@@ -202,6 +202,11 @@ final class Tokenizer implements TokenizerInterface
         $this->state[] = [$state, $data];
     }
 
+    /**
+     * @psalm-suppress PossiblyInvalidArrayAssignment, PropertyTypeCoercion
+     *
+     * @see https://github.com/vimeo/psalm/issues/8989
+     */
     private function setStateParam(string $name, string $value): void
     {
         Assert::notEmpty($this->state, 'Cannot set state params without a current state.');
