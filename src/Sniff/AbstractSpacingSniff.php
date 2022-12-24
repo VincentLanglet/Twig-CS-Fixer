@@ -26,17 +26,17 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     abstract protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     abstract protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int;
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     private function checkSpaceAfter(int $tokenPosition, array $tokens, int $expected): void
     {
@@ -75,7 +75,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     private function checkSpaceBefore(int $tokenPosition, array $tokens, int $expected): void
     {

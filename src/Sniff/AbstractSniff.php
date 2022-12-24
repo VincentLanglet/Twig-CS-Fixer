@@ -36,7 +36,7 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     abstract protected function process(int $tokenPosition, array $tokens): void;
 
@@ -58,8 +58,8 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int|int[]   $type
-     * @param list<Token> $tokens
+     * @param int|int[]         $type
+     * @param array<int, Token> $tokens
      */
     protected function findNext(int|array $type, array $tokens, int $start, bool $exclude = false): int|false
     {
@@ -80,8 +80,8 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param int|int[]   $type
-     * @param list<Token> $tokens
+     * @param int|int[]         $type
+     * @param array<int, Token> $tokens
      */
     protected function findPrevious(int|array $type, array $tokens, int $start, bool $exclude = false): int|false
     {

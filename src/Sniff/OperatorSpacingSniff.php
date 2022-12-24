@@ -13,7 +13,7 @@ use Webmozart\Assert\Assert;
 final class OperatorSpacingSniff extends AbstractSpacingSniff
 {
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
@@ -40,7 +40,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
@@ -67,7 +67,7 @@ final class OperatorSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     private function isUnary(int $tokenPosition, array $tokens): bool
     {

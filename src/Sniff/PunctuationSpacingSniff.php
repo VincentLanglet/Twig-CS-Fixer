@@ -32,7 +32,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     ];
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
@@ -45,7 +45,7 @@ final class PunctuationSpacingSniff extends AbstractSpacingSniff
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param array<int, Token> $tokens
      */
     protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
