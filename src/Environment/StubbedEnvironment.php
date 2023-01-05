@@ -77,7 +77,11 @@ final class StubbedEnvironment extends Environment
     public function getFilter($name): ?TwigFilter
     {
         if (!\array_key_exists($name, $this->stubFilters)) {
-            $this->stubFilters[$name] = new TwigFilter($name);
+            /** @psalm-suppress InternalMethod */
+            $existingFilter = parent::getFilter($name);
+            $this->stubFilters[$name] = $existingFilter instanceof TwigFilter
+                ? $existingFilter
+                : new TwigFilter($name);
         }
 
         return $this->stubFilters[$name];
@@ -89,7 +93,11 @@ final class StubbedEnvironment extends Environment
     public function getFunction($name): ?TwigFunction
     {
         if (!\array_key_exists($name, $this->stubFunctions)) {
-            $this->stubFunctions[$name] = new TwigFunction($name);
+            /** @psalm-suppress InternalMethod */
+            $existingFunction = parent::getFunction($name);
+            $this->stubFunctions[$name] = $existingFunction instanceof TwigFunction
+                ? $existingFunction
+                : new TwigFunction($name);
         }
 
         return $this->stubFunctions[$name];
@@ -101,7 +109,11 @@ final class StubbedEnvironment extends Environment
     public function getTest($name): ?TwigTest
     {
         if (!\array_key_exists($name, $this->stubTests)) {
-            $this->stubTests[$name] = new TwigTest($name);
+            /** @psalm-suppress InternalMethod */
+            $existingTest = parent::getTest($name);
+            $this->stubTests[$name] = $existingTest instanceof TwigTest
+                ? $existingTest
+                : new TwigTest($name);
         }
 
         return $this->stubTests[$name];
