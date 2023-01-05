@@ -6,9 +6,7 @@ namespace TwigCsFixer\Tests\Token\Tokenizer\Fixtures;
 
 use Twig\ExpressionParser;
 use Twig\Extension\ExtensionInterface;
-use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Binary\AddBinary;
-use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 
 final class CustomTwigExtension implements ExtensionInterface
