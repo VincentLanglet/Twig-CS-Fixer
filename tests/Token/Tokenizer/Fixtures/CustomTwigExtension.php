@@ -38,15 +38,8 @@ final class CustomTwigExtension implements ExtensionInterface
         return [];
     }
 
-    /**
-     * @return array{
-     *     array<string, array{precedence: int, class: class-string<AbstractUnary>}>,
-     *     array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
-     * }
-     */
     public function getOperators(): array
     {
-        /** @psalm-suppress InternalClass */
         return [
             ['n0t' => [
                 'precedence' => 0,

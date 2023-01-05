@@ -16,7 +16,6 @@ use Twig\Node\TextNode;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Tests\Environment\Fixtures\CustomTokenParser;
 use TwigCsFixer\Tests\Environment\Fixtures\CustomTwigExtension;
@@ -37,14 +36,26 @@ final class StubbedEnvironmentTest extends TestCase
         static::assertInstanceOf(TwigFunction::class, $env->getFunction('foo'));
     }
 
-    public function testTestIsStubbed(): void
+    public function testSameAs(): void
     {
+        $content = file_get_contents(__DIR__.'/Fixtures/same_as.html.twig');
+        static::assertNotFalse($content);
+
         $env = new StubbedEnvironment();
+        $source = new Source($content, 'same_as.html.twig');
 
-        static::assertInstanceOf(TwigTest::class, $env->getTest('foo'));
+        $env->parse($env->tokenize($source));
+    }
 
-        static::assertNull($env->getTest('divisible')); // To not conflict with `divisible by`
-        static::assertNull($env->getTest('same')); // To not conflict with `same as`
+    public function testDivisibleBy(): void
+    {
+        $content = file_get_contents(__DIR__.'/Fixtures/divisible_by.html.twig');
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment();
+        $source = new Source($content, 'divisible_by.html.twig');
+
+        $env->parse($env->tokenize($source));
     }
 
     public function testParse(): void
