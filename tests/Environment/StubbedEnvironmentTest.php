@@ -16,6 +16,7 @@ use Twig\Node\TextNode;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig\TwigTest;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Tests\Environment\Fixtures\CustomTokenParser;
 use TwigCsFixer\Tests\Environment\Fixtures\CustomTwigExtension;
@@ -26,14 +27,54 @@ final class StubbedEnvironmentTest extends TestCase
     {
         $env = new StubbedEnvironment();
 
-        static::assertInstanceOf(TwigFilter::class, $env->getFilter('foo'));
+        $stub = $env->getFilter('foo');
+        static::assertInstanceOf(TwigFilter::class, $stub);
+        static::assertNull($stub->getCallable());
+    }
+
+    public function testExistingFilterIsNotStubbed(): void
+    {
+        $env = new StubbedEnvironment();
+
+        $existing = $env->getFilter('length');
+        static::assertInstanceOf(TwigFilter::class, $existing);
+        static::assertNotNull($existing->getCallable());
     }
 
     public function testFunctionIsStubbed(): void
     {
         $env = new StubbedEnvironment();
 
-        static::assertInstanceOf(TwigFunction::class, $env->getFunction('foo'));
+        $stub = $env->getFunction('foo');
+        static::assertInstanceOf(TwigFunction::class, $stub);
+        static::assertNull($stub->getCallable());
+    }
+
+    public function testExistingFunctionIsNotStubbed(): void
+    {
+        $env = new StubbedEnvironment();
+
+        $existing = $env->getFunction('include');
+        static::assertInstanceOf(TwigFunction::class, $existing);
+        static::assertNotNull($existing->getCallable());
+    }
+
+    public function testTestIsStubbed(): void
+    {
+        $env = new StubbedEnvironment();
+
+        $stub = $env->getTest('foo');
+        static::assertInstanceOf(TwigTest::class, $stub);
+        static::assertNull($stub->getCallable());
+    }
+
+    public function testExistingTestIsNotStubbed(): void
+    {
+        $env = new StubbedEnvironment();
+
+        $existing = $env->getTest('empty');
+        static::assertInstanceOf(TwigTest::class, $existing);
+        static::assertNotNull($existing->getCallable());
     }
 
     public function testSameAs(): void
