@@ -64,6 +64,7 @@ By default, the generic standard is enabled with the twig coding standard rules 
 
  - `BlankEOFSniff`: ensures that files end with one blank line.
  - `EmptyLinesSniff`: ensures that 2 empty lines do not follow each other.
+ - `IndentSniff`: ensures that files are not indented with tabs.
  - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
  - `TrailingSpaceSniff`: ensures that files have no trailing spaces.
 
