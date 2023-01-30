@@ -21,8 +21,12 @@ abstract class AbstractSniffTestCase extends TestCase
     /**
      * @param array<array<int, int>> $expects
      */
-    protected function checkSniff(SniffInterface $sniff, array $expects, ?string $filePath = null): void
-    {
+    protected function checkSniff(
+        SniffInterface $sniff,
+        array $expects,
+        ?string $filePath = null,
+        ?string $fixedFilePath = null
+    ): void {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
         $linter = new Linter($env, $tokenizer);
@@ -33,13 +37,13 @@ abstract class AbstractSniffTestCase extends TestCase
         $ruleset->addSniff($sniff);
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
 
-        $fixedFile = substr($filePath, 0, -5).'.fixed.twig';
-        if (file_exists($fixedFile)) {
+        $fixedFilePath ??= substr($filePath, 0, -5).'.fixed.twig';
+        if (file_exists($fixedFilePath)) {
             $content = file_get_contents($filePath);
             static::assertNotFalse($content);
             $fixer = new Fixer($tokenizer);
 
-            $diff = TestHelper::generateDiff($fixer->fixFile($content, $ruleset), $fixedFile);
+            $diff = TestHelper::generateDiff($fixer->fixFile($content, $ruleset), $fixedFilePath);
             if ('' !== $diff) {
                 static::fail($diff);
             }

@@ -7,6 +7,7 @@ namespace TwigCsFixer\Standard;
 use TwigCsFixer\Sniff\BlankEOFSniff;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Sniff\EmptyLinesSniff;
+use TwigCsFixer\Sniff\IndentSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Sniff\SniffInterface;
@@ -27,6 +28,7 @@ final class Generic implements StandardInterface
             new BlankEOFSniff(),
             new DelimiterSpacingSniff(),
             new EmptyLinesSniff(),
+            new IndentSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
             new TrailingCommaSingleLineSniff(),
