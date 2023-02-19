@@ -8,6 +8,7 @@ composer.lock
 .coverage/
 .phpunit.xml
 .phpunit.result.cache
+.phpunit.cache
 
 ## PhpCs
 .php-cs-fixer.cache

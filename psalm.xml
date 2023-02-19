@@ -12,6 +12,7 @@
        ignoreInternalFunctionNullReturn="false"
        inferPropertyTypesFromConstructor="false"
        findUnusedPsalmSuppress="true"
+       findUnusedBaselineEntry="true"
        cacheDirectory="/tmp/psalm"
        findUnusedCode="false"
 >

@@ -121,6 +121,14 @@ final class LinterTest extends FileTestCase
 
     public function testUserDeprecationAreReported(): void
     {
+        $deprecations = 0;
+        set_error_handler(static function () use (&$deprecations): bool {
+            /** @psalm-suppress MixedOperand,MixedAssignment https://github.com/vimeo/psalm/issues/9155 */
+            $deprecations++;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
         $env = new StubbedEnvironment();
@@ -138,6 +146,8 @@ final class LinterTest extends FileTestCase
 
         // Ensure the error handler is restored.
         @trigger_error('User Deprecation 2', \E_USER_DEPRECATED);
+        static::assertSame(1, $deprecations);
+        restore_error_handler();
 
         $messages = $report->getMessages($filePath);
         static::assertCount(1, $messages);
