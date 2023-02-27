@@ -536,6 +536,32 @@ final class TokenizerTest extends TestCase
                 58 => Token::EOF_TYPE,
             ],
         ];
+
+        yield [
+            __DIR__.'/Fixtures/test13.twig',
+            [
+                0  => Token::BLOCK_START_TYPE,
+                1  => Token::WHITESPACE_TYPE,
+                2  => Token::BLOCK_TAG_TYPE,
+                3  => Token::WHITESPACE_TYPE,
+                4  => Token::STRING_TYPE,
+                5  => Token::WHITESPACE_TYPE,
+                6  => Token::NAME_TYPE,
+                7  => Token::WHITESPACE_TYPE,
+                8  => Token::PUNCTUATION_TYPE,
+                9  => Token::STRING_TYPE,
+                10 => Token::PUNCTUATION_TYPE,
+                11 => Token::WHITESPACE_TYPE,
+                12 => Token::STRING_TYPE,
+                13 => Token::PUNCTUATION_TYPE,
+                14 => Token::WHITESPACE_TYPE,
+                15 => Token::NAME_TYPE,
+                16 => Token::WHITESPACE_TYPE,
+                17 => Token::BLOCK_END_TYPE,
+                18 => Token::EOL_TYPE,
+                19 => Token::EOF_TYPE,
+            ],
+        ];
     }
 
     /**
