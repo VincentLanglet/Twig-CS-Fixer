@@ -8,7 +8,7 @@ includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
 parameters:
-    phpVersion: 80100
+    phpVersion: 80200
     tmpDir: /tmp/phpstan
     level: max
     paths:
