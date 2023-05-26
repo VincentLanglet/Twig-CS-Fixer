@@ -10,6 +10,7 @@ use Symfony\Bridge\Twig\Node\FormThemeNode;
 use Symfony\Bridge\Twig\Node\StopwatchNode;
 use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
 use Symfony\Bridge\Twig\Node\TransNode;
+use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Twig\Extra\Cache\Node\CacheNode;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 use Twig\Node\TextNode;
@@ -131,11 +132,26 @@ final class StubbedEnvironmentTest extends TestCase
         static::assertNotFalse($content);
 
         $env = new StubbedEnvironment();
-        $source = new Source($content, 'tags.html.twig');
+        $source = new Source($content, 'cache_tag.html.twig');
 
         $nodes = $env->parse($env->tokenize($source));
         $body = $nodes->getNode('body');
         static::assertInstanceOf(CacheNode::class, $body->getNode('0'));
+    }
+
+    public function testParseComponentTag(): void
+    {
+        if (!class_exists(ComponentLexer::class)) {
+            static::markTestSkipped('symfony/ux-twig-component is required');
+        }
+
+        $content = file_get_contents(__DIR__.'/Fixtures/component_tag.html.twig');
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment();
+        $source = new Source($content, 'component_tag.html.twig');
+
+        $env->parse($env->tokenize($source));
     }
 
     public function testParseWithCustomTokenParser(): void

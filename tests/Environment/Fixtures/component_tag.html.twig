@@ -1,0 +1,11 @@
+{% component DataTable with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
+    {% block th_class %}{{ parent() }} text-bold{% endblock %}
+
+    {% block td_class %}{{ parent() }} text-italic{% endblock %}
+
+    {% block footer %}
+        <div class="data-table-footer">
+            My footer
+        </div>
+    {% endblock %}
+{% endcomponent %}

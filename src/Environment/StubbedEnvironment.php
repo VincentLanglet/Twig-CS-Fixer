@@ -9,6 +9,7 @@ use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
+use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
@@ -17,6 +18,7 @@ use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
+use TwigCsFixer\Environment\Parser\ComponentTokenParser;
 
 /**
  * Provide stubs for all filters, functions, tests and tags that are not defined in twig's core.
@@ -60,6 +62,9 @@ final class StubbedEnvironment extends Environment
         // Optional dependency
         if (class_exists(CacheTokenParser::class)) {
             $this->addTokenParser(new CacheTokenParser());
+        }
+        if (class_exists(TwigComponentBundle::class)) {
+            $this->addTokenParser(new ComponentTokenParser());
         }
 
         foreach ($customTwigExtensions as $customTwigExtension) {
