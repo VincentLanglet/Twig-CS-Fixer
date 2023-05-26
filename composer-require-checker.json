@@ -1,6 +1,7 @@
 {
     "scan-files" : ["bin/twig-cs-fixer"],
     "symbol-whitelist" : [
-        "Twig\\Extra\\Cache\\TokenParser\\CacheTokenParser"
+        "Twig\\Extra\\Cache\\TokenParser\\CacheTokenParser",
+        "Symfony\\UX\\TwigComponent\\TwigComponentBundle"
     ]
 }
