@@ -1,4 +1,4 @@
-{% component DataTable with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
+{% component DataTable with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} only %}
     {% block th_class %}{{ parent() }} text-bold{% endblock %}
 
     {% block td_class %}{{ parent() }} text-italic{% endblock %}
