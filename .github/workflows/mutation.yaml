@@ -35,4 +35,4 @@ jobs:
             - name: Run Infection
               env:
                   INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
-              run: vendor/bin/infection --threads=4 --skip-initial-tests --coverage=build/coverage --no-progress --log-verbosity=none
+              run: vendor/bin/infection --threads=4 --skip-initial-tests --coverage=build/coverage --no-progress --log-verbosity=none --show-mutations
