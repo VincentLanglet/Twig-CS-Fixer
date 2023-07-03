@@ -77,8 +77,12 @@ final class Linter
 
             if (null !== $fixer) {
                 try {
-                    $content = $fixer->fixFile($content, $ruleset);
-                    file_put_contents($filePath, $content);
+                    $newContent = $fixer->fixFile($content, $ruleset);
+                    // Don't write the file if it is unchanged in order not to invalidate mtime based caches.
+                    if ($newContent !== $content) {
+                        file_put_contents($filePath, $newContent);
+                        $content = $newContent;
+                    }
                 } catch (CannotTokenizeException $exception) {
                     $sniffViolation = new SniffViolation(
                         SniffViolation::LEVEL_FATAL,
