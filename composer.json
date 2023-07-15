@@ -35,7 +35,7 @@
         "phpunit/phpunit": "^9.5.26 || ^10.0.9",
         "psalm/plugin-phpunit": "^0.18.4",
         "psalm/plugin-symfony": "^5.0.0",
-        "rector/rector": "^0.16.0",
+        "rector/rector": "^0.17.0",
         "symfony/filesystem": "^5.4 || ^6.0",
         "symfony/process": "^5.4 || ^6.0",
         "symfony/ux-twig-component": "^2.8.0",
