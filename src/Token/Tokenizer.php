@@ -266,7 +266,7 @@ final class Tokenizer implements TokenizerInterface
         $this->currentExpressionStarter++;
     }
 
-    private function pushToken(int $type, string $value = '', ?Token $relatedToken = null): Token
+    private function pushToken(int|string $type, string $value = '', ?Token $relatedToken = null): Token
     {
         $token = new Token(
             $type,
@@ -291,6 +291,7 @@ final class Tokenizer implements TokenizerInterface
     {
         $currentCode = $this->code[$this->cursor];
         $nextToken = $this->code[$this->cursor + 1] ?? null;
+        $next2Token = $this->code[$this->cursor + 2] ?? null;
 
         if (1 === preg_match('/\t/', $currentCode)) {
             $this->lexTab();
@@ -298,6 +299,8 @@ final class Tokenizer implements TokenizerInterface
             $this->lexWhitespace();
         } elseif (1 === preg_match("/\r\n?|\n/", $currentCode)) {
             $this->lexEOL();
+        } elseif ('.' === $currentCode && '.' === $nextToken && '.' === $next2Token) {
+            $this->lexSpread();
         } elseif ('=' === $currentCode && '>' === $nextToken) {
             $this->lexArrowFunction();
         } elseif (1 === preg_match($this->operatorRegex, $this->code, $match, 0, $this->cursor)) {
@@ -526,6 +529,11 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $this->lastEOL = $this->cursor;
+    }
+
+    private function lexSpread(): void
+    {
+        $this->pushToken(Token::SPREAD_TYPE, '...');
     }
 
     private function lexArrowFunction(): void

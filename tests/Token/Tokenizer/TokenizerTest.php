@@ -69,7 +69,7 @@ final class TokenizerTest extends TestCase
     }
 
     /**
-     * @param array<int, int> $expectedTokenTypes
+     * @param array<int, int|string> $expectedTokenTypes
      *
      * @dataProvider tokenizeDataProvider
      */
@@ -91,12 +91,12 @@ final class TokenizerTest extends TestCase
             static::fail($diff);
         }
 
-        $tokenTypes = array_map(static fn (Token $token): int => $token->getType(), $tokens);
+        $tokenTypes = array_map(static fn (Token $token): int|string => $token->getType(), $tokens);
         static::assertSame($expectedTokenTypes, $tokenTypes);
     }
 
     /**
-     * @return iterable<array-key, array{string, array<int, int>}>
+     * @return iterable<array-key, array{string, array<int, int|string>}>
      */
     public static function tokenizeDataProvider(): iterable
     {
@@ -534,6 +534,57 @@ final class TokenizerTest extends TestCase
                 56 => Token::BLOCK_END_TYPE,
                 57 => Token::EOL_TYPE,
                 58 => Token::EOF_TYPE,
+            ],
+        ];
+
+        yield [
+            __DIR__.'/Fixtures/test13.twig',
+            [
+                0  => Token::VAR_START_TYPE,
+                1  => Token::WHITESPACE_TYPE,
+                2  => Token::PUNCTUATION_TYPE,
+                3  => Token::WHITESPACE_TYPE,
+                4  => Token::NAME_TYPE,
+                5  => Token::PUNCTUATION_TYPE,
+                6  => Token::WHITESPACE_TYPE,
+                7  => Token::STRING_TYPE,
+                8  => Token::PUNCTUATION_TYPE,
+                9  => Token::WHITESPACE_TYPE,
+                10 => Token::SPREAD_TYPE,
+                11 => Token::PUNCTUATION_TYPE,
+                12 => Token::WHITESPACE_TYPE,
+                13 => Token::NAME_TYPE,
+                14 => Token::PUNCTUATION_TYPE,
+                15 => Token::WHITESPACE_TYPE,
+                16 => Token::STRING_TYPE,
+                17 => Token::WHITESPACE_TYPE,
+                18 => Token::PUNCTUATION_TYPE,
+                19 => Token::WHITESPACE_TYPE,
+                20 => Token::PUNCTUATION_TYPE,
+                21 => Token::WHITESPACE_TYPE,
+                22 => Token::VAR_END_TYPE,
+                23 => Token::EOL_TYPE,
+                24 => Token::VAR_START_TYPE,
+                25 => Token::WHITESPACE_TYPE,
+                26 => Token::PUNCTUATION_TYPE,
+                27 => Token::NUMBER_TYPE,
+                28 => Token::PUNCTUATION_TYPE,
+                29 => Token::WHITESPACE_TYPE,
+                30 => Token::NUMBER_TYPE,
+                31 => Token::PUNCTUATION_TYPE,
+                32 => Token::WHITESPACE_TYPE,
+                33 => Token::SPREAD_TYPE,
+                34 => Token::PUNCTUATION_TYPE,
+                35 => Token::NUMBER_TYPE,
+                36 => Token::PUNCTUATION_TYPE,
+                37 => Token::WHITESPACE_TYPE,
+                38 => Token::NUMBER_TYPE,
+                39 => Token::PUNCTUATION_TYPE,
+                40 => Token::PUNCTUATION_TYPE,
+                41 => Token::WHITESPACE_TYPE,
+                42 => Token::VAR_END_TYPE,
+                43 => Token::EOL_TYPE,
+                44 => Token::EOF_TYPE,
             ],
         ];
     }
