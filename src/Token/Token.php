@@ -24,19 +24,20 @@ final class Token
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
     public const ARROW_TYPE = 12;
+    public const SPREAD_TYPE = 13;
     // New constants
-    public const DQ_STRING_START_TYPE = 13;
-    public const DQ_STRING_END_TYPE = 14;
-    public const BLOCK_TAG_TYPE = 15;
-    public const WHITESPACE_TYPE = 16;
-    public const TAB_TYPE = 17;
-    public const EOL_TYPE = 18;
-    public const COMMENT_START_TYPE = 19;
-    public const COMMENT_TEXT_TYPE = 20;
-    public const COMMENT_WHITESPACE_TYPE = 21;
-    public const COMMENT_TAB_TYPE = 22;
-    public const COMMENT_EOL_TYPE = 23;
-    public const COMMENT_END_TYPE = 24;
+    public const DQ_STRING_START_TYPE = 'DQ_STRING_START_TYPE';
+    public const DQ_STRING_END_TYPE = 'DQ_STRING_END_TYPE';
+    public const BLOCK_TAG_TYPE = 'BLOCK_TAG_TYPE';
+    public const WHITESPACE_TYPE = 'WHITESPACE_TYPE';
+    public const TAB_TYPE = 'TAB_TYPE';
+    public const EOL_TYPE = 'EOL_TYPE';
+    public const COMMENT_START_TYPE = 'COMMENT_START_TYPE';
+    public const COMMENT_TEXT_TYPE = 'COMMENT_TEXT_TYPE';
+    public const COMMENT_WHITESPACE_TYPE = 'COMMENT_WHITESPACE_TYPE';
+    public const COMMENT_TAB_TYPE = 'COMMENT_TAB_TYPE';
+    public const COMMENT_EOL_TYPE = 'COMMENT_EOL_TYPE';
+    public const COMMENT_END_TYPE = 'COMMENT_END_TYPE';
 
     public const WHITESPACE_TOKENS = [
         self::WHITESPACE_TYPE         => self::WHITESPACE_TYPE,
@@ -62,7 +63,7 @@ final class Token
     ];
 
     public function __construct(
-        private int $type,
+        private int|string $type,
         private int $line,
         private int $position,
         private string $filename,
@@ -71,7 +72,7 @@ final class Token
     ) {
     }
 
-    public function getType(): int
+    public function getType(): int|string
     {
         return $this->type;
     }
