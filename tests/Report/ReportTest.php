@@ -98,4 +98,21 @@ final class ReportTest extends TestCase
         self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->getMessages('another_file.twig');
     }
+
+    public function testAddFixedFile(): void
+    {
+        $report = new Report([new SplFileInfo('file.twig')]);
+
+        static::assertSame([], $report->getFixedFiles());
+        $report->addFixedFile('file.twig');
+        static::assertSame(['file.twig'], $report->getFixedFiles());
+    }
+
+    public function testAddFixedFileForAnotherFile(): void
+    {
+        $report = new Report([new SplFileInfo('file.twig')]);
+
+        self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
+        $report->addFixedFile('another_file.twig');
+    }
 }
