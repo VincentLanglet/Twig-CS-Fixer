@@ -28,6 +28,14 @@ final class TextFormatter
 
     public function display(Report $report, ?string $level = null): void
     {
+        if (
+            $this->io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE
+            && [] !== $report->getFixedFiles()
+        ) {
+            $this->io->text('Changed:');
+            $this->io->listing($report->getFixedFiles());
+        }
+
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages($file, $level);
             if (\count($fileMessages) > 0) {

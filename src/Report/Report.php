@@ -22,6 +22,11 @@ final class Report
      */
     private array $messagesByFiles = [];
 
+    /**
+     * @var array<string, true>
+     */
+    private array $fixedFiles = [];
+
     private int $totalNotices = 0;
 
     private int $totalWarnings = 0;
@@ -100,6 +105,27 @@ final class Report
     public function getTotalFiles(): int
     {
         return \count($this->messagesByFiles);
+    }
+
+    public function addFixedFile(string $filename): self
+    {
+        if (!isset($this->messagesByFiles[$filename])) {
+            throw new InvalidArgumentException(
+                sprintf('The file "%s" is not handled by this report.', $filename)
+            );
+        }
+
+        $this->fixedFiles[$filename] = true;
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getFixedFiles(): array
+    {
+        return array_keys($this->fixedFiles);
     }
 
     public function getTotalNotices(): int

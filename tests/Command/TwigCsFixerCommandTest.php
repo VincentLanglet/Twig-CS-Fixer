@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
@@ -74,9 +75,30 @@ final class TwigCsFixerCommandTest extends FileTestCase
             '--fix' => true,
         ]);
 
+        $display = $commandTester->getDisplay();
+        static::assertStringNotContainsString('Changed', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
-            $commandTester->getDisplay()
+            $display
+        );
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithReportErrorsFixedVerbose(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--fix' => true,
+        ], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+
+        $display = $commandTester->getDisplay();
+        static::assertStringContainsString('Changed', $display);
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
+            $display
         );
         static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
     }
