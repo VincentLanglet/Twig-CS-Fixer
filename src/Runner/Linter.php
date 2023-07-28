@@ -82,6 +82,7 @@ final class Linter
                     if ($newContent !== $content) {
                         file_put_contents($filePath, $newContent);
                         $content = $newContent;
+                        $report->addFixedFile($filePath);
                     }
                 } catch (CannotTokenizeException $exception) {
                     $sniffViolation = new SniffViolation(
