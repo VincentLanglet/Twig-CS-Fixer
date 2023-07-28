@@ -601,8 +601,8 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
-        self::expectException(CannotTokenizeException::class);
-        self::expectExceptionMessage($expectedMessage);
+        $this->expectException(CannotTokenizeException::class);
+        $this->expectExceptionMessage($expectedMessage);
         $tokenizer->tokenize($source);
     }
 

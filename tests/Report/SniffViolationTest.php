@@ -42,7 +42,7 @@ final class SniffViolationTest extends TestCase
 
     public function testGetLevelAsStringException(): void
     {
-        self::expectExceptionMessage('Level "4" is not supported.');
+        $this->expectExceptionMessage('Level "4" is not supported.');
         SniffViolation::getLevelAsString(4);
     }
 
@@ -69,7 +69,7 @@ final class SniffViolationTest extends TestCase
 
     public function testGetLevelAsIntException(): void
     {
-        self::expectExceptionMessage('Level "Yolo" is not supported.');
+        $this->expectExceptionMessage('Level "Yolo" is not supported.');
         SniffViolation::getLevelAsInt('Yolo');
     }
 }
