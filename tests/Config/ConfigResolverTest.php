@@ -58,7 +58,7 @@ final class ConfigResolverTest extends FileTestCase
     {
         $configResolver = new ConfigResolver($this->getTmpPath($workingDir));
 
-        self::expectException(CannotResolveConfigException::class);
+        $this->expectException(CannotResolveConfigException::class);
         $configResolver->resolveConfig([], $path);
     }
 
@@ -120,7 +120,7 @@ final class ConfigResolverTest extends FileTestCase
     {
         $configResolver = new ConfigResolver('/tmp/path/not/found');
 
-        self::expectExceptionMessage(sprintf('Cannot find the config file "%s".', $configPath));
+        $this->expectExceptionMessage(sprintf('Cannot find the config file "%s".', $configPath));
         $configResolver->resolveConfig([], $path);
     }
 

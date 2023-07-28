@@ -87,7 +87,7 @@ final class ReportTest extends TestCase
     {
         $report = new Report([new SplFileInfo('file.twig')]);
 
-        self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
+        $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->addMessage(new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Message', 'another_file.twig'));
     }
 
@@ -95,7 +95,7 @@ final class ReportTest extends TestCase
     {
         $report = new Report([new SplFileInfo('file.twig')]);
 
-        self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
+        $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->getMessages('another_file.twig');
     }
 
@@ -112,7 +112,7 @@ final class ReportTest extends TestCase
     {
         $report = new Report([new SplFileInfo('file.twig')]);
 
-        self::expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
+        $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->addFixedFile('another_file.twig');
     }
 }
