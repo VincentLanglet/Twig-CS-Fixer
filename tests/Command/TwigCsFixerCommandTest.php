@@ -58,9 +58,12 @@ final class TwigCsFixerCommandTest extends FileTestCase
             'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
         ]);
 
+        $display = $commandTester->getDisplay();
+        static::assertStringContainsString('directory/subdirectory/file.twig', $display);
+        static::assertStringContainsString('directory/file.twig', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
-            $commandTester->getDisplay()
+            $display
         );
         static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
     }
@@ -77,6 +80,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $display = $commandTester->getDisplay();
         static::assertStringNotContainsString('Changed', $display);
+        static::assertStringNotContainsString('directory/subdirectory/file.twig', $display);
+        static::assertStringContainsString('directory/file.twig', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $display
@@ -96,6 +101,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $display = $commandTester->getDisplay();
         static::assertStringContainsString('Changed', $display);
+        static::assertStringContainsString('directory/subdirectory/file.twig', $display);
+        static::assertStringContainsString('directory/file.twig', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $display
