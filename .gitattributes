@@ -2,6 +2,7 @@
 tests export-ignore
 infection.json export-ignore
 Makefile export-ignore
+composer-require-checker.json export-ignore
 phpstan.neon export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml export-ignore
