@@ -39,6 +39,9 @@ final class Tokenizer implements TokenizerInterface
     private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PART.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
 
+    /**
+     * @var non-empty-string
+     */
     private string $operatorRegex;
 
     private int $cursor = 0;
@@ -630,6 +633,9 @@ final class Tokenizer implements TokenizerInterface
         $this->pushToken(Token::STRING_TYPE, $string);
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function getOperatorRegex(Environment $env): string
     {
         /** @psalm-suppress InternalMethod */

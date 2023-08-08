@@ -61,9 +61,9 @@ final class LinterTest extends FileTestCase
     {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
-        $env = $this->createStub(Environment::class);
+        $env = self::createStub(Environment::class);
         $env->method('tokenize')->willThrowException(new SyntaxError('Error.'));
-        $tokenizer = $this->createStub(TokenizerInterface::class);
+        $tokenizer = self::createStub(TokenizerInterface::class);
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
@@ -84,7 +84,7 @@ final class LinterTest extends FileTestCase
         $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
 
         $env = new StubbedEnvironment();
-        $tokenizer = $this->createStub(TokenizerInterface::class);
+        $tokenizer = self::createStub(TokenizerInterface::class);
 
         $call = 0;
         $tokenizer->method('tokenize')->willReturnCallback(
@@ -132,7 +132,7 @@ final class LinterTest extends FileTestCase
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
         $env = new StubbedEnvironment();
-        $tokenizer = $this->createStub(TokenizerInterface::class);
+        $tokenizer = self::createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturnCallback(static function (): array {
             @trigger_error('Default');
             trigger_error('User Deprecation', \E_USER_DEPRECATED);
@@ -190,7 +190,7 @@ final class LinterTest extends FileTestCase
         $ruleset = new Ruleset();
 
         $call = 0;
-        $fixer = $this->createStub(FixerInterface::class);
+        $fixer = self::createStub(FixerInterface::class);
         $fixer->method('fixFile')->willReturnCallback(
             static function () use (&$call, $exception): string {
                 if (0 === $call) {

@@ -22,7 +22,7 @@ final class RulesetTest extends TestCase
     public function testAddAndRemoveSniff(): void
     {
         $ruleset = new Ruleset();
-        $sniff = $this->createStub(SniffInterface::class);
+        $sniff = self::createStub(SniffInterface::class);
 
         $ruleset->addSniff($sniff);
         static::assertCount(1, $ruleset->getSniffs());
@@ -38,7 +38,7 @@ final class RulesetTest extends TestCase
         // Using real sniff to have different class name
         $sniff1 = new BlankEOFSniff();
         $sniff2 = new TrailingSpaceSniff();
-        $standard = $this->createStub(StandardInterface::class);
+        $standard = self::createStub(StandardInterface::class);
         $standard->method('getSniffs')->willReturn([$sniff1, $sniff2]);
 
         $ruleset->addStandard($standard);
