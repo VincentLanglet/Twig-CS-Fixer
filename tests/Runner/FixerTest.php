@@ -22,7 +22,7 @@ final class FixerTest extends TestCase
     {
         $exception = CannotTokenizeException::unknownError();
 
-        $tokenizer = $this->createStub(TokenizerInterface::class);
+        $tokenizer = self::createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willThrowException($exception);
         $ruleset = new Ruleset();
 

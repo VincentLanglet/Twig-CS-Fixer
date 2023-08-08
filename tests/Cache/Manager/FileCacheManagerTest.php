@@ -16,7 +16,7 @@ final class FileCacheManagerTest extends TestCase
     public function testNeedFixing(): void
     {
         $cacheManager = new FileCacheManager(
-            $this->createStub(CacheFileHandlerInterface::class),
+            self::createStub(CacheFileHandlerInterface::class),
             new Signature('8.0', '1', [])
         );
 
@@ -37,7 +37,7 @@ final class FileCacheManagerTest extends TestCase
         $cache = new Cache($signature);
         $cache->set($file, md5($content));
 
-        $cacheFileHandler = $this->createStub(CacheFileHandlerInterface::class);
+        $cacheFileHandler = self::createStub(CacheFileHandlerInterface::class);
         $cacheFileHandler->method('read')->willReturn($cache);
 
         $cacheManager = new FileCacheManager($cacheFileHandler, $signature);
@@ -58,7 +58,7 @@ final class FileCacheManagerTest extends TestCase
         $cache = new Cache(new Signature('8.0', '1', []));
         $cache->set($file, md5($content));
 
-        $cacheFileHandler = $this->createStub(CacheFileHandlerInterface::class);
+        $cacheFileHandler = self::createStub(CacheFileHandlerInterface::class);
         $cacheFileHandler->method('read')->willReturn($cache);
 
         $cacheManager = new FileCacheManager(
@@ -84,7 +84,7 @@ final class FileCacheManagerTest extends TestCase
     public function testCannotSerialize(): void
     {
         $cacheManager = new FileCacheManager(
-            $this->createStub(CacheFileHandlerInterface::class),
+            self::createStub(CacheFileHandlerInterface::class),
             new Signature('8.0', '1', [])
         );
 

@@ -26,10 +26,10 @@ final class SignatureTest extends TestCase
     {
         $ruleset = new Ruleset();
 
-        $sniff = $this->createStub(SniffInterface::class);
+        $sniff = self::createStub(SniffInterface::class);
         $ruleset->addSniff($sniff);
 
-        $configurableSniff = $this->createStub(ConfigurableSniffInterface::class);
+        $configurableSniff = self::createStub(ConfigurableSniffInterface::class);
         $configurableSniff->method('getConfiguration')->willReturn(['a' => 1]);
         $ruleset->addSniff($configurableSniff);
 
