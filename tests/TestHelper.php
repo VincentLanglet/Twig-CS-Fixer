@@ -19,7 +19,7 @@ final class TestHelper
             throw new LogicException('Cannot get the current working directory.');
         }
 
-        $cwd = $cwd.\DIRECTORY_SEPARATOR;
+        $cwd .= \DIRECTORY_SEPARATOR;
         if (str_starts_with($filePath, $cwd)) {
             $filename = substr($filePath, \strlen($cwd));
         } else {
