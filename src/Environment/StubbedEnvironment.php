@@ -53,13 +53,22 @@ final class StubbedEnvironment extends Environment
     ) {
         parent::__construct(new ArrayLoader());
 
-        $this->addTokenParser(new DumpTokenParser());
-        $this->addTokenParser(new FormThemeTokenParser());
-        $this->addTokenParser(new StopwatchTokenParser(true));
-        $this->addTokenParser(new TransDefaultDomainTokenParser());
-        $this->addTokenParser(new TransTokenParser());
-
         // Optional dependency
+        if (class_exists(DumpTokenParser::class)) {
+            $this->addTokenParser(new DumpTokenParser());
+        }
+        if (class_exists(FormThemeTokenParser::class)) {
+            $this->addTokenParser(new FormThemeTokenParser());
+        }
+        if (class_exists(StopwatchTokenParser::class)) {
+            $this->addTokenParser(new StopwatchTokenParser(true));
+        }
+        if (class_exists(TransDefaultDomainTokenParser::class)) {
+            $this->addTokenParser(new TransDefaultDomainTokenParser());
+        }
+        if (class_exists(TransTokenParser::class)) {
+            $this->addTokenParser(new TransTokenParser());
+        }
         if (class_exists(CacheTokenParser::class)) {
             $this->addTokenParser(new CacheTokenParser());
         }
