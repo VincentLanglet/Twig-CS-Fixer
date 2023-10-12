@@ -7,6 +7,7 @@
         "Symfony\\Bridge\\Twig\\TokenParser\\TransDefaultDomainTokenParser",
         "Symfony\\Bridge\\Twig\\TokenParser\\TransTokenParser",
         "Symfony\\UX\\TwigComponent\\TwigComponentBundle",
+        "Symfony\\UX\\TwigComponent\\Twig\\PropsTokenParser",
         "Twig\\Extra\\Cache\\TokenParser\\CacheTokenParser"
     ]
 }

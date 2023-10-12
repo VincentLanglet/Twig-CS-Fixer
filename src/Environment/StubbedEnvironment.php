@@ -76,6 +76,7 @@ final class StubbedEnvironment extends Environment
         if (class_exists(TwigComponentBundle::class)) {
             $this->addTokenParser(new ComponentTokenParser());
             if (class_exists(PropsTokenParser::class)) {
+                /** @psalm-suppress InternalClass */
                 $this->addTokenParser(new PropsTokenParser());
             }
         }

@@ -58,8 +58,8 @@
     ],
     "config": {
         "allow-plugins": {
-            "infection/extension-installer": true,
-            "ergebnis/composer-normalize": true
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
         },
         "sort-packages": true
     }
