@@ -11,6 +11,7 @@ use Symfony\Bridge\Twig\Node\StopwatchNode;
 use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
 use Symfony\Bridge\Twig\Node\TransNode;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
+use Symfony\UX\TwigComponent\Twig\PropsTokenParser;
 use Twig\Extra\Cache\Node\CacheNode;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 use Twig\Node\TextNode;
@@ -150,6 +151,25 @@ final class StubbedEnvironmentTest extends TestCase
 
         $env = new StubbedEnvironment();
         $source = new Source($content, 'component_tag.html.twig');
+
+        $env->parse($env->tokenize($source));
+    }
+
+    public function testParsePropsTag(): void
+    {
+        if (!class_exists(ComponentLexer::class)) {
+            static::markTestSkipped('symfony/ux-twig-component is required');
+        }
+
+        if (!class_exists(PropsTokenParser::class)) {
+            static::markTestSkipped('The props tag was added in TwigComponent 2.11.');
+        }
+
+        $content = file_get_contents(__DIR__.'/Fixtures/props_tag.html.twig');
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment();
+        $source = new Source($content, 'props_tag.html.twig');
 
         $env->parse($env->tokenize($source));
     }
