@@ -9,8 +9,8 @@ use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
+use Symfony\UX\TwigComponent\Twig\ComponentTokenParser as TwigComponentTokenParser;
 use Symfony\UX\TwigComponent\Twig\PropsTokenParser;
-use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
@@ -54,32 +54,7 @@ final class StubbedEnvironment extends Environment
     ) {
         parent::__construct(new ArrayLoader());
 
-        // Optional dependency
-        if (class_exists(DumpTokenParser::class)) {
-            $this->addTokenParser(new DumpTokenParser());
-        }
-        if (class_exists(FormThemeTokenParser::class)) {
-            $this->addTokenParser(new FormThemeTokenParser());
-        }
-        if (class_exists(StopwatchTokenParser::class)) {
-            $this->addTokenParser(new StopwatchTokenParser(true));
-        }
-        if (class_exists(TransDefaultDomainTokenParser::class)) {
-            $this->addTokenParser(new TransDefaultDomainTokenParser());
-        }
-        if (class_exists(TransTokenParser::class)) {
-            $this->addTokenParser(new TransTokenParser());
-        }
-        if (class_exists(CacheTokenParser::class)) {
-            $this->addTokenParser(new CacheTokenParser());
-        }
-        if (class_exists(TwigComponentBundle::class)) {
-            $this->addTokenParser(new ComponentTokenParser());
-            if (class_exists(PropsTokenParser::class)) {
-                /** @psalm-suppress InternalClass */
-                $this->addTokenParser(new PropsTokenParser());
-            }
-        }
+        $this->handleOptionalDependencies();
 
         foreach ($customTwigExtensions as $customTwigExtension) {
             $this->addExtension($customTwigExtension);
@@ -136,5 +111,34 @@ final class StubbedEnvironment extends Environment
         }
 
         return $this->stubTests[$name];
+    }
+
+    private function handleOptionalDependencies(): void
+    {
+        if (class_exists(DumpTokenParser::class)) {
+            $this->addTokenParser(new DumpTokenParser());
+        }
+        if (class_exists(FormThemeTokenParser::class)) {
+            $this->addTokenParser(new FormThemeTokenParser());
+        }
+        if (class_exists(StopwatchTokenParser::class)) {
+            $this->addTokenParser(new StopwatchTokenParser(true));
+        }
+        if (class_exists(TransDefaultDomainTokenParser::class)) {
+            $this->addTokenParser(new TransDefaultDomainTokenParser());
+        }
+        if (class_exists(TransTokenParser::class)) {
+            $this->addTokenParser(new TransTokenParser());
+        }
+        if (class_exists(CacheTokenParser::class)) {
+            $this->addTokenParser(new CacheTokenParser());
+        }
+        if (class_exists(TwigComponentTokenParser::class)) {
+            $this->addTokenParser(new ComponentTokenParser());
+        }
+        if (class_exists(PropsTokenParser::class)) {
+            /** @psalm-suppress InternalClass */
+            $this->addTokenParser(new PropsTokenParser());
+        }
     }
 }
