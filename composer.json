@@ -38,7 +38,7 @@
         "symfony/filesystem": "^5.4 || ^6.0",
         "symfony/process": "^5.4 || ^6.0",
         "symfony/twig-bridge": "^5.4 || ^6.0",
-        "symfony/ux-twig-component": "^2.8.0",
+        "symfony/ux-twig-component": "^2.2.0",
         "twig/cache-extra": "^3.2",
         "vimeo/psalm": "^5.2.0"
     },
