@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Standard;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Sniff\BlankEOFSniff;
+use TwigCsFixer\Sniff\BlockNameSpacingSniff;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\IndentSniff;
@@ -26,6 +27,7 @@ final class GenericTest extends TestCase
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
             new BlankEOFSniff(),
+            new BlockNameSpacingSniff(),
             new EmptyLinesSniff(),
             new IndentSniff(),
             new TrailingCommaSingleLineSniff(),

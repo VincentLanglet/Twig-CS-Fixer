@@ -64,6 +64,7 @@ Removes any space before and after opening and closing of arrays and hashes.
 By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
 
  - `BlankEOFSniff`: ensures that files end with one blank line.
+ - `BlockNameSpacingSniff`: ensure there is one space before and after block names.
  - `EmptyLinesSniff`: ensures that 2 empty lines do not follow each other.
  - `IndentSniff`: ensures that files are not indented with tabs.
  - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.

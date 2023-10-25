@@ -334,7 +334,7 @@ final class Tokenizer implements TokenizerInterface
             $this->bracketsAndTernary = []; // To reset ternary
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
 
-            $this->isVerbatim = 'verbatim' === $this->getStateParam('tag');
+            $this->isVerbatim = 'verbatim' === $this->getStateParam('blockName');
             $this->popState();
         } else {
             $this->lexExpression();
@@ -559,9 +559,9 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexName(string $name): void
     {
-        if (self::STATE_BLOCK === $this->getState() && null === $this->getStateParam('tag')) {
-            $this->pushToken(Token::BLOCK_TAG_TYPE, $name);
-            $this->setStateParam('tag', $name);
+        if (self::STATE_BLOCK === $this->getState() && null === $this->getStateParam('blockName')) {
+            $this->pushToken(Token::BLOCK_NAME_TYPE, $name);
+            $this->setStateParam('blockName', $name);
         } else {
             $this->pushToken(Token::NAME_TYPE, $name);
         }
