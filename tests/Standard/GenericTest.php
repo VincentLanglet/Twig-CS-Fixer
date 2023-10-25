@@ -10,6 +10,7 @@ use TwigCsFixer\Sniff\BlockNameSpacingSniff;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
 use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\IndentSniff;
+use TwigCsFixer\Sniff\OperatorNameSpacingSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
@@ -24,6 +25,7 @@ final class GenericTest extends TestCase
 
         static::assertEquals([
             new DelimiterSpacingSniff(),
+            new OperatorNameSpacingSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
             new BlankEOFSniff(),

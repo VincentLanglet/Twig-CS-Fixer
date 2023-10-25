@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Sniff\BlockNameSpacingSniff;
+namespace TwigCsFixer\Tests\Sniff\BlockNameSpacing;
 
 use TwigCsFixer\Sniff\BlockNameSpacingSniff;
 use TwigCsFixer\Tests\Sniff\AbstractSniffTestCase;
