@@ -22,12 +22,12 @@ final class GenericTest extends TestCase
         $standard = new Generic();
 
         static::assertEquals([
-            new BlankEOFSniff(),
             new DelimiterSpacingSniff(),
-            new EmptyLinesSniff(),
-            new IndentSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
+            new BlankEOFSniff(),
+            new EmptyLinesSniff(),
+            new IndentSniff(),
             new TrailingCommaSingleLineSniff(),
             new TrailingSpaceSniff(),
         ], $standard->getSniffs());
