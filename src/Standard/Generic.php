@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Sniff\BlankEOFSniff;
+use TwigCsFixer\Sniff\BlockNameSpacingSniff;
 use TwigCsFixer\Sniff\EmptyLinesSniff;
 use TwigCsFixer\Sniff\IndentSniff;
 use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
@@ -20,6 +21,7 @@ final class Generic implements StandardInterface
         return [
             ...(new Twig())->getSniffs(),
             new BlankEOFSniff(),
+            new BlockNameSpacingSniff(),
             new EmptyLinesSniff(),
             new IndentSniff(),
             new TrailingCommaSingleLineSniff(),
