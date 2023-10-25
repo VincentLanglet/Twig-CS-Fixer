@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Standard;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
+use TwigCsFixer\Sniff\OperatorNameSpacingSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 use TwigCsFixer\Standard\Twig;
@@ -18,6 +19,7 @@ final class TwigTest extends TestCase
 
         static::assertEquals([
             new DelimiterSpacingSniff(),
+            new OperatorNameSpacingSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
         ], $standard->getSniffs());

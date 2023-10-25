@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Sniff\DelimiterSpacingSniff;
+use TwigCsFixer\Sniff\OperatorNameSpacingSniff;
 use TwigCsFixer\Sniff\OperatorSpacingSniff;
 use TwigCsFixer\Sniff\PunctuationSpacingSniff;
 
@@ -19,6 +20,7 @@ class Twig implements StandardInterface
     {
         return [
             new DelimiterSpacingSniff(),
+            new OperatorNameSpacingSniff(),
             new OperatorSpacingSniff(),
             new PunctuationSpacingSniff(),
         ];
