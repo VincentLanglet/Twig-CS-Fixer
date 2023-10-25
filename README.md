@@ -69,8 +69,8 @@ By default, the generic standard is enabled with the twig coding standard rules 
  - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
  - `TrailingSpaceSniff`: ensures that files have no trailing spaces.
 
-If you want to use a custom standard and/or add/disable a sniff, you can provide your own configuration with
-a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
+If you want to use the basic Twig standard, another standard and/or add/disable a sniff, you can provide
+your own configuration with a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
 
 ```php
 <?php
