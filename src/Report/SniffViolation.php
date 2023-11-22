@@ -16,13 +16,13 @@ final class SniffViolation
     public const LEVEL_ERROR = 2;
     public const LEVEL_FATAL = 3;
 
-    private ?int $linePosition = null;
-
     public function __construct(
         private int $level,
         private string $message,
         private string $filename,
-        private ?int $line = null
+        private ?int $line = null,
+        private ?int $linePosition = null,
+        private ?string $sniffName = null
     ) {
     }
 
@@ -72,15 +72,13 @@ final class SniffViolation
         return $this->filename;
     }
 
-    public function setLinePosition(?int $linePosition): self
-    {
-        $this->linePosition = $linePosition;
-
-        return $this;
-    }
-
     public function getLinePosition(): ?int
     {
         return $this->linePosition;
+    }
+
+    public function getSniffName(): ?string
+    {
+        return $this->sniffName;
     }
 }

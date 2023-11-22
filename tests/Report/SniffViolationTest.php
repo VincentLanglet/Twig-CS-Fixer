@@ -11,14 +11,13 @@ final class SniffViolationTest extends TestCase
 {
     public function testGetters(): void
     {
-        $sniffViolation = new SniffViolation(SniffViolation::LEVEL_WARNING, 'message', 'filename', 42);
+        $sniffViolation = new SniffViolation(SniffViolation::LEVEL_WARNING, 'message', 'filename', 42, 33, 'name');
         static::assertSame(SniffViolation::LEVEL_WARNING, $sniffViolation->getLevel());
         static::assertSame('message', $sniffViolation->getMessage());
         static::assertSame('filename', $sniffViolation->getFilename());
         static::assertSame(42, $sniffViolation->getLine());
-
-        $sniffViolation->setLinePosition(33);
         static::assertSame(33, $sniffViolation->getLinePosition());
+        static::assertSame('name', $sniffViolation->getSniffName());
     }
 
     /**

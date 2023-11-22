@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Sniff\AbstractSniff;
+use TwigCsFixer\Tests\Sniff\Fixtures\FakeSniff;
 use TwigCsFixer\Token\Token;
 
 final class SniffTest extends TestCase
@@ -34,6 +35,12 @@ final class SniffTest extends TestCase
 
         static::assertSame(2, $report->getTotalWarnings());
         static::assertSame(2, $report->getTotalErrors());
+    }
+
+    public function testSniffName(): void
+    {
+        $sniff = new FakeSniff();
+        static::assertSame(FakeSniff::class, $sniff->getName());
     }
 
     public function testSniffWithReport2(): void
