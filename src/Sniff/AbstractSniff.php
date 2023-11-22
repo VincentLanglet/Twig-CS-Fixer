@@ -15,6 +15,11 @@ abstract class AbstractSniff implements SniffInterface
 
     private ?FixerInterface $fixer = null;
 
+    public function getName(): string
+    {
+        return static::class;
+    }
+
     public function lintFile(array $stream, Report $report): void
     {
         $this->report = $report;
@@ -133,9 +138,10 @@ abstract class AbstractSniff implements SniffInterface
             $messageType,
             $message,
             $token->getFilename(),
-            $token->getLine()
+            $token->getLine(),
+            $token->getPosition(),
+            $this->getName(),
         );
-        $sniffViolation->setLinePosition($token->getPosition());
 
         $report->addMessage($sniffViolation);
     }
