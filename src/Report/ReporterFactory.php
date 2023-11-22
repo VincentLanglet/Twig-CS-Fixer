@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Report\Reporter\ReporterInterface;
 use TwigCsFixer\Report\Reporter\TextReporter;
+use TwigCsFixer\Report\Reporter\CheckstyleReporter;
 
 final class ReporterFactory
 {
@@ -16,6 +17,7 @@ final class ReporterFactory
         return match ($format) {
             NullReporter::NAME => new NullReporter(),
             TextReporter::NAME => new TextReporter(),
+            CheckstyleReporter::NAME => new CheckstyleReporter(),
             default            => throw new InvalidArgumentException(
                 sprintf('No reporter supports the format "%s".', $format)
             ),
