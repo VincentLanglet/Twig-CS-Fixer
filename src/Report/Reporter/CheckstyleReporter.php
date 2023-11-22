@@ -22,17 +22,17 @@ final class CheckstyleReporter implements ReporterInterface
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages($file, $level);
             if (\count($fileMessages) > 0) {
+                /** @var \SimpleXMLElement $fileNode */
                 $fileNode = $checkstyle->addChild('file');
                 $fileNode->addAttribute('name', $file);
 
-                if ($fileNode !== null) {
-                    foreach ($fileMessages as $message) {
-                        $violation = $fileNode->addChild('violation');
-                        $violation->addAttribute('column', (string) $message->getLinePosition());
-                        $violation->addAttribute('line', (string) $message->getLine());
-                        $violation->addAttribute('severity', strtolower(SniffViolation::getLevelAsString($message->getLevel())));
-                        $violation->addAttribute('message', $message->getMessage());
-                    }
+                foreach ($fileMessages as $message) {
+                    /** @var \SimpleXMLElement $violation */
+                    $violation = $fileNode->addChild('violation');
+                    $violation->addAttribute('column', (string) $message->getLinePosition());
+                    $violation->addAttribute('severity', strtolower(SniffViolation::getLevelAsString($message->getLevel())));
+                    $violation->addAttribute('message', $message->getMessage());
+                    $violation->addAttribute('source', $message->getSniffName() ?? '');
                 }
             }
         }
