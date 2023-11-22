@@ -110,6 +110,21 @@ final class TwigCsFixerCommandTest extends FileTestCase
         static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
     }
 
+    public function testExecuteWithReportOption(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths'      => [$this->getTmpPath(__DIR__.'/Fixtures/file.twig')],
+            '--no-cache' => true, // To avoid cache output
+            '--report'   => 'null',
+        ]);
+
+        static::assertSame('', $commandTester->getDisplay());
+        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+    }
+
     public function testExecuteWithConfig(): void
     {
         $command = new TwigCsFixerCommand();

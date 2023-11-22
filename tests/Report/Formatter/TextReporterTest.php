@@ -2,27 +2,24 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Report;
+namespace TwigCsFixer\Tests\Report\Formatter;
 
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\Output;
+use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
+use TwigCsFixer\Report\Reporter\TextReporter;
 use TwigCsFixer\Report\SniffViolation;
-use TwigCsFixer\Report\TextFormatter;
 
-final class TextFormatterTest extends TestCase
+final class TextReporterTest extends TestCase
 {
     /**
      * @dataProvider displayDataProvider
      */
     public function testDisplayErrors(string $expected, ?string $level): void
     {
-        $input = new ArrayInput([]);
-        $output = new BufferedOutput(Output::VERBOSITY_NORMAL, true);
-        $textFormatter = new TextFormatter($input, $output);
+        $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
@@ -36,7 +33,8 @@ final class TextFormatterTest extends TestCase
         $violation3 = new SniffViolation(SniffViolation::LEVEL_FATAL, 'Fatal', $file);
         $report->addMessage($violation3);
 
-        $textFormatter->display($report, $level);
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+        $textFormatter->display($output, $report, $level);
 
         $text = $output->fetch();
         static::assertStringContainsString($expected, $text);
@@ -96,14 +94,13 @@ final class TextFormatterTest extends TestCase
 
     public function testDisplaySuccess(): void
     {
-        $input = new ArrayInput([]);
-        $output = new BufferedOutput();
-        $textFormatter = new TextFormatter($input, $output);
+        $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
 
-        $textFormatter->display($report);
+        $output = new BufferedOutput();
+        $textFormatter->display($output, $report);
 
         $text = $output->fetch();
         static::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
@@ -112,9 +109,7 @@ final class TextFormatterTest extends TestCase
 
     public function testDisplayMultipleFiles(): void
     {
-        $input = new ArrayInput([]);
-        $output = new BufferedOutput();
-        $textFormatter = new TextFormatter($input, $output);
+        $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
         $file2 = __DIR__.'/Fixtures/file2.twig';
@@ -123,7 +118,8 @@ final class TextFormatterTest extends TestCase
         $violation = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3);
         $report->addMessage($violation);
 
-        $textFormatter->display($report);
+        $output = new BufferedOutput();
+        $textFormatter->display($output, $report);
 
         static::assertStringContainsString(
             sprintf(
@@ -146,9 +142,7 @@ final class TextFormatterTest extends TestCase
 
     public function testDisplayNotFoundFile(): void
     {
-        $input = new ArrayInput([]);
-        $output = new BufferedOutput();
-        $textFormatter = new TextFormatter($input, $output);
+        $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/fileNotFound.twig';
 
@@ -156,7 +150,8 @@ final class TextFormatterTest extends TestCase
         $violation = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 1);
         $report->addMessage($violation);
 
-        $textFormatter->display($report);
+        $output = new BufferedOutput();
+        $textFormatter->display($output, $report);
 
         static::assertStringContainsString(
             sprintf(
@@ -177,9 +172,7 @@ final class TextFormatterTest extends TestCase
      */
     public function testDisplayBlock(string $expected, int $level): void
     {
-        $input = new ArrayInput([]);
-        $output = new BufferedOutput(Output::VERBOSITY_NORMAL, true);
-        $textFormatter = new TextFormatter($input, $output);
+        $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
@@ -187,7 +180,8 @@ final class TextFormatterTest extends TestCase
         $violation = new SniffViolation($level, 'Message', $file, 1);
         $report->addMessage($violation);
 
-        $textFormatter->display($report);
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+        $textFormatter->display($output, $report);
 
         $text = $output->fetch();
         static::assertStringContainsString($expected, $text);

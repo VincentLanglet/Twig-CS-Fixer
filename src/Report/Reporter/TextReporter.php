@@ -2,44 +2,43 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Report;
+namespace TwigCsFixer\Report\Reporter;
 
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TwigCsFixer\Report\Report;
+use TwigCsFixer\Report\SniffViolation;
 
 /**
  * Human-readable output with context.
  */
-final class TextFormatter
+final class TextReporter implements ReporterInterface
 {
+    public const NAME = 'text';
+
     private const ERROR_CURSOR_CHAR = '>>';
     private const ERROR_LINE_FORMAT = '%-5s| %s';
     private const ERROR_LINE_WIDTH = 120;
 
-    private SymfonyStyle $io;
-
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function display(OutputInterface $output, Report $report, ?string $level = null): void
     {
-        $this->io = new SymfonyStyle($input, $output);
-    }
+        $io = new SymfonyStyle(new ArrayInput([]), $output);
 
-    public function display(Report $report, ?string $level = null): void
-    {
         if (
-            $this->io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE
+            $io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE
             && [] !== $report->getFixedFiles()
         ) {
-            $this->io->text('Changed:');
-            $this->io->listing($report->getFixedFiles());
+            $io->text('Changed:');
+            $io->listing($report->getFixedFiles());
         }
 
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages($file, $level);
             if (\count($fileMessages) > 0) {
-                $this->io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
+                $io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
             }
 
             $content = @file_get_contents($file);
@@ -77,7 +76,7 @@ final class TextFormatter
             }
 
             if (\count($rows) > 0) {
-                $this->io->table([], $rows);
+                $io->table([], $rows);
             }
         }
 
@@ -90,11 +89,11 @@ final class TextFormatter
         );
 
         if (0 < $report->getTotalErrors()) {
-            $this->io->error($summaryString);
+            $io->error($summaryString);
         } elseif (0 < $report->getTotalWarnings()) {
-            $this->io->warning($summaryString);
+            $io->warning($summaryString);
         } else {
-            $this->io->success($summaryString);
+            $io->success($summaryString);
         }
     }
 

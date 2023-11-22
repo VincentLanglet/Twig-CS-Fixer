@@ -15,7 +15,8 @@ use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Report\TextFormatter;
+use TwigCsFixer\Report\Reporter\TextReporter;
+use TwigCsFixer\Report\ReporterFactory;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Token\Tokenizer;
@@ -49,6 +50,13 @@ final class TwigCsFixerCommand extends Command
                     'c',
                     InputOption::VALUE_REQUIRED,
                     'Path to a `.twig-cs-fixer.php` config file'
+                ),
+                new InputOption(
+                    'report',
+                    'r',
+                    InputOption::VALUE_REQUIRED,
+                    'Report format',
+                    TextReporter::NAME
                 ),
                 new InputOption(
                     'fix',
@@ -119,8 +127,9 @@ final class TwigCsFixerCommand extends Command
             $input->getOption('fix') ? new Fixer($tokenizer) : null
         );
 
-        $reporter = new TextFormatter($input, $output);
-        $reporter->display($report, $input->getOption('level'));
+        $reporterFactory = new ReporterFactory();
+        $reporter = $reporterFactory->getReporter($input->getOption('report'));
+        $reporter->display($output, $report, $input->getOption('level'));
 
         return $report;
     }
