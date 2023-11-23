@@ -60,6 +60,7 @@ final class LinterTest extends FileTestCase
     public function testInvalidFilesAreReported(): void
     {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
+        $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
 
         $env = self::createStub(Environment::class);
         $env->method('tokenize')->willThrowException(new SyntaxError('Error.'));
@@ -67,7 +68,7 @@ final class LinterTest extends FileTestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
+        $report = $linter->run([new SplFileInfo($filePath), new SplFileInfo($filePath2)], $ruleset);
 
         $messages = $report->getMessages($filePath);
         static::assertCount(1, $messages);
@@ -76,6 +77,10 @@ final class LinterTest extends FileTestCase
         static::assertSame('File is invalid: Error.', $message->getMessage());
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
+
+        // We still validate other files
+        $messages = $report->getMessages($filePath2);
+        static::assertCount(1, $messages);
     }
 
     public function testUntokenizableFilesAreReported(): void
