@@ -8,7 +8,6 @@
         "Symfony\\Bridge\\Twig\\TokenParser\\TransTokenParser",
         "Symfony\\UX\\TwigComponent\\Twig\\ComponentTokenParser",
         "Symfony\\UX\\TwigComponent\\Twig\\PropsTokenParser",
-        "Twig\\Extra\\Cache\\TokenParser\\CacheTokenParser",
-        "\\SimpleXMLElement"
+        "Twig\\Extra\\Cache\\TokenParser\\CacheTokenParser"
     ]
 }
