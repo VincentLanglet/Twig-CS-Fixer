@@ -24,7 +24,7 @@ final class CheckstyleReporter implements ReporterInterface
                 continue;
             }
 
-            $text .= '  <file name="'.$this->xmlEncode($file).'">'."\n";
+            $text .= sprintf('  <file name="%s">', $this->xmlEncode($file))."\n";
             foreach ($fileMessages as $message) {
                 $line = (string) $message->getLine();
                 $linePosition = (string) $message->getLinePosition();
