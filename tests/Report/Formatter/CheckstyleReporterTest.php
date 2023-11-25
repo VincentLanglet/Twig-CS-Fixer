@@ -58,22 +58,20 @@ final class CheckstyleReporterTest extends TestCase
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
-                      <file name="%s/Fixtures/file.twig">
+                      <file name="%1\$s/Fixtures/file.twig">
                         <error line="1" column="11" severity="notice" message="Notice" source="NoticeSniff"/>
                         <error line="2" column="22" severity="warning" message="Warning" source="WarningSniff"/>
                         <error line="3" column="33" severity="error" message="Error" source="ErrorSniff"/>
                         <error severity="fatal" message="Fatal"/>
                       </file>
-                      <file name="%s/Fixtures/file2.twig">
+                      <file name="%1\$s/Fixtures/file2.twig">
                         <error line="1" column="11" severity="notice" message="Notice2" source="Notice2Sniff"/>
                       </file>
-                      <file name="%s/Fixtures/file3.twig">
+                      <file name="%1\$s/Fixtures/file3.twig">
                         <error severity="fatal" message="&apos;&quot;&lt;&amp;&gt;&quot;&apos;"/>
                       </file>
                     </checkstyle>
                     EOD,
-                __DIR__,
-                __DIR__,
                 __DIR__
             ),
             null,
@@ -84,16 +82,15 @@ final class CheckstyleReporterTest extends TestCase
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
-                      <file name="%s/Fixtures/file.twig">
+                      <file name="%1\$s/Fixtures/file.twig">
                         <error line="3" column="33" severity="error" message="Error" source="ErrorSniff"/>
                         <error severity="fatal" message="Fatal"/>
                       </file>
-                      <file name="%s/Fixtures/file3.twig">
+                      <file name="%1\$s/Fixtures/file3.twig">
                         <error severity="fatal" message="&apos;&quot;&lt;&amp;&gt;&quot;&apos;"/>
                       </file>
                     </checkstyle>
                     EOD,
-                __DIR__,
                 __DIR__
             ),
             Report::MESSAGE_TYPE_ERROR,

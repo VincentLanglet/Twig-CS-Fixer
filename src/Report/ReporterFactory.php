@@ -6,6 +6,7 @@ namespace TwigCsFixer\Report;
 
 use InvalidArgumentException;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
+use TwigCsFixer\Report\Reporter\JUnitReporter;
 use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Report\Reporter\ReporterInterface;
 use TwigCsFixer\Report\Reporter\TextReporter;
@@ -18,6 +19,7 @@ final class ReporterFactory
             NullReporter::NAME       => new NullReporter(),
             TextReporter::NAME       => new TextReporter(),
             CheckstyleReporter::NAME => new CheckstyleReporter(),
+            JUnitReporter::NAME      => new JUnitReporter(),
             default                  => throw new InvalidArgumentException(
                 sprintf('No reporter supports the format "%s".', $format)
             ),

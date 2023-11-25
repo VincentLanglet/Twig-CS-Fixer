@@ -70,6 +70,19 @@ final class ReportTest extends TestCase
         );
 
         static::assertSame(
+            [
+                $sniffViolation1,
+                $sniffViolation2,
+                $sniffViolation4,
+                $sniffViolation7,
+                $sniffViolation3,
+                $sniffViolation5,
+                $sniffViolation6,
+            ],
+            $report->getAllMessages()
+        );
+
+        static::assertSame(
             [$sniffViolation4, $sniffViolation7],
             $report->getMessages($file, Report::MESSAGE_TYPE_ERROR)
         );
@@ -80,6 +93,15 @@ final class ReportTest extends TestCase
         static::assertSame(
             [$sniffViolation6],
             $report->getMessages($file3, Report::MESSAGE_TYPE_ERROR)
+        );
+        static::assertSame(
+            [
+                $sniffViolation4,
+                $sniffViolation7,
+                $sniffViolation5,
+                $sniffViolation6,
+            ],
+            $report->getAllMessages(Report::MESSAGE_TYPE_ERROR)
         );
     }
 

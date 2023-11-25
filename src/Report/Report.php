@@ -95,6 +95,25 @@ final class Report
     }
 
     /**
+     * @return list<SniffViolation>
+     */
+    public function getAllMessages(?string $level = null): array
+    {
+        $messages = array_merge(...array_values($this->messagesByFiles));
+
+        if (null === $level) {
+            return $messages;
+        }
+
+        return array_values(
+            array_filter(
+                $messages,
+                static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level)
+            )
+        );
+    }
+
+    /**
      * @return list<string>
      */
     public function getFiles(): array
