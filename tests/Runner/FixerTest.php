@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
-use TwigCsFixer\Sniff\AbstractSniff;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
@@ -48,7 +48,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $sniff = new class () extends AbstractSniff {
+        $rule = new class () extends AbstractRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -83,7 +83,7 @@ final class FixerTest extends TestCase
         };
 
         $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff);
+        $ruleset->addRule($rule);
 
         $fixer = new Fixer($tokenizer);
 
@@ -94,7 +94,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $sniff = new class () extends AbstractSniff {
+        $rule = new class () extends AbstractRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
@@ -107,7 +107,7 @@ final class FixerTest extends TestCase
         };
 
         $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff);
+        $ruleset->addRule($rule);
 
         $fixer = new Fixer($tokenizer);
 
@@ -119,7 +119,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $sniff1 = new class () extends AbstractSniff {
+        $rule1 = new class () extends AbstractRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -134,10 +134,10 @@ final class FixerTest extends TestCase
                     return;
                 }
 
-                $fixer->replaceToken($tokenPosition, 'sniff');
+                $fixer->replaceToken($tokenPosition, 'rule');
             }
         };
-        $sniff2 = new class () extends AbstractSniff {
+        $rule2 = new class () extends AbstractRule {
             private int $error = 0;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -169,12 +169,12 @@ final class FixerTest extends TestCase
                 $fixer->endChangeSet();
             }
         };
-        $sniff3 = new class () extends AbstractSniff {
+        $rule3 = new class () extends AbstractRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
             {
-                if ($this->isAlreadyExecuted || 'sniff' !== $tokens[$tokenPosition]->getValue()) {
+                if ($this->isAlreadyExecuted || 'rule' !== $tokens[$tokenPosition]->getValue()) {
                     return;
                 }
                 $this->isAlreadyExecuted = true;
@@ -184,7 +184,7 @@ final class FixerTest extends TestCase
                     return;
                 }
 
-                // On the first execution, a conflict is created by sniff 1 and 2
+                // On the first execution, a conflict is created by rule 1 and 2
                 // So the fixer won't try to fix anything else
                 TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
                 $fixer->beginChangeSet();
@@ -194,9 +194,9 @@ final class FixerTest extends TestCase
         };
 
         $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff1);
-        $ruleset->addSniff($sniff2);
-        $ruleset->addSniff($sniff3);
+        $ruleset->addRule($rule1);
+        $ruleset->addRule($rule2);
+        $ruleset->addRule($rule3);
 
         $fixer = new Fixer($tokenizer);
 
@@ -210,7 +210,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $sniff = new class () extends AbstractSniff {
+        $rule = new class () extends AbstractRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -235,7 +235,7 @@ final class FixerTest extends TestCase
         };
 
         $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff);
+        $ruleset->addRule($rule);
 
         $fixer = new Fixer($tokenizer);
 

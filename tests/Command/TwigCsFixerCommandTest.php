@@ -267,7 +267,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         $newCache = new Cache(new Signature(
             '0',
             $signature->getFixerVersion(),
-            $signature->getSniffs(),
+            $signature->getRules(),
         ));
         foreach ($hashes as $file => $hash) {
             $newCache->set($file, $hash);
@@ -290,7 +290,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         $newCache = new Cache(new Signature(
             $signature->getPhpVersion(),
             '0',
-            $signature->getSniffs(),
+            $signature->getRules(),
         ));
         foreach ($hashes as $file => $hash) {
             $newCache->set($file, $hash);

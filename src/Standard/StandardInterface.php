@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Standard;
 
-use TwigCsFixer\Sniff\SniffInterface;
+use TwigCsFixer\Rules\RuleInterface;
 
 interface StandardInterface
 {
     /**
-     * @return SniffInterface[]
+     * @return RuleInterface[]
      */
-    public function getSniffs(): array;
+    public function getRules(): array;
 }

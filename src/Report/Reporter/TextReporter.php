@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 
 /**
  * Human-readable output with context.
@@ -68,7 +68,7 @@ final class TextReporter implements ReporterInterface
                     $rows[] = new TableSeparator();
                 }
 
-                $messageLevel = SniffViolation::getLevelAsString($violation->getLevel());
+                $messageLevel = Violation::getLevelAsString($violation->getLevel());
                 $rows[] = [
                     new TableCell(sprintf('<comment>%s</comment>', $messageLevel)),
                     implode("\n", $formattedText),
@@ -119,7 +119,7 @@ final class TextReporter implements ReporterInterface
         return array_map(fn (string $code): string => substr($code, min($indents)), $result);
     }
 
-    private function formatErrorMessage(SniffViolation $message): string
+    private function formatErrorMessage(Violation $message): string
     {
         return sprintf(
             sprintf('<fg=red>%s</fg=red>', self::ERROR_LINE_FORMAT),

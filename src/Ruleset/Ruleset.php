@@ -4,45 +4,45 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Ruleset;
 
-use TwigCsFixer\Sniff\SniffInterface;
+use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Standard\StandardInterface;
 
 /**
- * Set of rules to be used by TwigCsFixer and contains all sniffs.
+ * Set of rules to be used by TwigCsFixer and contains all rules.
  */
 final class Ruleset
 {
     /**
-     * @var array<class-string<SniffInterface>, SniffInterface>
+     * @var array<class-string<RuleInterface>, RuleInterface>
      */
-    private array $sniffs = [];
+    private array $rules = [];
 
     /**
-     * @return array<class-string<SniffInterface>, SniffInterface>
+     * @return array<class-string<RuleInterface>, RuleInterface>
      */
-    public function getSniffs(): array
+    public function getRules(): array
     {
-        return $this->sniffs;
+        return $this->rules;
     }
 
     /**
      * @return $this
      */
-    public function addSniff(SniffInterface $sniff): self
+    public function addRule(RuleInterface $rule): self
     {
-        $this->sniffs[$sniff::class] = $sniff;
+        $this->rules[$rule::class] = $rule;
 
         return $this;
     }
 
     /**
-     * @param class-string<SniffInterface> $class
+     * @param class-string<RuleInterface> $class
      *
      * @return $this
      */
-    public function removeSniff(string $class): self
+    public function removeRule(string $class): self
     {
-        unset($this->sniffs[$class]);
+        unset($this->rules[$class]);
 
         return $this;
     }
@@ -52,8 +52,8 @@ final class Ruleset
      */
     public function addStandard(StandardInterface $standard): self
     {
-        foreach ($standard->getSniffs() as $sniff) {
-            $this->addSniff($sniff);
+        foreach ($standard->getRules() as $rule) {
+            $this->addRule($rule);
         }
 
         return $this;

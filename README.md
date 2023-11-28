@@ -61,16 +61,16 @@ Removes any space before and after opening and closing of arrays and hashes.
 
 ### Standard
 
-By default, the generic standard is enabled with the twig coding standard rules and the following sniffs:
+By default, the generic standard is enabled with the twig coding standard rules and the following rules:
 
- - `BlankEOFSniff`: ensures that files end with one blank line.
- - `BlockNameSpacingSniff`: ensure there is one space before and after block names.
- - `EmptyLinesSniff`: ensures that 2 empty lines do not follow each other.
- - `IndentSniff`: ensures that files are not indented with tabs.
- - `TrailingCommaSingleLineSniff`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
- - `TrailingSpaceSniff`: ensures that files have no trailing spaces.
+ - `BlankEOFRule`: ensures that files end with one blank line.
+ - `BlockNameSpacingRule`: ensure there is one space before and after block names.
+ - `EmptyLinesRule`: ensures that 2 empty lines do not follow each other.
+ - `IndentRule`: ensures that files are not indented with tabs.
+ - `TrailingCommaSingleLineRule`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
+ - `TrailingSpaceRule`: ensures that files have no trailing spaces.
 
-If you want to use the basic Twig standard, another standard and/or add/disable a sniff, you can provide
+If you want to use the basic Twig standard, another standard and/or add/disable a rule, you can provide
 your own configuration with a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
 
 ```php
@@ -78,7 +78,7 @@ your own configuration with a `.twig-cs-fixer.php` file which returns a `TwigCsF
 
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
 $ruleset->addStandard(new TwigCsFixer\Standard\Generic());
-$ruleset->removeSniff(TwigCsFixer\Sniff\EmptyLinesSniff::class);
+$ruleset->removeRule(TwigCsFixer\Rules\EmptyLinesRule::class);
 
 $config = new TwigCsFixer\Config\Config();
 $config->setRuleset($ruleset);

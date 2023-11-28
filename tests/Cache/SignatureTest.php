@@ -6,32 +6,32 @@ namespace TwigCsFixer\Tests\Cache;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
+use TwigCsFixer\Rules\OperatorSpacingRule;
+use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Sniff\ConfigurableSniffInterface;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
-use TwigCsFixer\Sniff\SniffInterface;
 
 final class SignatureTest extends TestCase
 {
     public function testSignature(): void
     {
-        $signature = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
+        $signature = new Signature('8.0', '1', [OperatorSpacingRule::class => null]);
 
         static::assertSame('8.0', $signature->getPhpVersion());
         static::assertSame('1', $signature->getFixerVersion());
-        static::assertSame([OperatorSpacingSniff::class => null], $signature->getSniffs());
+        static::assertSame([OperatorSpacingRule::class => null], $signature->getRules());
     }
 
     public function testSignatureFromRuleset(): void
     {
         $ruleset = new Ruleset();
 
-        $sniff = self::createStub(SniffInterface::class);
-        $ruleset->addSniff($sniff);
+        $rule = self::createStub(RuleInterface::class);
+        $ruleset->addRule($rule);
 
-        $configurableSniff = self::createStub(ConfigurableSniffInterface::class);
-        $configurableSniff->method('getConfiguration')->willReturn(['a' => 1]);
-        $ruleset->addSniff($configurableSniff);
+        $configurableRule = self::createStub(ConfigurableRuleInterface::class);
+        $configurableRule->method('getConfiguration')->willReturn(['a' => 1]);
+        $ruleset->addRule($configurableRule);
 
         $signature = Signature::fromRuleset('8.0', '1', $ruleset);
 
@@ -39,10 +39,10 @@ final class SignatureTest extends TestCase
         static::assertSame('1', $signature->getFixerVersion());
         static::assertSame(
             [
-                $sniff::class             => null,
-                $configurableSniff::class => ['a' => 1],
+                $rule::class             => null,
+                $configurableRule::class => ['a' => 1],
             ],
-            $signature->getSniffs()
+            $signature->getRules()
         );
     }
 
@@ -60,10 +60,10 @@ final class SignatureTest extends TestCase
      */
     public static function equalsDataProvider(): iterable
     {
-        $signature1 = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
-        $signature2 = new Signature('8.0', '1', [OperatorSpacingSniff::class => null]);
-        $signature3 = new Signature('8.1', '1', [OperatorSpacingSniff::class => null]);
-        $signature4 = new Signature('8.0', '2', [OperatorSpacingSniff::class => null]);
+        $signature1 = new Signature('8.0', '1', [OperatorSpacingRule::class => null]);
+        $signature2 = new Signature('8.0', '1', [OperatorSpacingRule::class => null]);
+        $signature3 = new Signature('8.1', '1', [OperatorSpacingRule::class => null]);
+        $signature4 = new Signature('8.0', '2', [OperatorSpacingRule::class => null]);
         $signature5 = new Signature('8.0', '1', []);
 
         yield [$signature1, $signature1, true];

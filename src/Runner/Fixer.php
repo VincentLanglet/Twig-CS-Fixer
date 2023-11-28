@@ -38,7 +38,7 @@ final class Fixer implements FixerInterface
      * A list of tokens that have already been fixed.
      *
      * We don't allow the same token to be fixed more than once each time through a file
-     * as this can easily cause conflicts between sniffs.
+     * as this can easily cause conflicts between rules.
      *
      * @var array<int, string>
      */
@@ -87,9 +87,9 @@ final class Fixer implements FixerInterface
 
             $this->startFile($stream);
 
-            $sniffs = $ruleset->getSniffs();
-            foreach ($sniffs as $sniff) {
-                $sniff->fixFile($stream, $this);
+            $rules = $ruleset->getRules();
+            foreach ($rules as $rule) {
+                $rule->fixFile($stream, $this);
             }
 
             $this->loops++;
