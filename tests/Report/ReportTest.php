@@ -42,13 +42,13 @@ final class ReportTest extends TestCase
         $sniffViolation6 = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file3);
         $sniffViolation7 = new SniffViolation(SniffViolation::LEVEL_FATAL, 'Fatal', $file);
 
-        $report->addMessage($sniffViolation1);
-        $report->addMessage($sniffViolation2);
-        $report->addMessage($sniffViolation3);
-        $report->addMessage($sniffViolation4);
-        $report->addMessage($sniffViolation5);
-        $report->addMessage($sniffViolation6);
-        $report->addMessage($sniffViolation7);
+        $report->addViolation($sniffViolation1);
+        $report->addViolation($sniffViolation2);
+        $report->addViolation($sniffViolation3);
+        $report->addViolation($sniffViolation4);
+        $report->addViolation($sniffViolation5);
+        $report->addViolation($sniffViolation6);
+        $report->addViolation($sniffViolation7);
 
         static::assertSame(1, $report->getTotalNotices());
         static::assertSame(2, $report->getTotalWarnings());
@@ -58,15 +58,15 @@ final class ReportTest extends TestCase
 
         static::assertSame(
             [$sniffViolation1, $sniffViolation2, $sniffViolation4, $sniffViolation7],
-            $report->getMessages($file)
+            $report->getFileViolations($file)
         );
         static::assertSame(
             [$sniffViolation3, $sniffViolation5],
-            $report->getMessages($file2)
+            $report->getFileViolations($file2)
         );
         static::assertSame(
             [$sniffViolation6],
-            $report->getMessages($file3)
+            $report->getFileViolations($file3)
         );
 
         static::assertSame(
@@ -79,20 +79,20 @@ final class ReportTest extends TestCase
                 $sniffViolation5,
                 $sniffViolation6,
             ],
-            $report->getAllMessages()
+            $report->getViolations()
         );
 
         static::assertSame(
             [$sniffViolation4, $sniffViolation7],
-            $report->getMessages($file, Report::MESSAGE_TYPE_ERROR)
+            $report->getFileViolations($file, Report::MESSAGE_TYPE_ERROR)
         );
         static::assertSame(
             [$sniffViolation5],
-            $report->getMessages($file2, Report::MESSAGE_TYPE_ERROR)
+            $report->getFileViolations($file2, Report::MESSAGE_TYPE_ERROR)
         );
         static::assertSame(
             [$sniffViolation6],
-            $report->getMessages($file3, Report::MESSAGE_TYPE_ERROR)
+            $report->getFileViolations($file3, Report::MESSAGE_TYPE_ERROR)
         );
         static::assertSame(
             [
@@ -101,24 +101,24 @@ final class ReportTest extends TestCase
                 $sniffViolation5,
                 $sniffViolation6,
             ],
-            $report->getAllMessages(Report::MESSAGE_TYPE_ERROR)
+            $report->getViolations(Report::MESSAGE_TYPE_ERROR)
         );
     }
 
-    public function testAddMessageForAnotherFile(): void
+    public function testAddViolationForAnotherFile(): void
     {
         $report = new Report([new SplFileInfo('file.twig')]);
 
         $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
-        $report->addMessage(new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Message', 'another_file.twig'));
+        $report->addViolation(new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Message', 'another_file.twig'));
     }
 
-    public function testGetMessageForAnotherFile(): void
+    public function testGetViolationForAnotherFile(): void
     {
         $report = new Report([new SplFileInfo('file.twig')]);
 
         $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
-        $report->getMessages('another_file.twig');
+        $report->getFileViolations('another_file.twig');
     }
 
     public function testAddFixedFile(): void

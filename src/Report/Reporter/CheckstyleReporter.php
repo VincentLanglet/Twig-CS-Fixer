@@ -19,16 +19,16 @@ final class CheckstyleReporter implements ReporterInterface
         $text .= '<checkstyle>'."\n";
 
         foreach ($report->getFiles() as $file) {
-            $fileMessages = $report->getMessages($file, $level);
-            if (0 === \count($fileMessages)) {
+            $fileViolations = $report->getFileViolations($file, $level);
+            if (0 === \count($fileViolations)) {
                 continue;
             }
 
             $text .= sprintf('  <file name="%s">', $this->xmlEncode($file))."\n";
-            foreach ($fileMessages as $message) {
-                $line = (string) $message->getLine();
-                $linePosition = (string) $message->getLinePosition();
-                $sniffName = $message->getSniffName();
+            foreach ($fileViolations as $violation) {
+                $line = (string) $violation->getLine();
+                $linePosition = (string) $violation->getLinePosition();
+                $sniffName = $violation->getSniffName();
 
                 $text .= '    <error';
                 if ('' !== $line) {
@@ -37,8 +37,8 @@ final class CheckstyleReporter implements ReporterInterface
                 if ('' !== $linePosition) {
                     $text .= ' column="'.$linePosition.'"';
                 }
-                $text .= ' severity="'.strtolower(SniffViolation::getLevelAsString($message->getLevel())).'"';
-                $text .= ' message="'.$this->xmlEncode($message->getMessage()).'"';
+                $text .= ' severity="'.strtolower(SniffViolation::getLevelAsString($violation->getLevel())).'"';
+                $text .= ' message="'.$this->xmlEncode($violation->getMessage()).'"';
                 if (null !== $sniffName) {
                     $text .= ' source="'.$sniffName.'"';
                 }

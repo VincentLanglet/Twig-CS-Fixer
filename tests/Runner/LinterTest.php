@@ -46,7 +46,7 @@ final class LinterTest extends FileTestCase
             $ruleset,
         );
 
-        $messages = $report->getMessages($fileNotReadablePath);
+        $messages = $report->getFileViolations($fileNotReadablePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -54,7 +54,7 @@ final class LinterTest extends FileTestCase
         static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($fileNotReadablePath, $message->getFilename());
 
-        static::assertCount(0, $report->getMessages($filePath));
+        static::assertCount(0, $report->getFileViolations($filePath));
     }
 
     public function testInvalidFilesAreReported(): void
@@ -70,7 +70,7 @@ final class LinterTest extends FileTestCase
         $linter = new Linter($env, $tokenizer);
         $report = $linter->run([new SplFileInfo($filePath), new SplFileInfo($filePath2)], $ruleset);
 
-        $messages = $report->getMessages($filePath);
+        $messages = $report->getFileViolations($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -79,7 +79,7 @@ final class LinterTest extends FileTestCase
         static::assertSame($filePath, $message->getFilename());
 
         // We still validate other files
-        $messages = $report->getMessages($filePath2);
+        $messages = $report->getFileViolations($filePath2);
         static::assertCount(1, $messages);
     }
 
@@ -115,7 +115,7 @@ final class LinterTest extends FileTestCase
             $ruleset
         );
 
-        $messages = $report->getMessages($filePath);
+        $messages = $report->getFileViolations($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -154,7 +154,7 @@ final class LinterTest extends FileTestCase
         static::assertSame(1, $deprecations);
         restore_error_handler();
 
-        $messages = $report->getMessages($filePath);
+        $messages = $report->getFileViolations($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];
@@ -219,7 +219,7 @@ final class LinterTest extends FileTestCase
             $fixer
         );
 
-        $messages = $report->getMessages($filePath);
+        $messages = $report->getFileViolations($filePath);
         static::assertCount(1, $messages);
 
         $message = $messages[0];

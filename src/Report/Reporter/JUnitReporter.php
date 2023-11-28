@@ -14,23 +14,23 @@ final class JUnitReporter implements ReporterInterface
 
     public function display(OutputInterface $output, Report $report, ?string $level = null): void
     {
-        $messages = $report->getAllMessages($level);
-        $totalErrors = \count($messages);
+        $violations = $report->getViolations($level);
+        $count = \count($violations);
 
         $text = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
         $text .= '<testsuites>'."\n";
         $text .= '  '.sprintf(
             '<testsuite name="Twig CS Fixer" tests="%d" failures="%d">',
-            max($totalErrors, 1),
-            $totalErrors
+            max($count, 1),
+            $count
         )."\n";
 
-        if ($totalErrors > 0) {
-            foreach ($messages as $message) {
+        if ($count > 0) {
+            foreach ($violations as $violation) {
                 $text .= $this->createTestCase(
-                    sprintf('%s:%s', $message->getFilename(), $message->getLine() ?? 0),
-                    strtolower(SniffViolation::getLevelAsString($message->getLevel())),
-                    $message->getMessage()
+                    sprintf('%s:%s', $violation->getFilename(), $violation->getLine() ?? 0),
+                    strtolower(SniffViolation::getLevelAsString($violation->getLevel())),
+                    $violation->getMessage()
                 );
             }
         } else {

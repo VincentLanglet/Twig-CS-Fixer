@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Report\Formatter;
+namespace TwigCsFixer\Tests\Report\Reporter;
 
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
@@ -27,19 +27,19 @@ final class JUnitReporterTest extends TestCase
         $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
 
         $violation0 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice', $file, 1, 11, 'NoticeSniff');
-        $report->addMessage($violation0);
+        $report->addViolation($violation0);
         $violation1 = new SniffViolation(SniffViolation::LEVEL_WARNING, 'Warning', $file, 2, 22, 'WarningSniff');
-        $report->addMessage($violation1);
+        $report->addViolation($violation1);
         $violation2 = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3, 33, 'ErrorSniff');
-        $report->addMessage($violation2);
+        $report->addViolation($violation2);
         $violation3 = new SniffViolation(SniffViolation::LEVEL_FATAL, 'Fatal', $file);
-        $report->addMessage($violation3);
+        $report->addViolation($violation3);
 
         $violation4 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice2', $file2, 1, 11, 'Notice2Sniff');
-        $report->addMessage($violation4);
+        $report->addViolation($violation4);
 
         $violation5 = new SniffViolation(SniffViolation::LEVEL_FATAL, '\'"<&>"\'', $file3);
-        $report->addMessage($violation5);
+        $report->addViolation($violation5);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
         $textFormatter->display($output, $report, $level);
