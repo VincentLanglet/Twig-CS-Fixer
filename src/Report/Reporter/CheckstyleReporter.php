@@ -6,7 +6,7 @@ namespace TwigCsFixer\Report\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 
 final class CheckstyleReporter implements ReporterInterface
 {
@@ -28,7 +28,7 @@ final class CheckstyleReporter implements ReporterInterface
             foreach ($fileViolations as $violation) {
                 $line = (string) $violation->getLine();
                 $linePosition = (string) $violation->getLinePosition();
-                $sniffName = $violation->getSniffName();
+                $ruleName = $violation->getRuleName();
 
                 $text .= '    <error';
                 if ('' !== $line) {
@@ -37,10 +37,10 @@ final class CheckstyleReporter implements ReporterInterface
                 if ('' !== $linePosition) {
                     $text .= ' column="'.$linePosition.'"';
                 }
-                $text .= ' severity="'.strtolower(SniffViolation::getLevelAsString($violation->getLevel())).'"';
+                $text .= ' severity="'.strtolower(Violation::getLevelAsString($violation->getLevel())).'"';
                 $text .= ' message="'.$this->xmlEncode($violation->getMessage()).'"';
-                if (null !== $sniffName) {
-                    $text .= ' source="'.$sniffName.'"';
+                if (null !== $ruleName) {
+                    $text .= ' source="'.$ruleName.'"';
                 }
                 $text .= '/>'."\n";
             }

@@ -6,7 +6,7 @@ namespace TwigCsFixer\Report\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 
 final class JUnitReporter implements ReporterInterface
 {
@@ -29,7 +29,7 @@ final class JUnitReporter implements ReporterInterface
             foreach ($violations as $violation) {
                 $text .= $this->createTestCase(
                     sprintf('%s:%s', $violation->getFilename(), $violation->getLine() ?? 0),
-                    strtolower(SniffViolation::getLevelAsString($violation->getLevel())),
+                    strtolower(Violation::getLevelAsString($violation->getLevel())),
                     $violation->getMessage()
                 );
             }

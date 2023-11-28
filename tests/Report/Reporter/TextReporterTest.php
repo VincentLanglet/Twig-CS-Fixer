@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\TextReporter;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 
 final class TextReporterTest extends TestCase
 {
@@ -24,13 +24,13 @@ final class TextReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
 
-        $violation0 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice', $file, 1);
+        $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file, 1);
         $report->addViolation($violation0);
-        $violation1 = new SniffViolation(SniffViolation::LEVEL_WARNING, 'Warning', $file, 2);
+        $violation1 = new Violation(Violation::LEVEL_WARNING, 'Warning', $file, 2);
         $report->addViolation($violation1);
-        $violation2 = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3);
+        $violation2 = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3);
         $report->addViolation($violation2);
-        $violation3 = new SniffViolation(SniffViolation::LEVEL_FATAL, 'Fatal', $file);
+        $violation3 = new Violation(Violation::LEVEL_FATAL, 'Fatal', $file);
         $report->addViolation($violation3);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
@@ -115,7 +115,7 @@ final class TextReporterTest extends TestCase
         $file2 = __DIR__.'/Fixtures/file2.twig';
 
         $report = new Report([new SplFileInfo($file), new SplFileInfo($file2)]);
-        $violation = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3);
+        $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3);
         $report->addViolation($violation);
 
         $output = new BufferedOutput();
@@ -147,7 +147,7 @@ final class TextReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/fileNotFound.twig';
 
         $report = new Report([new SplFileInfo($file)]);
-        $violation = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 1);
+        $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 1);
         $report->addViolation($violation);
 
         $output = new BufferedOutput();
@@ -177,7 +177,7 @@ final class TextReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
 
-        $violation = new SniffViolation($level, 'Message', $file, 1);
+        $violation = new Violation($level, 'Message', $file, 1);
         $report->addViolation($violation);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
@@ -192,9 +192,9 @@ final class TextReporterTest extends TestCase
      */
     public static function displayBlockDataProvider(): iterable
     {
-        yield ['[OK] Files linted: 1, notices: 1, warnings: 0, errors: 0', SniffViolation::LEVEL_NOTICE];
-        yield ['[WARNING] Files linted: 1, notices: 0, warnings: 1, errors: 0', SniffViolation::LEVEL_WARNING];
-        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', SniffViolation::LEVEL_ERROR];
-        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', SniffViolation::LEVEL_FATAL];
+        yield ['[OK] Files linted: 1, notices: 1, warnings: 0, errors: 0', Violation::LEVEL_NOTICE];
+        yield ['[WARNING] Files linted: 1, notices: 0, warnings: 1, errors: 0', Violation::LEVEL_WARNING];
+        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', Violation::LEVEL_ERROR];
+        yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', Violation::LEVEL_FATAL];
     }
 }

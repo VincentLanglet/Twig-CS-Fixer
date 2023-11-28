@@ -6,7 +6,7 @@ namespace TwigCsFixer\Report\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 
 /**
  * Allow errors to be reported in pull-requests diff when run in a GitHub Action
@@ -22,8 +22,8 @@ final class GithubReporter implements ReporterInterface
         $violations = $report->getViolations($level);
         foreach ($violations as $violation) {
             $text = match ($violation->getLevel()) {
-                SniffViolation::LEVEL_NOTICE  => '::notice',
-                SniffViolation::LEVEL_WARNING => '::warning',
+                Violation::LEVEL_NOTICE       => '::notice',
+                Violation::LEVEL_WARNING      => '::warning',
                 default                       => '::error',
             };
 

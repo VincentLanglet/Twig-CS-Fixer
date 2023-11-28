@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Standard;
 
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Sniff\DelimiterSpacingSniff;
-use TwigCsFixer\Sniff\OperatorNameSpacingSniff;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
-use TwigCsFixer\Sniff\PunctuationSpacingSniff;
+use TwigCsFixer\Rules\DelimiterSpacingRule;
+use TwigCsFixer\Rules\OperatorNameSpacingRule;
+use TwigCsFixer\Rules\OperatorSpacingRule;
+use TwigCsFixer\Rules\PunctuationSpacingRule;
 use TwigCsFixer\Standard\Twig;
 
 final class TwigTest extends TestCase
 {
-    public function testGetSniffs(): void
+    public function testGetRules(): void
     {
         $standard = new Twig();
 
         static::assertEquals([
-            new DelimiterSpacingSniff(),
-            new OperatorNameSpacingSniff(),
-            new OperatorSpacingSniff(),
-            new PunctuationSpacingSniff(),
-        ], $standard->getSniffs());
+            new DelimiterSpacingRule(),
+            new OperatorNameSpacingRule(),
+            new OperatorSpacingRule(),
+            new PunctuationSpacingRule(),
+        ], $standard->getRules());
     }
 }

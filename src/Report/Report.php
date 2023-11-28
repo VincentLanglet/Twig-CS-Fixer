@@ -18,7 +18,7 @@ final class Report
     public const MESSAGE_TYPE_FATAL = 'FATAL';
 
     /**
-     * @var array<string, list<SniffViolation>>
+     * @var array<string, list<Violation>>
      */
     private array $violationsByFile = [];
 
@@ -43,9 +43,9 @@ final class Report
         }
     }
 
-    public function addViolation(SniffViolation $sniffViolation): self
+    public function addViolation(Violation $violation): self
     {
-        $filename = $sniffViolation->getFilename();
+        $filename = $violation->getFilename();
         if (!isset($this->violationsByFile[$filename])) {
             throw new InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
@@ -53,26 +53,26 @@ final class Report
         }
 
         // Update stats
-        switch ($sniffViolation->getLevel()) {
-            case SniffViolation::LEVEL_NOTICE:
+        switch ($violation->getLevel()) {
+            case Violation::LEVEL_NOTICE:
                 $this->totalNotices++;
                 break;
-            case SniffViolation::LEVEL_WARNING:
+            case Violation::LEVEL_WARNING:
                 $this->totalWarnings++;
                 break;
-            case SniffViolation::LEVEL_ERROR:
-            case SniffViolation::LEVEL_FATAL:
+            case Violation::LEVEL_ERROR:
+            case Violation::LEVEL_FATAL:
                 $this->totalErrors++;
                 break;
         }
 
-        $this->violationsByFile[$filename][] = $sniffViolation;
+        $this->violationsByFile[$filename][] = $violation;
 
         return $this;
     }
 
     /**
-     * @return list<SniffViolation>
+     * @return list<Violation>
      */
     public function getFileViolations(string $filename, ?string $level = null): array
     {
@@ -89,13 +89,13 @@ final class Report
         return array_values(
             array_filter(
                 $this->violationsByFile[$filename],
-                static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level)
+                static fn (Violation $message): bool => $message->getLevel() >= Violation::getLevelAsInt($level)
             )
         );
     }
 
     /**
-     * @return list<SniffViolation>
+     * @return list<Violation>
      */
     public function getViolations(?string $level = null): array
     {
@@ -108,7 +108,7 @@ final class Report
         return array_values(
             array_filter(
                 $messages,
-                static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level)
+                static fn (Violation $message): bool => $message->getLevel() >= Violation::getLevelAsInt($level)
             )
         );
     }

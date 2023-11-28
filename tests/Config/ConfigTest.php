@@ -31,8 +31,8 @@ final class ConfigTest extends TestCase
 
         $ruleset = $config->getRuleset();
         static::assertEquals(
-            array_values($genericStandard->getSniffs()),
-            array_values($ruleset->getSniffs())
+            array_values($genericStandard->getRules()),
+            array_values($ruleset->getRules())
         );
 
         $ruleset = new Ruleset();

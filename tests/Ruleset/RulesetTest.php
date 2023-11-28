@@ -5,43 +5,43 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Ruleset;
 
 use PHPUnit\Framework\TestCase;
+use TwigCsFixer\Rules\BlankEOFRule;
+use TwigCsFixer\Rules\RuleInterface;
+use TwigCsFixer\Rules\TrailingSpaceRule;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Sniff\BlankEOFSniff;
-use TwigCsFixer\Sniff\SniffInterface;
-use TwigCsFixer\Sniff\TrailingSpaceSniff;
 use TwigCsFixer\Standard\StandardInterface;
 
 final class RulesetTest extends TestCase
 {
-    public function testStartWithNoSniff(): void
+    public function testStartWithNoRule(): void
     {
         $ruleset = new Ruleset();
-        static::assertSame([], $ruleset->getSniffs());
+        static::assertSame([], $ruleset->getRules());
     }
 
-    public function testAddAndRemoveSniff(): void
+    public function testAddAndRemoveRule(): void
     {
         $ruleset = new Ruleset();
-        $sniff = self::createStub(SniffInterface::class);
+        $rule = self::createStub(RuleInterface::class);
 
-        $ruleset->addSniff($sniff);
-        static::assertCount(1, $ruleset->getSniffs());
+        $ruleset->addRule($rule);
+        static::assertCount(1, $ruleset->getRules());
 
-        $ruleset->removeSniff($sniff::class);
-        static::assertCount(0, $ruleset->getSniffs());
+        $ruleset->removeRule($rule::class);
+        static::assertCount(0, $ruleset->getRules());
     }
 
     public function testAddStandard(): void
     {
         $ruleset = new Ruleset();
 
-        // Using real sniff to have different class name
-        $sniff1 = new BlankEOFSniff();
-        $sniff2 = new TrailingSpaceSniff();
+        // Using real rule to have different class name
+        $rule1 = new BlankEOFRule();
+        $rule2 = new TrailingSpaceRule();
         $standard = self::createStub(StandardInterface::class);
-        $standard->method('getSniffs')->willReturn([$sniff1, $sniff2]);
+        $standard->method('getRules')->willReturn([$rule1, $rule2]);
 
         $ruleset->addStandard($standard);
-        static::assertCount(2, $ruleset->getSniffs());
+        static::assertCount(2, $ruleset->getRules());
     }
 }

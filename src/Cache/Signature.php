@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Sniff\ConfigurableSniffInterface;
 
 final class Signature
 {
     /**
-     * @param array<mixed> $sniffs
+     * @param array<mixed> $rules
      */
     public function __construct(
         private string $phpVersion,
         private string $fixerVersion,
-        private array $sniffs
+        private array $rules
     ) {
     }
 
@@ -24,14 +24,14 @@ final class Signature
         string $fixerVersion,
         Ruleset $ruleset,
     ): self {
-        $sniffs = [];
-        foreach ($ruleset->getSniffs() as $sniff) {
-            $sniffs[$sniff::class] = $sniff instanceof ConfigurableSniffInterface
-                ? $sniff->getConfiguration()
+        $rules = [];
+        foreach ($ruleset->getRules() as $rule) {
+            $rules[$rule::class] = $rule instanceof ConfigurableRuleInterface
+                ? $rule->getConfiguration()
                 : null;
         }
 
-        return new self($phpVersion, $fixerVersion, $sniffs);
+        return new self($phpVersion, $fixerVersion, $rules);
     }
 
     public function getPhpVersion(): string
@@ -47,15 +47,15 @@ final class Signature
     /**
      * @return array<mixed>
      */
-    public function getSniffs(): array
+    public function getRules(): array
     {
-        return $this->sniffs;
+        return $this->rules;
     }
 
     public function equals(self $signature): bool
     {
         return $this->phpVersion === $signature->getPhpVersion()
             && $this->fixerVersion === $signature->getFixerVersion()
-            && $this->sniffs === $signature->getSniffs();
+            && $this->rules === $signature->getRules();
     }
 }

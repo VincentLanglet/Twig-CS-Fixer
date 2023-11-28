@@ -5,35 +5,35 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Standard;
 
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Sniff\BlankEOFSniff;
-use TwigCsFixer\Sniff\BlockNameSpacingSniff;
-use TwigCsFixer\Sniff\DelimiterSpacingSniff;
-use TwigCsFixer\Sniff\EmptyLinesSniff;
-use TwigCsFixer\Sniff\IndentSniff;
-use TwigCsFixer\Sniff\OperatorNameSpacingSniff;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
-use TwigCsFixer\Sniff\PunctuationSpacingSniff;
-use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
-use TwigCsFixer\Sniff\TrailingSpaceSniff;
+use TwigCsFixer\Rules\BlankEOFRule;
+use TwigCsFixer\Rules\BlockNameSpacingRule;
+use TwigCsFixer\Rules\DelimiterSpacingRule;
+use TwigCsFixer\Rules\EmptyLinesRule;
+use TwigCsFixer\Rules\IndentRule;
+use TwigCsFixer\Rules\OperatorNameSpacingRule;
+use TwigCsFixer\Rules\OperatorSpacingRule;
+use TwigCsFixer\Rules\PunctuationSpacingRule;
+use TwigCsFixer\Rules\TrailingCommaSingleLineRule;
+use TwigCsFixer\Rules\TrailingSpaceRule;
 use TwigCsFixer\Standard\Generic;
 
 final class GenericTest extends TestCase
 {
-    public function testGetSniffs(): void
+    public function testGetRules(): void
     {
         $standard = new Generic();
 
         static::assertEquals([
-            new DelimiterSpacingSniff(),
-            new OperatorNameSpacingSniff(),
-            new OperatorSpacingSniff(),
-            new PunctuationSpacingSniff(),
-            new BlankEOFSniff(),
-            new BlockNameSpacingSniff(),
-            new EmptyLinesSniff(),
-            new IndentSniff(),
-            new TrailingCommaSingleLineSniff(),
-            new TrailingSpaceSniff(),
-        ], $standard->getSniffs());
+            new DelimiterSpacingRule(),
+            new OperatorNameSpacingRule(),
+            new OperatorSpacingRule(),
+            new PunctuationSpacingRule(),
+            new BlankEOFRule(),
+            new BlockNameSpacingRule(),
+            new EmptyLinesRule(),
+            new IndentRule(),
+            new TrailingCommaSingleLineRule(),
+            new TrailingSpaceRule(),
+        ], $standard->getRules());
     }
 }

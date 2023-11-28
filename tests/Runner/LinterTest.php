@@ -11,7 +11,7 @@ use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Runner\Linter;
@@ -51,7 +51,7 @@ final class LinterTest extends FileTestCase
 
         $message = $messages[0];
         static::assertSame('Unable to read file.', $message->getMessage());
-        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame(Violation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($fileNotReadablePath, $message->getFilename());
 
         static::assertCount(0, $report->getFileViolations($filePath));
@@ -75,7 +75,7 @@ final class LinterTest extends FileTestCase
 
         $message = $messages[0];
         static::assertSame('File is invalid: Error.', $message->getMessage());
-        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame(Violation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
 
         // We still validate other files
@@ -120,7 +120,7 @@ final class LinterTest extends FileTestCase
 
         $message = $messages[0];
         static::assertSame('Unable to tokenize file: The template is invalid.', $message->getMessage());
-        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame(Violation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
     }
 
@@ -159,7 +159,7 @@ final class LinterTest extends FileTestCase
 
         $message = $messages[0];
         static::assertSame('User Deprecation', $message->getMessage());
-        static::assertSame(SniffViolation::LEVEL_NOTICE, $message->getLevel());
+        static::assertSame(Violation::LEVEL_NOTICE, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
     }
 
@@ -224,7 +224,7 @@ final class LinterTest extends FileTestCase
 
         $message = $messages[0];
         static::assertStringContainsString($expectedMessage, $message->getMessage());
-        static::assertSame(SniffViolation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame(Violation::LEVEL_FATAL, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
     }
 

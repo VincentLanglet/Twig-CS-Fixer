@@ -13,7 +13,7 @@ use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Report;
-use TwigCsFixer\Report\SniffViolation;
+use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
 
@@ -45,13 +45,13 @@ final class Linter
 
             $content = @file_get_contents($filePath);
             if (false === $content) {
-                $sniffViolation = new SniffViolation(
-                    SniffViolation::LEVEL_FATAL,
+                $violation = new Violation(
+                    Violation::LEVEL_FATAL,
                     'Unable to read file.',
                     $filePath
                 );
 
-                $report->addViolation($sniffViolation);
+                $report->addViolation($violation);
                 continue;
             }
 
@@ -64,14 +64,14 @@ final class Linter
                 $twigSource = new Source($content, $filePath);
                 $this->env->parse($this->env->tokenize($twigSource));
             } catch (Error $error) {
-                $sniffViolation = new SniffViolation(
-                    SniffViolation::LEVEL_FATAL,
+                $violation = new Violation(
+                    Violation::LEVEL_FATAL,
                     sprintf('File is invalid: %s', $error->getRawMessage()),
                     $filePath,
                     $error->getTemplateLine()
                 );
 
-                $report->addViolation($sniffViolation);
+                $report->addViolation($violation);
                 continue;
             }
 
@@ -85,22 +85,22 @@ final class Linter
                         $report->addFixedFile($filePath);
                     }
                 } catch (CannotTokenizeException $exception) {
-                    $sniffViolation = new SniffViolation(
-                        SniffViolation::LEVEL_FATAL,
+                    $violation = new Violation(
+                        Violation::LEVEL_FATAL,
                         sprintf('Unable to tokenize file: %s', $exception->getMessage()),
                         $filePath
                     );
 
-                    $report->addViolation($sniffViolation);
+                    $report->addViolation($violation);
                     continue;
                 } catch (CannotFixFileException $exception) {
-                    $sniffViolation = new SniffViolation(
-                        SniffViolation::LEVEL_FATAL,
+                    $violation = new Violation(
+                        Violation::LEVEL_FATAL,
                         sprintf('Unable to fix file: %s', $exception->getMessage()),
                         $filePath
                     );
 
-                    $report->addViolation($sniffViolation);
+                    $report->addViolation($violation);
                 }
             }
 
@@ -110,20 +110,20 @@ final class Linter
                 $twigSource = new Source($content, $filePath);
                 $stream = $this->tokenizer->tokenize($twigSource);
             } catch (CannotTokenizeException $exception) {
-                $sniffViolation = new SniffViolation(
-                    SniffViolation::LEVEL_FATAL,
+                $violation = new Violation(
+                    Violation::LEVEL_FATAL,
                     sprintf('Unable to tokenize file: %s', $exception->getMessage()),
                     $filePath
                 );
 
-                $report->addViolation($sniffViolation);
+                $report->addViolation($violation);
                 continue;
             }
             restore_error_handler();
 
-            $sniffs = $ruleset->getSniffs();
-            foreach ($sniffs as $sniff) {
-                $sniff->lintFile($stream, $report);
+            $rules = $ruleset->getRules();
+            foreach ($rules as $rule) {
+                $rule->lintFile($stream, $report);
             }
 
             // Only cache the file if there is no error in order to
@@ -140,13 +140,13 @@ final class Linter
     private function setErrorHandler(Report $report, string $file): void
     {
         set_error_handler(static function (int $type, string $message) use ($report, $file): bool {
-            $sniffViolation = new SniffViolation(
-                SniffViolation::LEVEL_NOTICE,
+            $violation = new Violation(
+                Violation::LEVEL_NOTICE,
                 $message,
                 $file
             );
 
-            $report->addViolation($sniffViolation);
+            $report->addViolation($violation);
 
             return true;
         }, \E_USER_DEPRECATED);

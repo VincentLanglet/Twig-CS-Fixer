@@ -31,13 +31,13 @@ final class CacheEncoder
         Assert::string($data['php_version']);
         Assert::keyExists($data, 'fixer_version');
         Assert::string($data['fixer_version']);
-        Assert::keyExists($data, 'sniffs');
-        Assert::isArray($data['sniffs']);
+        Assert::keyExists($data, 'rules');
+        Assert::isArray($data['rules']);
 
         $signature = new Signature(
             $data['php_version'],
             $data['fixer_version'],
-            $data['sniffs'],
+            $data['rules'],
         );
 
         $cache = new Cache($signature);
@@ -64,7 +64,7 @@ final class CacheEncoder
         return json_encode([
             'php_version'   => $signature->getPhpVersion(),
             'fixer_version' => $signature->getFixerVersion(),
-            'sniffs'        => $signature->getSniffs(),
+            'rules'         => $signature->getRules(),
             'hashes'        => $cache->getHashes(),
         ], \JSON_THROW_ON_ERROR);
     }

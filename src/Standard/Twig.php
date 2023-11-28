@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Standard;
 
-use TwigCsFixer\Sniff\DelimiterSpacingSniff;
-use TwigCsFixer\Sniff\OperatorNameSpacingSniff;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
-use TwigCsFixer\Sniff\PunctuationSpacingSniff;
+use TwigCsFixer\Rules\DelimiterSpacingRule;
+use TwigCsFixer\Rules\OperatorNameSpacingRule;
+use TwigCsFixer\Rules\OperatorSpacingRule;
+use TwigCsFixer\Rules\PunctuationSpacingRule;
 
 /**
  * Standard from twig.
@@ -16,13 +16,13 @@ use TwigCsFixer\Sniff\PunctuationSpacingSniff;
  */
 class Twig implements StandardInterface
 {
-    public function getSniffs(): array
+    public function getRules(): array
     {
         return [
-            new DelimiterSpacingSniff(),
-            new OperatorNameSpacingSniff(),
-            new OperatorSpacingSniff(),
-            new PunctuationSpacingSniff(),
+            new DelimiterSpacingRule(),
+            new OperatorNameSpacingRule(),
+            new OperatorSpacingRule(),
+            new PunctuationSpacingRule(),
         ];
     }
 }

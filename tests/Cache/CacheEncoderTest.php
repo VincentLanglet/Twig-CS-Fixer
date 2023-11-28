@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
 use TwigCsFixer\Cache\Signature;
-use TwigCsFixer\Sniff\OperatorSpacingSniff;
+use TwigCsFixer\Rules\OperatorSpacingRule;
 
 final class CacheEncoderTest extends TestCase
 {
@@ -31,15 +31,15 @@ final class CacheEncoderTest extends TestCase
         yield [''];
         yield ['null'];
         yield ['{}'];
-        yield ['{"php_version":12,"fixer_version":13,"sniffs":[],"hashes":"yes"}'];
-        yield ['{"php_version":12,"fixer_version":13,"sniffs":[],"hashes":["yes"]}'];
-        yield ['{"php_version":"7.4","fixer_version":13,"sniffs":[],"hashes":["yes"]}'];
-        yield ['{"php_version":"7.4","fixer_version":"1.3","sniffs":[],"hashes":["yes"]}'];
+        yield ['{"php_version":12,"fixer_version":13,"rules":[],"hashes":"yes"}'];
+        yield ['{"php_version":12,"fixer_version":13,"rules":[],"hashes":["yes"]}'];
+        yield ['{"php_version":"7.4","fixer_version":13,"rules":[],"hashes":["yes"]}'];
+        yield ['{"php_version":"7.4","fixer_version":"1.3","rules":[],"hashes":["yes"]}'];
     }
 
     public function testFromJsonSuccess(): void
     {
-        $cache = CacheEncoder::fromJson('{"php_version":"7.4","fixer_version":"1.3","sniffs":{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null},"hashes":{"folder/file.twig":"bnmdsa678dsa","anotherfolder/anotherfile.twig":"123bnmdsa678dsa"}}');
+        $cache = CacheEncoder::fromJson('{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\OperatorSpacingRule":null},"hashes":{"folder/file.twig":"bnmdsa678dsa","anotherfolder/anotherfile.twig":"123bnmdsa678dsa"}}');
 
         $signature = $cache->getSignature();
         static::assertEquals('7.4', $signature->getPhpVersion());
@@ -50,18 +50,18 @@ final class CacheEncoderTest extends TestCase
             $cache->getHashes()
         );
         static::assertSame(
-            [OperatorSpacingSniff::class => null],
-            $signature->getSniffs()
+            [OperatorSpacingRule::class => null],
+            $signature->getRules()
         );
     }
 
     public function testToJsonSuccess(): void
     {
-        $signature = new Signature('7.4', '1.3', [OperatorSpacingSniff::class => null]);
+        $signature = new Signature('7.4', '1.3', [OperatorSpacingRule::class => null]);
         $cache = new Cache($signature);
 
         static::assertSame(
-            '{"php_version":"7.4","fixer_version":"1.3","sniffs":{"TwigCsFixer\\\\Sniff\\\\OperatorSpacingSniff":null},"hashes":[]}',
+            '{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\OperatorSpacingRule":null},"hashes":[]}',
             CacheEncoder::toJson($cache)
         );
     }

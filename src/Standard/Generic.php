@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Standard;
 
-use TwigCsFixer\Sniff\BlankEOFSniff;
-use TwigCsFixer\Sniff\BlockNameSpacingSniff;
-use TwigCsFixer\Sniff\EmptyLinesSniff;
-use TwigCsFixer\Sniff\IndentSniff;
-use TwigCsFixer\Sniff\TrailingCommaSingleLineSniff;
-use TwigCsFixer\Sniff\TrailingSpaceSniff;
+use TwigCsFixer\Rules\BlankEOFRule;
+use TwigCsFixer\Rules\BlockNameSpacingRule;
+use TwigCsFixer\Rules\EmptyLinesRule;
+use TwigCsFixer\Rules\IndentRule;
+use TwigCsFixer\Rules\TrailingCommaSingleLineRule;
+use TwigCsFixer\Rules\TrailingSpaceRule;
 
 /**
  * Default standard from this fixer.
  */
 final class Generic implements StandardInterface
 {
-    public function getSniffs(): array
+    public function getRules(): array
     {
         return [
-            ...(new Twig())->getSniffs(),
-            new BlankEOFSniff(),
-            new BlockNameSpacingSniff(),
-            new EmptyLinesSniff(),
-            new IndentSniff(),
-            new TrailingCommaSingleLineSniff(),
-            new TrailingSpaceSniff(),
+            ...(new Twig())->getRules(),
+            new BlankEOFRule(),
+            new BlockNameSpacingRule(),
+            new EmptyLinesRule(),
+            new IndentRule(),
+            new TrailingCommaSingleLineRule(),
+            new TrailingSpaceRule(),
         ];
     }
 }
