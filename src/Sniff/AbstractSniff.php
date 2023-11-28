@@ -143,7 +143,7 @@ abstract class AbstractSniff implements SniffInterface
             $this->getName(),
         );
 
-        $report->addMessage($sniffViolation);
+        $report->addViolation($sniffViolation);
     }
 
     private function addFixableMessage(int $messageType, string $message, Token $token): ?FixerInterface

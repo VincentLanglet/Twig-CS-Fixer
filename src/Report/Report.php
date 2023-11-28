@@ -20,7 +20,7 @@ final class Report
     /**
      * @var array<string, list<SniffViolation>>
      */
-    private array $messagesByFiles = [];
+    private array $violationsByFile = [];
 
     /**
      * @var array<string, true>
@@ -39,14 +39,14 @@ final class Report
     public function __construct(iterable $files)
     {
         foreach ($files as $file) {
-            $this->messagesByFiles[$file->getPathname()] = [];
+            $this->violationsByFile[$file->getPathname()] = [];
         }
     }
 
-    public function addMessage(SniffViolation $sniffViolation): self
+    public function addViolation(SniffViolation $sniffViolation): self
     {
         $filename = $sniffViolation->getFilename();
-        if (!isset($this->messagesByFiles[$filename])) {
+        if (!isset($this->violationsByFile[$filename])) {
             throw new InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
@@ -66,7 +66,7 @@ final class Report
                 break;
         }
 
-        $this->messagesByFiles[$filename][] = $sniffViolation;
+        $this->violationsByFile[$filename][] = $sniffViolation;
 
         return $this;
     }
@@ -74,21 +74,21 @@ final class Report
     /**
      * @return list<SniffViolation>
      */
-    public function getMessages(string $filename, ?string $level = null): array
+    public function getFileViolations(string $filename, ?string $level = null): array
     {
-        if (!isset($this->messagesByFiles[$filename])) {
+        if (!isset($this->violationsByFile[$filename])) {
             throw new InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
 
         if (null === $level) {
-            return $this->messagesByFiles[$filename];
+            return $this->violationsByFile[$filename];
         }
 
         return array_values(
             array_filter(
-                $this->messagesByFiles[$filename],
+                $this->violationsByFile[$filename],
                 static fn (SniffViolation $message): bool => $message->getLevel() >= SniffViolation::getLevelAsInt($level)
             )
         );
@@ -97,9 +97,9 @@ final class Report
     /**
      * @return list<SniffViolation>
      */
-    public function getAllMessages(?string $level = null): array
+    public function getViolations(?string $level = null): array
     {
-        $messages = array_merge(...array_values($this->messagesByFiles));
+        $messages = array_merge(...array_values($this->violationsByFile));
 
         if (null === $level) {
             return $messages;
@@ -118,17 +118,17 @@ final class Report
      */
     public function getFiles(): array
     {
-        return array_keys($this->messagesByFiles);
+        return array_keys($this->violationsByFile);
     }
 
     public function getTotalFiles(): int
     {
-        return \count($this->messagesByFiles);
+        return \count($this->violationsByFile);
     }
 
     public function addFixedFile(string $filename): self
     {
-        if (!isset($this->messagesByFiles[$filename])) {
+        if (!isset($this->violationsByFile[$filename])) {
             throw new InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );

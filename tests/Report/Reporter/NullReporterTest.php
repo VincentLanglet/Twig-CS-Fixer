@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Report\Formatter;
+namespace TwigCsFixer\Tests\Report\Reporter;
 
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
@@ -25,13 +25,13 @@ final class NullReporterTest extends TestCase
         $report = new Report([new SplFileInfo($file)]);
 
         $violation0 = new SniffViolation(SniffViolation::LEVEL_NOTICE, 'Notice', $file, 1);
-        $report->addMessage($violation0);
+        $report->addViolation($violation0);
         $violation1 = new SniffViolation(SniffViolation::LEVEL_WARNING, 'Warning', $file, 2);
-        $report->addMessage($violation1);
+        $report->addViolation($violation1);
         $violation2 = new SniffViolation(SniffViolation::LEVEL_ERROR, 'Error', $file, 3);
-        $report->addMessage($violation2);
+        $report->addViolation($violation2);
         $violation3 = new SniffViolation(SniffViolation::LEVEL_FATAL, 'Fatal', $file);
-        $report->addMessage($violation3);
+        $report->addViolation($violation3);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
         $textFormatter->display($output, $report, $level);

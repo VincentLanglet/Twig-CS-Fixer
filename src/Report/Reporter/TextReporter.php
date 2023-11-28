@@ -36,19 +36,19 @@ final class TextReporter implements ReporterInterface
         }
 
         foreach ($report->getFiles() as $file) {
-            $fileMessages = $report->getMessages($file, $level);
-            if (\count($fileMessages) > 0) {
+            $fileViolations = $report->getFileViolations($file, $level);
+            if (\count($fileViolations) > 0) {
                 $io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
             }
 
             $content = @file_get_contents($file);
             $rows = [];
-            foreach ($fileMessages as $message) {
+            foreach ($fileViolations as $violation) {
                 $formattedText = [];
-                $line = $message->getLine();
+                $line = $violation->getLine();
 
                 if (null === $line || false === $content) {
-                    $formattedText[] = $this->formatErrorMessage($message);
+                    $formattedText[] = $this->formatErrorMessage($violation);
                 } else {
                     $lines = $this->getContext($content, $line);
                     foreach ($lines as $no => $code) {
@@ -58,8 +58,8 @@ final class TextReporter implements ReporterInterface
                             wordwrap($code, self::ERROR_LINE_WIDTH)
                         );
 
-                        if ($no === $message->getLine()) {
-                            $formattedText[] = $this->formatErrorMessage($message);
+                        if ($no === $violation->getLine()) {
+                            $formattedText[] = $this->formatErrorMessage($violation);
                         }
                     }
                 }
@@ -68,7 +68,7 @@ final class TextReporter implements ReporterInterface
                     $rows[] = new TableSeparator();
                 }
 
-                $messageLevel = SniffViolation::getLevelAsString($message->getLevel());
+                $messageLevel = SniffViolation::getLevelAsString($violation->getLevel());
                 $rows[] = [
                     new TableCell(sprintf('<comment>%s</comment>', $messageLevel)),
                     implode("\n", $formattedText),

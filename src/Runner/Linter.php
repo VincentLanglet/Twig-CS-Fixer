@@ -51,7 +51,7 @@ final class Linter
                     $filePath
                 );
 
-                $report->addMessage($sniffViolation);
+                $report->addViolation($sniffViolation);
                 continue;
             }
 
@@ -71,7 +71,7 @@ final class Linter
                     $error->getTemplateLine()
                 );
 
-                $report->addMessage($sniffViolation);
+                $report->addViolation($sniffViolation);
                 continue;
             }
 
@@ -91,7 +91,7 @@ final class Linter
                         $filePath
                     );
 
-                    $report->addMessage($sniffViolation);
+                    $report->addViolation($sniffViolation);
                     continue;
                 } catch (CannotFixFileException $exception) {
                     $sniffViolation = new SniffViolation(
@@ -100,7 +100,7 @@ final class Linter
                         $filePath
                     );
 
-                    $report->addMessage($sniffViolation);
+                    $report->addViolation($sniffViolation);
                 }
             }
 
@@ -116,7 +116,7 @@ final class Linter
                     $filePath
                 );
 
-                $report->addMessage($sniffViolation);
+                $report->addViolation($sniffViolation);
                 continue;
             }
             restore_error_handler();
@@ -129,7 +129,7 @@ final class Linter
             // Only cache the file if there is no error in order to
             // - still see the errors when running again the linter
             // - still having the possibility to fix the file
-            if ([] === $report->getMessages($filePath)) {
+            if ([] === $report->getFileViolations($filePath)) {
                 $this->cacheManager->setFile($filePath, $content);
             }
         }
@@ -146,7 +146,7 @@ final class Linter
                 $file
             );
 
-            $report->addMessage($sniffViolation);
+            $report->addViolation($sniffViolation);
 
             return true;
         }, \E_USER_DEPRECATED);
