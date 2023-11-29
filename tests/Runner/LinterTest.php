@@ -15,7 +15,7 @@ use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Runner\Linter;
-use TwigCsFixer\Standard\Generic;
+use TwigCsFixer\Standard\TwigCsFixer;
 use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
@@ -282,7 +282,7 @@ final class LinterTest extends FileTestCase
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
         $ruleset = new Ruleset();
-        $ruleset->addStandard(new Generic());
+        $ruleset->addStandard(new TwigCsFixer());
 
         $cacheManager = $this->createMock(CacheManagerInterface::class);
         $cacheManager->method('needFixing')->willReturn(true);

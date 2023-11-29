@@ -61,7 +61,7 @@ Removes any space before and after opening and closing of arrays and hashes.
 
 ### Standard
 
-By default, the generic standard is enabled with the twig coding standard rules and the following rules:
+By default, the twig-cs-fixer standard is enabled with the twig coding standard rules and the following rules:
 
  - `BlankEOFRule`: ensures that files end with one blank line.
  - `BlockNameSpacingRule`: ensure there is one space before and after block names.
@@ -77,8 +77,8 @@ your own configuration with a `.twig-cs-fixer.php` file which returns a `TwigCsF
 <?php
 
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
-$ruleset->addStandard(new TwigCsFixer\Standard\Generic());
-$ruleset->removeRule(TwigCsFixer\Rules\EmptyLinesRule::class);
+$ruleset->addStandard(new TwigCsFixer\Standard\Twig());
+$ruleset->addRule(\TwigCsFixer\Rules\Whitespace\EmptyLinesRule::class);
 
 $config = new TwigCsFixer\Config\Config();
 $config->setRuleset($ruleset);

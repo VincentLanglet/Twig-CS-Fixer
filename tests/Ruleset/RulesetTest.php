@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Ruleset;
 
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Rules\BlankEOFRule;
 use TwigCsFixer\Rules\RuleInterface;
-use TwigCsFixer\Rules\TrailingSpaceRule;
+use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
+use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\StandardInterface;
 

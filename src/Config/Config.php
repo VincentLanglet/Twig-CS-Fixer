@@ -10,7 +10,7 @@ use Twig\TokenParser\TokenParserInterface;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Standard\Generic;
+use TwigCsFixer\Standard\TwigCsFixer;
 
 /**
  * Main entry point to config the TwigCsFixer.
@@ -41,7 +41,7 @@ final class Config
     public function __construct(private string $name = 'Default')
     {
         $this->ruleset = new Ruleset();
-        $this->ruleset->addStandard(new Generic());
+        $this->ruleset->addStandard(new TwigCsFixer());
         $this->finder = new TwigCsFinder();
     }
 

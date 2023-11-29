@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
 use TwigCsFixer\Cache\Signature;
-use TwigCsFixer\Rules\OperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 
 final class CacheEncoderTest extends TestCase
 {
@@ -39,7 +39,7 @@ final class CacheEncoderTest extends TestCase
 
     public function testFromJsonSuccess(): void
     {
-        $cache = CacheEncoder::fromJson('{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\OperatorSpacingRule":null},"hashes":{"folder/file.twig":"bnmdsa678dsa","anotherfolder/anotherfile.twig":"123bnmdsa678dsa"}}');
+        $cache = CacheEncoder::fromJson('{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\Operator\\\\OperatorSpacingRule":null},"hashes":{"folder/file.twig":"bnmdsa678dsa","anotherfolder/anotherfile.twig":"123bnmdsa678dsa"}}');
 
         $signature = $cache->getSignature();
         static::assertEquals('7.4', $signature->getPhpVersion());
@@ -61,7 +61,7 @@ final class CacheEncoderTest extends TestCase
         $cache = new Cache($signature);
 
         static::assertSame(
-            '{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\OperatorSpacingRule":null},"hashes":[]}',
+            '{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\Operator\\\\OperatorSpacingRule":null},"hashes":[]}',
             CacheEncoder::toJson($cache)
         );
     }
