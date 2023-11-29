@@ -14,7 +14,7 @@ use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Standard\Generic;
+use TwigCsFixer\Standard\TwigCsFixer;
 
 final class ConfigTest extends TestCase
 {
@@ -27,7 +27,7 @@ final class ConfigTest extends TestCase
     public function testConfigRuleset(): void
     {
         $config = new Config();
-        $genericStandard = new Generic();
+        $genericStandard = new TwigCsFixer();
 
         $ruleset = $config->getRuleset();
         static::assertEquals(

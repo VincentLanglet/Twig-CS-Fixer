@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Cache;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
-use TwigCsFixer\Rules\OperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 

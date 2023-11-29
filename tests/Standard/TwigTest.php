@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Standard;
 
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Rules\DelimiterSpacingRule;
-use TwigCsFixer\Rules\OperatorNameSpacingRule;
-use TwigCsFixer\Rules\OperatorSpacingRule;
-use TwigCsFixer\Rules\PunctuationSpacingRule;
+use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
+use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
+use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
+use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
 use TwigCsFixer\Standard\Twig;
 
 final class TwigTest extends TestCase

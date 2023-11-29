@@ -77,8 +77,8 @@ your own configuration with a `.twig-cs-fixer.php` file which returns a `TwigCsF
 <?php
 
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
-$ruleset->addStandard(new TwigCsFixer\Standard\Generic());
-$ruleset->removeRule(TwigCsFixer\Rules\EmptyLinesRule::class);
+$ruleset->addStandard(new TwigCsFixer\Standard\TwigCsFixer());
+$ruleset->removeRule(\TwigCsFixer\Rules\Whitespace\EmptyLinesRule::class);
 
 $config = new TwigCsFixer\Config\Config();
 $config->setRuleset($ruleset);
