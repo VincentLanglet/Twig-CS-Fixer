@@ -1,4 +1,4 @@
-# Twig CS Fixer
+_# Twig CS Fixer
 
 [![PHP Version](http://poser.pugx.org/vincentlanglet/twig-cs-fixer/require/php)](https://packagist.org/packages/vincentlanglet/twig-cs-fixer)
 [![Latest Stable Version](http://poser.pugx.org/vincentlanglet/twig-cs-fixer/v)](https://packagist.org/packages/vincentlanglet/twig-cs-fixer)
@@ -157,3 +157,14 @@ $config->addTokenParser(new App\Twig\CustomTokenParser());
 
 return $config;
 ```
+
+### Reporter
+
+The `--report` option allows to choose the output format for the linter report.
+
+Supported formats are:
+- `text` selected by default.
+- `checkstyle` following the common checkstyle XML schema.
+- `github` if you want annotation on GitHub actions.
+- `junit` followings JUnit schema XML from Jenkins.
+- `null` if you don't want any reporting.
