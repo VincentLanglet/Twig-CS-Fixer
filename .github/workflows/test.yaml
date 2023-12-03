@@ -48,6 +48,7 @@ jobs:
                   composer config minimum-stability dev
                   composer global config --no-plugins allow-plugins.symfony/flex true
                   composer global require --no-progress --no-scripts --no-plugins symfony/flex
+                  composer remove maglnet/composer-require-checker --dev --no-update
 
             - name: Install Composer dependencies ${{ matrix.dependencies }}
               uses: ramsey/composer-install@v2
