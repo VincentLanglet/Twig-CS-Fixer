@@ -14,8 +14,8 @@
         "ext-ctype": "*",
         "ext-json": "*",
         "composer-runtime-api": "^2.0.0",
-        "symfony/console": "^5.4.9 || ^6.0",
-        "symfony/finder": "^5.4 || ^6.0",
+        "symfony/console": "^5.4.9 || ^6.0 || ^7.0",
+        "symfony/finder": "^5.4 || ^6.0 || ^7.0",
         "twig/twig": "^2.14.0 || ^3.0.5",
         "webmozart/assert": "^1.10"
     },
@@ -35,9 +35,9 @@
         "psalm/plugin-phpunit": "^0.18.4",
         "psalm/plugin-symfony": "^5.0.0",
         "rector/rector": "^0.18.0",
-        "symfony/filesystem": "^5.4 || ^6.0",
-        "symfony/process": "^5.4 || ^6.0",
-        "symfony/twig-bridge": "^5.4 || ^6.0",
+        "symfony/filesystem": "^5.4 || ^6.0 || ^7.0",
+        "symfony/process": "^5.4 || ^6.0 || ^7.0",
+        "symfony/twig-bridge": "^5.4 || ^6.0 || ^7.0",
         "symfony/ux-twig-component": "^2.2.0",
         "twig/cache-extra": "^3.2",
         "vimeo/psalm": "^5.2.0"

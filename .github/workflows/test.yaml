@@ -11,6 +11,9 @@ jobs:
         name: PHP ${{ matrix.php-version }} + ${{ matrix.dependencies }}
         runs-on: ubuntu-latest
 
+        env:
+            SYMFONY_REQUIRE: ${{matrix.symfony-require}}
+
         strategy:
             matrix:
                 php-version:
@@ -19,9 +22,13 @@ jobs:
                     - 8.2
                     - 8.3
                 dependencies: [highest]
+                symfony-require: ['']
                 include:
                     - php-version: 8.0
                       dependencies: lowest
+                    - php-version: '8.2'
+                      dependencies: highest
+                      symfony-require: 7.0.*
 
         steps:
             - name: Checkout
@@ -34,6 +41,14 @@ jobs:
                   coverage: pcov
                   tools: composer:v2
                   ini-file: development
+
+            - name: Globally install symfony/flex
+              if: matrix.symfony-require != ''
+              run: |
+                  composer config minimum-stability dev
+                  composer global config --no-plugins allow-plugins.symfony/flex true
+                  composer global require --no-progress --no-scripts --no-plugins symfony/flex
+                  composer remove maglnet/composer-require-checker --dev --no-update
 
             - name: Install Composer dependencies ${{ matrix.dependencies }}
               uses: ramsey/composer-install@v2
