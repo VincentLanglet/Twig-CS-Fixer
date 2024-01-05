@@ -27,9 +27,12 @@ final class TokenizerTest extends TestCase
 
         static::assertEquals(
             [
-                new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
-                new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
-                new Token(Token::EOF_TYPE, 2, 1, $filePath),
+                [
+                    new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
+                    new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
+                    new Token(Token::EOF_TYPE, 2, 1, $filePath),
+                ],
+                [],
             ],
             $tokenizer->tokenize($source)
         );
@@ -64,7 +67,7 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOL_TYPE, 1, 36, $filePath, "\n"),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
-            $tokenizer->tokenize($source)
+            $tokenizer->tokenize($source)[0]
         );
     }
 
@@ -82,7 +85,7 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
-        $tokens = $tokenizer->tokenize($source);
+        $tokens = $tokenizer->tokenize($source)[0];
 
         $tokenValues = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
 

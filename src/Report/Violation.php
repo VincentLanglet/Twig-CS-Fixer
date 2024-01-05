@@ -22,7 +22,8 @@ final class Violation
         private string $filename,
         private ?int $line = null,
         private ?int $linePosition = null,
-        private ?string $ruleName = null
+        private ?string $ruleName = null,
+        private ?ViolationId $identifier = null,
     ) {
     }
 
@@ -80,5 +81,10 @@ final class Violation
     public function getRuleName(): ?string
     {
         return $this->ruleName;
+    }
+
+    public function getIdentifier(): ?ViolationId
+    {
+        return $this->identifier;
     }
 }

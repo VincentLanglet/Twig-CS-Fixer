@@ -108,7 +108,7 @@ final class Linter
             $this->setErrorHandler($report, $filePath);
             try {
                 $twigSource = new Source($content, $filePath);
-                $stream = $this->tokenizer->tokenize($twigSource);
+                [$stream, $ignoredViolations] = $this->tokenizer->tokenize($twigSource);
             } catch (CannotTokenizeException $exception) {
                 $violation = new Violation(
                     Violation::LEVEL_FATAL,
@@ -123,7 +123,7 @@ final class Linter
 
             $rules = $ruleset->getRules();
             foreach ($rules as $rule) {
-                $rule->lintFile($stream, $report);
+                $rule->lintFile($stream, $report, $ignoredViolations);
             }
 
             // Only cache the file if there is no error in order to

@@ -8,6 +8,7 @@ use LogicException;
 use Twig\Environment;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Report\ViolationId;
 use Webmozart\Assert\Assert;
 
 /**
@@ -87,7 +88,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return list<Token>
+     * @return array{list<Token>, list<ViolationId>}
      *
      * @throws CannotTokenizeException
      */
@@ -153,7 +154,7 @@ final class Tokenizer implements TokenizerInterface
 
         $this->pushToken(Token::EOF_TYPE);
 
-        return $this->tokens;
+        return [$this->tokens, []];
     }
 
     private function resetState(Source $source): void

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Token;
 
+use ReflectionClass;
+
 /**
  * Override of Twig's Token to add new constants.
  */
@@ -75,6 +77,19 @@ final class Token
     public function getType(): int|string
     {
         return $this->type;
+    }
+
+    public function getName(): string
+    {
+        $constants = (new ReflectionClass($this))->getConstants();
+        $constantName = array_search($this->type, $constants, true);
+        if (false !== $constantName) {
+            $name = str_replace('_', '', ucwords(strtolower($constantName), '_'));
+
+            return str_ends_with($name, 'Type') ? substr($name, 0, -4) : $name;
+        }
+
+        return (string) $this->getType();
     }
 
     public function getLine(): int

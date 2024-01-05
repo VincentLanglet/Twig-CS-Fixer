@@ -7,6 +7,8 @@ namespace TwigCsFixer\Runner;
 use BadMethodCallException;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
@@ -83,13 +85,13 @@ final class Fixer implements FixerInterface
             $this->inConflict = false;
 
             $twigSource = new Source($content, 'TwigCsFixer');
-            $stream = $this->tokenizer->tokenize($twigSource);
+            [$stream, $ignoredViolations] = $this->tokenizer->tokenize($twigSource);
 
             $this->startFile($stream);
 
             $rules = $ruleset->getRules();
             foreach ($rules as $rule) {
-                $rule->fixFile($stream, $this);
+                $rule->fixFile($stream, $this, $ignoredViolations);
             }
 
             $this->loops++;

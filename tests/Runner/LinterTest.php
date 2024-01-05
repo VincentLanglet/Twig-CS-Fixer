@@ -99,7 +99,7 @@ final class LinterTest extends FileTestCase
                     throw CannotTokenizeException::unknownError();
                 }
 
-                return [];
+                return [[], []];
             }
         );
         $ruleset = new Ruleset();
@@ -142,7 +142,7 @@ final class LinterTest extends FileTestCase
             @trigger_error('Default');
             trigger_error('User Deprecation', \E_USER_DEPRECATED);
 
-            return [];
+            return [[], []];
         });
         $ruleset = new Ruleset();
 

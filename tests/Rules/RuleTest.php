@@ -41,6 +41,7 @@ final class RuleTest extends TestCase
     {
         $rule = new FakeRule();
         static::assertSame(FakeRule::class, $rule->getName());
+        static::assertSame('Fake', $rule->getShortName());
     }
 
     public function testRuleWithReport2(): void

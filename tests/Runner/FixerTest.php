@@ -36,7 +36,10 @@ final class FixerTest extends TestCase
     {
         $tokenizer = $this->createMock(TokenizerInterface::class);
         $tokenizer->expects(static::once())->method('tokenize')->willReturn([
-            new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
+            [
+                new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
+            ],
+            [],
         ]);
 
         $ruleset = new Ruleset();
