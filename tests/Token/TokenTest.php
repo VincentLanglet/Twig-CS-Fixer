@@ -29,7 +29,9 @@ final class TokenTest extends TestCase
         static::assertSame('', $token->getValue());
     }
 
-    #[DataProvider('tokenNameDataProvider')]
+    /**
+     * @dataProvider tokenNameDataProvider
+     */
     public function testTokenName(int|string $type, string $expectedName): void
     {
         $token = new Token($type, 1, 1, 'file.twig');
@@ -37,7 +39,7 @@ final class TokenTest extends TestCase
     }
 
     /**
-     * @return iterable<array{int|string, string}>
+     * @return iterable<array-key, array{int|string, string}>
      */
     public static function tokenNameDataProvider(): iterable
     {

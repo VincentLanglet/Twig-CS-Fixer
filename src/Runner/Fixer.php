@@ -7,8 +7,6 @@ namespace TwigCsFixer\Runner;
 use BadMethodCallException;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
-use TwigCsFixer\Report\Violation;
-use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Tests\Token\Tokenizer\Fixtures\CustomTwigExtension;
 use TwigCsFixer\Token\Token;
@@ -68,6 +69,31 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
             $tokenizer->tokenize($source)[0]
+        );
+    }
+
+    public function testTokenizeIgnoredViolations(): void
+    {
+        $filePath = __DIR__.'/Fixtures/ignored_violations.twig';
+        $content = file_get_contents($filePath);
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment([new CustomTwigExtension()]);
+        $tokenizer = new Tokenizer($env);
+        $source = new Source($content, $filePath);
+
+        static::assertEquals(
+            [
+                'Foo.Bar.Baz',
+                'Foo.Bar.BazInsensitive',
+                'Foo.Bar:3',
+                'Foo.Bar:5',
+                'Bar.Foo:5',
+            ],
+            array_map(
+                static fn (ViolationId $validationId) => $validationId->toString(),
+                $tokenizer->tokenize($source)[1]
+            )
         );
     }
 

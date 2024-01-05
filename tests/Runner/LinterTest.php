@@ -94,6 +94,7 @@ final class LinterTest extends FileTestCase
         $call = 0;
         $tokenizer->method('tokenize')->willReturnCallback(
             static function () use (&$call): array {
+                /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/10513 */
                 if (0 === $call) {
                     $call++;
                     throw CannotTokenizeException::unknownError();
@@ -128,7 +129,6 @@ final class LinterTest extends FileTestCase
     {
         $deprecations = 0;
         set_error_handler(static function () use (&$deprecations): bool {
-            /** @psalm-suppress MixedOperand,MixedAssignment https://github.com/vimeo/psalm/issues/9155 */
             $deprecations++;
 
             return true;
@@ -198,6 +198,7 @@ final class LinterTest extends FileTestCase
         $fixer = self::createStub(FixerInterface::class);
         $fixer->method('fixFile')->willReturnCallback(
             static function () use (&$call, $exception): string {
+                /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/10513 */
                 if (0 === $call) {
                     $call++;
                     throw $exception;

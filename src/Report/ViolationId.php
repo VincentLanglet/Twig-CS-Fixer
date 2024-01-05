@@ -52,10 +52,15 @@ final class ViolationId
 
     public function match(self $violationId): bool
     {
-        return $this->ruleShortName === $violationId->ruleShortName
-            && (null === $this->identifier || $this->identifier === $violationId->identifier)
-            && (null === $this->tokenName || $this->tokenName === $violationId->tokenName)
-            && (null === $this->line || $this->line === $violationId->line)
-            && (null === $this->linePosition || $this->linePosition === $violationId->linePosition);
+        return $this->matchValue($this->ruleShortName, $violationId->ruleShortName)
+            && $this->matchValue($this->identifier, $violationId->identifier)
+            && $this->matchValue($this->tokenName, $violationId->tokenName)
+            && $this->matchValue($this->line, $violationId->line)
+            && $this->matchValue($this->linePosition, $violationId->linePosition);
+    }
+
+    private function matchValue(string|int|null $self, string|int|null $other): bool
+    {
+        return null === $self || strtolower((string) $self) === strtolower((string) $other);
     }
 }

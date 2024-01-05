@@ -159,7 +159,7 @@ final class Tokenizer implements TokenizerInterface
 
         $this->pushToken(Token::EOF_TYPE);
 
-        return [$this->tokens, []];
+        return [$this->tokens, $this->ignoredViolations];
     }
 
     private function resetState(Source $source): void
@@ -689,12 +689,12 @@ final class Tokenizer implements TokenizerInterface
     private function extractIgnoredViolations(string $comment): void
     {
         $comment = trim($comment);
-        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line) ([\s\w,.:]+)/', $comment, $match)) {
+        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line) ([\s\w,.:]+)/i', $comment, $match)) {
             $this->setStateParam('ignoredViolations', preg_replace('/\s+/', ',', $match[2]) ?? '');
-            $this->setStateParam('ignoreType', trim('-', $match[1]));
+            $this->setStateParam('ignoredType', trim($match[1], '-'));
+        } else {
+            $this->setStateParam('ignoredViolations', '');
         }
-
-        $this->setStateParam('ignoredViolations', '');
     }
 
     private function processIgnoredViolations(): void
@@ -704,8 +704,8 @@ final class Tokenizer implements TokenizerInterface
             return;
         }
 
-        $line = match ($this->getStateParam('ignoreType')) {
-            'line'      => $this->getStateParam('startLine'),
+        $line = match ($this->getStateParam('ignoredType')) {
+            'line'      => (int) $this->getStateParam('startLine'),
             'next-line' => $this->line + 1,
             default     => null,
         };
