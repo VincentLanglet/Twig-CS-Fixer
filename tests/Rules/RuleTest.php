@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Rules;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use TwigCsFixer\Environment\StubbedEnvironment;

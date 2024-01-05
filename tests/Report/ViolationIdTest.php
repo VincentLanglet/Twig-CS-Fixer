@@ -48,4 +48,32 @@ class ViolationIdTest extends TestCase
         yield ['short', 'id', 'token', 1, null, 'short.id.token:1'];
         yield ['short', 'id', 'token', 1, 1, 'short.id.token:1:1'];
     }
+
+    /**
+     * @dataProvider matchDataProvider
+     */
+    public function testMatch(string $string1, string $string2, bool $expected): void
+    {
+        $violationId1 = ViolationId::fromString($string1);
+        $violationId2 = ViolationId::fromString($string2);
+        static::assertSame($expected, $violationId1->match($violationId2));
+    }
+
+    /**
+     * @return iterable<array-key, array{string, string, bool}>
+     */
+    public static function matchDataProvider(): iterable
+    {
+        yield ['short', 'short', true];
+        yield ['short', 'short.id.token:1:1', true];
+        yield ['short.id', 'short.id.token:1:1', true];
+        yield ['short.notId', 'short.id.token:1:1', false];
+        yield ['short.id', 'short', false];
+        yield ['SHORT.ID.TOKEN', 'short.id.token:1:1', true];
+        yield ['short.id.token:2:1', 'short.id.token:1:1', false];
+        yield ['short.id.token:1:2', 'short.id.token:1:1', false];
+        yield ['short::1', 'short.id.token:1:1', true];
+        yield ['short.id::1', 'short.id.token:1:1', true];
+        yield ['short.id.token::1', 'short.id.token:1:1', true];
+    }
 }
