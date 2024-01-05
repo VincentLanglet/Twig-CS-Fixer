@@ -700,17 +700,13 @@ final class Tokenizer implements TokenizerInterface
     private function processIgnoredViolations(): void
     {
         $ignoredViolations = $this->getStateParam('ignoredViolations');
-        if (!\is_string($ignoredViolations)) {
-            return;
-        }
-
         $line = match ($this->getStateParam('ignoredType')) {
             'line'      => (int) $this->getStateParam('startLine'),
             'next-line' => $this->line + 1,
             default     => null,
         };
 
-        $ignoredViolationsExploded = explode(',', $ignoredViolations);
+        $ignoredViolationsExploded = explode(',', (string) $ignoredViolations);
         foreach ($ignoredViolationsExploded as $ignoredViolation) {
             if ('' === $ignoredViolation) {
                 continue;

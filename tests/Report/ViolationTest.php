@@ -6,18 +6,22 @@ namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 
-final class SniffViolationTest extends TestCase
+final class ViolationTest extends TestCase
 {
     public function testGetters(): void
     {
-        $violation = new Violation(Violation::LEVEL_WARNING, 'message', 'filename', 42, 33, 'name');
+        $violationId = new ViolationId('name');
+        $violation = new Violation(Violation::LEVEL_WARNING, 'message', 'filename', 42, 33, 'name', $violationId);
+
         static::assertSame(Violation::LEVEL_WARNING, $violation->getLevel());
         static::assertSame('message', $violation->getMessage());
         static::assertSame('filename', $violation->getFilename());
         static::assertSame(42, $violation->getLine());
         static::assertSame(33, $violation->getLinePosition());
         static::assertSame('name', $violation->getRuleName());
+        static::assertSame($violationId, $violation->getIdentifier());
     }
 
     /**
