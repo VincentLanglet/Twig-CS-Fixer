@@ -15,13 +15,13 @@ final class ViolationId
     ) {
     }
 
-    public function fromString(string $string): self
+    public static function fromString(string $string, ?int $line = null): self
     {
         $exploded = explode(':', $string);
         $name = $exploded[0];
         $explodedName = explode('.', $name);
 
-        $line = isset($exploded[1]) ? (int) $exploded[1] : null;
+        $line ??= isset($exploded[1]) ? (int) $exploded[1] : null;
         $position = isset($exploded[2]) ? (int) $exploded[2] : null;
 
         return new self(
