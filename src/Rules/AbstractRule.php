@@ -168,22 +168,19 @@ abstract class AbstractRule implements RuleInterface
         }
 
         $report = $this->report;
-        if (null === $report) {
-            // We are fixing the file.
-            return true;
+        if (null !== $report) { // The report is null when we are fixing the file.
+            $violation = new Violation(
+                $messageType,
+                $message,
+                $token->getFilename(),
+                $token->getLine(),
+                $token->getPosition(),
+                $this->getName(),
+                $id
+            );
+
+            $report->addViolation($violation);
         }
-
-        $violation = new Violation(
-            $messageType,
-            $message,
-            $token->getFilename(),
-            $token->getLine(),
-            $token->getPosition(),
-            $this->getName(),
-            $id
-        );
-
-        $report->addViolation($violation);
 
         return true;
     }

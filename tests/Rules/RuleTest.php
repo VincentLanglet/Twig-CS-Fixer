@@ -152,7 +152,7 @@ final class RuleTest extends TestCase
         ];
         yield [
             __DIR__.'/Fixtures/disable2.twig',
-            [3, 6, 8, 10, 12],
+            [3, 6, 8, 10, 11, 13],
         ];
     }
 }
