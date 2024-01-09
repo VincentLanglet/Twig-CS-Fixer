@@ -89,6 +89,7 @@ final class TokenizerTest extends TestCase
                 'Foo.Bar:3',
                 'Foo.Bar:5',
                 'Bar.Foo:5',
+                ':6',
             ],
             array_map(
                 static fn (ViolationId $validationId) => $validationId->toString(),

@@ -71,7 +71,7 @@ final class Tokenizer implements TokenizerInterface
     private array $expressionStarters = [];
 
     /**
-     * @var array<array{int<0, 5>, array<string, int|string>}>
+     * @var array<array{int<0, 5>, array<string, int|string|bool>}>
      */
     private array $state = [];
 
@@ -216,14 +216,14 @@ final class Tokenizer implements TokenizerInterface
      *
      * @see https://github.com/vimeo/psalm/issues/8989
      */
-    private function setStateParam(string $name, int|string $value): void
+    private function setStateParam(string $name, int|string|bool $value): void
     {
         Assert::notEmpty($this->state, 'Cannot set state params without a current state.');
 
         $this->state[\count($this->state) - 1][1][$name] = $value;
     }
 
-    private function getStateParam(string $name): int|string|null
+    private function getStateParam(string $name): int|string|bool|null
     {
         Assert::notEmpty($this->state, 'Cannot get state params without a current state.');
 
@@ -689,24 +689,33 @@ final class Tokenizer implements TokenizerInterface
     private function extractIgnoredViolations(string $comment): void
     {
         $comment = trim($comment);
-        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line) ([\s\w,.:]+)/i', $comment, $match)) {
+        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line)\s+([\s\w,.:]*)/i', $comment, $match)) {
             $this->setStateParam('ignoredViolations', preg_replace('/\s+/', ',', $match[2]) ?? '');
             $this->setStateParam('ignoredType', trim($match[1], '-'));
         } else {
-            $this->setStateParam('ignoredViolations', '');
+            $this->setStateParam('ignoredViolations', false);
         }
     }
 
     private function processIgnoredViolations(): void
     {
         $ignoredViolations = $this->getStateParam('ignoredViolations');
+        if (!\is_string($ignoredViolations)) {
+            return;
+        }
         $line = match ($this->getStateParam('ignoredType')) {
             'line'      => (int) $this->getStateParam('startLine'),
             'next-line' => $this->line + 1,
             default     => null,
         };
 
-        $ignoredViolationsExploded = explode(',', (string) $ignoredViolations);
+        if ('' === $ignoredViolations) {
+            $this->ignoredViolations[] = ViolationId::fromString($ignoredViolations, $line);
+
+            return;
+        }
+
+        $ignoredViolationsExploded = explode(',', $ignoredViolations);
         foreach ($ignoredViolationsExploded as $ignoredViolation) {
             if ('' === $ignoredViolation) {
                 continue;

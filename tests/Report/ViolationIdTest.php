@@ -13,7 +13,7 @@ class ViolationIdTest extends TestCase
      * @dataProvider toStringDataProvider
      */
     public function testToString(
-        string $ruleShortName,
+        ?string $ruleShortName,
         ?string $identifier,
         ?string $tokenName,
         ?int $line,
@@ -35,10 +35,11 @@ class ViolationIdTest extends TestCase
     }
 
     /**
-     * @return iterable<array-key, array{string, string|null, string|null, int|null, int|null, string}>
+     * @return iterable<array-key, array{string|null, string|null, string|null, int|null, int|null, string}>
      */
     public static function toStringDataProvider(): iterable
     {
+        yield [null, null, null, null, null, ''];
         yield ['short', null, null, null, null, 'short'];
         yield ['short', 'id', null, null, null, 'short.id'];
         yield ['short', null, 'token', null, null, 'short..token'];
@@ -64,6 +65,8 @@ class ViolationIdTest extends TestCase
      */
     public static function matchDataProvider(): iterable
     {
+        yield ['', 'short', true];
+        yield ['', 'short.id.token:1:1', true];
         yield ['short', 'short', true];
         yield ['short', 'short.id.token:1:1', true];
         yield ['short.id', 'short.id.token:1:1', true];
