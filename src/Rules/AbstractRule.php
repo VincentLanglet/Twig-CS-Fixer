@@ -172,10 +172,8 @@ abstract class AbstractRule implements RuleInterface
                 $messageType,
                 $message,
                 $token->getFilename(),
-                $token->getLine(),
-                $token->getPosition(),
                 $this->getName(),
-                $id
+                $id,
             );
 
             $report->addViolation($violation);

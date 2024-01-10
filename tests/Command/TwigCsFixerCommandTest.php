@@ -61,6 +61,28 @@ final class TwigCsFixerCommandTest extends FileTestCase
         $display = $commandTester->getDisplay();
         static::assertStringContainsString('directory/subdirectory/file.twig', $display);
         static::assertStringContainsString('directory/file.twig', $display);
+        static::assertStringNotContainsString('DelimiterSpacing.After', $display);
+        static::assertStringContainsString(
+            '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
+            $display
+        );
+        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+    }
+
+    public function testExecuteWithReportErrorsAndDebug(): void
+    {
+        $command = new TwigCsFixerCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'paths'   => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            '--debug' => true,
+        ]);
+
+        $display = $commandTester->getDisplay();
+        static::assertStringContainsString('directory/subdirectory/file.twig', $display);
+        static::assertStringContainsString('directory/file.twig', $display);
+        static::assertStringContainsString('DelimiterSpacing.After', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
             $display
@@ -152,7 +174,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.config-not-found.php'),
         ]);
 
-        static::assertStringStartsWith('Error: ', $commandTester->getDisplay());
+        static::assertStringStartsWith('Error: Cannot find the config file', $commandTester->getDisplay());
         static::assertSame(Command::INVALID, $commandTester->getStatusCode());
     }
 

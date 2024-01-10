@@ -12,8 +12,12 @@ final class JUnitReporter implements ReporterInterface
 {
     public const NAME = 'junit';
 
-    public function display(OutputInterface $output, Report $report, ?string $level = null): void
-    {
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug
+    ): void {
         $violations = $report->getViolations($level);
         $count = \count($violations);
 
@@ -30,7 +34,7 @@ final class JUnitReporter implements ReporterInterface
                 $text .= $this->createTestCase(
                     sprintf('%s:%s', $violation->getFilename(), $violation->getLine() ?? 0),
                     strtolower(Violation::getLevelAsString($violation->getLevel())),
-                    $violation->getMessage()
+                    $violation->getDebugMessage($debug)
                 );
             }
         } else {

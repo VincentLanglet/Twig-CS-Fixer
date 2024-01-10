@@ -7,11 +7,21 @@ namespace TwigCsFixer\Report;
 final class ViolationId
 {
     public function __construct(
-        private ?string $ruleShortName = null,
-        private ?string $identifier = null,
+        private ?string $ruleIdentifier = null,
+        private ?string $messageIdentifier = null,
         private ?int $line = null,
         private ?int $linePosition = null,
     ) {
+    }
+
+    public function getLine(): ?int
+    {
+        return $this->line;
+    }
+
+    public function getLinePosition(): ?int
+    {
+        return $this->linePosition;
     }
 
     public static function fromString(string $string, ?int $line = null): self
@@ -35,8 +45,8 @@ final class ViolationId
     {
         $name = rtrim(sprintf(
             '%s.%s',
-            $this->ruleShortName ?? '',
-            $this->identifier ?? '',
+            $this->ruleIdentifier ?? '',
+            $this->messageIdentifier ?? '',
         ), '.');
 
         return rtrim(sprintf(
@@ -49,8 +59,8 @@ final class ViolationId
 
     public function match(self $violationId): bool
     {
-        return $this->matchValue($this->ruleShortName, $violationId->ruleShortName)
-            && $this->matchValue($this->identifier, $violationId->identifier)
+        return $this->matchValue($this->ruleIdentifier, $violationId->ruleIdentifier)
+            && $this->matchValue($this->messageIdentifier, $violationId->messageIdentifier)
             && $this->matchValue($this->line, $violationId->line)
             && $this->matchValue($this->linePosition, $violationId->linePosition);
     }

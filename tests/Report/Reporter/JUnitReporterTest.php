@@ -11,13 +11,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\JUnitReporter;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 
 final class JUnitReporterTest extends TestCase
 {
     /**
      * @dataProvider displayDataProvider
      */
-    public function testDisplayErrors(string $expected, ?string $level): void
+    public function testDisplayErrors(string $expected, ?string $level, bool $debug): void
     {
         $textFormatter = new JUnitReporter();
 
@@ -26,30 +27,66 @@ final class JUnitReporterTest extends TestCase
         $file3 = __DIR__.'/Fixtures/file3.twig';
         $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
 
-        $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file, 1, 11, 'NoticeRule');
+        $violation0 = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice',
+            $file,
+            'Rule',
+            new ViolationId('NoticeId', null, 1)
+        );
         $report->addViolation($violation0);
-        $violation1 = new Violation(Violation::LEVEL_WARNING, 'Warning', $file, 2, 22, 'WarningRule');
+        $violation1 = new Violation(
+            Violation::LEVEL_WARNING,
+            'Warning',
+            $file,
+            'Rule',
+            new ViolationId('WarningId', null, 2, 22)
+        );
         $report->addViolation($violation1);
-        $violation2 = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3, 33, 'ErrorRule');
+        $violation2 = new Violation(
+            Violation::LEVEL_ERROR,
+            'Error',
+            $file,
+            'Rule',
+            new ViolationId('ErrorId', null, 3, 33)
+        );
         $report->addViolation($violation2);
-        $violation3 = new Violation(Violation::LEVEL_FATAL, 'Fatal', $file);
+        $violation3 = new Violation(
+            Violation::LEVEL_FATAL,
+            'Fatal',
+            $file,
+            'Rule',
+            new ViolationId('FatalId')
+        );
         $report->addViolation($violation3);
 
-        $violation4 = new Violation(Violation::LEVEL_NOTICE, 'Notice2', $file2, 1, 11, 'Notice2Rule');
+        $violation4 = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice2',
+            $file2,
+            'Rule',
+            new ViolationId('NoticeId', null, 1)
+        );
         $report->addViolation($violation4);
 
-        $violation5 = new Violation(Violation::LEVEL_FATAL, '\'"<&>"\'', $file3);
+        $violation5 = new Violation(
+            Violation::LEVEL_FATAL,
+            '\'"<&>"\'',
+            $file3,
+            'Rule',
+            new ViolationId('FatalId')
+        );
         $report->addViolation($violation5);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-        $textFormatter->display($output, $report, $level);
+        $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
         static::assertStringContainsString($expected, $text);
     }
 
     /**
-     * @return iterable<array-key, array{string, string|null}>
+     * @return iterable<array-key, array{string, string|null, bool}>
      */
     public static function displayDataProvider(): iterable
     {
@@ -83,6 +120,39 @@ final class JUnitReporterTest extends TestCase
                 __DIR__
             ),
             null,
+            false,
+        ];
+        yield [
+            sprintf(
+                <<<EOD
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <testsuites>
+                      <testsuite name="Twig CS Fixer" tests="6" failures="6">
+                        <testcase name="%1\$s/Fixtures/file.twig:1">
+                          <failure type="notice" message="NoticeId:1" />
+                        </testcase>
+                        <testcase name="%1\$s/Fixtures/file.twig:2">
+                          <failure type="warning" message="WarningId:2:22" />
+                        </testcase>
+                        <testcase name="%1\$s/Fixtures/file.twig:3">
+                          <failure type="error" message="ErrorId:3:33" />
+                        </testcase>
+                        <testcase name="%1\$s/Fixtures/file.twig:0">
+                          <failure type="fatal" message="FatalId" />
+                        </testcase>
+                        <testcase name="%1\$s/Fixtures/file2.twig:1">
+                          <failure type="notice" message="NoticeId:1" />
+                        </testcase>
+                        <testcase name="%1\$s/Fixtures/file3.twig:0">
+                          <failure type="fatal" message="FatalId" />
+                        </testcase>
+                      </testsuite>
+                    </testsuites>
+                    EOD,
+                __DIR__
+            ),
+            null,
+            true,
         ];
     }
 
@@ -96,7 +166,7 @@ final class JUnitReporterTest extends TestCase
         $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-        $textFormatter->display($output, $report);
+        $textFormatter->display($output, $report, null, false);
 
         $expected = <<<EOD
             <?xml version="1.0" encoding="UTF-8"?>

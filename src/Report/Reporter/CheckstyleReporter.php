@@ -12,8 +12,12 @@ final class CheckstyleReporter implements ReporterInterface
 {
     public const NAME = 'checkstyle';
 
-    public function display(OutputInterface $output, Report $report, ?string $level = null): void
-    {
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug
+    ): void {
         $text = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 
         $text .= '<checkstyle>'."\n";
@@ -38,7 +42,7 @@ final class CheckstyleReporter implements ReporterInterface
                     $text .= ' column="'.$linePosition.'"';
                 }
                 $text .= ' severity="'.strtolower(Violation::getLevelAsString($violation->getLevel())).'"';
-                $text .= ' message="'.$this->xmlEncode($violation->getMessage()).'"';
+                $text .= ' message="'.$this->xmlEncode($violation->getDebugMessage($debug)).'"';
                 if (null !== $ruleName) {
                     $text .= ' source="'.$ruleName.'"';
                 }

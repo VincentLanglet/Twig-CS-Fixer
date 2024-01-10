@@ -17,8 +17,12 @@ final class GithubReporter implements ReporterInterface
 {
     public const NAME = 'github';
 
-    public function display(OutputInterface $output, Report $report, ?string $level = null): void
-    {
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug
+    ): void {
         $violations = $report->getViolations($level);
         foreach ($violations as $violation) {
             $text = match ($violation->getLevel()) {
@@ -40,7 +44,7 @@ final class GithubReporter implements ReporterInterface
 
             // newlines need to be encoded
             // see https://github.com/actions/starter-workflows/issues/68#issuecomment-581479448
-            $text .= '::'.str_replace("\n", '%0A', $violation->getMessage());
+            $text .= '::'.str_replace("\n", '%0A', $violation->getDebugMessage($debug));
 
             $output->writeln($text);
         }

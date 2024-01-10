@@ -23,8 +23,12 @@ final class TextReporter implements ReporterInterface
     private const ERROR_LINE_FORMAT = '%-5s| %s';
     private const ERROR_LINE_WIDTH = 120;
 
-    public function display(OutputInterface $output, Report $report, ?string $level = null): void
-    {
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug
+    ): void {
         $io = new SymfonyStyle(new ArrayInput([]), $output);
 
         if (
@@ -48,7 +52,7 @@ final class TextReporter implements ReporterInterface
                 $line = $violation->getLine();
 
                 if (null === $line || false === $content) {
-                    $formattedText[] = $this->formatErrorMessage($violation);
+                    $formattedText[] = $this->formatErrorMessage($violation, $debug);
                 } else {
                     $lines = $this->getContext($content, $line);
                     foreach ($lines as $no => $code) {
@@ -59,7 +63,7 @@ final class TextReporter implements ReporterInterface
                         );
 
                         if ($no === $violation->getLine()) {
-                            $formattedText[] = $this->formatErrorMessage($violation);
+                            $formattedText[] = $this->formatErrorMessage($violation, $debug);
                         }
                     }
                 }
@@ -119,12 +123,12 @@ final class TextReporter implements ReporterInterface
         return array_map(fn (string $code): string => substr($code, min($indents)), $result);
     }
 
-    private function formatErrorMessage(Violation $message): string
+    private function formatErrorMessage(Violation $message, bool $debug): string
     {
         return sprintf(
             sprintf('<fg=red>%s</fg=red>', self::ERROR_LINE_FORMAT),
             self::ERROR_CURSOR_CHAR,
-            wordwrap($message->getMessage(), self::ERROR_LINE_WIDTH)
+            wordwrap($message->getDebugMessage($debug), self::ERROR_LINE_WIDTH)
         );
     }
 }

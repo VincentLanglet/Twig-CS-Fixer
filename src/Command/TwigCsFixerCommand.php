@@ -70,6 +70,12 @@ final class TwigCsFixerCommand extends Command
                     InputOption::VALUE_NONE,
                     'Disable cache while running the fixer'
                 ),
+                new InputOption(
+                    'debug',
+                    '',
+                    InputOption::VALUE_NONE,
+                    'Display more technical informations',
+                ),
             ])
         ;
     }
@@ -129,7 +135,7 @@ final class TwigCsFixerCommand extends Command
 
         $reporterFactory = new ReporterFactory();
         $reporter = $reporterFactory->getReporter($input->getOption('report'));
-        $reporter->display($output, $report, $input->getOption('level'));
+        $reporter->display($output, $report, $input->getOption('level'), $input->getOption('debug'));
 
         return $report;
     }

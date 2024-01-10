@@ -12,8 +12,8 @@ final class ViolationTest extends TestCase
 {
     public function testGetters(): void
     {
-        $violationId = new ViolationId('name');
-        $violation = new Violation(Violation::LEVEL_WARNING, 'message', 'filename', 42, 33, 'name', $violationId);
+        $violationId = new ViolationId('nameId', null, 42, 33);
+        $violation = new Violation(Violation::LEVEL_WARNING, 'message', 'filename', 'name', $violationId);
 
         static::assertSame(Violation::LEVEL_WARNING, $violation->getLevel());
         static::assertSame('message', $violation->getMessage());

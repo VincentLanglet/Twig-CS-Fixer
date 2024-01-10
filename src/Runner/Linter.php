@@ -14,6 +14,7 @@ use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
 
@@ -68,7 +69,8 @@ final class Linter
                     Violation::LEVEL_FATAL,
                     sprintf('File is invalid: %s', $error->getRawMessage()),
                     $filePath,
-                    $error->getTemplateLine()
+                    null,
+                    new ViolationId(line: $error->getTemplateLine())
                 );
 
                 $report->addViolation($violation);
