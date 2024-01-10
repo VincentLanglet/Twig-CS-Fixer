@@ -157,7 +157,6 @@ abstract class AbstractRule implements RuleInterface
         $id = new ViolationId(
             $this->getShortName(),
             $messageId ?? ucfirst(strtolower(Violation::getLevelAsString($messageType))),
-            $token->getName(),
             $token->getLine(),
             $token->getPosition(),
         );

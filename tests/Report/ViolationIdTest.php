@@ -15,7 +15,6 @@ class ViolationIdTest extends TestCase
     public function testToString(
         ?string $ruleShortName,
         ?string $identifier,
-        ?string $tokenName,
         ?int $line,
         ?int $linePosition,
         string $expected,
@@ -23,7 +22,6 @@ class ViolationIdTest extends TestCase
         $violationId = new ViolationId(
             $ruleShortName,
             $identifier,
-            $tokenName,
             $line,
             $linePosition
         );
@@ -35,19 +33,17 @@ class ViolationIdTest extends TestCase
     }
 
     /**
-     * @return iterable<array-key, array{string|null, string|null, string|null, int|null, int|null, string}>
+     * @return iterable<array-key, array{string|null, string|null, int|null, int|null, string}>
      */
     public static function toStringDataProvider(): iterable
     {
-        yield [null, null, null, null, null, ''];
-        yield ['short', null, null, null, null, 'short'];
-        yield ['short', 'id', null, null, null, 'short.id'];
-        yield ['short', null, 'token', null, null, 'short..token'];
-        yield ['short', null, null, 1, null, 'short:1'];
-        yield ['short', null, null, null, 1, 'short::1'];
-        yield ['short', 'id', 'token', null, null, 'short.id.token'];
-        yield ['short', 'id', 'token', 1, null, 'short.id.token:1'];
-        yield ['short', 'id', 'token', 1, 1, 'short.id.token:1:1'];
+        yield [null, null, null, null, ''];
+        yield ['short', null, null, null, 'short'];
+        yield ['short', 'id', null, null, 'short.id'];
+        yield ['short', null, 1, null, 'short:1'];
+        yield ['short', null, null, 1, 'short::1'];
+        yield ['short', 'id', 1, null, 'short.id:1'];
+        yield ['short', 'id', 1, 1, 'short.id:1:1'];
     }
 
     /**
@@ -66,17 +62,16 @@ class ViolationIdTest extends TestCase
     public static function matchDataProvider(): iterable
     {
         yield ['', 'short', true];
-        yield ['', 'short.id.token:1:1', true];
+        yield ['', 'short.id:1:1', true];
         yield ['short', 'short', true];
-        yield ['short', 'short.id.token:1:1', true];
-        yield ['short.id', 'short.id.token:1:1', true];
-        yield ['short.notId', 'short.id.token:1:1', false];
+        yield ['short', 'short.id:1:1', true];
+        yield ['short.id', 'short.id:1:1', true];
+        yield ['short.notId', 'short.id:1:1', false];
         yield ['short.id', 'short', false];
-        yield ['SHORT.ID.TOKEN', 'short.id.token:1:1', true];
-        yield ['short.id.token:2:1', 'short.id.token:1:1', false];
-        yield ['short.id.token:1:2', 'short.id.token:1:1', false];
-        yield ['short::1', 'short.id.token:1:1', true];
-        yield ['short.id::1', 'short.id.token:1:1', true];
-        yield ['short.id.token::1', 'short.id.token:1:1', true];
+        yield ['SHORT.ID', 'short.id:1:1', true];
+        yield ['short.id:2:1', 'short.id:1:1', false];
+        yield ['short.id:1:2', 'short.id:1:1', false];
+        yield ['short::1', 'short.id:1:1', true];
+        yield ['short.id::1', 'short.id:1:1', true];
     }
 }

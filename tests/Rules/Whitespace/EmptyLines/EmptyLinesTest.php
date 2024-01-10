@@ -12,9 +12,9 @@ final class EmptyLinesTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new EmptyLinesRule(), [
-            'EmptyLines.Error.Eol:2:1',
-            'EmptyLines.Error.Eol:5:1',
-            'EmptyLines.Error.Eol:10:1',
+            'EmptyLines.Error:2:1',
+            'EmptyLines.Error:5:1',
+            'EmptyLines.Error:10:1',
         ]);
     }
 }

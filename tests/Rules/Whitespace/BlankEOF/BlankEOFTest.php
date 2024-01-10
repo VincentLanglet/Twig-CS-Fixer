@@ -12,11 +12,11 @@ final class BlankEOFTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new BlankEOFRule(), [
-            'BlankEOF.Error.Eof:4:1',
+            'BlankEOF.Error:4:1',
         ]);
 
         $this->checkRule(new BlankEOFRule(), [
-            'BlankEOF.Error.Eof:2:7',
+            'BlankEOF.Error:2:7',
         ], __DIR__.'/BlankEOFTest2.twig');
     }
 
@@ -25,7 +25,7 @@ final class BlankEOFTest extends AbstractRuleTestCase
         $this->checkRule(new BlankEOFRule(), [], __DIR__.'/BlankEOFTest.empty.twig');
 
         $this->checkRule(new BlankEOFRule(), [
-            'BlankEOF.Error.Eof:3:1',
+            'BlankEOF.Error:3:1',
         ], __DIR__.'/BlankEOFTest.empty2.twig');
     }
 }

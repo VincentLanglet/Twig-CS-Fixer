@@ -84,8 +84,8 @@ final class TokenizerTest extends TestCase
 
         static::assertEquals(
             [
-                'Foo.Bar.Baz',
-                'Foo.Bar.BazInsensitive',
+                'Foo.Bar',
+                'Foo.BarInsensitive',
                 'Foo.Bar:3',
                 'Foo.Bar:5',
                 'Bar.Foo:5',

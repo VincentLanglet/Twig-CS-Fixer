@@ -9,7 +9,6 @@ final class ViolationId
     public function __construct(
         private ?string $ruleShortName = null,
         private ?string $identifier = null,
-        private ?string $tokenName = null,
         private ?int $line = null,
         private ?int $linePosition = null,
     ) {
@@ -27,7 +26,6 @@ final class ViolationId
         return new self(
             $explodedName[0] ?? null,
             $explodedName[1] ?? null,
-            $explodedName[2] ?? null,
             $line,
             $position
         );
@@ -36,10 +34,9 @@ final class ViolationId
     public function toString(): string
     {
         $name = rtrim(sprintf(
-            '%s.%s.%s',
+            '%s.%s',
             $this->ruleShortName ?? '',
             $this->identifier ?? '',
-            $this->tokenName ?? ''
         ), '.');
 
         return rtrim(sprintf(
@@ -54,7 +51,6 @@ final class ViolationId
     {
         return $this->matchValue($this->ruleShortName, $violationId->ruleShortName)
             && $this->matchValue($this->identifier, $violationId->identifier)
-            && $this->matchValue($this->tokenName, $violationId->tokenName)
             && $this->matchValue($this->line, $violationId->line)
             && $this->matchValue($this->linePosition, $violationId->linePosition);
     }
