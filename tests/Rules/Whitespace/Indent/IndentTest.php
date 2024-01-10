@@ -18,8 +18,8 @@ final class IndentTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new IndentRule(), [
-            [2  => 1],
-            [4  => 1],
+            'Indent.Error.CommentTab:2:1',
+            'Indent.Error.Tab:4:1',
         ]);
     }
 
@@ -28,8 +28,8 @@ final class IndentTest extends AbstractRuleTestCase
         $this->checkRule(
             new IndentRule(2),
             [
-                [2  => 1],
-                [4  => 1],
+                'Indent.Error.CommentTab:2:1',
+                'Indent.Error.Tab:4:1',
             ],
             __DIR__.'/IndentTest.twig',
             __DIR__.'/IndentTest.fixed2.twig',

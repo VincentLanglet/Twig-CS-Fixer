@@ -12,10 +12,10 @@ final class BlockNameSpacingTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new BlockNameSpacingRule(), [
-            [1 => 5],
-            [1 => 5],
-            [3 => 3],
-            [3 => 3],
+            'BlockNameSpacing.After.BlockName:1:5',
+            'BlockNameSpacing.Before.BlockName:1:5',
+            'BlockNameSpacing.After.BlockName:3:3',
+            'BlockNameSpacing.Before.BlockName:3:3',
         ]);
     }
 }

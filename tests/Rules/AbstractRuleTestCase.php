@@ -19,7 +19,7 @@ use TwigCsFixer\Token\Tokenizer;
 abstract class AbstractRuleTestCase extends TestCase
 {
     /**
-     * @param array<array<int, int>> $expects
+     * @param array<string|null> $expects
      */
     protected function checkRule(
         RuleInterface $rule,
@@ -51,8 +51,8 @@ abstract class AbstractRuleTestCase extends TestCase
 
         $messages = $report->getFileViolations($filePath);
 
-        /** @var array<array<int, int>> $messagePositions */
-        $messagePositions = [];
+        /** @var array<string|null> $messageIds */
+        $messageIds = [];
         foreach ($messages as $message) {
             if (Violation::LEVEL_FATAL === $message->getLevel()) {
                 $errorMessage = $message->getMessage();
@@ -64,10 +64,10 @@ abstract class AbstractRuleTestCase extends TestCase
                 static::fail($errorMessage);
             }
 
-            $messagePositions[] = [$message->getLine() ?? 0 => $message->getLinePosition()];
+            $messageIds[] = $message->getIdentifier()?->toString();
         }
 
-        static::assertSame($expects, $messagePositions);
+        static::assertSame($expects, $messageIds);
     }
 
     private function generateFilePath(): string

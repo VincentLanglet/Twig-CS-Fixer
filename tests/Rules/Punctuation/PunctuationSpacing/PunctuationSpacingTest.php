@@ -12,21 +12,21 @@ final class PunctuationSpacingTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new PunctuationSpacingRule(), [
-            [3 => 4],
-            [3 => 10],
-            [4 => 4],
-            [4 => 10],
-            [4 => 16],
-            [4 => 22],
-            [4 => 28],
-            [5 => 12],
-            [5 => 16],
-            [5 => 20],
-            [5 => 24],
-            [6 => 6],
-            [6 => 6],
-            [7 => 12],
-            [7 => 15],
+            'PunctuationSpacing.After.Punctuation:3:4',
+            'PunctuationSpacing.Before.Punctuation:3:10',
+            'PunctuationSpacing.After.Punctuation:4:4',
+            'PunctuationSpacing.Before.Punctuation:4:10',
+            'PunctuationSpacing.Before.Punctuation:4:16',
+            'PunctuationSpacing.Before.Punctuation:4:22',
+            'PunctuationSpacing.Before.Punctuation:4:28',
+            'PunctuationSpacing.After.Punctuation:5:12',
+            'PunctuationSpacing.Before.Punctuation:5:16',
+            'PunctuationSpacing.Before.Punctuation:5:20',
+            'PunctuationSpacing.Before.Punctuation:5:24',
+            'PunctuationSpacing.After.Punctuation:6:6',
+            'PunctuationSpacing.Before.Punctuation:6:6',
+            'PunctuationSpacing.Before.Punctuation:7:12',
+            'PunctuationSpacing.Before.Punctuation:7:15',
         ]);
     }
 }

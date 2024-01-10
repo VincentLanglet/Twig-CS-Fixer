@@ -12,9 +12,9 @@ final class TrailingCommaSingleLineTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new TrailingCommaSingleLineRule(), [
-            [2 => 9],
-            [4 => 13],
-            [6 => 12],
+            'TrailingCommaSingleLine.Error.Punctuation:2:9',
+            'TrailingCommaSingleLine.Error.Punctuation:4:13',
+            'TrailingCommaSingleLine.Error.Punctuation:6:12',
         ]);
     }
 }
