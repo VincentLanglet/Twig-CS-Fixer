@@ -74,7 +74,7 @@ final class TwigCsFixerCommand extends Command
                     'debug',
                     '',
                     InputOption::VALUE_NONE,
-                    'Display more technical informations',
+                    'Display error identifiers instead of messages',
                 ),
             ])
         ;
