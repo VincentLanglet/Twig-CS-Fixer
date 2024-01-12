@@ -24,17 +24,17 @@ final class NullReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
 
-        $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file, 1);
+        $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file);
         $report->addViolation($violation0);
-        $violation1 = new Violation(Violation::LEVEL_WARNING, 'Warning', $file, 2);
+        $violation1 = new Violation(Violation::LEVEL_WARNING, 'Warning', $file);
         $report->addViolation($violation1);
-        $violation2 = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3);
+        $violation2 = new Violation(Violation::LEVEL_ERROR, 'Error', $file);
         $report->addViolation($violation2);
         $violation3 = new Violation(Violation::LEVEL_FATAL, 'Fatal', $file);
         $report->addViolation($violation3);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-        $textFormatter->display($output, $report, $level);
+        $textFormatter->display($output, $report, $level, false);
 
         $text = $output->fetch();
         static::assertSame('', $text);

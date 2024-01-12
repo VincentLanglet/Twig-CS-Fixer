@@ -60,7 +60,8 @@ abstract class AbstractSpacingRule extends AbstractRule
 
         $fixer = $this->addFixableError(
             sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue(), $count),
-            $token
+            $token,
+            'After'
         );
 
         if (null === $fixer) {
@@ -99,7 +100,8 @@ abstract class AbstractSpacingRule extends AbstractRule
 
         $fixer = $this->addFixableError(
             sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue(), $count),
-            $token
+            $token,
+            'Before'
         );
 
         if (null === $fixer) {

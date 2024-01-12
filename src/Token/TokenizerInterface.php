@@ -6,11 +6,12 @@ namespace TwigCsFixer\Token;
 
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Report\ViolationId;
 
 interface TokenizerInterface
 {
     /**
-     * @return list<Token>
+     * @return array{list<Token>, list<ViolationId>}
      *
      * @throws CannotTokenizeException
      */

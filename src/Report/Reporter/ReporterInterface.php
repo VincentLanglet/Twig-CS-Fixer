@@ -9,5 +9,10 @@ use TwigCsFixer\Report\Report;
 
 interface ReporterInterface
 {
-    public function display(OutputInterface $output, Report $report, ?string $level = null): void;
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug
+    ): void;
 }

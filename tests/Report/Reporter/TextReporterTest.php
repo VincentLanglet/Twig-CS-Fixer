@@ -11,30 +11,55 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\TextReporter;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 
 final class TextReporterTest extends TestCase
 {
     /**
      * @dataProvider displayDataProvider
      */
-    public function testDisplayErrors(string $expected, ?string $level): void
+    public function testDisplayErrors(string $expected, ?string $level, bool $debug): void
     {
         $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
 
-        $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file, 1);
+        $violation0 = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice',
+            $file,
+            'Rule',
+            new ViolationId('NoticeId', null, 1)
+        );
         $report->addViolation($violation0);
-        $violation1 = new Violation(Violation::LEVEL_WARNING, 'Warning', $file, 2);
+        $violation1 = new Violation(
+            Violation::LEVEL_WARNING,
+            'Warning',
+            $file,
+            'Rule',
+            new ViolationId('WarningId', null, 2)
+        );
         $report->addViolation($violation1);
-        $violation2 = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3);
+        $violation2 = new Violation(
+            Violation::LEVEL_ERROR,
+            'Error',
+            $file,
+            'Rule',
+            new ViolationId('ErrorId', null, 3)
+        );
         $report->addViolation($violation2);
-        $violation3 = new Violation(Violation::LEVEL_FATAL, 'Fatal', $file);
+        $violation3 = new Violation(
+            Violation::LEVEL_FATAL,
+            'Fatal',
+            $file,
+            'Rule',
+            new ViolationId('FatalId')
+        );
         $report->addViolation($violation3);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-        $textFormatter->display($output, $report, $level);
+        $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
         static::assertStringContainsString($expected, $text);
@@ -42,7 +67,7 @@ final class TextReporterTest extends TestCase
     }
 
     /**
-     * @return iterable<array-key, array{string, string|null}>
+     * @return iterable<array-key, array{string, string|null, bool}>
      */
     public static function displayDataProvider(): iterable
     {
@@ -71,6 +96,7 @@ final class TextReporterTest extends TestCase
                 __DIR__
             ),
             null,
+            false,
         ];
 
         yield [
@@ -89,6 +115,26 @@ final class TextReporterTest extends TestCase
                 __DIR__
             ),
             Report::MESSAGE_TYPE_ERROR,
+            false,
+        ];
+
+        yield [
+            sprintf(
+                <<<EOD
+                     \e[31mKO\e[39m %s/Fixtures/file.twig
+                     ------- ----------------------------------- 
+                      \e[33mERROR\e[39m   2    |     {# Some text line 2 #}  
+                              3    | {# Some text line 3 #}      
+                              \e[31m>>   | ErrorId:3\e[39m                   
+                              4    |                             
+                     ------- ----------------------------------- 
+                      \e[33mFATAL\e[39m   \e[31m>>   | FatalId\e[39m                     
+                     ------- ----------------------------------- 
+                    EOD,
+                __DIR__
+            ),
+            Report::MESSAGE_TYPE_ERROR,
+            true,
         ];
     }
 
@@ -100,7 +146,7 @@ final class TextReporterTest extends TestCase
         $report = new Report([new SplFileInfo($file)]);
 
         $output = new BufferedOutput();
-        $textFormatter->display($output, $report);
+        $textFormatter->display($output, $report, null, false);
 
         $text = $output->fetch();
         static::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
@@ -115,11 +161,11 @@ final class TextReporterTest extends TestCase
         $file2 = __DIR__.'/Fixtures/file2.twig';
 
         $report = new Report([new SplFileInfo($file), new SplFileInfo($file2)]);
-        $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3);
+        $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, null, new ViolationId(line: 3));
         $report->addViolation($violation);
 
         $output = new BufferedOutput();
-        $textFormatter->display($output, $report);
+        $textFormatter->display($output, $report, null, false);
 
         static::assertStringContainsString(
             sprintf(
@@ -147,11 +193,11 @@ final class TextReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/fileNotFound.twig';
 
         $report = new Report([new SplFileInfo($file)]);
-        $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 1);
+        $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, null, new ViolationId(line: 1));
         $report->addViolation($violation);
 
         $output = new BufferedOutput();
-        $textFormatter->display($output, $report);
+        $textFormatter->display($output, $report, null, false);
 
         static::assertStringContainsString(
             sprintf(
@@ -177,11 +223,11 @@ final class TextReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/file.twig';
         $report = new Report([new SplFileInfo($file)]);
 
-        $violation = new Violation($level, 'Message', $file, 1);
+        $violation = new Violation($level, 'Message', $file, null, new ViolationId(line: 1));
         $report->addViolation($violation);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-        $textFormatter->display($output, $report);
+        $textFormatter->display($output, $report, null, false);
 
         $text = $output->fetch();
         static::assertStringContainsString($expected, $text);

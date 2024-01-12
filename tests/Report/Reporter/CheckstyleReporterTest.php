@@ -11,13 +11,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 
 final class CheckstyleReporterTest extends TestCase
 {
     /**
      * @dataProvider displayDataProvider
      */
-    public function testDisplayErrors(string $expected, ?string $level): void
+    public function testDisplayErrors(string $expected, ?string $level, bool $debug): void
     {
         $textFormatter = new CheckstyleReporter();
 
@@ -26,30 +27,66 @@ final class CheckstyleReporterTest extends TestCase
         $file3 = __DIR__.'/Fixtures/file3.twig';
         $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
 
-        $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file, 1, 11, 'NoticeRule');
+        $violation0 = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice',
+            $file,
+            'NoticeRule',
+            new ViolationId('NoticeId', null, 1)
+        );
         $report->addViolation($violation0);
-        $violation1 = new Violation(Violation::LEVEL_WARNING, 'Warning', $file, 2, 22, 'WarningRule');
+        $violation1 = new Violation(
+            Violation::LEVEL_WARNING,
+            'Warning',
+            $file,
+            'WarningRule',
+            new ViolationId('WarningId', null, 2, 22)
+        );
         $report->addViolation($violation1);
-        $violation2 = new Violation(Violation::LEVEL_ERROR, 'Error', $file, 3, 33, 'ErrorRule');
+        $violation2 = new Violation(
+            Violation::LEVEL_ERROR,
+            'Error',
+            $file,
+            'ErrorRule',
+            new ViolationId('ErrorId', null, 3, 33)
+        );
         $report->addViolation($violation2);
-        $violation3 = new Violation(Violation::LEVEL_FATAL, 'Fatal', $file);
+        $violation3 = new Violation(
+            Violation::LEVEL_FATAL,
+            'Fatal',
+            $file,
+            null,
+            new ViolationId('FatalId')
+        );
         $report->addViolation($violation3);
 
-        $violation4 = new Violation(Violation::LEVEL_NOTICE, 'Notice2', $file2, 1, 11, 'Notice2Rule');
+        $violation4 = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice2',
+            $file2,
+            'Notice2Rule',
+            new ViolationId('NoticeId', null, 1)
+        );
         $report->addViolation($violation4);
 
-        $violation5 = new Violation(Violation::LEVEL_FATAL, '\'"<&>"\'', $file3);
+        $violation5 = new Violation(
+            Violation::LEVEL_FATAL,
+            '\'"<&>"\'',
+            $file3,
+            null,
+            new ViolationId('FatalId')
+        );
         $report->addViolation($violation5);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-        $textFormatter->display($output, $report, $level);
+        $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
         static::assertStringContainsString($expected, $text);
     }
 
     /**
-     * @return iterable<array-key, array{string, string|null}>
+     * @return iterable<array-key, array{string, string|null, bool}>
      */
     public static function displayDataProvider(): iterable
     {
@@ -59,13 +96,13 @@ final class CheckstyleReporterTest extends TestCase
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
                       <file name="%1\$s/Fixtures/file.twig">
-                        <error line="1" column="11" severity="notice" message="Notice" source="NoticeRule"/>
+                        <error line="1" severity="notice" message="Notice" source="NoticeRule"/>
                         <error line="2" column="22" severity="warning" message="Warning" source="WarningRule"/>
                         <error line="3" column="33" severity="error" message="Error" source="ErrorRule"/>
                         <error severity="fatal" message="Fatal"/>
                       </file>
                       <file name="%1\$s/Fixtures/file2.twig">
-                        <error line="1" column="11" severity="notice" message="Notice2" source="Notice2Rule"/>
+                        <error line="1" severity="notice" message="Notice2" source="Notice2Rule"/>
                       </file>
                       <file name="%1\$s/Fixtures/file3.twig">
                         <error severity="fatal" message="&apos;&quot;&lt;&amp;&gt;&quot;&apos;"/>
@@ -75,6 +112,7 @@ final class CheckstyleReporterTest extends TestCase
                 __DIR__
             ),
             null,
+            false,
         ];
 
         yield [
@@ -94,6 +132,27 @@ final class CheckstyleReporterTest extends TestCase
                 __DIR__
             ),
             Report::MESSAGE_TYPE_ERROR,
+            false,
+        ];
+
+        yield [
+            sprintf(
+                <<<EOD
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <checkstyle>
+                      <file name="%1\$s/Fixtures/file.twig">
+                        <error line="3" column="33" severity="error" message="ErrorId:3:33" source="ErrorRule"/>
+                        <error severity="fatal" message="FatalId"/>
+                      </file>
+                      <file name="%1\$s/Fixtures/file3.twig">
+                        <error severity="fatal" message="FatalId"/>
+                      </file>
+                    </checkstyle>
+                    EOD,
+                __DIR__
+            ),
+            Report::MESSAGE_TYPE_ERROR,
+            true,
         ];
     }
 }

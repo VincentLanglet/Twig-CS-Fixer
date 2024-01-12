@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Tests\Token\Tokenizer\Fixtures\CustomTwigExtension;
 use TwigCsFixer\Token\Token;
@@ -27,9 +28,12 @@ final class TokenizerTest extends TestCase
 
         static::assertEquals(
             [
-                new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
-                new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
-                new Token(Token::EOF_TYPE, 2, 1, $filePath),
+                [
+                    new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
+                    new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
+                    new Token(Token::EOF_TYPE, 2, 1, $filePath),
+                ],
+                [],
             ],
             $tokenizer->tokenize($source)
         );
@@ -64,7 +68,33 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOL_TYPE, 1, 36, $filePath, "\n"),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
-            $tokenizer->tokenize($source)
+            $tokenizer->tokenize($source)[0]
+        );
+    }
+
+    public function testTokenizeIgnoredViolations(): void
+    {
+        $filePath = __DIR__.'/Fixtures/ignored_violations.twig';
+        $content = file_get_contents($filePath);
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment([new CustomTwigExtension()]);
+        $tokenizer = new Tokenizer($env);
+        $source = new Source($content, $filePath);
+
+        static::assertEquals(
+            [
+                'Foo.Bar',
+                'Foo.BarInsensitive',
+                'Foo.Bar:3',
+                'Foo.Bar:5',
+                'Bar.Foo:5',
+                ':6',
+            ],
+            array_map(
+                static fn (ViolationId $validationId) => $validationId->toString(),
+                $tokenizer->tokenize($source)[1]
+            )
         );
     }
 
@@ -82,7 +112,7 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
-        $tokens = $tokenizer->tokenize($source);
+        $tokens = $tokenizer->tokenize($source)[0];
 
         $tokenValues = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
 

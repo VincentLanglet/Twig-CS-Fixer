@@ -36,7 +36,10 @@ final class FixerTest extends TestCase
     {
         $tokenizer = $this->createMock(TokenizerInterface::class);
         $tokenizer->expects(static::once())->method('tokenize')->willReturn([
-            new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
+            [
+                new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
+            ],
+            [],
         ]);
 
         $ruleset = new Ruleset();
@@ -201,6 +204,40 @@ final class FixerTest extends TestCase
         $fixer = new Fixer($tokenizer);
 
         static::assertSame('test 2 2', $fixer->fixFile('test test test', $ruleset));
+    }
+
+    public function testIgnoredViolations(): void
+    {
+        $tokenizer = new Tokenizer(new StubbedEnvironment());
+
+        $rule = new class () extends AbstractRule {
+            public function getShortName(): string
+            {
+                return 'Rule';
+            }
+
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+                $fixer = $this->addFixableWarning('Error', $tokens[$tokenPosition]);
+                if (null !== $fixer) {
+                    $fixer->replaceToken($tokenPosition, 'a');
+                }
+
+                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                if (null !== $fixer) {
+                    $fixer->replaceToken($tokenPosition, 'b');
+                }
+            }
+        };
+
+        $ruleset = new Ruleset();
+        $ruleset->addRule($rule);
+
+        $fixer = new Fixer($tokenizer);
+
+        $content = '{# twig-cs-fixer-disable Rule #}';
+        // The rule should produce an infinite loop but the comment disable it
+        static::assertSame($content, $fixer->fixFile('{# twig-cs-fixer-disable Rule #}', $ruleset));
     }
 
     /**

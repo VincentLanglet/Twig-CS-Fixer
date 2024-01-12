@@ -20,9 +20,8 @@ final class Violation
         private int $level,
         private string $message,
         private string $filename,
-        private ?int $line = null,
-        private ?int $linePosition = null,
-        private ?string $ruleName = null
+        private ?string $ruleName = null,
+        private ?ViolationId $identifier = null,
     ) {
     }
 
@@ -62,9 +61,13 @@ final class Violation
         return $this->message;
     }
 
-    public function getLine(): ?int
+    public function getDebugMessage(bool $debug): string
     {
-        return $this->line;
+        if (!$debug) {
+            return $this->message;
+        }
+
+        return $this->identifier?->toString() ?? $this->message;
     }
 
     public function getFilename(): string
@@ -72,13 +75,23 @@ final class Violation
         return $this->filename;
     }
 
-    public function getLinePosition(): ?int
-    {
-        return $this->linePosition;
-    }
-
     public function getRuleName(): ?string
     {
         return $this->ruleName;
+    }
+
+    public function getIdentifier(): ?ViolationId
+    {
+        return $this->identifier;
+    }
+
+    public function getLine(): ?int
+    {
+        return $this->identifier?->getLine();
+    }
+
+    public function getLinePosition(): ?int
+    {
+        return $this->identifier?->getLinePosition();
     }
 }

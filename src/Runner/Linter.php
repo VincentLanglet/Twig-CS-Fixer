@@ -14,6 +14,7 @@ use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
 
@@ -68,7 +69,8 @@ final class Linter
                     Violation::LEVEL_FATAL,
                     sprintf('File is invalid: %s', $error->getRawMessage()),
                     $filePath,
-                    $error->getTemplateLine()
+                    null,
+                    new ViolationId(line: $error->getTemplateLine())
                 );
 
                 $report->addViolation($violation);
@@ -108,7 +110,7 @@ final class Linter
             $this->setErrorHandler($report, $filePath);
             try {
                 $twigSource = new Source($content, $filePath);
-                $stream = $this->tokenizer->tokenize($twigSource);
+                [$stream, $ignoredViolations] = $this->tokenizer->tokenize($twigSource);
             } catch (CannotTokenizeException $exception) {
                 $violation = new Violation(
                     Violation::LEVEL_FATAL,
@@ -123,7 +125,7 @@ final class Linter
 
             $rules = $ruleset->getRules();
             foreach ($rules as $rule) {
-                $rule->lintFile($stream, $report);
+                $rule->lintFile($stream, $report, $ignoredViolations);
             }
 
             // Only cache the file if there is no error in order to

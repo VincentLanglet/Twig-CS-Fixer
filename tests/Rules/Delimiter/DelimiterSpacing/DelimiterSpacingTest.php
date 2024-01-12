@@ -12,10 +12,10 @@ final class DelimiterSpacingTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new DelimiterSpacingRule(), [
-            [15 => 1],
-            [15 => 12],
-            [15 => 15],
-            [15 => 25],
+            'DelimiterSpacing.After:15:1',
+            'DelimiterSpacing.Before:15:12',
+            'DelimiterSpacing.After:15:15',
+            'DelimiterSpacing.Before:15:25',
         ]);
     }
 }

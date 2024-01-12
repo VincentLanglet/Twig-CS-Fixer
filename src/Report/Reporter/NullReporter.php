@@ -14,7 +14,11 @@ final class NullReporter implements ReporterInterface
 {
     public const NAME = 'null';
 
-    public function display(OutputInterface $output, Report $report, ?string $level = null): void
-    {
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug
+    ): void {
     }
 }

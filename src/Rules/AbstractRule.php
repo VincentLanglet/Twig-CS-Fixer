@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules;
 
+use ReflectionClass;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
 
@@ -15,25 +17,39 @@ abstract class AbstractRule implements RuleInterface
 
     private ?FixerInterface $fixer = null;
 
+    /**
+     * @var list<ViolationId>
+     */
+    private array $ignoredViolations = [];
+
     public function getName(): string
     {
         return static::class;
     }
 
-    public function lintFile(array $stream, Report $report): void
+    public function getShortName(): string
+    {
+        $shortName = (new ReflectionClass($this))->getShortName();
+
+        return str_ends_with($shortName, 'Rule') ? substr($shortName, 0, -4) : $shortName;
+    }
+
+    public function lintFile(array $stream, Report $report, array $ignoredViolations = []): void
     {
         $this->report = $report;
         $this->fixer = null;
+        $this->ignoredViolations = $ignoredViolations;
 
         foreach (array_keys($stream) as $index) {
             $this->process($index, $stream);
         }
     }
 
-    public function fixFile(array $stream, FixerInterface $fixer): void
+    public function fixFile(array $stream, FixerInterface $fixer, array $ignoredViolations = []): void
     {
         $this->report = null;
         $this->fixer = $fixer;
+        $this->ignoredViolations = $ignoredViolations;
 
         foreach (array_keys($stream) as $index) {
             $this->process($index, $stream);
@@ -106,50 +122,63 @@ abstract class AbstractRule implements RuleInterface
         return $start - $i;
     }
 
-    protected function addWarning(string $message, Token $token): void
+    protected function addWarning(string $message, Token $token, ?string $messageId = null): bool
     {
-        $this->addMessage(Violation::LEVEL_WARNING, $message, $token);
+        return $this->addMessage(Violation::LEVEL_WARNING, $message, $token, $messageId);
     }
 
-    protected function addError(string $message, Token $token): void
+    protected function addError(string $message, Token $token, ?string $messageId = null): bool
     {
-        $this->addMessage(Violation::LEVEL_ERROR, $message, $token);
+        return $this->addMessage(Violation::LEVEL_ERROR, $message, $token, $messageId);
     }
 
-    protected function addFixableWarning(string $message, Token $token): ?FixerInterface
+    protected function addFixableWarning(string $message, Token $token, ?string $messageId = null): ?FixerInterface
     {
-        return $this->addFixableMessage(Violation::LEVEL_WARNING, $message, $token);
-    }
-
-    protected function addFixableError(string $message, Token $token): ?FixerInterface
-    {
-        return $this->addFixableMessage(Violation::LEVEL_ERROR, $message, $token);
-    }
-
-    private function addMessage(int $messageType, string $message, Token $token): void
-    {
-        $report = $this->report;
-        if (null === $report) {
-            // We are fixing the file.
-            return;
+        $added = $this->addWarning($message, $token, $messageId);
+        if (!$added) {
+            return null;
         }
 
-        $violation = new Violation(
-            $messageType,
-            $message,
-            $token->getFilename(),
-            $token->getLine(),
-            $token->getPosition(),
-            $this->getName(),
-        );
-
-        $report->addViolation($violation);
+        return $this->fixer;
     }
 
-    private function addFixableMessage(int $messageType, string $message, Token $token): ?FixerInterface
+    protected function addFixableError(string $message, Token $token, ?string $messageId = null): ?FixerInterface
     {
-        $this->addMessage($messageType, $message, $token);
+        $added = $this->addError($message, $token, $messageId);
+        if (!$added) {
+            return null;
+        }
 
         return $this->fixer;
+    }
+
+    private function addMessage(int $messageType, string $message, Token $token, ?string $messageId = null): bool
+    {
+        $id = new ViolationId(
+            $this->getShortName(),
+            $messageId ?? ucfirst(strtolower(Violation::getLevelAsString($messageType))),
+            $token->getLine(),
+            $token->getPosition(),
+        );
+        foreach ($this->ignoredViolations as $ignoredViolation) {
+            if ($ignoredViolation->match($id)) {
+                return false;
+            }
+        }
+
+        $report = $this->report;
+        if (null !== $report) { // The report is null when we are fixing the file.
+            $violation = new Violation(
+                $messageType,
+                $message,
+                $token->getFilename(),
+                $this->getName(),
+                $id,
+            );
+
+            $report->addViolation($violation);
+        }
+
+        return true;
     }
 }

@@ -6,10 +6,15 @@ namespace TwigCsFixer\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
+use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Report;
+use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Tests\Rules\Fixtures\FakeRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokenizer;
 
 final class RuleTest extends TestCase
 {
@@ -41,6 +46,7 @@ final class RuleTest extends TestCase
     {
         $rule = new FakeRule();
         static::assertSame(FakeRule::class, $rule->getName());
+        static::assertSame('Fake', $rule->getShortName());
     }
 
     public function testRuleWithReport2(): void
@@ -104,5 +110,49 @@ final class RuleTest extends TestCase
 
         static::assertSame(0, $report->getTotalWarnings());
         static::assertSame(2, $report->getTotalErrors());
+    }
+
+    /**
+     * @param array<int> $expectedLines
+     *
+     * @dataProvider ignoredViolationsDataProvider
+     */
+    public function testIgnoredViolations(string $filePath, array $expectedLines): void
+    {
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $linter = new Linter($env, $tokenizer);
+        $ruleset = new Ruleset();
+
+        $ruleset->addRule(new FakeRule());
+        $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
+        $messages = $report->getFileViolations($filePath);
+
+        static::assertSame(
+            $expectedLines,
+            array_map(
+                static fn (Violation $violation) => $violation->getLine(),
+                $messages,
+            ),
+        );
+    }
+
+    /**
+     * @return iterable<array-key, array{string, array<int>}>
+     */
+    public static function ignoredViolationsDataProvider(): iterable
+    {
+        yield [
+            __DIR__.'/Fixtures/disable0.twig',
+            [1],
+        ];
+        yield [
+            __DIR__.'/Fixtures/disable1.twig',
+            [],
+        ];
+        yield [
+            __DIR__.'/Fixtures/disable2.twig',
+            [3, 7, 9, 11, 12, 14],
+        ];
     }
 }

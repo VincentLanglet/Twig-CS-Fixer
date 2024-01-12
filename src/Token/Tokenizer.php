@@ -8,6 +8,7 @@ use LogicException;
 use Twig\Environment;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Report\ViolationId;
 use Webmozart\Assert\Assert;
 
 /**
@@ -60,12 +61,17 @@ final class Tokenizer implements TokenizerInterface
     private array $tokens = [];
 
     /**
+     * @var list<ViolationId>
+     */
+    private array $ignoredViolations = [];
+
+    /**
      * @var list<array{fullMatch: string, position: int, match: string}>
      */
     private array $expressionStarters = [];
 
     /**
-     * @var array<array{int<0, 5>, array<string, string>}>
+     * @var array<array{int<0, 5>, array<string, int|string|bool>}>
      */
     private array $state = [];
 
@@ -87,7 +93,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return list<Token>
+     * @return array{list<Token>, list<ViolationId>}
      *
      * @throws CannotTokenizeException
      */
@@ -153,7 +159,7 @@ final class Tokenizer implements TokenizerInterface
 
         $this->pushToken(Token::EOF_TYPE);
 
-        return $this->tokens;
+        return [$this->tokens, $this->ignoredViolations];
     }
 
     private function resetState(Source $source): void
@@ -197,8 +203,8 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int<0, 5>             $state
-     * @param array<string, string> $data
+     * @param int<0, 5>                 $state
+     * @param array<string, int|string> $data
      */
     private function pushState(int $state, array $data = []): void
     {
@@ -210,14 +216,14 @@ final class Tokenizer implements TokenizerInterface
      *
      * @see https://github.com/vimeo/psalm/issues/8989
      */
-    private function setStateParam(string $name, string $value): void
+    private function setStateParam(string $name, int|string|bool $value): void
     {
         Assert::notEmpty($this->state, 'Cannot set state params without a current state.');
 
         $this->state[\count($this->state) - 1][1][$name] = $value;
     }
 
-    private function getStateParam(string $name): ?string
+    private function getStateParam(string $name): int|string|bool|null
     {
         Assert::notEmpty($this->state, 'Cannot get state params without a current state.');
 
@@ -368,9 +374,15 @@ final class Tokenizer implements TokenizerInterface
             throw CannotTokenizeException::unclosedComment($this->line);
         }
         if ($match[0][1] === $this->cursor) {
+            $this->processIgnoredViolations();
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
             $this->popState();
         } else {
+            if (null === $this->getStateParam('ignoredViolations')) {
+                $comment = substr($this->code, $this->cursor, $match[0][1]);
+                $this->extractIgnoredViolations($comment);
+            }
+
             // Parse as text until the end position.
             $this->lexData($match[0][1]);
         }
@@ -474,7 +486,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $this->pushToken($tokenType, $expressionStarter['fullMatch']);
-        $this->pushState($state);
+        $this->pushState($state, ['startLine' => $this->line]);
     }
 
     private function lexStartDqString(): void
@@ -672,5 +684,43 @@ final class Tokenizer implements TokenizerInterface
         }
 
         return '/'.implode('|', $regex).'/A';
+    }
+
+    private function extractIgnoredViolations(string $comment): void
+    {
+        $comment = trim($comment);
+        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line)\s+([\s\w,.:]*)/i', $comment, $match)) {
+            $this->setStateParam('ignoredViolations', preg_replace('/\s+/', ',', $match[2]) ?? '');
+            $this->setStateParam('ignoredType', trim($match[1], '-'));
+        } else {
+            $this->setStateParam('ignoredViolations', false);
+        }
+    }
+
+    private function processIgnoredViolations(): void
+    {
+        $ignoredViolations = $this->getStateParam('ignoredViolations');
+        if (!\is_string($ignoredViolations)) {
+            return;
+        }
+        $line = match ($this->getStateParam('ignoredType')) {
+            'line'      => (int) $this->getStateParam('startLine'),
+            'next-line' => $this->line + 1,
+            default     => null,
+        };
+
+        if ('' === $ignoredViolations) {
+            $this->ignoredViolations[] = ViolationId::fromString($ignoredViolations, $line);
+
+            return;
+        }
+
+        $ignoredViolationsExploded = explode(',', $ignoredViolations);
+        foreach ($ignoredViolationsExploded as $ignoredViolation) {
+            if ('' === $ignoredViolation) {
+                continue;
+            }
+            $this->ignoredViolations[] = ViolationId::fromString($ignoredViolation, $line);
+        }
     }
 }

@@ -12,9 +12,9 @@ final class OperatorNameSpacingTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new OperatorNameSpacingRule(), [
-            [2 => 13],
-            [3 => 13],
-            [4 => 10],
+            'OperatorNameSpacing.Error:2:13',
+            'OperatorNameSpacing.Error:3:13',
+            'OperatorNameSpacing.Error:4:10',
         ]);
     }
 }
