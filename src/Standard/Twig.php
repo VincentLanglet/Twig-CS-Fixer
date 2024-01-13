@@ -14,7 +14,7 @@ use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
  *
  * @see https://twig.symfony.com/doc/3.x/coding_standards.html
  */
-class Twig implements StandardInterface
+final class Twig implements StandardInterface
 {
     public function getRules(): array
     {
