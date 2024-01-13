@@ -24,6 +24,19 @@ final class ViolationTest extends TestCase
         static::assertSame($violationId, $violation->getIdentifier());
     }
 
+    public function testGetterWithoutViolationId(): void
+    {
+        $violation = new Violation(Violation::LEVEL_WARNING, 'message', 'filename', 'name');
+
+        static::assertSame(Violation::LEVEL_WARNING, $violation->getLevel());
+        static::assertSame('message', $violation->getMessage());
+        static::assertSame('filename', $violation->getFilename());
+        static::assertNull($violation->getLine());
+        static::assertNull($violation->getLinePosition());
+        static::assertSame('name', $violation->getRuleName());
+        static::assertNull($violation->getIdentifier());
+    }
+
     /**
      * @dataProvider getLevelAsStringDataProvider
      */
