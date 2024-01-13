@@ -8,7 +8,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Exceptions\DefaultExceptionTypeResolver;
 use PHPStan\Rules\Exceptions\ExceptionTypeResolver as PHPStanExceptionTypeResolver;
 
-class ExceptionTypeResolver implements PHPStanExceptionTypeResolver
+final class ExceptionTypeResolver implements PHPStanExceptionTypeResolver
 {
     public function __construct(private DefaultExceptionTypeResolver $defaultExceptionTypeResolver)
     {

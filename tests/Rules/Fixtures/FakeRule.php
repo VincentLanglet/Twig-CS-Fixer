@@ -9,7 +9,7 @@ use TwigCsFixer\Rules\AbstractRule;
 /**
  * This rule reports an error for the first token of every line.
  */
-class FakeRule extends AbstractRule
+final class FakeRule extends AbstractRule
 {
     public function process(int $tokenPosition, array $tokens): void
     {

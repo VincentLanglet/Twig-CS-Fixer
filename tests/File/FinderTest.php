@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\File;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\File\Finder;
 
-class FinderTest extends TestCase
+final class FinderTest extends TestCase
 {
     public function testFinder(): void
     {

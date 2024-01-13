@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Report;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\ViolationId;
 
-class ViolationIdTest extends TestCase
+final class ViolationIdTest extends TestCase
 {
     /**
      * @dataProvider toStringDataProvider
