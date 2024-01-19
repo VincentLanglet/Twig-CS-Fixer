@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Whitespace\Indent;
 use TwigCsFixer\Rules\Whitespace\IndentRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class IndentTest extends AbstractRuleTestCase
+final class IndentRuleTest extends AbstractRuleTestCase
 {
     public function testConfiguration(): void
     {
@@ -31,8 +31,8 @@ final class IndentTest extends AbstractRuleTestCase
                 'Indent.Error:2:1',
                 'Indent.Error:4:1',
             ],
-            __DIR__.'/IndentTest.twig',
-            __DIR__.'/IndentTest.fixed2.twig',
+            __DIR__.'/IndentRuleTest.twig',
+            __DIR__.'/IndentRuleTest.fixed2.twig',
         );
     }
 }

@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Operator\OperatorSpacing;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class OperatorSpacingTest extends AbstractRuleTestCase
+final class OperatorSpacingRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {
@@ -64,7 +64,7 @@ final class OperatorSpacingTest extends AbstractRuleTestCase
         $this->checkRule(
             new OperatorSpacingRule(),
             [],
-            __DIR__.'/OperatorSpacingTest.tab.twig'
+            __DIR__.'/OperatorSpacingRuleTest.tab.twig'
         );
     }
 }
