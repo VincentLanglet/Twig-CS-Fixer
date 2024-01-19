@@ -48,13 +48,13 @@ final class FileHelper
         ?string $baseDir = null,
         array $ignoredDir = []
     ): array {
-        $baseDir = trim($baseDir ?? '', '/');
+        $baseDir = trim($baseDir ?? '', \DIRECTORY_SEPARATOR);
 
         if ('' === $baseDir) {
             $baseDirPosition = 0;
-            $baseDir = '/';
+            $baseDir = \DIRECTORY_SEPARATOR;
         } else {
-            $baseDir = '/'.$baseDir.'/';
+            $baseDir = \DIRECTORY_SEPARATOR.$baseDir.\DIRECTORY_SEPARATOR;
             $baseDirPosition = strrpos($absolutePath, $baseDir);
             if (false === $baseDirPosition) {
                 return [];
@@ -63,12 +63,12 @@ final class FileHelper
 
         $path = substr($absolutePath, $baseDirPosition + \strlen($baseDir));
         foreach ($ignoredDir as $ignoredDirectory) {
-            $ignoredDirectory = trim($ignoredDirectory, '/').'/';
+            $ignoredDirectory = trim($ignoredDirectory, \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR;
             if (str_starts_with($path, $ignoredDirectory)) {
                 return [];
             }
         }
 
-        return explode('/', $path);
+        return explode(\DIRECTORY_SEPARATOR, $path);
     }
 }
