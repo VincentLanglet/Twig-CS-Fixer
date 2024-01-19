@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Whitespace\TrailingSpace;
 use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class TrailingSpaceTest extends AbstractRuleTestCase
+final class TrailingSpaceRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {
@@ -22,7 +22,7 @@ final class TrailingSpaceTest extends AbstractRuleTestCase
         $this->checkRule(new TrailingSpaceRule(), [
             'TrailingSpace.Error:2:32',
             'TrailingSpace.Error:4:21',
-        ], __DIR__.'/TrailingSpaceTest.tab.twig');
+        ], __DIR__.'/TrailingSpaceRuleTest.tab.twig');
     }
 
     public function testRuleWithEmptyFile(): void
@@ -30,11 +30,11 @@ final class TrailingSpaceTest extends AbstractRuleTestCase
         $this->checkRule(
             new TrailingSpaceRule(),
             [],
-            __DIR__.'/TrailingSpaceTest.empty.twig'
+            __DIR__.'/TrailingSpaceRuleTest.empty.twig'
         );
 
         $this->checkRule(new TrailingSpaceRule(), [
             'TrailingSpace.Error:1:2',
-        ], __DIR__.'/TrailingSpaceTest.empty2.twig');
+        ], __DIR__.'/TrailingSpaceRuleTest.empty2.twig');
     }
 }

@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Punctuation\TrailingCommaSingleLine;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class TrailingCommaSingleLineTest extends AbstractRuleTestCase
+final class TrailingCommaSingleLineRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {

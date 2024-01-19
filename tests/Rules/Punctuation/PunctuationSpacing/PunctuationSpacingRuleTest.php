@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Punctuation\PunctuationSpacing;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class PunctuationSpacingTest extends AbstractRuleTestCase
+final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {

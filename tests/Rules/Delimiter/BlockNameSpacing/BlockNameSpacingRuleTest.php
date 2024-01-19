@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Delimiter\BlockNameSpacing;
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class BlockNameSpacingTest extends AbstractRuleTestCase
+final class BlockNameSpacingRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {

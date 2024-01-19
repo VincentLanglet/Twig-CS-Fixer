@@ -16,6 +16,7 @@
         "composer-runtime-api": "^2.0.0",
         "symfony/console": "^5.4.9 || ^6.0 || ^7.0",
         "symfony/finder": "^5.4 || ^6.0 || ^7.0",
+        "symfony/string": "^5.4 || ^6.0 || ^7.0",
         "twig/twig": "^2.14.0 || ^3.0.5",
         "webmozart/assert": "^1.10"
     },

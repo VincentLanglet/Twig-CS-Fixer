@@ -1,0 +1,80 @@
+<?php
+
+declare(strict_types=1);
+
+namespace TwigCsFixer\Tests\Rules\File\FileName;
+
+use TwigCsFixer\Rules\File\FileNameRule;
+use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+
+final class FileNameRuleTest extends AbstractRuleTestCase
+{
+    public function testConfiguration(): void
+    {
+        static::assertSame(
+            [
+                'case'                  => FileNameRule::SNAKE_CASE,
+                'baseDirectory'         => null,
+                'ignoredSubDirectories' => [],
+            ],
+            (new FileNameRule())->getConfiguration()
+        );
+
+        static::assertSame(
+            [
+                'case'                  => FileNameRule::PASCAL_CASE,
+                'baseDirectory'         => 'foo',
+                'ignoredSubDirectories' => ['bar'],
+            ],
+            (new FileNameRule(
+                FileNameRule::PASCAL_CASE,
+                'foo',
+                ['bar']
+            ))->getConfiguration()
+        );
+    }
+
+    public function testRule(): void
+    {
+        $this->checkRule(new FileNameRule(), [
+            'FileName.Error:1:1',
+        ]);
+    }
+
+    public function testRulePascalCase(): void
+    {
+        $this->checkRule(new FileNameRule(FileNameRule::PASCAL_CASE), []);
+    }
+
+    public function testRuleKebabCase(): void
+    {
+        $this->checkRule(new FileNameRule(FileNameRule::KEBAB_CASE), [], __DIR__.'/file-name-rule-test.twig');
+    }
+
+    public function testRuleCamelCase(): void
+    {
+        $this->checkRule(new FileNameRule(FileNameRule::CAMEL_CASE), [], __DIR__.'/fileNameRuleTest.camel.twig');
+    }
+
+    public function testRuleValidFile(): void
+    {
+        $this->checkRule(new FileNameRule(), [], __DIR__.'/file_name_rule_test.twig');
+    }
+
+    public function testRuleValidFileWithDot(): void
+    {
+        $this->checkRule(new FileNameRule(), [], __DIR__.'/file_name_rule_test.withDot.twig');
+    }
+
+    public function testRuleBaseDir(): void
+    {
+        $this->checkRule(new FileNameRule(baseDirectory: 'File'), [
+            'FileName.Error:1:1',
+        ]);
+    }
+
+    public function testRuleIgnoredPath(): void
+    {
+        $this->checkRule(new FileNameRule(baseDirectory: 'File', ignoredSubDirectories: ['FileName']), []);
+    }
+}

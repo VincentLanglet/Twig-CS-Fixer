@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Whitespace\EmptyLines;
 use TwigCsFixer\Rules\Whitespace\EmptyLinesRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class EmptyLinesTest extends AbstractRuleTestCase
+final class EmptyLinesRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {
