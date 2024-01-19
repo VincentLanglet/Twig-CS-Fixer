@@ -67,6 +67,11 @@ final class ConfigResolver
             return $this->getConfigFromPath($defaultPath);
         }
 
+        $defaultDistPath = $this->getAbsolutePath(Config::DEFAULT_DIST_PATH);
+        if (file_exists($defaultDistPath)) {
+            return $this->getConfigFromPath($defaultDistPath);
+        }
+
         return new Config();
     }
 

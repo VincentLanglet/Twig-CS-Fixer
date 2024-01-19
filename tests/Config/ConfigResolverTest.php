@@ -47,6 +47,7 @@ final class ConfigResolverTest extends FileTestCase
     {
         yield [__DIR__.'/Fixtures/directoryWithoutConfig', null, 'Default'];
         yield [__DIR__.'/Fixtures/directoryWithCustomRuleset', null, 'Custom'];
+        yield [__DIR__.'/Fixtures/directoryWithCustomRuleset2', null, 'CustomDist'];
         yield [__DIR__, 'Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
         yield ['/tmp', __DIR__.'/Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
     }
