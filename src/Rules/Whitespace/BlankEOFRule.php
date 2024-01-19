@@ -8,7 +8,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure that files ends with one blank line.
+ * Ensures that files end with one blank line.
  */
 final class BlankEOFRule extends AbstractRule
 {

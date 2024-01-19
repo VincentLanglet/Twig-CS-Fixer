@@ -5,7 +5,7 @@
 By default, the twig-cs-fixer standard is enabled with the twig coding standard rules and the following rules:
 
 - `BlankEOFRule`: ensures that files end with one blank line.
-- `BlockNameSpacingRule`: ensure there is one space before and after block names.
+- `BlockNameSpacingRule`: ensures there is one space before and after block names.
 - `EmptyLinesRule`: ensures that 2 empty lines do not follow each other.
 - `IndentRule`: ensures that files are not indented with tabs.
 - `TrailingCommaSingleLineRule`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.

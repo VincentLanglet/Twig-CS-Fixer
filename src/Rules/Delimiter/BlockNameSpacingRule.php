@@ -8,7 +8,7 @@ use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure there is one space before and after block names.
+ * Ensures there is one space before and after block names.
  */
 final class BlockNameSpacingRule extends AbstractSpacingRule
 {

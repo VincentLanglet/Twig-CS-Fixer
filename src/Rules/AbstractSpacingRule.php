@@ -7,7 +7,7 @@ namespace TwigCsFixer\Rules;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure there is one space before or after some tokens
+ * Ensures there is one space before or after some tokens
  */
 abstract class AbstractSpacingRule extends AbstractRule
 {

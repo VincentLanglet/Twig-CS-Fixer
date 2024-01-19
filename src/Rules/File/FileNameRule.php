@@ -9,6 +9,9 @@ use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
+/**
+ * Ensures file name is snake_case (Configurable).
+ */
 final class FileNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
     public const SNAKE_CASE = 'snake_case';

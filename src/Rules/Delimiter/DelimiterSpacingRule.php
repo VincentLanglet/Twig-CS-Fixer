@@ -8,7 +8,7 @@ use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
+ * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
  */
 final class DelimiterSpacingRule extends AbstractSpacingRule
 {

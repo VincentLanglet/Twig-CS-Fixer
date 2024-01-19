@@ -9,7 +9,7 @@ use TwigCsFixer\Token\Token;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensure there is one space before and after an operator except for '..'.
+ * Ensures there is one space before and after an operator except for '..'.
  */
 final class OperatorSpacingRule extends AbstractSpacingRule
 {
