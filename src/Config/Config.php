@@ -18,6 +18,7 @@ use TwigCsFixer\Standard\TwigCsFixer;
 final class Config
 {
     public const DEFAULT_PATH = '.twig-cs-fixer.php';
+    public const DEFAULT_DIST_PATH = '.twig-cs-fixer.dist.php';
     public const DEFAULT_CACHE_PATH = '.twig-cs-fixer.cache';
 
     private Ruleset $ruleset;

@@ -12,7 +12,8 @@ By default, the twig-cs-fixer standard is enabled with the twig coding standard 
 - `TrailingSpaceRule`: ensures that files have no trailing spaces.
 
 If you want to use the basic Twig standard, another standard and/or add/disable a rule, you can provide
-your own configuration with a `.twig-cs-fixer.php` file which returns a `TwigCsFixer\Config\Config` class:
+your own configuration with a `.twig-cs-fixer.php` or `.twig-cs-fixer.dist.php` file which returns
+a `TwigCsFixer\Config\Config` class:
 
 ```php
 <?php
@@ -38,7 +39,7 @@ vendor/bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.
 
 If you want to lint specific files or directories you can pass them as argument. If you want a more sophisticated
-rule, you can configure it in the `.twig-cs-fixer.php` file:
+rule, you can configure it in the config file:
 
 ```php
 <?php
@@ -57,7 +58,7 @@ return $config;
 By default, cache is enabled and stored in `.twig-cs-fixer.cache`. Further runs are therefore much
 faster. Cache is invalidated when a different PHP version, twig-cs-fixer version or ruleset is used.
 
-If you want a custom cache location you can configure it in `.twig-cs-fixer.php`:
+If you want a custom cache location you can configure it in your config file:
 
 ```php
 <?php
