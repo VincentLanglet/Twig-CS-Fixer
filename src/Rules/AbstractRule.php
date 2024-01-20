@@ -124,16 +124,57 @@ abstract class AbstractRule implements RuleInterface
 
     protected function addWarning(string $message, Token $token, ?string $messageId = null): bool
     {
-        return $this->addMessage(Violation::LEVEL_WARNING, $message, $token, $messageId);
+        return $this->addMessage(
+            Violation::LEVEL_WARNING,
+            $message,
+            $token->getFilename(),
+            $token->getLine(),
+            $token->getPosition(),
+            $messageId,
+        );
+    }
+
+    protected function addFileWarning(string $message, Token $token, ?string $messageId = null): bool
+    {
+        return $this->addMessage(
+            Violation::LEVEL_WARNING,
+            $message,
+            $token->getFilename(),
+            null,
+            null,
+            $messageId,
+        );
     }
 
     protected function addError(string $message, Token $token, ?string $messageId = null): bool
     {
-        return $this->addMessage(Violation::LEVEL_ERROR, $message, $token, $messageId);
+        return $this->addMessage(
+            Violation::LEVEL_ERROR,
+            $message,
+            $token->getFilename(),
+            $token->getLine(),
+            $token->getPosition(),
+            $messageId,
+        );
     }
 
-    protected function addFixableWarning(string $message, Token $token, ?string $messageId = null): ?FixerInterface
+    protected function addFileError(string $message, Token $token, ?string $messageId = null): bool
     {
+        return $this->addMessage(
+            Violation::LEVEL_ERROR,
+            $message,
+            $token->getFilename(),
+            null,
+            null,
+            $messageId,
+        );
+    }
+
+    protected function addFixableWarning(
+        string $message,
+        Token $token,
+        ?string $messageId = null
+    ): ?FixerInterface {
         $added = $this->addWarning($message, $token, $messageId);
         if (!$added) {
             return null;
@@ -142,8 +183,11 @@ abstract class AbstractRule implements RuleInterface
         return $this->fixer;
     }
 
-    protected function addFixableError(string $message, Token $token, ?string $messageId = null): ?FixerInterface
-    {
+    protected function addFixableError(
+        string $message,
+        Token $token,
+        ?string $messageId = null
+    ): ?FixerInterface {
         $added = $this->addError($message, $token, $messageId);
         if (!$added) {
             return null;
@@ -152,13 +196,19 @@ abstract class AbstractRule implements RuleInterface
         return $this->fixer;
     }
 
-    private function addMessage(int $messageType, string $message, Token $token, ?string $messageId = null): bool
-    {
+    private function addMessage(
+        int $messageType,
+        string $message,
+        string $fileName,
+        ?int $line = null,
+        ?int $position = null,
+        ?string $messageId = null
+    ): bool {
         $id = new ViolationId(
             $this->getShortName(),
             $messageId ?? ucfirst(strtolower(Violation::getLevelAsString($messageType))),
-            $token->getLine(),
-            $token->getPosition(),
+            $line,
+            $position,
         );
         foreach ($this->ignoredViolations as $ignoredViolation) {
             if ($ignoredViolation->match($id)) {
@@ -171,7 +221,7 @@ abstract class AbstractRule implements RuleInterface
             $violation = new Violation(
                 $messageType,
                 $message,
-                $token->getFilename(),
+                $fileName,
                 $this->getName(),
                 $id,
             );
