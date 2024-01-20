@@ -8,7 +8,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure that files has no trailing space.
+ * Ensures that files have no trailing spaces.
  */
 final class TrailingSpaceRule extends AbstractRule
 {

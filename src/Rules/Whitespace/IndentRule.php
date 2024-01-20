@@ -9,7 +9,7 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensure that files are not indented with tabs.
+ * Ensures that files are not indented with tabs.
  */
 final class IndentRule extends AbstractRule implements ConfigurableRuleInterface
 {

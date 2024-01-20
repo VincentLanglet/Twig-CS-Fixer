@@ -62,3 +62,4 @@ Removes any space before and after opening and closing of arrays and hashes.
 - [CLI options](docs/command.md)
 - [Configuration file](docs/configuration.md)
 - [How to disable a rule on a specific file or line](docs/identifiers.md)
+- [Rules & Standard](docs/rules.md)

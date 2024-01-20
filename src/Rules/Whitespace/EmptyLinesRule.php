@@ -9,7 +9,7 @@ use TwigCsFixer\Token\Token;
 use Webmozart\Assert\Assert;
 
 /**
- * Checks that there are not 2 empty lines following each other.
+ * Ensures that 2 empty lines do not follow each other.
  */
 final class EmptyLinesRule extends AbstractRule
 {
