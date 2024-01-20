@@ -29,7 +29,9 @@ final class RuleTest extends TestCase
 
                 if (0 === $tokenPosition) {
                     $this->addWarning('Fake Warning', $token);
-                    $this->addError('Fake Error', $token);
+                    $this->addFileWarning('Fake File Warning', $token);
+                    $this->addError('Fake File Error', $token);
+                    $this->addFileError('Fake Error', $token);
                     $this->addFixableWarning('Fake fixable warning', $token);
                     $this->addFixableError('Fake fixable error', $token);
                 }
@@ -38,8 +40,8 @@ final class RuleTest extends TestCase
 
         $rule->lintFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')], $report);
 
-        static::assertSame(2, $report->getTotalWarnings());
-        static::assertSame(2, $report->getTotalErrors());
+        static::assertSame(3, $report->getTotalWarnings());
+        static::assertSame(3, $report->getTotalErrors());
     }
 
     public function testRuleName(): void

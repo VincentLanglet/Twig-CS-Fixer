@@ -37,7 +37,7 @@ final class FileNameRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new FileNameRule(), [
-            'FileName.Error:1:1',
+            'FileName.Error',
         ]);
     }
 
@@ -69,7 +69,7 @@ final class FileNameRuleTest extends AbstractRuleTestCase
     public function testRuleBaseDir(): void
     {
         $this->checkRule(new FileNameRule(baseDirectory: 'File'), [
-            'FileName.Error:1:1',
+            'FileName.Error',
         ]);
     }
 

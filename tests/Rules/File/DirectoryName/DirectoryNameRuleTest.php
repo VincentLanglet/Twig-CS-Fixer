@@ -52,7 +52,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
     {
         $this->checkRule(
             new DirectoryNameRule(baseDirectory: 'templates'),
-            ['DirectoryName.Error:1:1'],
+            ['DirectoryName.Error'],
             __DIR__.'/templates/directoryNameRuleTest/DirectoryNameRuleTest.twig'
         );
     }
@@ -64,7 +64,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
 
     public function testRuleInvalidDirectory(): void
     {
-        $this->checkRule(new DirectoryNameRule(baseDirectory: 'File'), ['DirectoryName.Error:1:1']);
+        $this->checkRule(new DirectoryNameRule(baseDirectory: 'File'), ['DirectoryName.Error']);
     }
 
     public function testRuleKebabCase(): void
