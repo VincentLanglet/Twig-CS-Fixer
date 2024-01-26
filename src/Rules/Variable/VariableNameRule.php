@@ -8,6 +8,7 @@ use Symfony\Component\String\UnicodeString;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use Webmozart\Assert\Assert;
 
 final class VariableNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
@@ -38,10 +39,8 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
             return;
         }
 
-        $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition + 1);
-        if (false === $nameTokenPosition) {
-            return;
-        }
+        $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
+        Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE set must be followed by a name');
         $name = $tokens[$nameTokenPosition]->getValue();
 
         $expected = match ($this->case) {

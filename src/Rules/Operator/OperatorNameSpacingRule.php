@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Operator;
 
-use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
 
 /**
  * Ensures there is no consecutive spaces inside operator names.
  */
-final class OperatorNameSpacingRule extends AbstractRule
+final class OperatorNameSpacingRule extends AbstractFixableRule
 {
     protected function process(int $tokenPosition, array $tokens): void
     {

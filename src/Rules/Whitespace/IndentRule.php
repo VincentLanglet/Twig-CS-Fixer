@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Whitespace;
 
-use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 
 /**
  * Ensures that files are not indented with tabs.
  */
-final class IndentRule extends AbstractRule implements ConfigurableRuleInterface
+final class IndentRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
     public function __construct(private int $spaceRatio = 4)
     {

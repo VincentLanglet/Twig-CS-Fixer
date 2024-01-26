@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Whitespace;
 
-use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
 
 /**
  * Ensures that files end with one blank line.
  */
-final class BlankEOFRule extends AbstractRule
+final class BlankEOFRule extends AbstractFixableRule
 {
     protected function process(int $tokenPosition, array $tokens): void
     {

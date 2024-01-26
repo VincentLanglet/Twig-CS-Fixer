@@ -9,7 +9,7 @@ use SplFileInfo;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
-use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Tests\Rules\Fixtures\FakeRule;
@@ -22,7 +22,7 @@ final class RuleTest extends TestCase
     {
         $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class () extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $token = $tokens[$tokenPosition];
@@ -55,7 +55,7 @@ final class RuleTest extends TestCase
     {
         $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class () extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $token = $tokens[$tokenPosition];

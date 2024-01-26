@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Runner;
 
 use BadMethodCallException;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
@@ -51,7 +53,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class () extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -97,7 +99,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class () extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
@@ -122,7 +124,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule1 = new class () extends AbstractRule {
+        $rule1 = new class () extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -140,7 +142,7 @@ final class FixerTest extends TestCase
                 $fixer->replaceToken($tokenPosition, 'rule');
             }
         };
-        $rule2 = new class () extends AbstractRule {
+        $rule2 = new class () extends AbstractFixableRule {
             private int $error = 0;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -172,7 +174,7 @@ final class FixerTest extends TestCase
                 $fixer->endChangeSet();
             }
         };
-        $rule3 = new class () extends AbstractRule {
+        $rule3 = new class () extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -210,7 +212,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class () extends AbstractFixableRule {
             public function getShortName(): string
             {
                 return 'Rule';
@@ -237,7 +239,7 @@ final class FixerTest extends TestCase
 
         $content = '{# twig-cs-fixer-disable Rule #}';
         // The rule should produce an infinite loop but the comment disable it
-        static::assertSame($content, $fixer->fixFile('{# twig-cs-fixer-disable Rule #}', $ruleset));
+        static::assertSame($content, $fixer->fixFile($content, $ruleset));
     }
 
     /**
@@ -247,7 +249,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class () extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -307,5 +309,25 @@ final class FixerTest extends TestCase
 
         $this->expectException(BadMethodCallException::class);
         $fixer->endChangeSet();
+    }
+
+    public function testNonFixableRulesAreSkipped(): void
+    {
+        $tokenizer = new Tokenizer(new StubbedEnvironment());
+
+        $rule = new class () extends AbstractRule {
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+                throw new LogicException('Should be skipped');
+            }
+        };
+
+        $ruleset = new Ruleset();
+        $ruleset->addRule($rule);
+
+        $fixer = new Fixer($tokenizer);
+
+        $content = '';
+        static::assertSame($content, $fixer->fixFile($content, $ruleset));
     }
 }

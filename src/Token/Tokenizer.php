@@ -12,7 +12,7 @@ use TwigCsFixer\Report\ViolationId;
 use Webmozart\Assert\Assert;
 
 /**
- * An override of Twig's Lexer to add whitespace and new line detection.
+ * An override of Twig\Lexer to add whitespace and new line detection.
  */
 final class Tokenizer implements TokenizerInterface
 {

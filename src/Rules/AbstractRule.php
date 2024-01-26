@@ -8,14 +8,11 @@ use ReflectionClass;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
-use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
 
 abstract class AbstractRule implements RuleInterface
 {
     private ?Report $report = null;
-
-    private ?FixerInterface $fixer = null;
 
     /**
      * @var list<ViolationId>
@@ -36,24 +33,20 @@ abstract class AbstractRule implements RuleInterface
 
     public function lintFile(array $stream, Report $report, array $ignoredViolations = []): void
     {
-        $this->report = $report;
-        $this->fixer = null;
-        $this->ignoredViolations = $ignoredViolations;
+        $this->init($report, $ignoredViolations);
 
         foreach (array_keys($stream) as $index) {
             $this->process($index, $stream);
         }
     }
 
-    public function fixFile(array $stream, FixerInterface $fixer, array $ignoredViolations = []): void
+    /**
+     * @param list<ViolationId> $ignoredViolations
+     */
+    protected function init(?Report $report, array $ignoredViolations = []): void
     {
-        $this->report = null;
-        $this->fixer = $fixer;
+        $this->report = $report;
         $this->ignoredViolations = $ignoredViolations;
-
-        foreach (array_keys($stream) as $index) {
-            $this->process($index, $stream);
-        }
     }
 
     /**
@@ -168,32 +161,6 @@ abstract class AbstractRule implements RuleInterface
             null,
             $messageId,
         );
-    }
-
-    protected function addFixableWarning(
-        string $message,
-        Token $token,
-        ?string $messageId = null
-    ): ?FixerInterface {
-        $added = $this->addWarning($message, $token, $messageId);
-        if (!$added) {
-            return null;
-        }
-
-        return $this->fixer;
-    }
-
-    protected function addFixableError(
-        string $message,
-        Token $token,
-        ?string $messageId = null
-    ): ?FixerInterface {
-        $added = $this->addError($message, $token, $messageId);
-        if (!$added) {
-            return null;
-        }
-
-        return $this->fixer;
     }
 
     private function addMessage(

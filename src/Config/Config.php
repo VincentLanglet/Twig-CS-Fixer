@@ -39,6 +39,8 @@ final class Config
      */
     private array $tokenParsers = [];
 
+    private bool $useOnlyFixableRules = true;
+
     public function __construct(private string $name = 'Default')
     {
         $this->ruleset = new Ruleset();
@@ -142,5 +144,20 @@ final class Config
     public function getTokenParsers(): array
     {
         return $this->tokenParsers;
+    }
+
+    /**
+     * @return $this
+     */
+    public function useOnlyFixableRules(bool $useOnlyFixableRules = true): self
+    {
+        $this->useOnlyFixableRules = $useOnlyFixableRules;
+
+        return $this;
+    }
+
+    public function getUseOnlyFixableRules(): bool
+    {
+        return $this->useOnlyFixableRules;
     }
 }

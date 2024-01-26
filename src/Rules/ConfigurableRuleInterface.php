@@ -7,7 +7,7 @@ namespace TwigCsFixer\Rules;
 interface ConfigurableRuleInterface extends RuleInterface
 {
     /**
-     * @return array<mixed>
+     * @return array<string, mixed>
      */
     public function getConfiguration(): array;
 }

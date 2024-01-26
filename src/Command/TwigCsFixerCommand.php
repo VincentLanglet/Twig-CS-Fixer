@@ -107,7 +107,7 @@ final class TwigCsFixerCommand extends Command
         $config = $configResolver->resolveConfig(
             $input->getArgument('paths'),
             $input->getOption('config'),
-            $input->getOption('no-cache')
+            $input->getOption('no-cache'),
         );
 
         $cacheFile = $config->getCacheFile();
@@ -130,7 +130,7 @@ final class TwigCsFixerCommand extends Command
         $report = $linter->run(
             $config->getFinder(),
             $config->getRuleset(),
-            $input->getOption('fix') ? new Fixer($tokenizer) : null
+            $input->getOption('fix') ? new Fixer($tokenizer) : null,
         );
 
         $reporterFactory = new ReporterFactory();

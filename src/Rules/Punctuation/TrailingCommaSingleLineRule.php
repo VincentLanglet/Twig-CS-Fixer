@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Punctuation;
 
-use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
 use Webmozart\Assert\Assert;
 
 /**
  * Ensures that single-line arrays, objects and argument lists do not have a trailing comma.
  */
-final class TrailingCommaSingleLineRule extends AbstractRule
+final class TrailingCommaSingleLineRule extends AbstractFixableRule
 {
     protected function process(int $tokenPosition, array $tokens): void
     {
