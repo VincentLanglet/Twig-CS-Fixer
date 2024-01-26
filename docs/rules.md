@@ -2,10 +2,10 @@
 
 ## Rules
 
+### Fixable
+
 - **BlockNameSpacingRule**: ensures there is one space before and after block names.
 - **DelimiterSpacingRule**: ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
-- **DirectoryNameRule**: ensures directory name is snake_case (configurable).
-- **FileNameRule**: ensures file name is snake_case (configurable).
 - **OperatorNameSpacingRule**: ensures there is no consecutive spaces inside operator names.
 - **OperatorSpacingRule**: ensures there is one space before and after an operator except for '..'.
 - **PunctuationSpacingRule**: ensures there is no space before and after a punctuation except for ':' and ','.
@@ -15,6 +15,12 @@
 - **IndentRule**: ensures that files are not indented with tabs.
 - **TrailingSpaceRule**: ensures that files have no trailing spaces.
 
+### Non-fixable
+
+- **DirectoryNameRule**: ensures that directory name use snake_case (configurable).
+- **FileNameRule**: ensures that file name use snake_case (configurable).
+- **VariableNameRule**: ensures that variable name use snake_case (configurable).
+
 ## Standards
 
 **Twig**:
@@ -22,6 +28,7 @@
 - OperatorNameSpacingRule
 - OperatorSpacingRule
 - PunctuationSpacingRule
+- VariableNameRule
 
 **TwigCsFixer**:
 - Twig

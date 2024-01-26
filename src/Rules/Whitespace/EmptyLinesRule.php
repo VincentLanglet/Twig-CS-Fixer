@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Whitespace;
 
-use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
 use Webmozart\Assert\Assert;
 
 /**
  * Ensures that 2 empty lines do not follow each other.
  */
-final class EmptyLinesRule extends AbstractRule
+final class EmptyLinesRule extends AbstractFixableRule
 {
     protected function process(int $tokenPosition, array $tokens): void
     {

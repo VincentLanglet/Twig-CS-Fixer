@@ -54,5 +54,5 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Run PHP Code Sniffer
+            - name: Run Psalm
               run: vendor/bin/psalm --no-progress --output-format=github --shepherd

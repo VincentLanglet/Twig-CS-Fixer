@@ -7,6 +7,7 @@ namespace TwigCsFixer\Runner;
 use BadMethodCallException;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\Rules\FixableRuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
@@ -89,7 +90,9 @@ final class Fixer implements FixerInterface
 
             $rules = $ruleset->getRules();
             foreach ($rules as $rule) {
-                $rule->fixFile($stream, $this, $ignoredViolations);
+                if ($rule instanceof FixableRuleInterface) {
+                    $rule->fixFile($stream, $this, $ignoredViolations);
+                }
             }
 
             $this->loops++;

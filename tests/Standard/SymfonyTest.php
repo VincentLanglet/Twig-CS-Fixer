@@ -11,6 +11,7 @@ use TwigCsFixer\Rules\File\FileNameRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
+use TwigCsFixer\Rules\Variable\VariableNameRule;
 use TwigCsFixer\Standard\Symfony;
 
 final class SymfonyTest extends TestCase
@@ -24,6 +25,7 @@ final class SymfonyTest extends TestCase
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
+            new VariableNameRule(),
             new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
             new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
         ], $standard->getRules());

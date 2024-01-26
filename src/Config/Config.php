@@ -39,6 +39,8 @@ final class Config
      */
     private array $tokenParsers = [];
 
+    private bool $allowNonFixableRules = false;
+
     public function __construct(private string $name = 'Default')
     {
         $this->ruleset = new Ruleset();
@@ -142,5 +144,20 @@ final class Config
     public function getTokenParsers(): array
     {
         return $this->tokenParsers;
+    }
+
+    /**
+     * @return $this
+     */
+    public function allowNonFixableRules(bool $allowNonFixableRules = true): self
+    {
+        $this->allowNonFixableRules = $allowNonFixableRules;
+
+        return $this;
+    }
+
+    public function areNonFixableRulesAllowed(): bool
+    {
+        return $this->allowNonFixableRules;
     }
 }

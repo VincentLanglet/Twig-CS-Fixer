@@ -34,6 +34,21 @@ If your config is not located in your current directory, you can specify its pat
 vendor/bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ```
 
+## Non fixable rules
+
+Most of the rules are automatically fixable but some of them are not.
+By default, the twig-cs-fixer disable all the non-fixable-rules, but you can still allow them in the config file:
+
+```php
+<?php
+
+$config = new TwigCsFixer\Config\Config();
+$config->allowNonFixableRules();
+
+return $config;
+```
+
+
 ## Files
 
 By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.

@@ -99,4 +99,17 @@ final class ConfigTest extends TestCase
 
         static::assertSame([$twigExtension, $twigExtension2], $config->getTwigExtensions());
     }
+
+    public function testAllowNonFixableRules(): void
+    {
+        $config = new Config();
+
+        static::assertFalse($config->areNonFixableRulesAllowed());
+
+        $config->allowNonFixableRules();
+        static::assertTrue($config->areNonFixableRulesAllowed());
+
+        $config->allowNonFixableRules(false);
+        static::assertFalse($config->areNonFixableRulesAllowed());
+    }
 }

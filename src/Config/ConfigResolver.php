@@ -34,10 +34,13 @@ final class ConfigResolver
     public function resolveConfig(
         array $paths = [],
         ?string $configPath = null,
-        bool $disableCache = false
+        bool $disableCache = false,
     ): Config {
         $config = $this->getConfig($configPath);
         $config->setFinder($this->resolveFinder($config->getFinder(), $paths));
+
+        // Override ruleset with config
+        $config->getRuleset()->allowNonFixableRules($config->areNonFixableRulesAllowed());
 
         if ($disableCache) {
             $config->setCacheFile(null);
@@ -46,7 +49,7 @@ final class ConfigResolver
             $config->setCacheManager($this->resolveCacheManager(
                 $config->getCacheManager(),
                 $config->getCacheFile(),
-                $config->getRuleset()
+                $config->getRuleset(),
             ));
         }
 
@@ -132,7 +135,7 @@ final class ConfigResolver
     private function resolveCacheManager(
         ?CacheManagerInterface $cacheManager,
         ?string $cacheFile,
-        Ruleset $ruleset
+        Ruleset $ruleset,
     ): ?CacheManagerInterface {
         if (null !== $cacheManager) {
             return $cacheManager;
@@ -147,7 +150,7 @@ final class ConfigResolver
             Signature::fromRuleset(
                 \PHP_VERSION,
                 InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
-                $ruleset
+                $ruleset,
             )
         );
     }

@@ -9,7 +9,7 @@ use TwigCsFixer\Token\Token;
 /**
  * Ensures there is one space before or after some tokens
  */
-abstract class AbstractSpacingRule extends AbstractRule
+abstract class AbstractSpacingRule extends AbstractFixableRule
 {
     protected function process(int $tokenPosition, array $tokens): void
     {

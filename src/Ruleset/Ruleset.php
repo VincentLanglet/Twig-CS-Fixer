@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Ruleset;
 
+use TwigCsFixer\Rules\FixableRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Standard\StandardInterface;
 
@@ -17,11 +18,27 @@ final class Ruleset
      */
     private array $rules = [];
 
+    private bool $allowNonFixableRules = true;
+
+    public function allowNonFixableRules(bool $allowNonFixableRules = true): self
+    {
+        $this->allowNonFixableRules = $allowNonFixableRules;
+
+        return $this;
+    }
+
     /**
      * @return array<class-string<RuleInterface>, RuleInterface>
      */
     public function getRules(): array
     {
+        if (!$this->allowNonFixableRules) {
+            return array_filter(
+                $this->rules,
+                static fn (RuleInterface $rule): bool => $rule instanceof FixableRuleInterface,
+            );
+        }
+
         return $this->rules;
     }
 
