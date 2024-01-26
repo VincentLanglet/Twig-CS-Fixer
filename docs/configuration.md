@@ -43,7 +43,7 @@ By default, the twig-cs-fixer disable all the non-fixable-rules, but you can sti
 <?php
 
 $config = new TwigCsFixer\Config\Config();
-$config->useOnlyFixableRules(false);
+$config->allowNonFixableRules();
 
 return $config;
 ```

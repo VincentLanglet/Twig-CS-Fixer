@@ -40,7 +40,7 @@ final class ConfigResolver
         $config->setFinder($this->resolveFinder($config->getFinder(), $paths));
 
         // Override ruleset with config
-        $config->getRuleset()->useOnlyFixableRules($config->getUseOnlyFixableRules());
+        $config->getRuleset()->allowNonFixableRules($config->areNonFixableRulesAllowed());
 
         if ($disableCache) {
             $config->setCacheFile(null);

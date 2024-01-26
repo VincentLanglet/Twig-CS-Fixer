@@ -18,11 +18,11 @@ final class Ruleset
      */
     private array $rules = [];
 
-    private bool $useOnlyFixableRules = false;
+    private bool $allowNonFixableRules = true;
 
-    public function useOnlyFixableRules(bool $useOnlyFixableRules = true): self
+    public function allowNonFixableRules(bool $allowNonFixableRules = true): self
     {
-        $this->useOnlyFixableRules = $useOnlyFixableRules;
+        $this->allowNonFixableRules = $allowNonFixableRules;
 
         return $this;
     }
@@ -32,7 +32,7 @@ final class Ruleset
      */
     public function getRules(): array
     {
-        if ($this->useOnlyFixableRules) {
+        if (!$this->allowNonFixableRules) {
             return array_filter(
                 $this->rules,
                 static fn (RuleInterface $rule): bool => $rule instanceof FixableRuleInterface,

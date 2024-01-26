@@ -39,7 +39,7 @@ final class Config
      */
     private array $tokenParsers = [];
 
-    private bool $useOnlyFixableRules = true;
+    private bool $allowNonFixableRules = false;
 
     public function __construct(private string $name = 'Default')
     {
@@ -149,15 +149,15 @@ final class Config
     /**
      * @return $this
      */
-    public function useOnlyFixableRules(bool $useOnlyFixableRules = true): self
+    public function allowNonFixableRules(bool $allowNonFixableRules = true): self
     {
-        $this->useOnlyFixableRules = $useOnlyFixableRules;
+        $this->allowNonFixableRules = $allowNonFixableRules;
 
         return $this;
     }
 
-    public function getUseOnlyFixableRules(): bool
+    public function areNonFixableRulesAllowed(): bool
     {
-        return $this->useOnlyFixableRules;
+        return $this->allowNonFixableRules;
     }
 }
