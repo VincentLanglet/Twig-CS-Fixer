@@ -8,6 +8,7 @@ use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
+use TwigCsFixer\Rules\Variable\VariableNameRule;
 
 /**
  * Standard from twig.
@@ -23,6 +24,7 @@ final class Twig implements StandardInterface
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
+            new VariableNameRule(),
         ];
     }
 }
