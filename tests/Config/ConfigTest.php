@@ -99,4 +99,14 @@ final class ConfigTest extends TestCase
 
         static::assertSame([$twigExtension, $twigExtension2], $config->getTwigExtensions());
     }
+
+    public function testUseOnlyFixableRules(): void
+    {
+        $config = new Config();
+
+        static::assertTrue($config->getUseOnlyFixableRules());
+
+        $config->useOnlyFixableRules(false);
+        static::assertFalse($config->getUseOnlyFixableRules());
+    }
 }

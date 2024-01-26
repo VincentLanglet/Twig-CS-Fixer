@@ -10,7 +10,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
 /**
- * Ensures file name is snake_case (Configurable).
+ * Ensures that file name use snake_case (Configurable).
  */
 final class FileNameRule extends AbstractRule implements ConfigurableRuleInterface
 {

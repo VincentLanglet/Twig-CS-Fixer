@@ -10,6 +10,9 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use Webmozart\Assert\Assert;
 
+/**
+ * Ensures that variable name use snake_case (Configurable).
+ */
 final class VariableNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
     // Kebab case is not a valid case for variable names.

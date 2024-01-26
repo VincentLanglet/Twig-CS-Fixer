@@ -10,7 +10,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
 /**
- * Ensures directory name is snake_case (Configurable).
+ * Ensures that directory name use snake_case (Configurable).
  */
 final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
