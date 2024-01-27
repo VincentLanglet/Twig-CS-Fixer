@@ -8,7 +8,7 @@ use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\AbstractRule;
 
 /**
- * Ensures file name uses two extensions (e.g. index.html.twig).
+ * Ensures that file name uses two extensions (e.g. index.html.twig).
  */
 final class FileExtensionRule extends AbstractRule
 {
@@ -19,16 +19,15 @@ final class FileExtensionRule extends AbstractRule
         }
 
         $token = $tokens[$tokenPosition];
-        $fileName = FileHelper::getFileName($token->getFilename());
-        $fileParts = explode('.', $fileName ?? '');
+        $fileName = FileHelper::getFileName($token->getFilename()) ?? '';
+        $fileParts = explode('.', FileHelper::removeDot($fileName));
 
         $fileExtension = array_pop($fileParts);
         if ('twig' !== $fileExtension) {
             return;
         }
 
-        $formatExtension = array_pop($fileParts);
-        if ([] === $fileParts || null === $formatExtension) {
+        if (\count($fileParts) < 2) {
             $this->addFileError(
                 sprintf('The file must use two extensions; found ".%s".', $fileExtension),
                 $token,

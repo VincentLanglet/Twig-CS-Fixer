@@ -10,6 +10,26 @@ use TwigCsFixer\File\FileHelper;
 final class FileHelperTest extends TestCase
 {
     /**
+     * @dataProvider removeDotDataProvider
+     */
+    public function testRemoveDot(
+        string $fileName,
+        string $expected,
+    ): void {
+        static::assertSame($expected, FileHelper::removeDot($fileName));
+    }
+
+    /**
+     * @return iterable<array-key, array{string, string}>
+     */
+    public static function removeDotDataProvider(): iterable
+    {
+        yield ['file.twig', 'file.twig'];
+        yield ['.file.twig', 'file.twig'];
+        yield ['..file.twig', '.file.twig'];
+    }
+
+    /**
      * @param array<string> $ignoredDir
      *
      * @dataProvider getFileNameDataProvider
