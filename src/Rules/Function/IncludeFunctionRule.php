@@ -20,20 +20,20 @@ final class IncludeFunctionRule extends AbstractFixableRule
             return;
         }
 
+        $fixer = $this->addFixableError(
+            'Include function must be used instead of include tag.',
+            $token
+        );
+        
+        if (null === $fixer) {
+            return;
+        }
+
         $openingTag = $this->findPrevious(Token::BLOCK_START_TYPE, $tokens, $tokenPosition);
         Assert::notFalse($openingTag, 'Opening tag cannot be null.');
 
         $closingTag = $this->findNext(Token::BLOCK_END_TYPE, $tokens, $tokenPosition);
         Assert::notFalse($closingTag, 'Closing tag cannot not be null.');
-
-        $fixer = $this->addFixableError(
-            'Include function must be used instead of include tag.',
-            $token
-        );
-
-        if (null === $fixer) {
-            return;
-        }
 
         $fixer->beginChangeSet();
         $fixer->replaceToken($openingTag, '{{');
