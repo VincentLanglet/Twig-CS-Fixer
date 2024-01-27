@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\File\DirectoryNameRule;
+use TwigCsFixer\Rules\File\FileExtensionRule;
 use TwigCsFixer\Rules\File\FileNameRule;
 
 /**
@@ -21,6 +22,7 @@ final class Symfony implements StandardInterface
             ...(new Twig())->getRules(),
             new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
             new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
+            new FileExtensionRule(),
         ];
     }
 }
