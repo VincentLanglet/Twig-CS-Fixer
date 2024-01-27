@@ -24,7 +24,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
             'Include function must be used instead of include tag.',
             $token
         );
-        
+
         if (null === $fixer) {
             return;
         }
