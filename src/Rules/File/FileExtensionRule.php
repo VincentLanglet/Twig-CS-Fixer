@@ -19,14 +19,9 @@ final class FileExtensionRule extends AbstractRule
         }
 
         $token = $tokens[$tokenPosition];
-        $fileName = FileHelper::getFileName(
-            $token->getFilename(),
-        );
-        if (null === $fileName) {
-            return;
-        }
+        $fileName = FileHelper::getFileName($token->getFilename());
+        $fileParts = explode('.', $fileName ?? '');
 
-        $fileParts = explode('.', $fileName);
         $fileExtension = array_pop($fileParts);
         if ('twig' !== $fileExtension) {
             return;
