@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests\Standard;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\File\DirectoryNameRule;
+use TwigCsFixer\Rules\File\FileExtensionRule;
 use TwigCsFixer\Rules\File\FileNameRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
@@ -28,6 +29,7 @@ final class SymfonyTest extends TestCase
             new VariableNameRule(),
             new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
             new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
+            new FileExtensionRule(),
         ], $standard->getRules());
     }
 }

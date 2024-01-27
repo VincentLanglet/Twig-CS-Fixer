@@ -43,3 +43,4 @@
 - Twig
 - DirectoryNameRule
 - FileNameRule
+- FileExtensionRule
