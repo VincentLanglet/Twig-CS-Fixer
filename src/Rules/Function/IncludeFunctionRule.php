@@ -36,16 +36,15 @@ final class IncludeFunctionRule extends AbstractFixableRule
         Assert::notFalse($closingTag, 'Closing tag cannot be null.');
 
         $fixer->beginChangeSet();
-        $fixer->replaceToken($openingTag, '{{');
+
+        // Replace opening tag (and keep eventual whitespace modifiers)
+        $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens[$openingTag]->getValue()));
         $fixer->replaceToken($tokenPosition, 'include(');
-        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $fixer->replaceToken($tokenPosition + 1, '');
-        }
         $ignoreMissing = false;
         $withoutContext = false;
         foreach (range($tokenPosition, $closingTag - 1) as $position) {
             $token = $tokens[$position];
-            if (Token::BLOCK_NAME_TYPE === $token->getType() || Token::NAME_TYPE === $token->getType()) {
+            if (Token::NAME_TYPE === $token->getType()) {
                 switch ($token->getValue()) {
                     case 'with':
                         $fixer->replaceToken($position, ',');
@@ -66,12 +65,12 @@ final class IncludeFunctionRule extends AbstractFixableRule
                 }
             }
         }
-        $endInclude = ') }}';
-        if ($withoutContext) {
-            $endInclude = ', with_context = false'.$endInclude;
-        }
+        $endInclude = ') '. str_replace('%}', '}}', $tokens[$closingTag]->getValue());
         if ($ignoreMissing) {
             $endInclude = ', ignore_missing = true'.$endInclude;
+        }
+        if ($withoutContext) {
+            $endInclude = ', with_context = false'.$endInclude;
         }
         $fixer->replaceToken($closingTag, $endInclude);
         $fixer->endChangeSet();
