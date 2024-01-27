@@ -67,7 +67,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
         }
         $endInclude = ') '.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
         if ($ignoreMissing) {
-            $endInclude = sprintf(', %s', $ignoreMissing ? 'true' : 'false').$endInclude;
+            $endInclude = ', true'.$endInclude;
         }
         if ($ignoreMissing || $withoutContext) {
             $endInclude = sprintf(', %s', $withoutContext ? 'false' : 'true').$endInclude;
