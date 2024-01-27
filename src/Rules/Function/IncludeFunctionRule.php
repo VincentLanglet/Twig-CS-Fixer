@@ -33,7 +33,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
         Assert::notFalse($openingTag, 'Opening tag cannot be null.');
 
         $closingTag = $this->findNext(Token::BLOCK_END_TYPE, $tokens, $tokenPosition);
-        Assert::notFalse($closingTag, 'Closing tag cannot not be null.');
+        Assert::notFalse($closingTag, 'Closing tag cannot be null.');
 
         $fixer->beginChangeSet();
         $fixer->replaceToken($openingTag, '{{');
