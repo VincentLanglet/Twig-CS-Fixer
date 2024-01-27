@@ -65,7 +65,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
                 }
             }
         }
-        $endInclude = ') '. str_replace('%}', '}}', $tokens[$closingTag]->getValue());
+        $endInclude = ') '.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
         if ($ignoreMissing) {
             $endInclude = ', ignore_missing = true'.$endInclude;
         }
