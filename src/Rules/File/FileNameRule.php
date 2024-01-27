@@ -10,7 +10,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
 /**
- * Ensures that file name use snake_case (Configurable).
+ * Ensures that file name uses snake_case (Configurable).
  */
 final class FileNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
@@ -54,7 +54,10 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
         if (null === $fileName) {
             return;
         }
-        $fileName = explode('.', $fileName)[0]; // Avoid conflict with some extensions
+
+        // We're only checking the first part before a dot,
+        // in order to avoid conflict with some file extensions.
+        $fileName = explode('.', FileHelper::removeDot($fileName))[0];
 
         $expected = match ($this->case) {
             self::SNAKE_CASE  => (new UnicodeString($fileName))->snake()->toString(),

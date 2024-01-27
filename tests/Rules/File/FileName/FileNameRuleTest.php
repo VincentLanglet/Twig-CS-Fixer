@@ -41,6 +41,18 @@ final class FileNameRuleTest extends AbstractRuleTestCase
         ]);
     }
 
+    public function testRuleDotfile(): void
+    {
+        $this->checkRule(new FileNameRule(), [
+            'FileName.Error',
+        ], __DIR__.'/.FileNameRuleTest.twig');
+    }
+
+    public function testRuleValidDotfile(): void
+    {
+        $this->checkRule(new FileNameRule(FileNameRule::PASCAL_CASE), [], __DIR__.'/.FileNameRuleTest.twig');
+    }
+
     public function testRulePascalCase(): void
     {
         $this->checkRule(new FileNameRule(FileNameRule::PASCAL_CASE), []);

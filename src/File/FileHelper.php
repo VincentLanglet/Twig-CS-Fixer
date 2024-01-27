@@ -6,6 +6,15 @@ namespace TwigCsFixer\File;
 
 final class FileHelper
 {
+    public static function removeDot(string $fileName): string
+    {
+        if (!str_starts_with($fileName, '.')) {
+            return $fileName;
+        }
+
+        return substr($fileName, 1);
+    }
+
     /**
      * @param array<string> $ignoredDir
      */
