@@ -53,10 +53,6 @@ $rules = [
     'no_useless_else'                                  => true,
     'nullable_type_declaration_for_default_null_value' => true,
     'operator_linebreak'                               => true,
-    'ordered_imports'                                  => [
-        'sort_algorithm' => 'alpha',
-        'imports_order'  => ['class', 'function', 'const'],
-    ],
     'php_unit_test_case_static_method_calls'           => true,
     'phpdoc_add_missing_param_annotation'              => true,
     'phpdoc_no_empty_return'                           => true,
