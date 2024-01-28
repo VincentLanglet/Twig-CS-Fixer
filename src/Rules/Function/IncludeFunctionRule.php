@@ -43,26 +43,27 @@ final class IncludeFunctionRule extends AbstractFixableRule
         $ignoreMissing = false;
         $withoutContext = false;
         $withVariable = false;
-        foreach (range($tokenPosition, $closingTag - 1) as $position) {
+        foreach (range($tokenPosition, $closingTag) as $position) {
             $token = $tokens[$position];
-            if ($this->isTokenMatching($token, Token::NAME_TYPE)) {
-                switch ($token->getValue()) {
-                    case 'with':
-                        $withVariable = true;
-                        $fixer->replaceToken($position, ',');
-                        break;
-                    case 'only':
-                        $withoutContext = true;
-                        $fixer->replaceToken($position, '');
-                        break;
-                    case 'ignore':
-                        $ignoreMissing = true;
-                        $fixer->replaceToken($position, '');
-                        break;
-                    case 'missing':
-                        $fixer->replaceToken($position, '');
-                        break;
-                }
+            if (!$this->isTokenMatching($token, Token::NAME_TYPE)) {
+                continue;
+            }
+            switch ($token->getValue()) {
+                case 'with':
+                    $withVariable = true;
+                    $fixer->replaceToken($position, ',');
+                    break;
+                case 'only':
+                    $withoutContext = true;
+                    $fixer->replaceToken($position, '');
+                    break;
+                case 'ignore':
+                    $ignoreMissing = true;
+                    $fixer->replaceToken($position, '');
+                    break;
+                case 'missing':
+                    $fixer->replaceToken($position, '');
+                    break;
             }
         }
 
