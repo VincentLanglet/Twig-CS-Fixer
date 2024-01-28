@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rules\Function\IncludeFunction;
+namespace TwigCsFixer\Tests\Rules\Function\IncludeFunction;
 
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;

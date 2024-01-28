@@ -24,7 +24,6 @@ final class IncludeFunctionRule extends AbstractFixableRule
             'Include function must be used instead of include tag.',
             $token
         );
-
         if (null === $fixer) {
             return;
         }
@@ -40,13 +39,16 @@ final class IncludeFunctionRule extends AbstractFixableRule
         // Replace opening tag (and keep eventual whitespace modifiers)
         $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens[$openingTag]->getValue()));
         $fixer->replaceToken($tokenPosition, 'include(');
+
         $ignoreMissing = false;
         $withoutContext = false;
+        $withVariable = false;
         foreach (range($tokenPosition, $closingTag - 1) as $position) {
             $token = $tokens[$position];
-            if (Token::NAME_TYPE === $token->getType()) {
+            if ($this->isTokenMatching($token, Token::NAME_TYPE)) {
                 switch ($token->getValue()) {
                     case 'with':
+                        $withVariable = true;
                         $fixer->replaceToken($position, ',');
                         break;
                     case 'only':
@@ -60,18 +62,22 @@ final class IncludeFunctionRule extends AbstractFixableRule
                     case 'missing':
                         $fixer->replaceToken($position, '');
                         break;
-                    default:
-                        break;
                 }
             }
         }
+
         $endInclude = ') '.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
         if ($ignoreMissing) {
             $endInclude = ', true'.$endInclude;
         }
         if ($ignoreMissing || $withoutContext) {
             $endInclude = sprintf(', %s', $withoutContext ? 'false' : 'true').$endInclude;
+
+            if (!$withVariable) {
+                $endInclude = ', []'.$endInclude;
+            }
         }
+
         $fixer->replaceToken($closingTag, $endInclude);
         $fixer->endChangeSet();
     }

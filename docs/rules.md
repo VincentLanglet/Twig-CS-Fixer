@@ -6,6 +6,7 @@
 
 - **BlockNameSpacingRule**: ensures there is one space before and after block names.
 - **DelimiterSpacingRule**: ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
+- **IncludeFunctionRule**: ensures that include function is used instead of function tag.
 - **OperatorNameSpacingRule**: ensures there is no consecutive spaces inside operator names.
 - **OperatorSpacingRule**: ensures there is one space before and after an operator except for '..'.
 - **PunctuationSpacingRule**: ensures there is no space before and after a punctuation except for ':' and ','.
