@@ -61,7 +61,7 @@ final class Violation
         return $this->message;
     }
 
-    public function getDebugMessage(bool $debug): string
+    public function getDebugMessage(bool $debug = true): string
     {
         if (!$debug) {
             return $this->message;

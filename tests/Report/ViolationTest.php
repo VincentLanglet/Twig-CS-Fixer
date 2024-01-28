@@ -17,6 +17,8 @@ final class ViolationTest extends TestCase
 
         static::assertSame(Violation::LEVEL_WARNING, $violation->getLevel());
         static::assertSame('message', $violation->getMessage());
+        static::assertSame('nameId:42:33', $violation->getDebugMessage());
+        static::assertSame('message', $violation->getDebugMessage(false));
         static::assertSame('filename', $violation->getFilename());
         static::assertSame(42, $violation->getLine());
         static::assertSame(33, $violation->getLinePosition());
@@ -30,6 +32,8 @@ final class ViolationTest extends TestCase
 
         static::assertSame(Violation::LEVEL_WARNING, $violation->getLevel());
         static::assertSame('message', $violation->getMessage());
+        static::assertSame('message', $violation->getDebugMessage());
+        static::assertSame('message', $violation->getDebugMessage(false));
         static::assertSame('filename', $violation->getFilename());
         static::assertNull($violation->getLine());
         static::assertNull($violation->getLinePosition());
