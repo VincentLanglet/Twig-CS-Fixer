@@ -19,13 +19,14 @@ use TwigCsFixer\Token\Tokenizer;
 abstract class AbstractRuleTestCase extends TestCase
 {
     /**
-     * @param array<string|null> $expects
+     * @param RuleInterface|array<RuleInterface> $rules
+     * @param array<string|null>                 $expects
      */
     protected function checkRule(
-        RuleInterface $rule,
+        RuleInterface|array $rules,
         array $expects,
         ?string $filePath = null,
-        ?string $fixedFilePath = null
+        ?string $fixedFilePath = null,
     ): void {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -34,7 +35,14 @@ abstract class AbstractRuleTestCase extends TestCase
 
         $filePath ??= $this->generateFilePath();
 
-        $ruleset->addRule($rule);
+        if (\is_array($rules)) {
+            foreach ($rules as $rule) {
+                $ruleset->addRule($rule);
+            }
+        } else {
+            $ruleset->addRule($rules);
+        }
+
         $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
 
         $fixedFilePath ??= substr($filePath, 0, -5).'.fixed.twig';
