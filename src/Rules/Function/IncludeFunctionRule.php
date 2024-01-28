@@ -40,33 +40,54 @@ final class IncludeFunctionRule extends AbstractFixableRule
         $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens[$openingTag]->getValue()));
         $fixer->replaceToken($tokenPosition, 'include(');
 
+        // Unlike tag, function doesn't require a whitespace after the opening parenthesis.
+        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TYPE)) {
+            $fixer->replaceToken($tokenPosition + 1, '');
+        }
+
+        if ($this->isTokenMatching($tokens[$closingTag - 1], Token::WHITESPACE_TYPE)) {
+            $closingTagSpace = $tokens[$closingTag - 1]->getValue();
+        } else {
+            $closingTagSpace = '';
+        }
+
         $ignoreMissing = false;
         $withoutContext = false;
         $withVariable = false;
-        foreach (range($tokenPosition, $closingTag - 1) as $position) {
+        $clearWhitespace = true;
+        foreach (array_reverse(range($tokenPosition, $closingTag - 1)) as $position) {
             $token = $tokens[$position];
+            if ($clearWhitespace && $this->isTokenMatching($token, Token::WHITESPACE_TYPE)) {
+                $fixer->replaceToken($position, '');
+            }
+            $clearWhitespace = false;
+
             if ($this->isTokenMatching($token, Token::NAME_TYPE)) {
                 switch ($token->getValue()) {
                     case 'with':
                         $withVariable = true;
+                        $clearWhitespace = true;
                         $fixer->replaceToken($position, ',');
                         break;
                     case 'only':
                         $withoutContext = true;
+                        $clearWhitespace = true;
                         $fixer->replaceToken($position, '');
                         break;
                     case 'ignore':
                         $ignoreMissing = true;
+                        $clearWhitespace = true;
                         $fixer->replaceToken($position, '');
                         break;
                     case 'missing':
+                        $clearWhitespace = true;
                         $fixer->replaceToken($position, '');
                         break;
                 }
             }
         }
 
-        $endInclude = ') '.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
+        $endInclude = ')'.$closingTagSpace.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
         if ($ignoreMissing) {
             $endInclude = ', true'.$endInclude;
         }

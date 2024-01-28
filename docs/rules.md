@@ -19,9 +19,9 @@
 ### Non-fixable
 
 - **DirectoryNameRule**: ensures that directory name uses snake_case (configurable).
+- **FileExtensionRule**: ensures that file name uses two extensions (e.g. index.html.twig).
 - **FileNameRule**: ensures that file name uses snake_case (configurable).
 - **VariableNameRule**: ensures that variable name uses snake_case (configurable).
-- **FileExtensionRule**: ensures that file name uses two extensions (e.g. index.html.twig).
 
 ## Standards
 

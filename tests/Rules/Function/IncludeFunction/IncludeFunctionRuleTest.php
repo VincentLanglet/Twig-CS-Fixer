@@ -28,6 +28,7 @@ final class IncludeFunctionRuleTest extends AbstractRuleTestCase
             'IncludeFunction.Error:14:4',
             'IncludeFunction.Error:15:5',
             'IncludeFunction.Error:16:6',
+            'IncludeFunction.Error:17:3',
         ]);
     }
 }

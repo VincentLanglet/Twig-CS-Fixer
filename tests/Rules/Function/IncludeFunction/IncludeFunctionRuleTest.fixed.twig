@@ -1,16 +1,17 @@
-{{ include( 'template.html' ) }}
-{{ include( ['template_a.html', 'template_b.html']   , {'foo': 'bar'}  , false, true) }}
-{{ include( 'template.html'  , [], false) }}
-{{ include( 'template.html' , vars ) }}
-{{ include( 'template.html' , vars  , false) }}
-{{ include( 'template.html' , {'foo': 'bar'} ) }}
-{{ include( 'template.html' , {'foo': 'bar'}  , false) }}
-{{ include( some_var ) }}
-{{ include( ajax ? 'ajax.html' : 'not_ajax.html' ) }}
-{{ include( 'template.html'   , [], true, true) }}
-{{ include( 'template.html'   , {'foo': 'bar'} , true, true) }}
-{{ include( 'template.html'    , [], false, true) }}
-{{ include( ['template_a.html', 'template_b.html'] ) }}
-{{ include( ['template_a.html', 'template_b.html']  , [], false) }}
-{{- include( 'template.html' ) ~}}
-{{~  include( 'template.html'  ) -}}
+{{ include('template.html') }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, false, true) }}
+{{ include('template.html', [], false) }}
+{{ include('template.html', vars) }}
+{{ include('template.html', vars, false) }}
+{{ include('template.html', {'foo': 'bar'}) }}
+{{ include('template.html', {'foo': 'bar'}, false) }}
+{{ include(some_var) }}
+{{ include(ajax ? 'ajax.html' : 'not_ajax.html') }}
+{{ include('template.html', [], true, true) }}
+{{ include('template.html', {'foo': 'bar'}, true, true) }}
+{{ include('template.html', [], false, true) }}
+{{ include(['template_a.html', 'template_b.html']) }}
+{{ include(['template_a.html', 'template_b.html'], [], false) }}
+{{- include('template.html') ~}} {# Some comment #}
+{{~  include('template.html')  -}}
+{{include('template.html')}}
