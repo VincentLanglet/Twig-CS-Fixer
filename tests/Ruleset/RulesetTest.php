@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Ruleset;
 
 use PHPUnit\Framework\TestCase;
+use TwigCsFixer\Rules\AbstractFixableRule;
+use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
 use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;
@@ -43,5 +45,29 @@ final class RulesetTest extends TestCase
 
         $ruleset->addStandard($standard);
         static::assertCount(2, $ruleset->getRules());
+    }
+
+    public function testAllowNonFixableRules(): void
+    {
+        $ruleset = new Ruleset();
+
+        $rule1 = new class () extends AbstractRule {
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+            }
+        };
+        $rule2 = new class () extends AbstractFixableRule {
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+            }
+        };
+        $standard = self::createStub(StandardInterface::class);
+        $standard->method('getRules')->willReturn([$rule1, $rule2]);
+
+        $ruleset->addStandard($standard);
+        static::assertCount(2, $ruleset->getRules());
+
+        $ruleset->allowNonFixableRules(false);
+        static::assertCount(1, $ruleset->getRules());
     }
 }
