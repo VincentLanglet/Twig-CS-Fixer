@@ -1,0 +1,16 @@
+{% include 'template.html' %}
+{% include ['template_a.html', 'template_b.html'] ignore missing with {'foo': 'bar'} only %}
+{% include 'template.html' only %}
+{% include 'template.html' with vars %}
+{% include 'template.html' with vars only %}
+{% include 'template.html' with {'foo': 'bar'} %}
+{% include 'template.html' with {'foo': 'bar'} only %}
+{% include some_var %}
+{% include ajax ? 'ajax.html' : 'not_ajax.html' %}
+{% include 'template.html' ignore missing %}
+{% include 'template.html' ignore missing with {'foo': 'bar'} %}
+{% include 'template.html' ignore missing only %}
+{% include ['template_a.html', 'template_b.html'] %}
+{% include ['template_a.html', 'template_b.html'] only %}
+{%- include 'template.html' ~%}
+{%~  include 'template.html'  -%}
