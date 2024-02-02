@@ -20,7 +20,7 @@ a `TwigCsFixer\Config\Config` class:
 
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
 $ruleset->addStandard(new TwigCsFixer\Standard\Twig());
-$ruleset->addRule(\TwigCsFixer\Rules\Whitespace\EmptyLinesRule::class);
+$ruleset->addRule(new TwigCsFixer\Rules\Whitespace\EmptyLinesRule());
 
 $config = new TwigCsFixer\Config\Config();
 $config->setRuleset($ruleset);
