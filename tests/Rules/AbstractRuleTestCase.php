@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use SplFileInfo;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Rules\RuleInterface;
@@ -43,7 +41,7 @@ abstract class AbstractRuleTestCase extends TestCase
             $ruleset->addRule($rules);
         }
 
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
 
         $fixedFilePath ??= substr($filePath, 0, -5).'.fixed.twig';
         if (file_exists($fixedFilePath)) {
@@ -80,7 +78,7 @@ abstract class AbstractRuleTestCase extends TestCase
 
     private function generateFilePath(): string
     {
-        $class = new ReflectionClass(static::class);
+        $class = new \ReflectionClass(static::class);
         $className = $class->getShortName();
         $filename = $class->getFileName();
         static::assertNotFalse($filename);

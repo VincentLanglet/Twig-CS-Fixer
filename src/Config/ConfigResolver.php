@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Config;
 
 use Composer\InstalledVersions;
-use LogicException;
 use Symfony\Component\Finder\Finder;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
@@ -16,7 +15,7 @@ use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 
 /**
- * Resolve config from `.twig-cs-fixer.php` if provided
+ * Resolve config from `.twig-cs-fixer.php` if provided.
  */
 final class ConfigResolver
 {
@@ -103,7 +102,7 @@ final class ConfigResolver
         $nestedFinder = null;
         try {
             $nestedFinder = $finder->getIterator();
-        } catch (LogicException) {
+        } catch (\LogicException) {
             // Only way to know if in() method has not been called
         }
 

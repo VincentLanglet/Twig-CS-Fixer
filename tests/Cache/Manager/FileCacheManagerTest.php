@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache\Manager;
 
-use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
@@ -88,13 +87,13 @@ final class FileCacheManagerTest extends TestCase
             new Signature('8.0', '1', [])
         );
 
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(\BadMethodCallException::class);
         serialize($cacheManager);
     }
 
     public function testCannotUnserialize(): void
     {
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(\BadMethodCallException::class);
         unserialize('O:42:"TwigCsFixer\Cache\Manager\FileCacheManager":0:{}');
     }
 }

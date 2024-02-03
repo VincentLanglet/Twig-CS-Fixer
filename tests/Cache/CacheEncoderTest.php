@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache;
 
-use InvalidArgumentException;
-use JsonException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
@@ -19,7 +17,7 @@ final class CacheEncoderTest extends TestCase
      */
     public function testFromJsonFailure(string $input): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         CacheEncoder::fromJson($input);
     }
 
@@ -71,7 +69,7 @@ final class CacheEncoderTest extends TestCase
         $signature = new Signature('7.4', "\xB1\x31", []);
         $cache = new Cache($signature);
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         CacheEncoder::toJson($cache);
     }
 }

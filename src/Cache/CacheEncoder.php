@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache;
 
-use InvalidArgumentException;
-use JsonException;
 use Webmozart\Assert\Assert;
 
 final class CacheEncoder
 {
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public static function fromJson(string $json): Cache
     {
         try {
             $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new InvalidArgumentException(sprintf(
+        } catch (\JsonException $e) {
+            throw new \InvalidArgumentException(sprintf(
                 'Value needs to be a valid JSON string, got "%s", error: "%s".',
                 $json,
                 $e->getMessage()
@@ -55,7 +53,7 @@ final class CacheEncoder
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public static function toJson(Cache $cache): string
     {

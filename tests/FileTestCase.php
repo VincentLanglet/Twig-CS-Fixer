@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Assert\Assert;
 
@@ -69,7 +68,7 @@ abstract class FileTestCase extends TestCase
     private function getDir(): string
     {
         if (null === $this->dir) {
-            $reflectionClass = new ReflectionClass($this);
+            $reflectionClass = new \ReflectionClass($this);
             $fileName = $reflectionClass->getFileName();
             Assert::notFalse($fileName); // Avoid doing a phpunit assertion
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
@@ -20,7 +19,7 @@ final class RuleTest extends TestCase
 {
     public function testRuleWithReport(): void
     {
-        $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
+        $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
         $rule = new class () extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
@@ -53,7 +52,7 @@ final class RuleTest extends TestCase
 
     public function testRuleWithReport2(): void
     {
-        $report = new Report([new SplFileInfo('fakeFile.html.twig')]);
+        $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
         $rule = new class () extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
@@ -127,7 +126,7 @@ final class RuleTest extends TestCase
         $ruleset = new Ruleset();
 
         $ruleset->addRule(new FakeRule());
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
         $messages = $report->getFileViolations($filePath);
 
         static::assertSame(

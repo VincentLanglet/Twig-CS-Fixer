@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report\Reporter;
 
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
@@ -25,7 +24,7 @@ final class CheckstyleReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/file.twig';
         $file2 = __DIR__.'/Fixtures/file2.twig';
         $file3 = __DIR__.'/Fixtures/file3.twig';
-        $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
+        $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
 
         $violation0 = new Violation(
             Violation::LEVEL_NOTICE,

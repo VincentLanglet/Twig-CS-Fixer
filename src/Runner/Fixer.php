@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Runner;
 
-use BadMethodCallException;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Rules\FixableRuleInterface;
@@ -113,7 +112,7 @@ final class Fixer implements FixerInterface
     public function beginChangeSet(): void
     {
         if ($this->inChangeSet) {
-            throw new BadMethodCallException('Already in change set.');
+            throw new \BadMethodCallException('Already in change set.');
         }
 
         $this->changeSet = [];
@@ -123,7 +122,7 @@ final class Fixer implements FixerInterface
     public function endChangeSet(): void
     {
         if (!$this->inChangeSet) {
-            throw new BadMethodCallException('There is no current change set.');
+            throw new \BadMethodCallException('There is no current change set.');
         }
 
         $this->inChangeSet = false;

@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Exception;
 
-use JsonException;
-use RuntimeException;
-use Throwable;
-
-final class CannotWriteCacheException extends RuntimeException
+final class CannotWriteCacheException extends \RuntimeException
 {
-    private function __construct(string $message, int $code = 0, ?Throwable $previous = null)
+    private function __construct(string $message, int $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
 
-    public static function jsonException(JsonException $exception): self
+    public static function jsonException(\JsonException $exception): self
     {
         return new self(
             sprintf('Cannot encode cache to JSON, error: "%s".', $exception->getMessage()),

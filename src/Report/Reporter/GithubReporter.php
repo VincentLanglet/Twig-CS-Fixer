@@ -9,7 +9,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
 /**
- * Allow errors to be reported in pull-requests diff when run in a GitHub Action
+ * Allow errors to be reported in pull-requests diff when run in a GitHub Action.
  *
  * @see https://help.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-error-message
  */

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Report;
 
-use InvalidArgumentException;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
 use TwigCsFixer\Report\Reporter\GithubReporter;
 use TwigCsFixer\Report\Reporter\JUnitReporter;
@@ -22,7 +21,7 @@ final class ReporterFactory
             CheckstyleReporter::NAME => new CheckstyleReporter(),
             JUnitReporter::NAME => new JUnitReporter(),
             GithubReporter::NAME => new GithubReporter(),
-            default => throw new InvalidArgumentException(
+            default => throw new \InvalidArgumentException(
                 sprintf('No reporter supports the format "%s".', $format)
             ),
         };

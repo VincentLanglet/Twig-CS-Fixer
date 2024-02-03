@@ -17,21 +17,15 @@ $rules = [
     // Override of the Symfony config
     'class_attributes_separation' => [
         'elements' => ['method' => 'one', 'property' => 'one'],
-    ],
+    ], // Instead of ['elements' => ['method' => 'one']]
     'class_definition' => [
         'inline_constructor_arguments' => false,
         'space_before_parenthesis' => true,
         'single_line' => true,
     ], // To be PSR12
     'error_suppression' => false, // For testing purpose
-    'global_namespace_import' => [
-        'import_classes' => true,
-        'import_constants' => false,
-        'import_functions' => false,
-    ],
     'no_trailing_whitespace_in_string' => false, // For string comparison in tests
-    'operator_linebreak' => true,
-    'phpdoc_summary' => false,
+    'operator_linebreak' => true, // Instead of ['only_booleans' => true]
     'phpdoc_to_comment' => [
         'ignored_tags' => ['psalm-suppress'],
     ],

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache;
 
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\Signature;
@@ -48,7 +47,7 @@ final class CacheTest extends TestCase
 
     public function testCacheFileNotFound(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
 
         $signature = new Signature('7.4', '1', []);
         $cache = new Cache($signature);

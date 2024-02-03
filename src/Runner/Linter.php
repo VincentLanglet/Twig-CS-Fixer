@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Runner;
 
-use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
@@ -34,7 +33,7 @@ final class Linter
     }
 
     /**
-     * @param iterable<SplFileInfo> $files
+     * @param iterable<\SplFileInfo> $files
      */
     public function run(iterable $files, Ruleset $ruleset, ?FixerInterface $fixer = null): Report
     {

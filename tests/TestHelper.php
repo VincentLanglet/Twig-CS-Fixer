@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests;
 
-use LogicException;
-
 final class TestHelper
 {
     /**
@@ -16,7 +14,7 @@ final class TestHelper
     {
         $cwd = getcwd();
         if (false === $cwd) {
-            throw new LogicException('Cannot get the current working directory.');
+            throw new \LogicException('Cannot get the current working directory.');
         }
 
         $cwd .= \DIRECTORY_SEPARATOR;
@@ -28,12 +26,12 @@ final class TestHelper
 
         $tempName = tempnam(sys_get_temp_dir(), 'TwigCsFixer');
         if (false === $tempName) {
-            throw new LogicException('Cannot generate temporary name.');
+            throw new \LogicException('Cannot generate temporary name.');
         }
 
         $fixedFile = fopen($tempName, 'w');
         if (false === $fixedFile) {
-            throw new LogicException(sprintf('Cannot open temporary file "%s".', $tempName));
+            throw new \LogicException(sprintf('Cannot open temporary file "%s".', $tempName));
         }
 
         fwrite($fixedFile, $contents);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules;
 
-use ReflectionClass;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
@@ -26,7 +25,7 @@ abstract class AbstractRule implements RuleInterface
 
     public function getShortName(): string
     {
-        $shortName = (new ReflectionClass($this))->getShortName();
+        $shortName = (new \ReflectionClass($this))->getShortName();
 
         return str_ends_with($shortName, 'Rule') ? substr($shortName, 0, -4) : $shortName;
     }

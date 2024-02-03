@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Report;
 
-use InvalidArgumentException;
-use SplFileInfo;
-
 /**
  * Report contains all violations with stats.
  */
@@ -34,7 +31,7 @@ final class Report
     private int $totalErrors = 0;
 
     /**
-     * @param iterable<SplFileInfo> $files
+     * @param iterable<\SplFileInfo> $files
      */
     public function __construct(iterable $files)
     {
@@ -47,7 +44,7 @@ final class Report
     {
         $filename = $violation->getFilename();
         if (!isset($this->violationsByFile[$filename])) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
@@ -77,7 +74,7 @@ final class Report
     public function getFileViolations(string $filename, ?string $level = null): array
     {
         if (!isset($this->violationsByFile[$filename])) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
@@ -129,7 +126,7 @@ final class Report
     public function addFixedFile(string $filename): self
     {
         if (!isset($this->violationsByFile[$filename])) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }

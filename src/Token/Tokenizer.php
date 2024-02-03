@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Token;
 
-use LogicException;
 use Twig\Environment;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
@@ -144,7 +143,7 @@ final class Tokenizer implements TokenizerInterface
                 && $oldBracketAndTernary === $this->bracketsAndTernary
             ) {
                 // @codeCoverageIgnoreStart
-                throw new LogicException('Infinite loop');
+                throw new \LogicException('Infinite loop');
                 // @codeCoverageIgnoreEnd
             }
 
@@ -403,7 +402,7 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0], $bracket);
         } else {
             // @codeCoverageIgnoreStart
-            throw new LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
+            throw new \LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
             // @codeCoverageIgnoreEnd
         }
     }
@@ -481,7 +480,7 @@ final class Tokenizer implements TokenizerInterface
             $tokenType = Token::VAR_START_TYPE;
         } else {
             // @codeCoverageIgnoreStart
-            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
+            throw new \LogicException(sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
             // @codeCoverageIgnoreEnd
         }
 

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Exception;
 
-use RuntimeException;
-use Throwable;
 use TwigCsFixer\Config\Config;
 
-final class CannotResolveConfigException extends RuntimeException
+final class CannotResolveConfigException extends \RuntimeException
 {
-    private function __construct(string $message, int $code = 0, ?Throwable $previous = null)
+    private function __construct(string $message, int $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
