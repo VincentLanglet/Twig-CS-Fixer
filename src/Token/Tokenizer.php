@@ -202,12 +202,11 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int<0, 5>                  $state
-     * @param array<string, string|null> $data
+     * @param int<0, 5> $state
      */
-    private function pushState(int $state, array $data = []): void
+    private function pushState(int $state): void
     {
-        $this->state[] = [$state, $data];
+        $this->state[] = [$state, []];
     }
 
     /**
@@ -233,7 +232,7 @@ final class Tokenizer implements TokenizerInterface
     {
         Assert::notEmpty($this->state, 'Cannot check state params without a current state.');
 
-        return isset($this->state[\count($this->state) - 1][1][$name]);
+        return array_key_exists($name, $this->state[\count($this->state) - 1][1]);
     }
 
     private function popState(): void
@@ -492,7 +491,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $this->pushToken($tokenType, $expressionStarter['fullMatch']);
-        $this->pushState($state, ['startLine' => (string) $this->line]);
+        $this->pushState($state);
     }
 
     private function lexStartDqString(): void
@@ -711,7 +710,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $line = match ($this->getStateParam('ignoredType')) {
-            'line' => (int) $this->getStateParam('startLine'),
+            'line' => $this->line,
             'next-line' => $this->line + 1,
             default => null,
         };
