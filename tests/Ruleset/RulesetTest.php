@@ -51,12 +51,12 @@ final class RulesetTest extends TestCase
     {
         $ruleset = new Ruleset();
 
-        $rule1 = new class () extends AbstractRule {
+        $rule1 = new class() extends AbstractRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
             }
         };
-        $rule2 = new class () extends AbstractFixableRule {
+        $rule2 = new class() extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
             }
