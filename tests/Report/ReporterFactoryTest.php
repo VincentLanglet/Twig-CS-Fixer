@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
+use TwigCsFixer\Report\Reporter\GithubReporter;
 use TwigCsFixer\Report\Reporter\JUnitReporter;
 use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Report\Reporter\TextReporter;
@@ -22,6 +23,7 @@ final class ReporterFactoryTest extends TestCase
         static::assertInstanceOf(NullReporter::class, $reporterFactory->getReporter(NullReporter::NAME));
         static::assertInstanceOf(CheckstyleReporter::class, $reporterFactory->getReporter(CheckstyleReporter::NAME));
         static::assertInstanceOf(JUnitReporter::class, $reporterFactory->getReporter(JUnitReporter::NAME));
+        static::assertInstanceOf(GithubReporter::class, $reporterFactory->getReporter(GithubReporter::NAME));
     }
 
     public function testGetMessageForAnotherFile(): void

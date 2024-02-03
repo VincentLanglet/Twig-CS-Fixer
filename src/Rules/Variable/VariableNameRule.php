@@ -38,14 +38,28 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
     {
         $token = $tokens[$tokenPosition];
 
-        if (!$this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'set')) {
-            return;
+        if ($this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'set')) {
+            $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
+            Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "set" must be followed by a name');
+
+            $this->validateVariable($tokens[$nameTokenPosition]);
+        } elseif ($this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'for')) {
+            $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
+            Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "for" must be followed by a name');
+
+            $secondNameTokenPosition = $this->findNext([Token::NAME_TYPE, Token::OPERATOR_TYPE], $tokens, $nameTokenPosition + 1);
+            Assert::notFalse($secondNameTokenPosition, 'A BLOCK_NAME_TYPE "for" must use the "in" operator');
+
+            $this->validateVariable($tokens[$nameTokenPosition]);
+            if ($this->isTokenMatching($tokens[$secondNameTokenPosition], Token::NAME_TYPE)) {
+                $this->validateVariable($tokens[$secondNameTokenPosition]);
+            }
         }
+    }
 
-        $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
-        Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE set must be followed by a name');
-        $name = $tokens[$nameTokenPosition]->getValue();
-
+    private function validateVariable(Token $token): void
+    {
+        $name = $token->getValue();
         $expected = match ($this->case) {
             self::SNAKE_CASE => (new UnicodeString($name))->snake()->toString(),
             self::CAMEL_CASE => (new UnicodeString($name))->camel()->toString(),
