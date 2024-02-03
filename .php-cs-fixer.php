@@ -9,8 +9,6 @@ $rules = [
     // Default
     '@PHP80Migration' => true,
     '@PHP80Migration:risky' => true,
-    '@PSR12' => true,
-    '@PSR12:risky' => true,
     '@Symfony' => true,
     '@Symfony:risky' => true,
 
@@ -18,11 +16,6 @@ $rules = [
     'class_attributes_separation' => [
         'elements' => ['method' => 'one', 'property' => 'one'],
     ], // Instead of ['elements' => ['method' => 'one']]
-    'class_definition' => [
-        'inline_constructor_arguments' => false,
-        'space_before_parenthesis' => true,
-        'single_line' => true,
-    ], // To be PSR12
     'error_suppression' => false, // For testing purpose
     'no_trailing_whitespace_in_string' => false, // For string comparison in tests
     'operator_linebreak' => true, // Instead of ['only_booleans' => true]

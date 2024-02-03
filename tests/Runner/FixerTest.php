@@ -51,7 +51,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractFixableRule {
+        $rule = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -97,7 +97,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractFixableRule {
+        $rule = new class() extends AbstractFixableRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
@@ -122,7 +122,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule1 = new class () extends AbstractFixableRule {
+        $rule1 = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -140,7 +140,7 @@ final class FixerTest extends TestCase
                 $fixer->replaceToken($tokenPosition, 'rule');
             }
         };
-        $rule2 = new class () extends AbstractFixableRule {
+        $rule2 = new class() extends AbstractFixableRule {
             private int $error = 0;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -172,7 +172,7 @@ final class FixerTest extends TestCase
                 $fixer->endChangeSet();
             }
         };
-        $rule3 = new class () extends AbstractFixableRule {
+        $rule3 = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -210,7 +210,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractFixableRule {
+        $rule = new class() extends AbstractFixableRule {
             public function getShortName(): string
             {
                 return 'Rule';
@@ -247,7 +247,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractFixableRule {
+        $rule = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
             protected function process(int $tokenPosition, array $tokens): void
@@ -313,7 +313,7 @@ final class FixerTest extends TestCase
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
-        $rule = new class () extends AbstractRule {
+        $rule = new class() extends AbstractRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
                 throw new \LogicException('Should be skipped');
