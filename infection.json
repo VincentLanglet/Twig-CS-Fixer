@@ -9,7 +9,7 @@
         "@default": true,
         "global-ignoreSourceCodeByRegex": [
             "Assert\\:\\:.*",
-            "throw new LogicException\\(.*"
+            "throw new \\LogicException\\(.*"
         ]
     },
     "logs": {
