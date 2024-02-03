@@ -64,8 +64,8 @@ final class TestHelper
         foreach ($diffLines as $line) {
             if (isset($line[0])) {
                 $diff[] = match ($line[0]) {
-                    '-'     => "\033[31m{$line}\033[0m",
-                    '+'     => "\033[32m{$line}\033[0m",
+                    '-' => "\033[31m{$line}\033[0m",
+                    '+' => "\033[32m{$line}\033[0m",
                     default => $line,
                 };
             }

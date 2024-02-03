@@ -33,11 +33,11 @@ final class Violation
     public static function getLevelAsString(int $level): string
     {
         return match ($level) {
-            self::LEVEL_NOTICE  => Report::MESSAGE_TYPE_NOTICE,
+            self::LEVEL_NOTICE => Report::MESSAGE_TYPE_NOTICE,
             self::LEVEL_WARNING => Report::MESSAGE_TYPE_WARNING,
-            self::LEVEL_ERROR   => Report::MESSAGE_TYPE_ERROR,
-            self::LEVEL_FATAL   => Report::MESSAGE_TYPE_FATAL,
-            default             => throw new InvalidArgumentException(
+            self::LEVEL_ERROR => Report::MESSAGE_TYPE_ERROR,
+            self::LEVEL_FATAL => Report::MESSAGE_TYPE_FATAL,
+            default => throw new InvalidArgumentException(
                 sprintf('Level "%s" is not supported.', $level)
             ),
         };
@@ -46,11 +46,11 @@ final class Violation
     public static function getLevelAsInt(string $level): int
     {
         return match (strtoupper($level)) {
-            Report::MESSAGE_TYPE_NOTICE  => self::LEVEL_NOTICE,
+            Report::MESSAGE_TYPE_NOTICE => self::LEVEL_NOTICE,
             Report::MESSAGE_TYPE_WARNING => self::LEVEL_WARNING,
-            Report::MESSAGE_TYPE_ERROR   => self::LEVEL_ERROR,
-            Report::MESSAGE_TYPE_FATAL   => self::LEVEL_FATAL,
-            default                      => throw new InvalidArgumentException(
+            Report::MESSAGE_TYPE_ERROR => self::LEVEL_ERROR,
+            Report::MESSAGE_TYPE_FATAL => self::LEVEL_FATAL,
+            default => throw new InvalidArgumentException(
                 sprintf('Level "%s" is not supported.', $level)
             ),
         };

@@ -245,8 +245,8 @@ final class Tokenizer implements TokenizerInterface
         foreach ($match[0] as $index => $tokenFullMatch) {
             $expressionStartersReworked[] = [
                 'fullMatch' => $tokenFullMatch[0],
-                'position'  => $tokenFullMatch[1],
-                'match'     => $match[1][$index][0],
+                'position' => $tokenFullMatch[1],
+                'match' => $match[1][$index][0],
             ];
         }
 
@@ -272,7 +272,7 @@ final class Tokenizer implements TokenizerInterface
     {
         Assert::true($this->hasExpressionStarter(), 'There is no more expression starters');
 
-        $this->currentExpressionStarter++;
+        ++$this->currentExpressionStarter;
     }
 
     private function pushToken(int|string $type, string $value = '', ?Token $relatedToken = null): Token
@@ -509,7 +509,7 @@ final class Tokenizer implements TokenizerInterface
         $cursor = $this->cursor;
         while (preg_match('/\t/', $this->code[$cursor])) {
             $whitespace .= $this->code[$cursor];
-            $cursor++;
+            ++$cursor;
         }
 
         if (self::STATE_COMMENT === $this->getState()) {
@@ -525,7 +525,7 @@ final class Tokenizer implements TokenizerInterface
         $cursor = $this->cursor;
         while (' ' === $this->code[$cursor]) {
             $whitespace .= $this->code[$cursor];
-            $cursor++;
+            ++$cursor;
         }
 
         if (self::STATE_COMMENT === $this->getState()) {
@@ -704,9 +704,9 @@ final class Tokenizer implements TokenizerInterface
             return;
         }
         $line = match ($this->getStateParam('ignoredType')) {
-            'line'      => (int) $this->getStateParam('startLine'),
+            'line' => (int) $this->getStateParam('startLine'),
             'next-line' => $this->line + 1,
-            default     => null,
+            default => null,
         };
 
         if ('' === $ignoredViolations) {

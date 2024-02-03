@@ -83,7 +83,7 @@ abstract class AbstractRule implements RuleInterface
             isset($tokens[$start + $i])
             && $exclude === $this->isTokenMatching($tokens[$start + $i], $type)
         ) {
-            $i++;
+            ++$i;
         }
 
         if (!isset($tokens[$start + $i])) {
@@ -105,7 +105,7 @@ abstract class AbstractRule implements RuleInterface
             isset($tokens[$start - $i])
             && $exclude === $this->isTokenMatching($tokens[$start - $i], $type)
         ) {
-            $i++;
+            ++$i;
         }
 
         if (!isset($tokens[$start - $i])) {

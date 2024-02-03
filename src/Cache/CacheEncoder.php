@@ -62,10 +62,10 @@ final class CacheEncoder
         $signature = $cache->getSignature();
 
         return json_encode([
-            'php_version'   => $signature->getPhpVersion(),
+            'php_version' => $signature->getPhpVersion(),
             'fixer_version' => $signature->getFixerVersion(),
-            'rules'         => $signature->getRules(),
-            'hashes'        => $cache->getHashes(),
+            'rules' => $signature->getRules(),
+            'hashes' => $cache->getHashes(),
         ], \JSON_THROW_ON_ERROR);
     }
 }

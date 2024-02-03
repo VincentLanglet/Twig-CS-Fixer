@@ -75,7 +75,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'   => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--debug' => true,
         ]);
 
@@ -138,9 +138,9 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'      => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--no-cache' => true, // To avoid cache output
-            '--report'   => 'null',
+            '--report' => 'null',
         ]);
 
         static::assertSame('', $commandTester->getDisplay());
@@ -153,7 +153,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer.php'),
         ]);
 
@@ -170,7 +170,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.config-not-found.php'),
         ]);
 
@@ -211,11 +211,11 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         // Run two times to be sure to generate the cache if we were using one.
         $commandTester->execute([
-            'paths'      => [$path],
+            'paths' => [$path],
             '--no-cache' => true,
         ]);
         $commandTester->execute([
-            'paths'      => [$path],
+            'paths' => [$path],
             '--no-cache' => true,
         ]);
 
@@ -232,7 +232,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache.php'),
         ]);
 
@@ -250,7 +250,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         $hashes = CacheEncoder::fromJson($cacheContent)->getHashes();
 
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
         ]);
 
@@ -276,7 +276,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         file_put_contents($cachePath, CacheEncoder::toJson($cache));
 
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
         ]);
 
@@ -299,7 +299,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         file_put_contents($cachePath, CacheEncoder::toJson($newCache));
 
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
         ]);
 
@@ -322,7 +322,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         file_put_contents($cachePath, CacheEncoder::toJson($newCache));
 
         $commandTester->execute([
-            'paths'    => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
             '--config' => $this->getTmpPath(__DIR__.'/Fixtures/.twig-cs-fixer-with-cache2.php'),
         ]);
 

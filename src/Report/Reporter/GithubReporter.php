@@ -26,9 +26,9 @@ final class GithubReporter implements ReporterInterface
         $violations = $report->getViolations($level);
         foreach ($violations as $violation) {
             $text = match ($violation->getLevel()) {
-                Violation::LEVEL_NOTICE       => '::notice',
-                Violation::LEVEL_WARNING      => '::warning',
-                default                       => '::error',
+                Violation::LEVEL_NOTICE => '::notice',
+                Violation::LEVEL_WARNING => '::warning',
+                default => '::error',
             };
 
             $text .= ' file='.$violation->getFilename();

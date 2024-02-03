@@ -17,12 +17,12 @@ final class ReporterFactory
     public function getReporter(string $format = TextReporter::NAME): ReporterInterface
     {
         return match ($format) {
-            NullReporter::NAME       => new NullReporter(),
-            TextReporter::NAME       => new TextReporter(),
+            NullReporter::NAME => new NullReporter(),
+            TextReporter::NAME => new TextReporter(),
             CheckstyleReporter::NAME => new CheckstyleReporter(),
-            JUnitReporter::NAME      => new JUnitReporter(),
-            GithubReporter::NAME     => new GithubReporter(),
-            default                  => throw new InvalidArgumentException(
+            JUnitReporter::NAME => new JUnitReporter(),
+            GithubReporter::NAME => new GithubReporter(),
+            default => throw new InvalidArgumentException(
                 sprintf('No reporter supports the format "%s".', $format)
             ),
         };

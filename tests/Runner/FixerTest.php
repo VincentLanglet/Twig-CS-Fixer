@@ -160,7 +160,7 @@ final class FixerTest extends TestCase
                 }
 
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
-                $this->error++;
+                ++$this->error;
                 if (null === $fixer) {
                     return;
                 }

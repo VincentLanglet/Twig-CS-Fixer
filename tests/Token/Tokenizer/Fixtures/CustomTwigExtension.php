@@ -41,11 +41,11 @@ final class CustomTwigExtension implements ExtensionInterface
         return [
             ['n0t' => [
                 'precedence' => 0,
-                'class'      => NotUnary::class,
+                'class' => NotUnary::class,
             ]],
             ['+sum' => [
-                'precedence'    => 0,
-                'class'         => AddBinary::class,
+                'precedence' => 0,
+                'class' => AddBinary::class,
                 'associativity' => ExpressionParser::OPERATOR_RIGHT,
             ]],
         ];

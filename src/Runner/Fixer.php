@@ -95,7 +95,7 @@ final class Fixer implements FixerInterface
                 }
             }
 
-            $this->loops++;
+            ++$this->loops;
             $content = $this->getContent();
             $numFixes = \count($this->fixedTokens);
         } while (
