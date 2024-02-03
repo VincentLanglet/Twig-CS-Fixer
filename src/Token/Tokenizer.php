@@ -70,7 +70,7 @@ final class Tokenizer implements TokenizerInterface
     private array $expressionStarters = [];
 
     /**
-     * @var array<array{int<0, 5>, array<string, int|string|bool>}>
+     * @var array<array{int<0, 5>, array<string, string|null>}>
      */
     private array $state = [];
 
@@ -202,12 +202,11 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int<0, 5>                 $state
-     * @param array<string, int|string> $data
+     * @param int<0, 5> $state
      */
-    private function pushState(int $state, array $data = []): void
+    private function pushState(int $state): void
     {
-        $this->state[] = [$state, $data];
+        $this->state[] = [$state, []];
     }
 
     /**
@@ -215,18 +214,25 @@ final class Tokenizer implements TokenizerInterface
      *
      * @see https://github.com/vimeo/psalm/issues/8989
      */
-    private function setStateParam(string $name, int|string|bool $value): void
+    private function setStateParam(string $name, ?string $value): void
     {
         Assert::notEmpty($this->state, 'Cannot set state params without a current state.');
 
         $this->state[\count($this->state) - 1][1][$name] = $value;
     }
 
-    private function getStateParam(string $name): int|string|bool|null
+    private function getStateParam(string $name): ?string
     {
         Assert::notEmpty($this->state, 'Cannot get state params without a current state.');
 
-        return $this->state[\count($this->state) - 1][1][$name] ?? null;
+        return $this->state[\count($this->state) - 1][1][$name];
+    }
+
+    private function hasStateParam(string $name): bool
+    {
+        Assert::notEmpty($this->state, 'Cannot check state params without a current state.');
+
+        return \array_key_exists($name, $this->state[\count($this->state) - 1][1]);
     }
 
     private function popState(): void
@@ -377,7 +383,7 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
             $this->popState();
         } else {
-            if (null === $this->getStateParam('ignoredViolations')) {
+            if (!$this->hasStateParam('ignoredViolations')) {
                 $comment = substr($this->code, $this->cursor, $match[0][1]);
                 $this->extractIgnoredViolations($comment);
             }
@@ -485,7 +491,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $this->pushToken($tokenType, $expressionStarter['fullMatch']);
-        $this->pushState($state, ['startLine' => $this->line]);
+        $this->pushState($state);
     }
 
     private function lexStartDqString(): void
@@ -570,7 +576,7 @@ final class Tokenizer implements TokenizerInterface
 
     private function lexName(string $name): void
     {
-        if (self::STATE_BLOCK === $this->getState() && null === $this->getStateParam('blockName')) {
+        if (self::STATE_BLOCK === $this->getState() && !$this->hasStateParam('blockName')) {
             $this->pushToken(Token::BLOCK_NAME_TYPE, $name);
             $this->setStateParam('blockName', $name);
         } else {
@@ -692,18 +698,19 @@ final class Tokenizer implements TokenizerInterface
             $this->setStateParam('ignoredViolations', preg_replace('/\s+/', ',', $match[2]) ?? '');
             $this->setStateParam('ignoredType', trim($match[1], '-'));
         } else {
-            $this->setStateParam('ignoredViolations', false);
+            $this->setStateParam('ignoredViolations', null);
         }
     }
 
     private function processIgnoredViolations(): void
     {
         $ignoredViolations = $this->getStateParam('ignoredViolations');
-        if (!\is_string($ignoredViolations)) {
+        if (null === $ignoredViolations) {
             return;
         }
+
         $line = match ($this->getStateParam('ignoredType')) {
-            'line' => (int) $this->getStateParam('startLine'),
+            'line' => $this->line,
             'next-line' => $this->line + 1,
             default => null,
         };
