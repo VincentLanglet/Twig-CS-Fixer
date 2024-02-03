@@ -232,7 +232,7 @@ final class Tokenizer implements TokenizerInterface
     {
         Assert::notEmpty($this->state, 'Cannot check state params without a current state.');
 
-        return array_key_exists($name, $this->state[\count($this->state) - 1][1]);
+        return \array_key_exists($name, $this->state[\count($this->state) - 1][1]);
     }
 
     private function popState(): void
