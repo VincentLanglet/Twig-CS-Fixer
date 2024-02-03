@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Token;
 
-use LogicException;
 use Twig\Environment;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
@@ -144,7 +143,7 @@ final class Tokenizer implements TokenizerInterface
                 && $oldBracketAndTernary === $this->bracketsAndTernary
             ) {
                 // @codeCoverageIgnoreStart
-                throw new LogicException('Infinite loop');
+                throw new \LogicException('Infinite loop');
                 // @codeCoverageIgnoreEnd
             }
 
@@ -245,8 +244,8 @@ final class Tokenizer implements TokenizerInterface
         foreach ($match[0] as $index => $tokenFullMatch) {
             $expressionStartersReworked[] = [
                 'fullMatch' => $tokenFullMatch[0],
-                'position'  => $tokenFullMatch[1],
-                'match'     => $match[1][$index][0],
+                'position' => $tokenFullMatch[1],
+                'match' => $match[1][$index][0],
             ];
         }
 
@@ -272,7 +271,7 @@ final class Tokenizer implements TokenizerInterface
     {
         Assert::true($this->hasExpressionStarter(), 'There is no more expression starters');
 
-        $this->currentExpressionStarter++;
+        ++$this->currentExpressionStarter;
     }
 
     private function pushToken(int|string $type, string $value = '', ?Token $relatedToken = null): Token
@@ -403,7 +402,7 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0], $bracket);
         } else {
             // @codeCoverageIgnoreStart
-            throw new LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
+            throw new \LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
             // @codeCoverageIgnoreEnd
         }
     }
@@ -481,7 +480,7 @@ final class Tokenizer implements TokenizerInterface
             $tokenType = Token::VAR_START_TYPE;
         } else {
             // @codeCoverageIgnoreStart
-            throw new LogicException(sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
+            throw new \LogicException(sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
             // @codeCoverageIgnoreEnd
         }
 
@@ -509,7 +508,7 @@ final class Tokenizer implements TokenizerInterface
         $cursor = $this->cursor;
         while (preg_match('/\t/', $this->code[$cursor])) {
             $whitespace .= $this->code[$cursor];
-            $cursor++;
+            ++$cursor;
         }
 
         if (self::STATE_COMMENT === $this->getState()) {
@@ -525,7 +524,7 @@ final class Tokenizer implements TokenizerInterface
         $cursor = $this->cursor;
         while (' ' === $this->code[$cursor]) {
             $whitespace .= $this->code[$cursor];
-            $cursor++;
+            ++$cursor;
         }
 
         if (self::STATE_COMMENT === $this->getState()) {
@@ -704,9 +703,9 @@ final class Tokenizer implements TokenizerInterface
             return;
         }
         $line = match ($this->getStateParam('ignoredType')) {
-            'line'      => (int) $this->getStateParam('startLine'),
+            'line' => (int) $this->getStateParam('startLine'),
             'next-line' => $this->line + 1,
-            default     => null,
+            default => null,
         };
 
         if ('' === $ignoredViolations) {

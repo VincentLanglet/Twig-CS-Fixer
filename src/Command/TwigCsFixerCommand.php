@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Config\ConfigResolver;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -85,7 +84,7 @@ final class TwigCsFixerCommand extends Command
         try {
             $config = $this->resolveConfig($input, $output);
             $report = $this->runLinter($config, $input, $output);
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
             $output->writeln(sprintf('<error>Error: %s</error>', $exception->getMessage()));
 
             return self::INVALID;

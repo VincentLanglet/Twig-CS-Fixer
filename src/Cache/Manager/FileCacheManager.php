@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Cache\Manager;
 
-use BadMethodCallException;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\Directory;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
@@ -52,7 +51,7 @@ final class FileCacheManager implements CacheManagerInterface
      */
     public function __sleep(): array
     {
-        throw new BadMethodCallException(sprintf('Cannot serialize %s.', self::class));
+        throw new \BadMethodCallException(sprintf('Cannot serialize %s.', self::class));
     }
 
     /**
@@ -63,7 +62,7 @@ final class FileCacheManager implements CacheManagerInterface
      */
     public function __wakeup(): void
     {
-        throw new BadMethodCallException(sprintf('Cannot unserialize %s.', self::class));
+        throw new \BadMethodCallException(sprintf('Cannot unserialize %s.', self::class));
     }
 
     public function needFixing(string $file, string $fileContent): bool

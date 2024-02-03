@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
-use SplFileInfo;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
@@ -42,7 +41,7 @@ final class LinterTest extends FileTestCase
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
         $report = $linter->run(
-            [new SplFileInfo($fileNotReadablePath), new SplFileInfo($filePath)],
+            [new \SplFileInfo($fileNotReadablePath), new \SplFileInfo($filePath)],
             $ruleset,
         );
 
@@ -68,7 +67,7 @@ final class LinterTest extends FileTestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $report = $linter->run([new SplFileInfo($filePath), new SplFileInfo($filePath2)], $ruleset);
+        $report = $linter->run([new \SplFileInfo($filePath), new \SplFileInfo($filePath2)], $ruleset);
 
         $messages = $report->getFileViolations($filePath);
         static::assertCount(1, $messages);
@@ -96,7 +95,7 @@ final class LinterTest extends FileTestCase
             static function () use (&$call): array {
                 /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/10513 */
                 if (0 === $call) {
-                    $call++;
+                    ++$call;
                     throw CannotTokenizeException::unknownError();
                 }
 
@@ -112,7 +111,7 @@ final class LinterTest extends FileTestCase
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
         $report = $linter->run(
-            [new SplFileInfo($filePath), new SplFileInfo($filePath2)],
+            [new \SplFileInfo($filePath), new \SplFileInfo($filePath2)],
             $ruleset
         );
 
@@ -129,7 +128,7 @@ final class LinterTest extends FileTestCase
     {
         $deprecations = 0;
         set_error_handler(static function () use (&$deprecations): bool {
-            $deprecations++;
+            ++$deprecations;
 
             return true;
         }, \E_USER_DEPRECATED);
@@ -147,7 +146,7 @@ final class LinterTest extends FileTestCase
         $ruleset = new Ruleset();
 
         $linter = new Linter($env, $tokenizer);
-        $report = $linter->run([new SplFileInfo($filePath)], $ruleset);
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
 
         // Ensure the error handler is restored.
         @trigger_error('User Deprecation 2', \E_USER_DEPRECATED);
@@ -175,7 +174,7 @@ final class LinterTest extends FileTestCase
         $fixer->expects(static::once())->method('fixFile')->willReturn('newContent');
 
         $linter = new Linter($env, $tokenizer);
-        $linter->run([new SplFileInfo($filePath)], $ruleset, $fixer);
+        $linter->run([new \SplFileInfo($filePath)], $ruleset, $fixer);
 
         static::assertStringEqualsFile($filePath, 'newContent');
     }
@@ -200,7 +199,7 @@ final class LinterTest extends FileTestCase
             static function () use (&$call, $exception): string {
                 /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/10513 */
                 if (0 === $call) {
-                    $call++;
+                    ++$call;
                     throw $exception;
                 }
 
@@ -215,7 +214,7 @@ final class LinterTest extends FileTestCase
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
         $report = $linter->run(
-            [new SplFileInfo($filePath), new SplFileInfo($filePath2)],
+            [new \SplFileInfo($filePath), new \SplFileInfo($filePath2)],
             $ruleset,
             $fixer
         );
@@ -254,7 +253,7 @@ final class LinterTest extends FileTestCase
         $fixer->expects(static::never())->method('fixFile');
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
-        $linter->run([new SplFileInfo(__DIR__.'/Fixtures/Linter/file.twig')], $ruleset, $fixer);
+        $linter->run([new \SplFileInfo(__DIR__.'/Fixtures/Linter/file.twig')], $ruleset, $fixer);
     }
 
     public function testFileIsNotSkippedIfNotCached(): void
@@ -273,7 +272,7 @@ final class LinterTest extends FileTestCase
         $fixer->expects(static::once())->method('fixFile');
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
-        $linter->run([new SplFileInfo($filePath)], $ruleset, $fixer);
+        $linter->run([new \SplFileInfo($filePath)], $ruleset, $fixer);
     }
 
     public function testFileIsNotCachedWhenReportHasErrors(): void
@@ -290,6 +289,6 @@ final class LinterTest extends FileTestCase
         $cacheManager->expects(static::never())->method('setFile');
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
-        $linter->run([new SplFileInfo($filePath)], $ruleset);
+        $linter->run([new \SplFileInfo($filePath)], $ruleset);
     }
 }

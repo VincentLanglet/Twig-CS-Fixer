@@ -39,7 +39,7 @@ final class SignatureTest extends TestCase
         static::assertSame('1', $signature->getFixerVersion());
         static::assertSame(
             [
-                $rule::class             => null,
+                $rule::class => null,
                 $configurableRule::class => ['a' => 1],
             ],
             $signature->getRules()

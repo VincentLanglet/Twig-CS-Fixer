@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report\Reporter;
 
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
@@ -23,7 +22,7 @@ final class TextReporterTest extends TestCase
         $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report([new SplFileInfo($file)]);
+        $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(
             Violation::LEVEL_NOTICE,
@@ -143,7 +142,7 @@ final class TextReporterTest extends TestCase
         $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report([new SplFileInfo($file)]);
+        $report = new Report([new \SplFileInfo($file)]);
 
         $output = new BufferedOutput();
         $textFormatter->display($output, $report, null, false);
@@ -160,7 +159,7 @@ final class TextReporterTest extends TestCase
         $file = __DIR__.'/Fixtures/file.twig';
         $file2 = __DIR__.'/Fixtures/file2.twig';
 
-        $report = new Report([new SplFileInfo($file), new SplFileInfo($file2)]);
+        $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2)]);
         $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, null, new ViolationId(line: 3));
         $report->addViolation($violation);
 
@@ -192,7 +191,7 @@ final class TextReporterTest extends TestCase
 
         $file = __DIR__.'/Fixtures/fileNotFound.twig';
 
-        $report = new Report([new SplFileInfo($file)]);
+        $report = new Report([new \SplFileInfo($file)]);
         $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, null, new ViolationId(line: 1));
         $report->addViolation($violation);
 
@@ -221,7 +220,7 @@ final class TextReporterTest extends TestCase
         $textFormatter = new TextReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report([new SplFileInfo($file)]);
+        $report = new Report([new \SplFileInfo($file)]);
 
         $violation = new Violation($level, 'Message', $file, null, new ViolationId(line: 1));
         $report->addViolation($violation);

@@ -33,8 +33,8 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
     public function getConfiguration(): array
     {
         return [
-            'case'                  => $this->case,
-            'baseDirectory'         => $this->baseDirectory,
+            'case' => $this->case,
+            'baseDirectory' => $this->baseDirectory,
             'ignoredSubDirectories' => $this->ignoredSubDirectories,
         ];
     }
@@ -60,10 +60,10 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
         $fileName = explode('.', FileHelper::removeDot($fileName))[0];
 
         $expected = match ($this->case) {
-            self::SNAKE_CASE  => (new UnicodeString($fileName))->snake()->toString(),
-            self::CAMEL_CASE  => (new UnicodeString($fileName))->camel()->toString(),
+            self::SNAKE_CASE => (new UnicodeString($fileName))->snake()->toString(),
+            self::CAMEL_CASE => (new UnicodeString($fileName))->camel()->toString(),
             self::PASCAL_CASE => ucfirst((new UnicodeString($fileName))->camel()->toString()),
-            self::KEBAB_CASE  => (new UnicodeString($fileName))->snake()->replace('_', '-')->toString(),
+            self::KEBAB_CASE => (new UnicodeString($fileName))->snake()->replace('_', '-')->toString(),
         };
 
         if ($expected !== $fileName) {

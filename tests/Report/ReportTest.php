@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
@@ -29,9 +28,9 @@ final class ReportTest extends TestCase
         $file3 = 'file3.twig';
 
         $report = new Report([
-            new SplFileInfo($file),
-            new SplFileInfo($file2),
-            new SplFileInfo($file3),
+            new \SplFileInfo($file),
+            new \SplFileInfo($file2),
+            new \SplFileInfo($file3),
         ]);
 
         $violation1 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file);
@@ -107,7 +106,7 @@ final class ReportTest extends TestCase
 
     public function testAddViolationForAnotherFile(): void
     {
-        $report = new Report([new SplFileInfo('file.twig')]);
+        $report = new Report([new \SplFileInfo('file.twig')]);
 
         $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->addViolation(new Violation(Violation::LEVEL_NOTICE, 'Message', 'another_file.twig'));
@@ -115,7 +114,7 @@ final class ReportTest extends TestCase
 
     public function testGetViolationForAnotherFile(): void
     {
-        $report = new Report([new SplFileInfo('file.twig')]);
+        $report = new Report([new \SplFileInfo('file.twig')]);
 
         $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->getFileViolations('another_file.twig');
@@ -123,7 +122,7 @@ final class ReportTest extends TestCase
 
     public function testAddFixedFile(): void
     {
-        $report = new Report([new SplFileInfo('file.twig')]);
+        $report = new Report([new \SplFileInfo('file.twig')]);
 
         static::assertSame([], $report->getFixedFiles());
         $report->addFixedFile('file.twig');
@@ -132,7 +131,7 @@ final class ReportTest extends TestCase
 
     public function testAddFixedFileForAnotherFile(): void
     {
-        $report = new Report([new SplFileInfo('file.twig')]);
+        $report = new Report([new \SplFileInfo('file.twig')]);
 
         $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
         $report->addFixedFile('another_file.twig');

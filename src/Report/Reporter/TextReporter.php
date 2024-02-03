@@ -117,7 +117,7 @@ final class TextReporter implements ReporterInterface
             preg_match('/^[\s\t]+/', $lines[$position], $match);
             $indents[] = \strlen($match[0] ?? '');
             $result[$position + 1] = $lines[$position];
-            $position++;
+            ++$position;
         } while ($position < $max);
 
         return array_map(fn (string $code): string => substr($code, min($indents)), $result);

@@ -13,8 +13,8 @@ final class FileNameRuleTest extends AbstractRuleTestCase
     {
         static::assertSame(
             [
-                'case'                  => FileNameRule::SNAKE_CASE,
-                'baseDirectory'         => null,
+                'case' => FileNameRule::SNAKE_CASE,
+                'baseDirectory' => null,
                 'ignoredSubDirectories' => [],
             ],
             (new FileNameRule())->getConfiguration()
@@ -22,8 +22,8 @@ final class FileNameRuleTest extends AbstractRuleTestCase
 
         static::assertSame(
             [
-                'case'                  => FileNameRule::PASCAL_CASE,
-                'baseDirectory'         => 'foo',
+                'case' => FileNameRule::PASCAL_CASE,
+                'baseDirectory' => 'foo',
                 'ignoredSubDirectories' => ['bar'],
             ],
             (new FileNameRule(

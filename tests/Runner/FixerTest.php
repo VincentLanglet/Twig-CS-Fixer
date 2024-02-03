@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
-use BadMethodCallException;
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
@@ -160,7 +158,7 @@ final class FixerTest extends TestCase
                 }
 
                 $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
-                $this->error++;
+                ++$this->error;
                 if (null === $fixer) {
                     return;
                 }
@@ -298,7 +296,7 @@ final class FixerTest extends TestCase
         $fixer = new Fixer($tokenizer);
 
         $fixer->beginChangeSet();
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(\BadMethodCallException::class);
         $fixer->beginChangeSet();
     }
 
@@ -307,7 +305,7 @@ final class FixerTest extends TestCase
         $tokenizer = new Tokenizer(new StubbedEnvironment());
         $fixer = new Fixer($tokenizer);
 
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(\BadMethodCallException::class);
         $fixer->endChangeSet();
     }
 
@@ -318,7 +316,7 @@ final class FixerTest extends TestCase
         $rule = new class () extends AbstractRule {
             protected function process(int $tokenPosition, array $tokens): void
             {
-                throw new LogicException('Should be skipped');
+                throw new \LogicException('Should be skipped');
             }
         };
 

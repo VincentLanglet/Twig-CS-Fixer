@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report\Reporter;
 
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
@@ -23,7 +22,7 @@ final class GithubReporterTest extends TestCase
         $textFormatter = new GithubReporter();
 
         $file = __DIR__.'/Fixtures/file.twig';
-        $report = new Report([new SplFileInfo($file)]);
+        $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(
             Violation::LEVEL_NOTICE,

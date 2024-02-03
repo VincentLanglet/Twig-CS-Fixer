@@ -47,8 +47,8 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
         $name = $tokens[$nameTokenPosition]->getValue();
 
         $expected = match ($this->case) {
-            self::SNAKE_CASE  => (new UnicodeString($name))->snake()->toString(),
-            self::CAMEL_CASE  => (new UnicodeString($name))->camel()->toString(),
+            self::SNAKE_CASE => (new UnicodeString($name))->snake()->toString(),
+            self::CAMEL_CASE => (new UnicodeString($name))->camel()->toString(),
             self::PASCAL_CASE => ucfirst((new UnicodeString($name))->camel()->toString()),
         };
 

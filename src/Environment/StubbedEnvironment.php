@@ -41,7 +41,7 @@ final class StubbedEnvironment extends Environment
      */
     private array $stubTests = [
         'divisible' => null, // Allow 'divisible by'
-        'same'      => null, // Allow 'same as'
+        'same' => null, // Allow 'same as'
     ];
 
     /**

@@ -55,7 +55,7 @@ final class EmptyLinesRule extends AbstractFixableRule
         $fixer->beginChangeSet();
         while ($i >= 2 || $i === $tokenPosition) {
             $fixer->replaceToken($tokenPosition - $i, '');
-            $i--;
+            --$i;
         }
         $fixer->endChangeSet();
     }

@@ -33,8 +33,8 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
     public function getConfiguration(): array
     {
         return [
-            'case'                  => $this->case,
-            'baseDirectory'         => $this->baseDirectory,
+            'case' => $this->case,
+            'baseDirectory' => $this->baseDirectory,
             'ignoredSubDirectories' => $this->ignoredSubDirectories,
         ];
     }
@@ -54,10 +54,10 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
 
         foreach ($directories as $directory) {
             $expected = match ($this->case) {
-                self::SNAKE_CASE  => (new UnicodeString($directory))->snake()->toString(),
-                self::CAMEL_CASE  => (new UnicodeString($directory))->camel()->toString(),
+                self::SNAKE_CASE => (new UnicodeString($directory))->snake()->toString(),
+                self::CAMEL_CASE => (new UnicodeString($directory))->camel()->toString(),
                 self::PASCAL_CASE => ucfirst((new UnicodeString($directory))->camel()->toString()),
-                self::KEBAB_CASE  => (new UnicodeString($directory))->snake()->replace('_', '-')->toString(),
+                self::KEBAB_CASE => (new UnicodeString($directory))->snake()->replace('_', '-')->toString(),
             };
 
             if ($expected !== $directory) {
