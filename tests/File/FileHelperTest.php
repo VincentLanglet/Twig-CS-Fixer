@@ -179,5 +179,23 @@ final class FileHelperTest extends TestCase
             [],
             ['foo_directory'],
         ];
+        yield [
+            './foo_directory/directory/file.twig',
+            'foo_directory',
+            [],
+            ['directory'],
+        ];
+        yield [
+            'foo_directory/directory/file.twig',
+            'foo_directory',
+            [],
+            ['directory'],
+        ];
+        yield [
+            'foo_directory/directory/file.twig',
+            'foo',
+            [],
+            [],
+        ];
     }
 }
