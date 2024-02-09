@@ -36,13 +36,13 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
 
     public function testRule(): void
     {
-        $this->checkRule(new DirectoryNameRule(baseDirectory: 'templates'), []);
+        $this->checkRule(new DirectoryNameRule(baseDirectory: __DIR__.'/templates'), []);
     }
 
     public function testRuleValidTemplatesDirectory(): void
     {
         $this->checkRule(
-            new DirectoryNameRule(baseDirectory: 'templates'),
+            new DirectoryNameRule(baseDirectory: __DIR__.'/templates'),
             [],
             __DIR__.'/templates/directory_name_rule_test/DirectoryNameRuleTest.twig'
         );
@@ -51,7 +51,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
     public function testRuleInvalidTemplatesDirectory(): void
     {
         $this->checkRule(
-            new DirectoryNameRule(baseDirectory: 'templates'),
+            new DirectoryNameRule(baseDirectory: __DIR__.'/templates'),
             ['DirectoryName.Error'],
             __DIR__.'/templates/directoryNameRuleTest/DirectoryNameRuleTest.twig'
         );
@@ -59,18 +59,18 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
 
     public function testRulePascalCase(): void
     {
-        $this->checkRule(new DirectoryNameRule(DirectoryNameRule::PASCAL_CASE, baseDirectory: 'File'), []);
+        $this->checkRule(new DirectoryNameRule(DirectoryNameRule::PASCAL_CASE, baseDirectory: __DIR__.'/..'), []);
     }
 
     public function testRuleInvalidDirectory(): void
     {
-        $this->checkRule(new DirectoryNameRule(baseDirectory: 'File'), ['DirectoryName.Error']);
+        $this->checkRule(new DirectoryNameRule(baseDirectory: __DIR__.'/..'), ['DirectoryName.Error']);
     }
 
     public function testRuleKebabCase(): void
     {
         $this->checkRule(
-            new DirectoryNameRule(DirectoryNameRule::KEBAB_CASE, baseDirectory: 'templates'),
+            new DirectoryNameRule(DirectoryNameRule::KEBAB_CASE, baseDirectory: __DIR__.'/templates'),
             [],
             __DIR__.'/templates/directory-name-rule-test/DirectoryNameRuleTest.twig',
         );
@@ -79,7 +79,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
     public function testRuleCamelCase(): void
     {
         $this->checkRule(
-            new DirectoryNameRule(DirectoryNameRule::CAMEL_CASE, baseDirectory: 'templates'),
+            new DirectoryNameRule(DirectoryNameRule::CAMEL_CASE, baseDirectory: __DIR__.'/templates'),
             [],
             __DIR__.'/templates/directoryNameRuleTest/DirectoryNameRuleTest.twig',
         );
@@ -88,7 +88,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
     public function testRuleIgnoredDirectory(): void
     {
         $this->checkRule(
-            new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
+            new DirectoryNameRule(baseDirectory: __DIR__.'/templates', ignoredSubDirectories: ['bundles']),
             [],
             __DIR__.'/templates/bundles/directoryNameRuleTest/DirectoryNameRuleTest.twig'
         );

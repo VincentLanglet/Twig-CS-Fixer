@@ -11,6 +11,7 @@ use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Exception\CannotResolveConfigException;
+use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\File\Finder as TwigCsFinder;
 use TwigCsFixer\Ruleset\Ruleset;
 
@@ -61,15 +62,15 @@ final class ConfigResolver
     private function getConfig(?string $configPath = null): Config
     {
         if (null !== $configPath) {
-            return $this->getConfigFromPath($this->getAbsolutePath($configPath));
+            return $this->getConfigFromPath(FileHelper::getAbsolutePath($configPath, $this->workingDir));
         }
 
-        $defaultPath = $this->getAbsolutePath(Config::DEFAULT_PATH);
+        $defaultPath = FileHelper::getAbsolutePath(Config::DEFAULT_PATH, $this->workingDir);
         if (file_exists($defaultPath)) {
             return $this->getConfigFromPath($defaultPath);
         }
 
-        $defaultDistPath = $this->getAbsolutePath(Config::DEFAULT_DIST_PATH);
+        $defaultDistPath = FileHelper::getAbsolutePath(Config::DEFAULT_DIST_PATH, $this->workingDir);
         if (file_exists($defaultDistPath)) {
             return $this->getConfigFromPath($defaultDistPath);
         }
@@ -145,23 +146,12 @@ final class ConfigResolver
         }
 
         return new FileCacheManager(
-            new CacheFileHandler($this->getAbsolutePath($cacheFile)),
+            new CacheFileHandler(FileHelper::getAbsolutePath($cacheFile, $this->workingDir)),
             Signature::fromRuleset(
                 \PHP_VERSION,
                 InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
                 $ruleset,
             )
         );
-    }
-
-    private function getAbsolutePath(string $path): string
-    {
-        $isAbsolutePath = '' !== $path && (
-            '/' === $path[0]
-            || '\\' === $path[0]
-            || 1 === preg_match('#^[a-zA-Z]:\\\\#', $path)
-        );
-
-        return $isAbsolutePath ? $path : $this->workingDir.\DIRECTORY_SEPARATOR.$path;
     }
 }
