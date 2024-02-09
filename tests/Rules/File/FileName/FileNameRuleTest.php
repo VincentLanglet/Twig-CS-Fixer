@@ -80,13 +80,13 @@ final class FileNameRuleTest extends AbstractRuleTestCase
 
     public function testRuleBaseDir(): void
     {
-        $this->checkRule(new FileNameRule(baseDirectory: 'File'), [
+        $this->checkRule(new FileNameRule(baseDirectory: __DIR__.'/..'), [
             'FileName.Error',
         ]);
     }
 
     public function testRuleIgnoredPath(): void
     {
-        $this->checkRule(new FileNameRule(baseDirectory: 'File', ignoredSubDirectories: ['FileName']), []);
+        $this->checkRule(new FileNameRule(baseDirectory: __DIR__.'/..', ignoredSubDirectories: ['FileName']), []);
     }
 }

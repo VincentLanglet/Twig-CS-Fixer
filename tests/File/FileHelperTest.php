@@ -35,12 +35,12 @@ final class FileHelperTest extends TestCase
      * @dataProvider getFileNameDataProvider
      */
     public function testGetFileName(
-        string $absolutePath,
+        string $path,
         ?string $baseDir,
         array $ignoredDir,
         ?string $expected,
     ): void {
-        static::assertSame($expected, FileHelper::getFileName($absolutePath, $baseDir, $ignoredDir));
+        static::assertSame($expected, FileHelper::getFileName($path, $baseDir, $ignoredDir));
     }
 
     /**
@@ -64,12 +64,6 @@ final class FileHelperTest extends TestCase
             __DIR__.'/Fixtures/directory/file.twig',
             __DIR__.'/Fixtures',
             ['directory'],
-            null,
-        ];
-        yield [
-            __DIR__.'/Fixtures/directory/file.twig',
-            __DIR__.'/Fixtures',
-            ['/directory'],
             null,
         ];
         yield [
@@ -104,7 +98,7 @@ final class FileHelperTest extends TestCase
         array $ignoredDir,
         array $expected,
     ): void {
-        static::assertSame($expected, FileHelper::getDirectories($absolutePath, $baseDir, $ignoredDir));
+        static::assertSame($expected, FileHelper::getDirectories($absolutePath, $baseDir, $ignoredDir, __DIR__));
     }
 
     /**
@@ -139,12 +133,6 @@ final class FileHelperTest extends TestCase
         yield [
             __DIR__.'/Fixtures/directory/file.twig',
             __DIR__.'/Fixtures',
-            ['/directory'],
-            [],
-        ];
-        yield [
-            __DIR__.'/Fixtures/directory/file.twig',
-            __DIR__.'/Fixtures',
             ['directory/'],
             [],
         ];
@@ -161,12 +149,6 @@ final class FileHelperTest extends TestCase
             ['Fixtures', 'directory'],
         ];
 
-        yield [
-            __DIR__.'/directory/foo/directory/file.twig',
-            'directory',
-            [],
-            [],
-        ];
         yield [
             '/foo_directory/directory/file.twig',
             '/',
