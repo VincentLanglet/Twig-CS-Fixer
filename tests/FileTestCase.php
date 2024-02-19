@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Assert\Assert;
 
@@ -26,7 +27,11 @@ abstract class FileTestCase extends TestCase
         $tmpFixtures = $this->getTmpPath($fixtureDir);
 
         if ($tmpFixtures !== $fixtureDir) {
-            $this->getFilesystem()->remove($tmpFixtures);
+            try {
+                $this->getFilesystem()->remove($tmpFixtures);
+            } catch (IOException) {
+                // Ignore
+            }
 
             if ($this->getFilesystem()->exists($fixtureDir)) {
                 $this->getFilesystem()->mirror($fixtureDir, $tmpFixtures);

@@ -17,6 +17,6 @@ final class TwigCsFixerTest extends FileTestCase
             TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer')
         ));
 
-        static::assertSame(0, $process->run());
+        static::assertSame(0, $process->run(), $process->getErrorOutput());
     }
 }
