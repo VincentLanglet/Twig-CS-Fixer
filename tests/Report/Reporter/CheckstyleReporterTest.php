@@ -22,9 +22,9 @@ final class CheckstyleReporterTest extends TestCase
     {
         $textFormatter = new CheckstyleReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
-        $file2 = __DIR__.'/Fixtures/file2.twig';
-        $file3 = __DIR__.'/Fixtures/file3.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
+        $file3 = TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig');
         $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
 
         $violation0 = new Violation(

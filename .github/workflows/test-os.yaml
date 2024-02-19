@@ -28,6 +28,12 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
+            - name: Test 1
+              run: rm vendor/symfony/console/Helper/Table.php
+
+            - name: Test 2
+              run: mv tmp/Table.php vendor/symfony/console/Helper/Table.php
+
             - name: Run tests with PHPUnit
               run: vendor/bin/phpunit
 

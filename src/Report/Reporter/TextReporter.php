@@ -80,7 +80,6 @@ final class TextReporter implements ReporterInterface
             }
 
             if (\count($rows) > 0) {
-                dump($rows);
                 $io->table([], $rows);
             }
         }
