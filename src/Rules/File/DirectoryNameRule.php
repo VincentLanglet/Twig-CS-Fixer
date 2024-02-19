@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\File;
 
-use Symfony\Component\String\UnicodeString;
 use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
+use TwigCsFixer\Util\StringUtil;
 
 /**
  * Ensures that directory name uses snake_case (Configurable).
@@ -54,10 +54,10 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
 
         foreach ($directories as $directory) {
             $expected = match ($this->case) {
-                self::SNAKE_CASE => (new UnicodeString($directory))->snake()->toString(),
-                self::CAMEL_CASE => (new UnicodeString($directory))->camel()->toString(),
-                self::PASCAL_CASE => ucfirst((new UnicodeString($directory))->camel()->toString()),
-                self::KEBAB_CASE => (new UnicodeString($directory))->snake()->replace('_', '-')->toString(),
+                self::SNAKE_CASE => StringUtil::toSnakeCase($directory),
+                self::CAMEL_CASE => StringUtil::toCamelCase($directory),
+                self::PASCAL_CASE => StringUtil::toPascalCase($directory),
+                self::KEBAB_CASE => StringUtil::toKebabCase($directory),
             };
 
             if ($expected !== $directory) {

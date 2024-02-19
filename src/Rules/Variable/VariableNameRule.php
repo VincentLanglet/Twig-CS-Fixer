@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Variable;
 
-use Symfony\Component\String\UnicodeString;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Util\StringUtil;
 use Webmozart\Assert\Assert;
 
 /**
@@ -61,9 +61,9 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
     {
         $name = $token->getValue();
         $expected = match ($this->case) {
-            self::SNAKE_CASE => (new UnicodeString($name))->snake()->toString(),
-            self::CAMEL_CASE => (new UnicodeString($name))->camel()->toString(),
-            self::PASCAL_CASE => ucfirst((new UnicodeString($name))->camel()->toString()),
+            self::SNAKE_CASE => StringUtil::toSnakeCase($name),
+            self::CAMEL_CASE => StringUtil::toCamelCase($name),
+            self::PASCAL_CASE => StringUtil::toPascalCase($name),
         };
 
         if ($expected !== $name) {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\File;
 
-use Symfony\Component\String\UnicodeString;
 use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
+use TwigCsFixer\Util\StringUtil;
 
 /**
  * Ensures that file name uses snake_case (Configurable).
@@ -60,10 +60,10 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
         $fileName = explode('.', FileHelper::removeDot($fileName))[0];
 
         $expected = match ($this->case) {
-            self::SNAKE_CASE => (new UnicodeString($fileName))->snake()->toString(),
-            self::CAMEL_CASE => (new UnicodeString($fileName))->camel()->toString(),
-            self::PASCAL_CASE => ucfirst((new UnicodeString($fileName))->camel()->toString()),
-            self::KEBAB_CASE => (new UnicodeString($fileName))->snake()->replace('_', '-')->toString(),
+            self::SNAKE_CASE => StringUtil::toSnakeCase($fileName),
+            self::CAMEL_CASE => StringUtil::toCamelCase($fileName),
+            self::PASCAL_CASE => StringUtil::toPascalCase($fileName),
+            self::KEBAB_CASE => StringUtil::toKebabCase($fileName),
         };
 
         if ($expected !== $fileName) {
