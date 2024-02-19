@@ -84,6 +84,12 @@ final class FileHelperTest extends TestCase
             ['directory'],
             'file.twig',
         ];
+        yield [
+            str_replace('/', '\\', __DIR__.'/Fixtures/directory/file.twig'), // To simulate Windows
+            null,
+            ['directory'],
+            'file.twig',
+        ];
     }
 
     /**
