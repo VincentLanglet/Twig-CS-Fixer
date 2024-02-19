@@ -30,6 +30,7 @@ final class VariableNameRuleTest extends AbstractRuleTestCase
             'VariableName.Error:6:8',
             'VariableName.Error:7:8',
             'VariableName.Error:7:16',
+            'VariableName.Error:9:8',
         ]);
     }
 
@@ -38,6 +39,7 @@ final class VariableNameRuleTest extends AbstractRuleTestCase
         $this->checkRule(new VariableNameRule(VariableNameRule::CAMEL_CASE), [
             'VariableName.Error:3:8',
             'VariableName.Error:4:8',
+            'VariableName.Error:9:8',
         ]);
     }
 
