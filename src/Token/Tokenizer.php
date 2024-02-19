@@ -304,15 +304,15 @@ final class Tokenizer implements TokenizerInterface
     private function lexExpression(): void
     {
         $currentCode = $this->code[$this->cursor];
-        $nextToken = $this->code[$this->cursor + 1] ?? null;
-        $next2Token = $this->code[$this->cursor + 2] ?? null;
+        $nextToken = $this->code[$this->cursor + 1] ?? '';
+        $next2Token = $this->code[$this->cursor + 2] ?? '';
 
         if (1 === preg_match('/\t/', $currentCode)) {
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (1 === preg_match("/\r\n?|\n/", $currentCode)) {
-            $this->lexEOL();
+        } elseif (1 === preg_match("/^\r\n?|^\n/", $currentCode.$nextToken, $match)) {
+            $this->lexEOL($match[0]);
         } elseif ('.' === $currentCode && '.' === $nextToken && '.' === $next2Token) {
             $this->lexSpread();
         } elseif ('=' === $currentCode && '>' === $nextToken) {
@@ -440,12 +440,14 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $currentCode = $this->code[$this->cursor];
+        $nextToken = $this->code[$this->cursor + 1] ?? '';
+
         if (1 === preg_match('/\t/', $currentCode)) {
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (1 === preg_match("/\r\n?|\n/", $currentCode)) {
-            $this->lexEOL();
+        } elseif (1 === preg_match("/^\r\n?|^\n/", $currentCode.$nextToken, $match)) {
+            $this->lexEOL($match[0]);
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
 
@@ -540,12 +542,12 @@ final class Tokenizer implements TokenizerInterface
         }
     }
 
-    private function lexEOL(): void
+    private function lexEOL(string $eol): void
     {
         if (self::STATE_COMMENT === $this->getState()) {
-            $this->pushToken(Token::COMMENT_EOL_TYPE, $this->code[$this->cursor]);
+            $this->pushToken(Token::COMMENT_EOL_TYPE, $eol);
         } else {
-            $this->pushToken(Token::EOL_TYPE, $this->code[$this->cursor]);
+            $this->pushToken(Token::EOL_TYPE, $eol);
         }
 
         $this->lastEOL = $this->cursor;

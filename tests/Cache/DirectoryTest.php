@@ -23,16 +23,18 @@ final class DirectoryTest extends TestCase
      */
     public static function getRelativePathToDataProvider(): iterable
     {
+        $slash = \DIRECTORY_SEPARATOR;
+
         yield ['', 'foo.php', 'foo.php'];
-        yield ['', '/foo.php', '/foo.php'];
-        yield ['', '\foo.php', '/foo.php'];
+        yield ['', '/foo.php', $slash.'foo.php'];
+        yield ['', '\foo.php', $slash.'foo.php'];
         yield ['directory', 'foo.php', 'foo.php'];
         yield ['directory', 'directory.php', 'directory.php'];
         yield ['directory', 'directory/foo.php', 'foo.php'];
         yield ['directory', 'directory\foo.php', 'foo.php'];
-        yield ['directory', '/foo.php', '/foo.php'];
-        yield ['directory', '\foo.php', '/foo.php'];
-        yield ['directory', '/directory/foo.php', '/directory/foo.php'];
-        yield ['directory', '\directory\foo.php', '/directory/foo.php'];
+        yield ['directory', '/foo.php', $slash.'foo.php'];
+        yield ['directory', '\foo.php', $slash.'foo.php'];
+        yield ['directory', '/directory/foo.php', $slash.'directory'.$slash.'foo.php'];
+        yield ['directory', '\directory\foo.php', $slash.'directory'.$slash.'foo.php'];
     }
 }
