@@ -18,7 +18,7 @@ final class FileHelper
         $workingDir ??= @getcwd();
         Assert::notFalse($workingDir, 'Cannot get the current working directory.');
 
-        return $workingDir.\DIRECTORY_SEPARATOR.$path;
+        return self::getAbsolutePath($workingDir.\DIRECTORY_SEPARATOR.$path);
     }
 
     public static function removeDot(string $fileName): string
@@ -78,17 +78,22 @@ final class FileHelper
         $baseDir = Path::canonicalize(self::getAbsolutePath($baseDir ?? '', $workingDir));
         $path = Path::canonicalize(self::getAbsolutePath($path, $workingDir));
 
-        if (!str_starts_with($path, $baseDir.\DIRECTORY_SEPARATOR)) {
+        if (!str_starts_with($path, self::normalize($baseDir.\DIRECTORY_SEPARATOR))) {
             return [];
         }
 
         foreach ($ignoredDir as $ignoredDirectory) {
             $ignoredDirectory = Path::canonicalize(self::getAbsolutePath($ignoredDirectory, $baseDir));
-            if (str_starts_with($path, $ignoredDirectory.\DIRECTORY_SEPARATOR)) {
+            if (str_starts_with($path, self::normalize($ignoredDirectory.\DIRECTORY_SEPARATOR))) {
                 return [];
             }
         }
 
-        return explode(\DIRECTORY_SEPARATOR, substr($path, \strlen($baseDir) + 1));
+        return explode(self::normalize(\DIRECTORY_SEPARATOR), substr($path, \strlen($baseDir) + 1));
+    }
+
+    public static function normalize(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 }
