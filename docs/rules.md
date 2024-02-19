@@ -18,6 +18,8 @@
 
 ### Non-fixable
 
+To use these rules, you have to [allow non-fixable rules](configuration.md#non-fixable-rules) on your ruleset.
+
 - **DirectoryNameRule**: ensures that directory name uses snake_case (configurable).
 - **FileNameRule**: ensures that file name uses snake_case (configurable).
 - **VariableNameRule**: ensures that variable name uses snake_case (configurable).
