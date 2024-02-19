@@ -41,6 +41,9 @@ final class FileHelperTest extends TestCase
         ?string $expected,
     ): void {
         static::assertSame($expected, FileHelper::getFileName($path, $baseDir, $ignoredDir));
+
+        $windowsPath = str_replace('/', '\\', $path);
+        static::assertSame($expected, FileHelper::getFileName($windowsPath, $baseDir, $ignoredDir));
     }
 
     /**
@@ -99,12 +102,15 @@ final class FileHelperTest extends TestCase
      * @dataProvider getDirectoriesDataProvider
      */
     public function testGetDirectories(
-        string $absolutePath,
+        string $path,
         ?string $baseDir,
         array $ignoredDir,
         array $expected,
     ): void {
-        static::assertSame($expected, FileHelper::getDirectories($absolutePath, $baseDir, $ignoredDir, __DIR__));
+        static::assertSame($expected, FileHelper::getDirectories($path, $baseDir, $ignoredDir, __DIR__));
+
+        $windowsPath = str_replace('/', '\\', $path);
+        static::assertSame($expected, FileHelper::getDirectories($windowsPath, $baseDir, $ignoredDir, __DIR__));
     }
 
     /**
