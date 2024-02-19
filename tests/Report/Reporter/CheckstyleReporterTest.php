@@ -11,6 +11,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Tests\TestHelper;
 
 final class CheckstyleReporterTest extends TestCase
 {
@@ -81,7 +82,7 @@ final class CheckstyleReporterTest extends TestCase
         $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
-        static::assertStringContainsString($expected, $text);
+        static::assertSame($expected, rtrim($text));
     }
 
     /**
@@ -94,21 +95,23 @@ final class CheckstyleReporterTest extends TestCase
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
-                      <file name="%1\$s/Fixtures/file.twig">
+                      <file name="%1\$s">
                         <error line="1" severity="notice" message="Notice" source="NoticeRule"/>
                         <error line="2" column="22" severity="warning" message="Warning" source="WarningRule"/>
                         <error line="3" column="33" severity="error" message="Error" source="ErrorRule"/>
                         <error severity="fatal" message="Fatal"/>
                       </file>
-                      <file name="%1\$s/Fixtures/file2.twig">
+                      <file name="%2\$s">
                         <error line="1" severity="notice" message="Notice2" source="Notice2Rule"/>
                       </file>
-                      <file name="%1\$s/Fixtures/file3.twig">
+                      <file name="%3\$s">
                         <error severity="fatal" message="&apos;&quot;&lt;&amp;&gt;&quot;&apos;"/>
                       </file>
                     </checkstyle>
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
             ),
             null,
             false,
@@ -119,16 +122,17 @@ final class CheckstyleReporterTest extends TestCase
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
-                      <file name="%1\$s/Fixtures/file.twig">
+                      <file name="%1\$s">
                         <error line="3" column="33" severity="error" message="Error" source="ErrorRule"/>
                         <error severity="fatal" message="Fatal"/>
                       </file>
-                      <file name="%1\$s/Fixtures/file3.twig">
+                      <file name="%2\$s">
                         <error severity="fatal" message="&apos;&quot;&lt;&amp;&gt;&quot;&apos;"/>
                       </file>
                     </checkstyle>
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
             ),
             Report::MESSAGE_TYPE_ERROR,
             false,
@@ -139,16 +143,17 @@ final class CheckstyleReporterTest extends TestCase
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
-                      <file name="%1\$s/Fixtures/file.twig">
+                      <file name="%1\$s">
                         <error line="3" column="33" severity="error" message="ErrorId:3:33" source="ErrorRule"/>
                         <error severity="fatal" message="FatalId"/>
                       </file>
-                      <file name="%1\$s/Fixtures/file3.twig">
+                      <file name="%2\$s">
                         <error severity="fatal" message="FatalId"/>
                       </file>
                     </checkstyle>
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
             ),
             Report::MESSAGE_TYPE_ERROR,
             true,

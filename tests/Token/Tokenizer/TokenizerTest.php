@@ -30,7 +30,7 @@ final class TokenizerTest extends TestCase
             [
                 [
                     new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
-                    new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
+                    new Token(Token::EOL_TYPE, 1, 16, $filePath, \PHP_EOL),
                     new Token(Token::EOF_TYPE, 2, 1, $filePath),
                 ],
                 [],
@@ -65,7 +65,7 @@ final class TokenizerTest extends TestCase
                 new Token(Token::NAME_TYPE, 1, 22, $filePath, 'sumVariable'),
                 new Token(Token::WHITESPACE_TYPE, 1, 33, $filePath, ' '),
                 new Token(Token::VAR_END_TYPE, 1, 34, $filePath, '}}'),
-                new Token(Token::EOL_TYPE, 1, 36, $filePath, "\n"),
+                new Token(Token::EOL_TYPE, 1, 36, $filePath, \PHP_EOL),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
             $tokenizer->tokenize($source)[0]

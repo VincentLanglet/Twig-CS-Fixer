@@ -11,6 +11,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\JUnitReporter;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Tests\TestHelper;
 
 final class JUnitReporterTest extends TestCase
 {
@@ -21,9 +22,9 @@ final class JUnitReporterTest extends TestCase
     {
         $textFormatter = new JUnitReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
-        $file2 = __DIR__.'/Fixtures/file2.twig';
-        $file3 = __DIR__.'/Fixtures/file3.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
+        $file3 = TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig');
         $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
 
         $violation0 = new Violation(
@@ -81,7 +82,7 @@ final class JUnitReporterTest extends TestCase
         $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
-        static::assertStringContainsString($expected, $text);
+        static::assertSame($expected, rtrim($text));
     }
 
     /**
@@ -95,28 +96,30 @@ final class JUnitReporterTest extends TestCase
                     <?xml version="1.0" encoding="UTF-8"?>
                     <testsuites>
                       <testsuite name="Twig CS Fixer" tests="6" failures="6">
-                        <testcase name="%1\$s/Fixtures/file.twig:1">
+                        <testcase name="%1\$s:1">
                           <failure type="notice" message="Notice" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file.twig:2">
+                        <testcase name="%1\$s:2">
                           <failure type="warning" message="Warning" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file.twig:3">
+                        <testcase name="%1\$s:3">
                           <failure type="error" message="Error" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file.twig:0">
+                        <testcase name="%1\$s:0">
                           <failure type="fatal" message="Fatal" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file2.twig:1">
+                        <testcase name="%2\$s:1">
                           <failure type="notice" message="Notice2" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file3.twig:0">
+                        <testcase name="%3\$s:0">
                           <failure type="fatal" message="&apos;&quot;&lt;&amp;&gt;&quot;&apos;" />
                         </testcase>
                       </testsuite>
                     </testsuites>
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
             ),
             null,
             false,
@@ -127,28 +130,30 @@ final class JUnitReporterTest extends TestCase
                     <?xml version="1.0" encoding="UTF-8"?>
                     <testsuites>
                       <testsuite name="Twig CS Fixer" tests="6" failures="6">
-                        <testcase name="%1\$s/Fixtures/file.twig:1">
+                        <testcase name="%1\$s:1">
                           <failure type="notice" message="NoticeId:1" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file.twig:2">
+                        <testcase name="%1\$s:2">
                           <failure type="warning" message="WarningId:2:22" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file.twig:3">
+                        <testcase name="%1\$s:3">
                           <failure type="error" message="ErrorId:3:33" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file.twig:0">
+                        <testcase name="%1\$s:0">
                           <failure type="fatal" message="FatalId" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file2.twig:1">
+                        <testcase name="%2\$s:1">
                           <failure type="notice" message="NoticeId:1" />
                         </testcase>
-                        <testcase name="%1\$s/Fixtures/file3.twig:0">
+                        <testcase name="%3\$s:0">
                           <failure type="fatal" message="FatalId" />
                         </testcase>
                       </testsuite>
                     </testsuites>
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig'),
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
             ),
             null,
             true,
@@ -159,9 +164,9 @@ final class JUnitReporterTest extends TestCase
     {
         $textFormatter = new JUnitReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
-        $file2 = __DIR__.'/Fixtures/file2.twig';
-        $file3 = __DIR__.'/Fixtures/file3.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
+        $file3 = TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig');
         $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
@@ -178,6 +183,6 @@ final class JUnitReporterTest extends TestCase
             EOD;
 
         $text = $output->fetch();
-        static::assertStringContainsString($expected, $text);
+        static::assertSame($expected, rtrim($text));
     }
 }

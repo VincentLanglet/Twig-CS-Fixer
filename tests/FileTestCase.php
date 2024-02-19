@@ -22,7 +22,7 @@ abstract class FileTestCase extends TestCase
     {
         parent::setUp();
 
-        $fixtureDir = $this->getDir().'/Fixtures';
+        $fixtureDir = $this->getDir().\DIRECTORY_SEPARATOR.'Fixtures';
         $tmpFixtures = $this->getTmpPath($fixtureDir);
 
         if ($tmpFixtures !== $fixtureDir) {
@@ -58,6 +58,7 @@ abstract class FileTestCase extends TestCase
 
     protected function getTmpPath(string $path): string
     {
+        $path = TestHelper::getOsPath($path);
         if (!str_starts_with($path, $this->getDir())) {
             return $path;
         }
@@ -87,7 +88,7 @@ abstract class FileTestCase extends TestCase
             if (false === $tmp) {
                 $this->tmp = $this->getDir();
             } else {
-                $this->tmp = $tmp.'/twig-cs-fixer';
+                $this->tmp = $tmp.\DIRECTORY_SEPARATOR.'twig-cs-fixer';
             }
         }
 

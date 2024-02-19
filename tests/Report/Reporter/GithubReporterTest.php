@@ -11,6 +11,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\GithubReporter;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Tests\TestHelper;
 
 final class GithubReporterTest extends TestCase
 {
@@ -21,7 +22,7 @@ final class GithubReporterTest extends TestCase
     {
         $textFormatter = new GithubReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(
@@ -61,7 +62,7 @@ final class GithubReporterTest extends TestCase
         $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
-        static::assertStringContainsString($expected, $text);
+        static::assertSame($expected, rtrim($text));
     }
 
     /**
@@ -72,12 +73,12 @@ final class GithubReporterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                    ::notice file=%1\$s/Fixtures/file.twig,line=1::Notice
-                    ::warning file=%1\$s/Fixtures/file.twig,line=2,col=22::Warning
-                    ::error file=%1\$s/Fixtures/file.twig,line=3,col=33::Error
-                    ::error file=%1\$s/Fixtures/file.twig::Fatal%%0Awith new line
+                    ::notice file=%1\$s,line=1::Notice
+                    ::warning file=%1\$s,line=2,col=22::Warning
+                    ::error file=%1\$s,line=3,col=33::Error
+                    ::error file=%1\$s::Fatal%%0Awith new line
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
             ),
             null,
             false,
@@ -85,12 +86,12 @@ final class GithubReporterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                    ::notice file=%1\$s/Fixtures/file.twig,line=1::NoticeId:1
-                    ::warning file=%1\$s/Fixtures/file.twig,line=2,col=22::WarningId:2:22
-                    ::error file=%1\$s/Fixtures/file.twig,line=3,col=33::ErrorId:3:33
-                    ::error file=%1\$s/Fixtures/file.twig::FatalId
+                    ::notice file=%1\$s,line=1::NoticeId:1
+                    ::warning file=%1\$s,line=2,col=22::WarningId:2:22
+                    ::error file=%1\$s,line=3,col=33::ErrorId:3:33
+                    ::error file=%1\$s::FatalId
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
             ),
             null,
             true,

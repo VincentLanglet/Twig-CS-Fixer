@@ -11,6 +11,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\TextReporter;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Tests\TestHelper;
 
 final class TextReporterTest extends TestCase
 {
@@ -21,7 +22,7 @@ final class TextReporterTest extends TestCase
     {
         $textFormatter = new TextReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(
@@ -73,7 +74,7 @@ final class TextReporterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                     \e[31mKO\e[39m %s/Fixtures/file.twig
+                     \e[31mKO\e[39m %s
                      --------- --------------------------------------- 
                       \e[33mNOTICE\e[39m    1    |     {# Some text line 1 #}      
                                 \e[31m>>   | Notice\e[39m                          
@@ -92,7 +93,7 @@ final class TextReporterTest extends TestCase
                       \e[33mFATAL\e[39m     \e[31m>>   | Fatal\e[39m                           
                      --------- --------------------------------------- 
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig')
             ),
             null,
             false,
@@ -101,7 +102,7 @@ final class TextReporterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                     \e[31mKO\e[39m %s/Fixtures/file.twig
+                     \e[31mKO\e[39m %s
                      ------- ----------------------------------- 
                       \e[33mERROR\e[39m   2    |     {# Some text line 2 #}  
                               3    | {# Some text line 3 #}      
@@ -111,7 +112,7 @@ final class TextReporterTest extends TestCase
                       \e[33mFATAL\e[39m   \e[31m>>   | Fatal\e[39m                       
                      ------- ----------------------------------- 
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig')
             ),
             Report::MESSAGE_TYPE_ERROR,
             false,
@@ -120,7 +121,7 @@ final class TextReporterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                     \e[31mKO\e[39m %s/Fixtures/file.twig
+                     \e[31mKO\e[39m %s
                      ------- ----------------------------------- 
                       \e[33mERROR\e[39m   2    |     {# Some text line 2 #}  
                               3    | {# Some text line 3 #}      
@@ -130,7 +131,7 @@ final class TextReporterTest extends TestCase
                       \e[33mFATAL\e[39m   \e[31m>>   | FatalId\e[39m                     
                      ------- ----------------------------------- 
                     EOD,
-                __DIR__
+                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig')
             ),
             Report::MESSAGE_TYPE_ERROR,
             true,
@@ -141,14 +142,14 @@ final class TextReporterTest extends TestCase
     {
         $textFormatter = new TextReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $output = new BufferedOutput();
         $textFormatter->display($output, $report, null, false);
 
         $text = $output->fetch();
-        static::assertStringNotContainsString(sprintf('KO %s/Fixtures/file.twig', __DIR__), $text);
+        static::assertStringNotContainsString(sprintf('KO %s', $file), $text);
         static::assertStringContainsString('[OK]', $text);
     }
 
@@ -156,8 +157,8 @@ final class TextReporterTest extends TestCase
     {
         $textFormatter = new TextReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
-        $file2 = __DIR__.'/Fixtures/file2.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
 
         $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2)]);
         $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, null, new ViolationId(line: 3));
@@ -169,7 +170,7 @@ final class TextReporterTest extends TestCase
         static::assertStringContainsString(
             sprintf(
                 <<<EOD
-                     KO %s/Fixtures/file.twig
+                     KO %s
                      ------- ----------------------------------- 
                       ERROR   2    |     {# Some text line 2 #}  
                               3    | {# Some text line 3 #}      
@@ -179,7 +180,7 @@ final class TextReporterTest extends TestCase
                     
                      [ERROR] Files linted: 2, notices: 0, warnings: 0, errors: 1
                     EOD,
-                __DIR__
+                $file
             ),
             $output->fetch()
         );
@@ -189,7 +190,7 @@ final class TextReporterTest extends TestCase
     {
         $textFormatter = new TextReporter();
 
-        $file = __DIR__.'/Fixtures/fileNotFound.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/fileNotFound.twig');
 
         $report = new Report([new \SplFileInfo($file)]);
         $violation = new Violation(Violation::LEVEL_ERROR, 'Error', $file, null, new ViolationId(line: 1));
@@ -201,14 +202,14 @@ final class TextReporterTest extends TestCase
         static::assertStringContainsString(
             sprintf(
                 <<<EOD
-                     KO %s/Fixtures/fileNotFound.twig
+                     KO %s
                      ------- -------------- 
                       ERROR   >>   | Error  
                      ------- -------------- 
                     EOD,
-                __DIR__
+                $file
             ),
-            $output->fetch()
+            rtrim($output->fetch())
         );
     }
 
@@ -219,7 +220,7 @@ final class TextReporterTest extends TestCase
     {
         $textFormatter = new TextReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $violation = new Violation($level, 'Message', $file, null, new ViolationId(line: 1));
