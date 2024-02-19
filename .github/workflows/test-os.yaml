@@ -22,17 +22,14 @@ jobs:
                   tools: composer:v2
                   ini-file: development
 
+            - name: Apply patches
+              run: 'composer config extra.patches.symfony/console --json --merge \'["patches/Table.patch"]\''
+
             - name: Install Composer dependencies
               uses: ramsey/composer-install@v2
               with:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
-
-            - name: Test 1
-              run: rm vendor/symfony/console/Helper/Table.php
-
-            - name: Test 2
-              run: mv tmp/Table.php vendor/symfony/console/Helper/Table.php
 
             - name: Run tests with PHPUnit
               run: vendor/bin/phpunit
