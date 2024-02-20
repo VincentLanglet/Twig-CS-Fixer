@@ -12,10 +12,11 @@ final class TwigCsFixerTest extends FileTestCase
 {
     public function testBinary(): void
     {
-        $process = Process::fromShellCommandline(sprintf(
-            '%s lint Fixtures',
-            TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer')
-        ));
+        $process = new Process([
+            TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer'),
+            'lint',
+            'Fixtures'
+        ]);
 
         static::assertSame(0, $process->run(), $process->getErrorOutput());
     }
