@@ -23,7 +23,7 @@ jobs:
                   ini-file: development
 
             - name: Apply patches
-              run: 'composer config extra.patches.symfony/console --json --merge \'["patches/Table.patch"]\''
+              run: "composer config extra.patches.symfony/console --json --merge '[\"patches/Table.patch\"]'"
 
             - name: Install Composer dependencies
               uses: ramsey/composer-install@v2
