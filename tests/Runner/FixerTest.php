@@ -284,8 +284,8 @@ final class FixerTest extends TestCase
      */
     public static function addContentMethodsDataProvider(): iterable
     {
-        yield ['', "\nba\n"];
-        yield ['foo', "\nbfooa\n"];
+        yield ['', \PHP_EOL.'ba'.\PHP_EOL];
+        yield ['foo', \PHP_EOL.'bfooa'.\PHP_EOL];
         yield ["\n", "\nb\na\n"];
         yield ["\r", "\rb\ra\r"];
     }

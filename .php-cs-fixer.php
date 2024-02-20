@@ -20,7 +20,7 @@ $rules = [
     'no_trailing_whitespace_in_string' => false, // For string comparison in tests
     'operator_linebreak' => true, // Instead of ['only_booleans' => true]
     'phpdoc_to_comment' => [
-        'ignored_tags' => ['psalm-suppress'],
+        'ignored_tags' => ['phpstan-var', 'psalm-suppress'],
     ],
     'single_line_throw' => false,
 
