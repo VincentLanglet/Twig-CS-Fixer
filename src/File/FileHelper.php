@@ -9,6 +9,16 @@ use Webmozart\Assert\Assert;
 
 final class FileHelper
 {
+    /**
+     * @return non-empty-string
+     */
+    public static function detectEOL(string $content): string
+    {
+        preg_match("/\r\n?|\n/", $content, $matches);
+
+        return $matches[0] ?? \PHP_EOL;
+    }
+
     public static function getAbsolutePath(string $path, ?string $workingDir = null): string
     {
         if (Path::isAbsolute($path)) {

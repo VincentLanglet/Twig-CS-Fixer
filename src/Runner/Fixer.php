@@ -6,6 +6,7 @@ namespace TwigCsFixer\Runner;
 
 use Twig\Source;
 use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\FixableRuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
@@ -21,7 +22,7 @@ final class Fixer implements FixerInterface
 
     private int $loops = 0;
 
-    private string $eolChar = "\n";
+    private string $eolChar = \PHP_EOL;
 
     /**
      * The list of tokens that make up the file contents.
@@ -224,8 +225,7 @@ final class Fixer implements FixerInterface
 
         $this->tokens = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
 
-        preg_match("/\r\n?|\n/", $this->getContent(), $matches);
-        $this->eolChar = $matches[0] ?? "\n";
+        $this->eolChar = FileHelper::detectEOL($this->getContent());
     }
 
     private function getContent(): string

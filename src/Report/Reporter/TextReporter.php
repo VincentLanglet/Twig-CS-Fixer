@@ -9,6 +9,7 @@ use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
@@ -106,7 +107,8 @@ final class TextReporter implements ReporterInterface
      */
     private function getContext(string $template, int $line): array
     {
-        $lines = explode(\PHP_EOL, $template);
+        $eol = FileHelper::detectEOL($template);
+        $lines = explode($eol, $template);
         $position = max(0, $line - 2);
         $max = min(\count($lines), $line + 1);
 
