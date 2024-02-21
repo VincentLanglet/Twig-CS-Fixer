@@ -8,6 +8,9 @@ use Symfony\Component\Process\Process;
 use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Tests\TestHelper;
 
+/**
+ * @group skip-windows
+ */
 final class TwigCsFixerTest extends FileTestCase
 {
     public function testBinary(): void
@@ -15,7 +18,7 @@ final class TwigCsFixerTest extends FileTestCase
         $process = new Process([
             TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer'),
             'lint',
-            'Fixtures'
+            'Fixtures',
         ]);
 
         static::assertSame(0, $process->run(), $process->getErrorOutput());

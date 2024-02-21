@@ -33,7 +33,7 @@ jobs:
                   composer-options: --prefer-dist --prefer-stable
 
             - name: Run tests with PHPUnit
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --exclude-group=skip-windows
 
     test-macos:
         name: Mac OS
