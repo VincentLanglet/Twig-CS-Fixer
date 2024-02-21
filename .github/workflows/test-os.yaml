@@ -1,0 +1,60 @@
+name: Test OS
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    test-windows:
+        name: Windows
+        runs-on: windows-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.2
+                  tools: composer:v2
+                  ini-file: development
+
+            - name: Apply patch
+              run: composer config extra.patches.symfony/console --json --merge '["patches/Table.patch"]'
+              shell: bash
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  dependency-versions: highest
+                  composer-options: --prefer-dist --prefer-stable
+
+            - name: Run tests with PHPUnit
+              run: vendor/bin/phpunit --exclude-group=skip-windows
+
+    test-macos:
+        name: Mac OS
+        runs-on: macos-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.2
+                  tools: composer:v2
+                  ini-file: development
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  dependency-versions: highest
+                  composer-options: --prefer-dist --prefer-stable
+
+            - name: Run tests with PHPUnit
+              run: vendor/bin/phpunit

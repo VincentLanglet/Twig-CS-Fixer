@@ -9,6 +9,7 @@ use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
@@ -59,7 +60,7 @@ final class TextReporter implements ReporterInterface
                         $formattedText[] = sprintf(
                             self::ERROR_LINE_FORMAT,
                             $no,
-                            wordwrap($code, self::ERROR_LINE_WIDTH)
+                            wordwrap($code, self::ERROR_LINE_WIDTH, \PHP_EOL)
                         );
 
                         if ($no === $violation->getLine()) {
@@ -75,7 +76,7 @@ final class TextReporter implements ReporterInterface
                 $messageLevel = Violation::getLevelAsString($violation->getLevel());
                 $rows[] = [
                     new TableCell(sprintf('<comment>%s</comment>', $messageLevel)),
-                    implode("\n", $formattedText),
+                    implode(\PHP_EOL, $formattedText),
                 ];
             }
 
@@ -106,7 +107,8 @@ final class TextReporter implements ReporterInterface
      */
     private function getContext(string $template, int $line): array
     {
-        $lines = explode("\n", $template);
+        $eol = FileHelper::detectEOL($template);
+        $lines = explode($eol, $template);
         $position = max(0, $line - 2);
         $max = min(\count($lines), $line + 1);
 
@@ -128,7 +130,7 @@ final class TextReporter implements ReporterInterface
         return sprintf(
             sprintf('<fg=red>%s</fg=red>', self::ERROR_LINE_FORMAT),
             self::ERROR_CURSOR_CHAR,
-            wordwrap($message->getDebugMessage($debug), self::ERROR_LINE_WIDTH)
+            wordwrap($message->getDebugMessage($debug), self::ERROR_LINE_WIDTH, \PHP_EOL)
         );
     }
 }

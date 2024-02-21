@@ -22,11 +22,12 @@ jobs:
                     - 8.2
                     - 8.3
                 dependencies: [highest]
+                runner: [ubuntu-latest]
                 symfony-require: ['']
                 include:
                     - php-version: 8.0
                       dependencies: lowest
-                    - php-version: '8.2'
+                    - php-version: 8.2
                       dependencies: highest
                       symfony-require: 7.0.*
 

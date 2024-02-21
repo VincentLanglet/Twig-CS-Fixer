@@ -13,6 +13,7 @@ use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Command\TwigCsFixerCommand;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Tests\FileTestCase;
+use TwigCsFixer\Tests\TestHelper;
 
 final class TwigCsFixerCommandTest extends FileTestCase
 {
@@ -59,8 +60,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
         ]);
 
         $display = $commandTester->getDisplay();
-        static::assertStringContainsString('directory/subdirectory/file.twig', $display);
-        static::assertStringContainsString('directory/file.twig', $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
         static::assertStringNotContainsString('DelimiterSpacing.After', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
@@ -80,8 +81,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
         ]);
 
         $display = $commandTester->getDisplay();
-        static::assertStringContainsString('directory/subdirectory/file.twig', $display);
-        static::assertStringContainsString('directory/file.twig', $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
         static::assertStringContainsString('DelimiterSpacing.After', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
@@ -102,8 +103,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $display = $commandTester->getDisplay();
         static::assertStringNotContainsString('Changed', $display);
-        static::assertStringNotContainsString('directory/subdirectory/file.twig', $display);
-        static::assertStringContainsString('directory/file.twig', $display);
+        static::assertStringNotContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $display
@@ -123,8 +124,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $display = $commandTester->getDisplay();
         static::assertStringContainsString('Changed', $display);
-        static::assertStringContainsString('directory/subdirectory/file.twig', $display);
-        static::assertStringContainsString('directory/file.twig', $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $display

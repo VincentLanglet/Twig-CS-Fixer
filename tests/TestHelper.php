@@ -6,6 +6,11 @@ namespace TwigCsFixer\Tests;
 
 final class TestHelper
 {
+    public static function getOsPath(string $path): string
+    {
+        return str_replace('/', \DIRECTORY_SEPARATOR, $path);
+    }
+
     /**
      * @param string $contents Content to compare
      * @param string $filePath file path to diff the file against

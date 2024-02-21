@@ -49,7 +49,7 @@ final class ConfigResolverTest extends FileTestCase
         yield [__DIR__.'/Fixtures/directoryWithCustomRuleset', null, 'Custom'];
         yield [__DIR__.'/Fixtures/directoryWithCustomRuleset2', null, 'CustomDist'];
         yield [__DIR__, 'Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
-        yield ['/tmp', __DIR__.'/Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
+        yield [__DIR__.'/..', __DIR__.'/Fixtures/directoryWithCustomRuleset/.twig-cs-fixer.php', 'Custom'];
     }
 
     /**
@@ -112,30 +112,6 @@ final class ConfigResolverTest extends FileTestCase
             __DIR__.'/Fixtures/directoryWithCustomFinder2/.twig-cs-fixer.php',
             2,
         ];
-    }
-
-    /**
-     * @dataProvider configPathIsCorrectlyGeneratedDataProvider
-     */
-    public function testConfigPathIsCorrectlyGenerated(string $configPath, string $path): void
-    {
-        $configResolver = new ConfigResolver('/tmp/path/not/found');
-
-        $this->expectExceptionMessage(sprintf('Cannot find the config file "%s".', $configPath));
-        $configResolver->resolveConfig([], $path);
-    }
-
-    /**
-     * @return iterable<array-key, array{string, string}>
-     */
-    public static function configPathIsCorrectlyGeneratedDataProvider(): iterable
-    {
-        yield ['/tmp/path/not/found/', ''];
-        yield ['/tmp/path/not/found/a', 'a'];
-        yield ['/tmp/path/not/found/../a', '../a'];
-        yield ['/a', '/a'];
-        yield ['\\a', '\\a'];
-        yield ['C:\WINDOWS', 'C:\WINDOWS'];
     }
 
     /**

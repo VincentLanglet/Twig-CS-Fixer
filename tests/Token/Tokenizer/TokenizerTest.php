@@ -30,8 +30,29 @@ final class TokenizerTest extends TestCase
             [
                 [
                     new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
-                    new Token(Token::EOL_TYPE, 1, 16, $filePath, "\n"),
+                    new Token(Token::EOL_TYPE, 1, 16, $filePath, \PHP_EOL),
                     new Token(Token::EOF_TYPE, 2, 1, $filePath),
+                ],
+                [],
+            ],
+            $tokenizer->tokenize($source)
+        );
+    }
+
+    public function testTokenizeWindowsEOL(): void
+    {
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $source = new Source("\r\n{#\r\n#}", 'path');
+
+        static::assertEquals(
+            [
+                [
+                    new Token(Token::EOL_TYPE, 1, 1, 'path', "\r\n"),
+                    new Token(Token::COMMENT_START_TYPE, 2, 1, 'path', '{#'),
+                    new Token(Token::COMMENT_EOL_TYPE, 2, 3, 'path', "\r\n"),
+                    new Token(Token::COMMENT_END_TYPE, 3, 1, 'path', '#}'),
+                    new Token(Token::EOF_TYPE, 3, 3, 'path'),
                 ],
                 [],
             ],
@@ -65,7 +86,7 @@ final class TokenizerTest extends TestCase
                 new Token(Token::NAME_TYPE, 1, 22, $filePath, 'sumVariable'),
                 new Token(Token::WHITESPACE_TYPE, 1, 33, $filePath, ' '),
                 new Token(Token::VAR_END_TYPE, 1, 34, $filePath, '}}'),
-                new Token(Token::EOL_TYPE, 1, 36, $filePath, "\n"),
+                new Token(Token::EOL_TYPE, 1, 36, $filePath, \PHP_EOL),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
             $tokenizer->tokenize($source)[0]

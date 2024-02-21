@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Tests\TestHelper;
 
 final class NullReporterTest extends TestCase
 {
@@ -20,7 +21,7 @@ final class NullReporterTest extends TestCase
     {
         $textFormatter = new NullReporter();
 
-        $file = __DIR__.'/Fixtures/file.twig';
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(Violation::LEVEL_NOTICE, 'Notice', $file);

@@ -9,6 +9,17 @@ use Webmozart\Assert\Assert;
 
 final class FileHelper
 {
+    /**
+     * @return non-empty-string
+     */
+    public static function detectEOL(string $content): string
+    {
+        preg_match("/\r\n?|\n/", $content, $matches);
+        /** @phpstan-var array<non-empty-string> $matches */
+
+        return $matches[0] ?? \PHP_EOL;
+    }
+
     public static function getAbsolutePath(string $path, ?string $workingDir = null): string
     {
         if (Path::isAbsolute($path)) {
@@ -78,17 +89,17 @@ final class FileHelper
         $baseDir = Path::canonicalize(self::getAbsolutePath($baseDir ?? '', $workingDir));
         $path = Path::canonicalize(self::getAbsolutePath($path, $workingDir));
 
-        if (!str_starts_with($path, $baseDir.\DIRECTORY_SEPARATOR)) {
+        if (!str_starts_with($path, $baseDir.'/')) {
             return [];
         }
 
         foreach ($ignoredDir as $ignoredDirectory) {
             $ignoredDirectory = Path::canonicalize(self::getAbsolutePath($ignoredDirectory, $baseDir));
-            if (str_starts_with($path, $ignoredDirectory.\DIRECTORY_SEPARATOR)) {
+            if (str_starts_with($path, $ignoredDirectory.'/')) {
                 return [];
             }
         }
 
-        return explode(\DIRECTORY_SEPARATOR, substr($path, \strlen($baseDir) + 1));
+        return explode('/', substr($path, \strlen($baseDir) + 1));
     }
 }

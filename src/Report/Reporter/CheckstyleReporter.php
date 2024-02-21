@@ -18,9 +18,9 @@ final class CheckstyleReporter implements ReporterInterface
         ?string $level,
         bool $debug
     ): void {
-        $text = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        $text = '<?xml version="1.0" encoding="UTF-8"?>'.\PHP_EOL;
 
-        $text .= '<checkstyle>'."\n";
+        $text .= '<checkstyle>'.\PHP_EOL;
 
         foreach ($report->getFiles() as $file) {
             $fileViolations = $report->getFileViolations($file, $level);
@@ -28,7 +28,7 @@ final class CheckstyleReporter implements ReporterInterface
                 continue;
             }
 
-            $text .= sprintf('  <file name="%s">', $this->xmlEncode($file))."\n";
+            $text .= sprintf('  <file name="%s">', $this->xmlEncode($file)).\PHP_EOL;
             foreach ($fileViolations as $violation) {
                 $line = (string) $violation->getLine();
                 $linePosition = (string) $violation->getLinePosition();
@@ -46,9 +46,9 @@ final class CheckstyleReporter implements ReporterInterface
                 if (null !== $ruleName) {
                     $text .= ' source="'.$ruleName.'"';
                 }
-                $text .= '/>'."\n";
+                $text .= '/>'.\PHP_EOL;
             }
-            $text .= '  </file>'."\n";
+            $text .= '  </file>'.\PHP_EOL;
         }
 
         $text .= '</checkstyle>';
