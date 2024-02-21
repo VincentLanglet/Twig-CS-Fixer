@@ -39,6 +39,27 @@ final class TokenizerTest extends TestCase
         );
     }
 
+    public function testTokenizeWindowsEOL(): void
+    {
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $source = new Source("\r\n{#\r\n#}", 'path');
+
+        static::assertEquals(
+            [
+                [
+                    new Token(Token::EOL_TYPE, 1, 1, 'path', "\r\n"),
+                    new Token(Token::COMMENT_START_TYPE, 2, 1, 'path', '{#'),
+                    new Token(Token::COMMENT_EOL_TYPE, 2, 3, 'path', "\r\n"),
+                    new Token(Token::COMMENT_END_TYPE, 3, 1, 'path', '#}'),
+                    new Token(Token::EOF_TYPE, 3, 3, 'path'),
+                ],
+                [],
+            ],
+            $tokenizer->tokenize($source)
+        );
+    }
+
     public function testTokenizeWithCustomOperators(): void
     {
         $filePath = __DIR__.'/Fixtures/custom_operators.twig';
