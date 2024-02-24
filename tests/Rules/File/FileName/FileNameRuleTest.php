@@ -16,6 +16,7 @@ final class FileNameRuleTest extends AbstractRuleTestCase
                 'case' => FileNameRule::SNAKE_CASE,
                 'baseDirectory' => null,
                 'ignoredSubDirectories' => [],
+                'allowedPrefix' => '',
             ],
             (new FileNameRule())->getConfiguration()
         );
@@ -25,11 +26,13 @@ final class FileNameRuleTest extends AbstractRuleTestCase
                 'case' => FileNameRule::PASCAL_CASE,
                 'baseDirectory' => 'foo',
                 'ignoredSubDirectories' => ['bar'],
+                'allowedPrefix' => '_',
             ],
             (new FileNameRule(
                 FileNameRule::PASCAL_CASE,
                 'foo',
-                ['bar']
+                ['bar'],
+                '_'
             ))->getConfiguration()
         );
     }
@@ -88,5 +91,11 @@ final class FileNameRuleTest extends AbstractRuleTestCase
     public function testRuleIgnoredPath(): void
     {
         $this->checkRule(new FileNameRule(baseDirectory: __DIR__.'/..', ignoredSubDirectories: ['FileName']), []);
+    }
+
+    public function testRuleAllowedPrefix(): void
+    {
+        $this->checkRule(new FileNameRule(), ['FileName.Error'], __DIR__.'/_file_name_rule_test.twig');
+        $this->checkRule(new FileNameRule(allowedPrefix: '_'), [], __DIR__.'/_file_name_rule_test.twig');
     }
 }
