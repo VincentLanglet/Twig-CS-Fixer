@@ -465,6 +465,10 @@ final class Tokenizer implements TokenizerInterface
             } else {
                 $this->pushToken(Token::TEXT_TYPE, $value);
             }
+        } else {
+            // @codeCoverageIgnoreStart
+            throw new \LogicException(sprintf('Unhandled character "%s" in lexData.', $currentCode));
+            // @codeCoverageIgnoreEnd
         }
     }
 
