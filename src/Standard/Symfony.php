@@ -21,7 +21,7 @@ final class Symfony implements StandardInterface
     {
         return [
             ...(new Twig())->getRules(),
-            new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles'], allowedPrefix: '_'),
+            new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles'], optionalPrefix: '_'),
             new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
             new FileExtensionRule(),
         ];
