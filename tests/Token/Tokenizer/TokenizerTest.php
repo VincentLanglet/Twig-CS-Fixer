@@ -39,18 +39,18 @@ final class TokenizerTest extends TestCase
         );
     }
 
-    public function testTokenizeWindowsEOL(): void
+    public function testTokenizeMixedEOL(): void
     {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
-        $source = new Source("\r\n{#\r\n#}", 'path');
+        $source = new Source("\r\n{#\n#}", 'path');
 
         static::assertEquals(
             [
                 [
                     new Token(Token::EOL_TYPE, 1, 1, 'path', "\r\n"),
                     new Token(Token::COMMENT_START_TYPE, 2, 1, 'path', '{#'),
-                    new Token(Token::COMMENT_EOL_TYPE, 2, 3, 'path', "\r\n"),
+                    new Token(Token::COMMENT_EOL_TYPE, 2, 3, 'path', "\n"),
                     new Token(Token::COMMENT_END_TYPE, 3, 1, 'path', '#}'),
                     new Token(Token::EOF_TYPE, 3, 3, 'path'),
                 ],
