@@ -18,8 +18,8 @@ final class IndentRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new IndentRule(), [
-            'Indent.Error:2:1',
-            'Indent.Error:4:1',
+            'Indent.Error:2:1' => 'A file must not be indented with tabs.',
+            'Indent.Error:4:1' => 'A file must not be indented with tabs.',
         ]);
     }
 
@@ -28,8 +28,8 @@ final class IndentRuleTest extends AbstractRuleTestCase
         $this->checkRule(
             new IndentRule(2),
             [
-                'Indent.Error:2:1',
-                'Indent.Error:4:1',
+                'Indent.Error:2:1' => 'A file must not be indented with tabs.',
+                'Indent.Error:4:1' => 'A file must not be indented with tabs.',
             ],
             __DIR__.'/IndentRuleTest.twig',
             __DIR__.'/IndentRuleTest.fixed2.twig',

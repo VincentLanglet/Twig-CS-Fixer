@@ -52,7 +52,9 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
     {
         $this->checkRule(
             new DirectoryNameRule(baseDirectory: __DIR__.'/templates'),
-            ['DirectoryName.Error'],
+            [
+                'DirectoryName.Error' => 'The directory name must use snake_case; expected directory_name_rule_test.',
+            ],
             __DIR__.'/templates/directoryNameRuleTest/DirectoryNameRuleTest.twig'
         );
     }
@@ -64,7 +66,9 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
 
     public function testRuleInvalidDirectory(): void
     {
-        $this->checkRule(new DirectoryNameRule(baseDirectory: __DIR__.'/..'), ['DirectoryName.Error']);
+        $this->checkRule(new DirectoryNameRule(baseDirectory: __DIR__.'/..'), [
+            'DirectoryName.Error' => 'The directory name must use snake_case; expected directory_name.',
+        ]);
     }
 
     public function testRuleKebabCase(): void

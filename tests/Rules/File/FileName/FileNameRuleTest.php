@@ -40,14 +40,14 @@ final class FileNameRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new FileNameRule(), [
-            'FileName.Error',
+            'FileName.Error' => 'The file name must use snake_case; expected file_name_rule_test.',
         ]);
     }
 
     public function testRuleDotfile(): void
     {
         $this->checkRule(new FileNameRule(), [
-            'FileName.Error',
+            'FileName.Error' => 'The file name must use snake_case; expected file_name_rule_test.',
         ], __DIR__.'/.FileNameRuleTest.twig');
     }
 
@@ -84,7 +84,7 @@ final class FileNameRuleTest extends AbstractRuleTestCase
     public function testRuleBaseDir(): void
     {
         $this->checkRule(new FileNameRule(baseDirectory: __DIR__.'/..'), [
-            'FileName.Error',
+            'FileName.Error' => 'The file name must use snake_case; expected file_name_rule_test.',
         ]);
     }
 
@@ -95,7 +95,14 @@ final class FileNameRuleTest extends AbstractRuleTestCase
 
     public function testRuleAllowedPrefix(): void
     {
-        $this->checkRule(new FileNameRule(), ['FileName.Error'], __DIR__.'/_file_name_rule_test.twig');
+        $this->checkRule(new FileNameRule(), [
+            'FileName.Error' => 'The file name must use snake_case; expected file_name_rule_test.',
+        ], __DIR__.'/_file_name_rule_test.twig');
+
         $this->checkRule(new FileNameRule(allowedPrefix: '_'), [], __DIR__.'/_file_name_rule_test.twig');
+
+        $this->checkRule(new FileNameRule(FileNameRule::CAMEL_CASE, allowedPrefix: '_'), [
+            'FileName.Error' => 'The file name must use camelCase; expected _fileNameRuleTest.',
+        ], __DIR__.'/_file_name_rule_test.twig');
     }
 }

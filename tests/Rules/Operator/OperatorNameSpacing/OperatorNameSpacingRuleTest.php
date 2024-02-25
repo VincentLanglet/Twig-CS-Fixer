@@ -12,9 +12,9 @@ final class OperatorNameSpacingRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new OperatorNameSpacingRule(), [
-            'OperatorNameSpacing.Error:2:13',
-            'OperatorNameSpacing.Error:3:13',
-            'OperatorNameSpacing.Error:4:10',
+            'OperatorNameSpacing.Error:2:13' => 'A single line operator should not have consecutive spaces.',
+            'OperatorNameSpacing.Error:3:13' => 'A single line operator should not have consecutive spaces.',
+            'OperatorNameSpacing.Error:4:10' => 'A single line operator should not have consecutive spaces.',
         ]);
     }
 }
