@@ -9,7 +9,6 @@ use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
@@ -47,16 +46,18 @@ final class TextReporter implements ReporterInterface
             }
 
             $content = @file_get_contents($file);
+            $lines = false !== $content ? preg_split("/\r\n?|\n/", $content) : false;
+
             $rows = [];
             foreach ($fileViolations as $violation) {
                 $formattedText = [];
                 $line = $violation->getLine();
 
-                if (null === $line || false === $content) {
+                if (null === $line || false === $lines) {
                     $formattedText[] = $this->formatErrorMessage($violation, $debug);
                 } else {
-                    $lines = $this->getContext($content, $line);
-                    foreach ($lines as $no => $code) {
+                    $context = $this->getContext($lines, $line);
+                    foreach ($context as $no => $code) {
                         $formattedText[] = sprintf(
                             self::ERROR_LINE_FORMAT,
                             $no,
@@ -103,22 +104,22 @@ final class TextReporter implements ReporterInterface
     }
 
     /**
+     * @param array<string> $templatesLines
+     *
      * @return array<int, string>
      */
-    private function getContext(string $template, int $line): array
+    private function getContext(array $templatesLines, int $line): array
     {
-        $eol = FileHelper::detectEOL($template);
-        $lines = explode($eol, $template);
         $position = max(0, $line - 2);
-        $max = min(\count($lines), $line + 1);
+        $max = min(\count($templatesLines), $line + 1);
 
         $result = [];
         $indents = [];
 
         do {
-            preg_match('/^[\s\t]+/', $lines[$position], $match);
+            preg_match('/^[\s\t]+/', $templatesLines[$position], $match);
             $indents[] = \strlen($match[0] ?? '');
-            $result[$position + 1] = $lines[$position];
+            $result[$position + 1] = $templatesLines[$position];
             ++$position;
         } while ($position < $max);
 

@@ -7,7 +7,6 @@ namespace TwigCsFixer\Token;
 use Twig\Environment;
 use Twig\Source;
 use TwigCsFixer\Exception\CannotTokenizeException;
-use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Report\ViolationId;
 use Webmozart\Assert\Assert;
 
@@ -46,8 +45,6 @@ final class Tokenizer implements TokenizerInterface
     private string $operatorRegex;
 
     private int $cursor = 0;
-
-    private string $eol = \PHP_EOL;
 
     private int $lastEOL = 0;
 
@@ -177,7 +174,6 @@ final class Tokenizer implements TokenizerInterface
         $this->code = $source->getCode();
         $this->end = \strlen($this->code);
         $this->filename = $source->getName();
-        $this->eol = FileHelper::detectEOL($this->code);
     }
 
     /**
@@ -297,7 +293,9 @@ final class Tokenizer implements TokenizerInterface
         $this->tokens[] = $token;
 
         $this->cursor += \strlen($value);
-        $this->line += substr_count($value, $this->eol);
+
+        $eolNb = preg_match_all("/\r\n?|\n/", $value);
+        $this->line += false !== $eolNb ? $eolNb : 0;
 
         return $token;
     }
@@ -315,7 +313,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (1 === preg_match("/^{$this->eol}/", $currentCode.$nextToken, $match)) {
+        } elseif (1 === preg_match("/^\r\n?|^\n/", $currentCode.$nextToken, $match)) {
             $this->lexEOL($match[0]);
         } elseif ('.' === $currentCode && '.' === $nextToken && '.' === $next2Token) {
             $this->lexSpread();
@@ -450,7 +448,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexTab();
         } elseif (' ' === $currentCode) {
             $this->lexWhitespace();
-        } elseif (1 === preg_match("/^{$this->eol}/", $currentCode.$nextToken, $match)) {
+        } elseif (1 === preg_match("/^\r\n?|^\n/", $currentCode.$nextToken, $match)) {
             $this->lexEOL($match[0]);
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
