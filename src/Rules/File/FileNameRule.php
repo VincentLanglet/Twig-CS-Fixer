@@ -27,6 +27,7 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
         private string $case = self::SNAKE_CASE,
         private ?string $baseDirectory = null,
         private array $ignoredSubDirectories = [],
+        private string $optionalPrefix = '',
     ) {
     }
 
@@ -36,6 +37,7 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
             'case' => $this->case,
             'baseDirectory' => $this->baseDirectory,
             'ignoredSubDirectories' => $this->ignoredSubDirectories,
+            'optionalPrefix' => $this->optionalPrefix,
         ];
     }
 
@@ -59,6 +61,12 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
         // in order to avoid conflict with some file extensions.
         $fileName = explode('.', FileHelper::removeDot($fileName))[0];
 
+        $prefix = '';
+        if (str_starts_with($fileName, $this->optionalPrefix)) {
+            $prefix = $this->optionalPrefix;
+            $fileName = substr($fileName, \strlen($this->optionalPrefix));
+        }
+
         $expected = match ($this->case) {
             self::SNAKE_CASE => StringUtil::toSnakeCase($fileName),
             self::CAMEL_CASE => StringUtil::toCamelCase($fileName),
@@ -68,7 +76,7 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
 
         if ($expected !== $fileName) {
             $this->addFileError(
-                sprintf('The file name must use %s; expected %s.', $this->case, $expected),
+                sprintf('The file name must use %s; expected %s.', $this->case, $prefix.$expected),
                 $token,
             );
         }

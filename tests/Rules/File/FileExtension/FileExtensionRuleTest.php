@@ -11,7 +11,9 @@ final class FileExtensionRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {
-        $this->checkRule(new FileExtensionRule(), ['FileExtension.Error']);
+        $this->checkRule(new FileExtensionRule(), [
+            'FileExtension.Error' => 'The file must use two extensions; found ".twig".',
+        ]);
     }
 
     public function testRuleIgnoredFile(): void
@@ -26,7 +28,9 @@ final class FileExtensionRuleTest extends AbstractRuleTestCase
 
     public function testRuleInvalidDotFile(): void
     {
-        $this->checkRule(new FileExtensionRule(), ['FileExtension.Error'], __DIR__.'/.dotfile.twig');
+        $this->checkRule(new FileExtensionRule(), [
+            'FileExtension.Error' => 'The file must use two extensions; found ".twig".',
+        ], __DIR__.'/.dotfile.twig');
     }
 
     public function testRuleValidDotFileWithFormatExtension(): void

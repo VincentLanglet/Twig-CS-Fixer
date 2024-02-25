@@ -55,25 +55,30 @@ abstract class AbstractRuleTestCase extends TestCase
             }
         }
 
-        $messages = $report->getFileViolations($filePath);
+        $violations = $report->getFileViolations($filePath);
 
-        /** @var array<string|null> $messageIds */
-        $messageIds = [];
-        foreach ($messages as $message) {
-            if (Violation::LEVEL_FATAL === $message->getLevel()) {
-                $errorMessage = $message->getMessage();
-                $line = $message->getLine();
+        /** @var array<string, string> $messages */
+        $messages = [];
+        foreach ($violations as $violation) {
+            $message = $violation->getMessage();
+            if (Violation::LEVEL_FATAL === $violation->getLevel()) {
+                $line = $violation->getLine();
 
                 if (null !== $line) {
-                    $errorMessage = sprintf('Line %s: %s', $line, $errorMessage);
+                    $message = sprintf('Line %s: %s', $line, $message);
                 }
-                static::fail($errorMessage);
+                static::fail($message);
             }
 
-            $messageIds[] = $message->getIdentifier()?->toString();
+            $id = $violation->getIdentifier()?->toString() ?? '';
+            if (isset($messages[$id])) {
+                static::fail(sprintf('Two violations have the same identifier "%s".', $id));
+            }
+
+            $messages[$id] = $message;
         }
 
-        static::assertSame($expects, $messageIds);
+        static::assertSame($expects, $messages);
     }
 
     private function generateFilePath(): string

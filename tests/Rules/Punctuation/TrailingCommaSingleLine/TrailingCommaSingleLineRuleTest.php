@@ -12,9 +12,9 @@ final class TrailingCommaSingleLineRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new TrailingCommaSingleLineRule(), [
-            'TrailingCommaSingleLine.Error:2:9',
-            'TrailingCommaSingleLine.Error:4:13',
-            'TrailingCommaSingleLine.Error:6:12',
+            'TrailingCommaSingleLine.Error:2:9' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
+            'TrailingCommaSingleLine.Error:4:13' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
+            'TrailingCommaSingleLine.Error:6:12' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
         ]);
     }
 }
