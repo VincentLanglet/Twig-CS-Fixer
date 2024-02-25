@@ -69,5 +69,8 @@ final class RulesetTest extends TestCase
 
         $ruleset->allowNonFixableRules(false);
         static::assertCount(1, $ruleset->getRules());
+
+        $ruleset->allowNonFixableRules();
+        static::assertCount(2, $ruleset->getRules());
     }
 }

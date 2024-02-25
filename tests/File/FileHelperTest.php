@@ -10,6 +10,26 @@ use TwigCsFixer\File\FileHelper;
 final class FileHelperTest extends TestCase
 {
     /**
+     * @dataProvider detectEOLDataProvider
+     */
+    public function testDetectEOL(
+        string $content,
+        string $expected,
+    ): void {
+        static::assertSame($expected, FileHelper::detectEOL($content));
+    }
+
+    /**
+     * @return iterable<array-key, array{string, string}>
+     */
+    public static function detectEOLDataProvider(): iterable
+    {
+        yield ['foo', \PHP_EOL];
+        yield ["foo\n", "\n"];
+        yield ["foo\r\n", "\r\n"];
+    }
+
+    /**
      * @dataProvider removeDotDataProvider
      */
     public function testRemoveDot(
