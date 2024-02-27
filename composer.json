@@ -22,7 +22,6 @@
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
-        "cweagans/composer-patches": "^1.7",
         "dereuromark/composer-prefer-lowest": "^0.1.10",
         "ergebnis/composer-normalize": "^2.29",
         "friendsofphp/php-cs-fixer": "^3.13.0",
@@ -60,7 +59,6 @@
     ],
     "config": {
         "allow-plugins": {
-            "cweagans/composer-patches": true,
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true
         },
