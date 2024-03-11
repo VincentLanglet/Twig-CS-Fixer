@@ -14,7 +14,7 @@ use TwigCsFixer\Standard\StandardInterface;
 final class Ruleset
 {
     /**
-     * @var array<class-string<RuleInterface>, RuleInterface>
+     * @var array<RuleInterface>
      */
     private array $rules = [];
 
@@ -28,7 +28,7 @@ final class Ruleset
     }
 
     /**
-     * @return array<class-string<RuleInterface>, RuleInterface>
+     * @return array<RuleInterface>
      */
     public function getRules(): array
     {
@@ -47,7 +47,18 @@ final class Ruleset
      */
     public function addRule(RuleInterface $rule): self
     {
-        $this->rules[$rule::class] = $rule;
+        $this->rules[] = $rule;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function overrideRule(RuleInterface $rule): self
+    {
+        $this->removeRule($rule::class);
+        $this->addRule($rule);
 
         return $this;
     }
@@ -59,7 +70,11 @@ final class Ruleset
      */
     public function removeRule(string $class): self
     {
-        unset($this->rules[$class]);
+        foreach ($this->rules as $key => $rule) {
+            if ($rule::class === $class) {
+                unset($this->rules[$key]);
+            }
+        }
 
         return $this;
     }
