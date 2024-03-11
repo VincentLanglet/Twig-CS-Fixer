@@ -29,6 +29,12 @@ final class RulesetTest extends TestCase
         $ruleset->addRule($rule);
         static::assertCount(1, $ruleset->getRules());
 
+        $ruleset->addRule($rule);
+        static::assertCount(2, $ruleset->getRules());
+
+        $ruleset->overrideRule($rule);
+        static::assertCount(1, $ruleset->getRules());
+
         $ruleset->removeRule($rule::class);
         static::assertCount(0, $ruleset->getRules());
     }

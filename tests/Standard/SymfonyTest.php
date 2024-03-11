@@ -27,8 +27,10 @@ final class SymfonyTest extends TestCase
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
             new VariableNameRule(),
-            new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles'], optionalPrefix: '_'),
-            new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles']),
+            new FileNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles', 'components'], optionalPrefix: '_'),
+            new FileNameRule(case: DirectoryNameRule::PASCAL_CASE, baseDirectory: 'templates/components'),
+            new DirectoryNameRule(baseDirectory: 'templates', ignoredSubDirectories: ['bundles', 'components']),
+            new DirectoryNameRule(case: DirectoryNameRule::PASCAL_CASE, baseDirectory: 'templates/components'),
             new FileExtensionRule(),
         ], $standard->getRules());
     }
