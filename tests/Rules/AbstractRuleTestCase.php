@@ -24,7 +24,7 @@ abstract class AbstractRuleTestCase extends TestCase
         RuleInterface|array $rules,
         array $expects,
         ?string $filePath = null,
-        ?string $fixedFilePath = null,
+        string|false|null $fixedFilePath = null,
     ): void {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -43,15 +43,17 @@ abstract class AbstractRuleTestCase extends TestCase
 
         $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
 
-        $fixedFilePath ??= substr($filePath, 0, -5).'.fixed.twig';
-        if (file_exists($fixedFilePath)) {
-            $content = file_get_contents($filePath);
-            static::assertNotFalse($content);
-            $fixer = new Fixer($tokenizer);
+        if (false !== $fixedFilePath) {
+            $fixedFilePath ??= substr($filePath, 0, -5).'.fixed.twig';
+            if (file_exists($fixedFilePath)) {
+                $content = file_get_contents($filePath);
+                static::assertNotFalse($content);
+                $fixer = new Fixer($tokenizer);
 
-            $diff = TestHelper::generateDiff($fixer->fixFile($content, $ruleset), $fixedFilePath);
-            if ('' !== $diff) {
-                static::fail($diff);
+                $diff = TestHelper::generateDiff($fixer->fixFile($content, $ruleset), $fixedFilePath);
+                if ('' !== $diff) {
+                    static::fail($diff);
+                }
             }
         }
 

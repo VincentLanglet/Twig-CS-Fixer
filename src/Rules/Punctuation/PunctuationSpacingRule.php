@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace TwigCsFixer\Rules\Punctuation;
 
 use TwigCsFixer\Rules\AbstractSpacingRule;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use Webmozart\Assert\Assert;
 
 /**
  * Ensures there is no space before and after a punctuation except for ':' and ','.
  */
-final class PunctuationSpacingRule extends AbstractSpacingRule
+final class PunctuationSpacingRule extends AbstractSpacingRule implements ConfigurableRuleInterface
 {
-    private const SPACE_BEFORE = [
+    private const DEFAULT_SPACE_BEFORE = [
         ')' => 0,
         ']' => 0,
         '}' => 0,
@@ -22,7 +23,7 @@ final class PunctuationSpacingRule extends AbstractSpacingRule
         ',' => 0,
         '|' => 0,
     ];
-    private const SPACE_AFTER = [
+    private const DEFAULT_SPACE_AFTER = [
         '(' => 0,
         '[' => 0,
         '{' => 0,
@@ -31,6 +32,32 @@ final class PunctuationSpacingRule extends AbstractSpacingRule
         ':' => 1,
         ',' => 1,
     ];
+
+    /** @var array<string, int|null> */
+    private array $punctuationWithSpaceBefore;
+
+    /** @var array<string, int|null> */
+    private array $punctuationWithSpaceAfter;
+
+    /**
+     * @param array<string, int|null> $punctuationWithSpaceBefore
+     * @param array<string, int|null> $punctuationWithSpaceAfter
+     */
+    public function __construct(
+        array $punctuationWithSpaceBefore = [],
+        array $punctuationWithSpaceAfter = [],
+    ) {
+        $this->punctuationWithSpaceBefore = $punctuationWithSpaceBefore + self::DEFAULT_SPACE_BEFORE;
+        $this->punctuationWithSpaceAfter = $punctuationWithSpaceAfter + self::DEFAULT_SPACE_AFTER;
+    }
+
+    public function getConfiguration(): array
+    {
+        return [
+            'before' => $this->punctuationWithSpaceBefore,
+            'after' => $this->punctuationWithSpaceAfter,
+        ];
+    }
 
     /**
      * @param array<int, Token> $tokens
@@ -42,7 +69,7 @@ final class PunctuationSpacingRule extends AbstractSpacingRule
             return null;
         }
 
-        return self::SPACE_BEFORE[$token->getValue()] ?? null;
+        return $this->punctuationWithSpaceBefore[$token->getValue()] ?? null;
     }
 
     /**
@@ -64,6 +91,6 @@ final class PunctuationSpacingRule extends AbstractSpacingRule
             return null;
         }
 
-        return self::SPACE_AFTER[$token->getValue()] ?? null;
+        return $this->punctuationWithSpaceAfter[$token->getValue()] ?? null;
     }
 }
