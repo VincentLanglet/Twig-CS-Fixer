@@ -19,8 +19,17 @@ a `TwigCsFixer\Config\Config` class:
 <?php
 
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
-$ruleset->addStandard(new TwigCsFixer\Standard\Twig());
-$ruleset->addRule(new TwigCsFixer\Rules\Whitespace\EmptyLinesRule());
+
+// You can start from a default standard
+$ruleset->addStandard(new TwigCsFixer\Standard\TwigCsFixer());
+
+// And then add/remove/override some rules
+$ruleset->addRule(new TwigCsFixer\Rules\File\FileExtensionRule()());
+$ruleset->removeRule(new TwigCsFixer\Rules\Whitespace\EmptyLinesRule());
+$ruleset->overrideRule(new TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule(
+    ['}' => 1],
+    ['{' => 1],
+));
 
 $config = new TwigCsFixer\Config\Config();
 $config->setRuleset($ruleset);
