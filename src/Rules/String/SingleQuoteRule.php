@@ -9,7 +9,7 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 
 /**
- * Ensures that string use single quotes when possible.
+ * Ensures that strings use single quotes when possible.
  */
 final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {

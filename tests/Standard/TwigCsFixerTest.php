@@ -11,6 +11,7 @@ use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
+use TwigCsFixer\Rules\String\SingleQuoteRule;
 use TwigCsFixer\Rules\Variable\VariableNameRule;
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
 use TwigCsFixer\Rules\Whitespace\EmptyLinesRule;
@@ -34,6 +35,7 @@ final class TwigCsFixerTest extends TestCase
             new BlockNameSpacingRule(),
             new EmptyLinesRule(),
             new IndentRule(),
+            new SingleQuoteRule(),
             new TrailingCommaSingleLineRule(),
             new TrailingSpaceRule(),
         ], $standard->getRules());
