@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Rules\String\SimpleQuote;
 
 use TwigCsFixer\Rules\String\SingleQuoteRule;
