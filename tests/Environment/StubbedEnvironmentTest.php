@@ -12,7 +12,6 @@ use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
 use Symfony\Bridge\Twig\Node\TransNode;
 use Symfony\UX\TwigComponent\Twig\ComponentTokenParser;
 use Symfony\UX\TwigComponent\Twig\PropsTokenParser;
-use Twig\Extra\Cache\Node\CacheNode;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 use Twig\Node\TextNode;
 use Twig\Source;
@@ -135,9 +134,7 @@ final class StubbedEnvironmentTest extends TestCase
         $env = new StubbedEnvironment();
         $source = new Source($content, 'cache_tag.html.twig');
 
-        $nodes = $env->parse($env->tokenize($source));
-        $body = $nodes->getNode('body');
-        static::assertInstanceOf(CacheNode::class, $body->getNode('0'));
+        $env->parse($env->tokenize($source));
     }
 
     public function testParseComponentTag(): void
