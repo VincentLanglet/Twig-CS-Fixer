@@ -5,13 +5,25 @@ declare(strict_types=1);
 namespace TwigCsFixer\Rules\String;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 
 /**
  * Ensures that string use single quotes when possible.
  */
-final class SingleQuoteRule extends AbstractFixableRule
+final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
+    public function __construct(private bool $skipStringContainingSingleQuote = true)
+    {
+    }
+
+    public function getConfiguration(): array
+    {
+        return [
+            'skip_string_containing_single_quote' => $this->skipStringContainingSingleQuote,
+        ];
+    }
+
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
@@ -20,7 +32,10 @@ final class SingleQuoteRule extends AbstractFixableRule
         }
 
         $content = $token->getValue();
-        if ('"' !== $content[0]) {
+        if (
+            !str_starts_with($content, '"')
+            || str_contains($content, '\'') && $this->skipStringContainingSingleQuote
+        ) {
             return;
         }
 
@@ -33,7 +48,8 @@ final class SingleQuoteRule extends AbstractFixableRule
         $content = str_replace(
             ['\\"', '\\#{', '#\\{', '\\\'', '\''],
             ['"', '#{', '#{', '\'', '\\\''],
-            $content);
+            $content
+        );
         $fixer->replaceToken($tokenPosition, '\''.$content.'\'');
     }
 }
