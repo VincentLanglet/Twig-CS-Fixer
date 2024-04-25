@@ -16,7 +16,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
                 'case' => DirectoryNameRule::SNAKE_CASE,
                 'baseDirectory' => null,
                 'ignoredSubDirectories' => [],
-                'optionalPrefix' => ''
+                'optionalPrefix' => '',
             ],
             (new DirectoryNameRule())->getConfiguration()
         );
@@ -26,7 +26,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
                 'case' => DirectoryNameRule::PASCAL_CASE,
                 'baseDirectory' => 'foo',
                 'ignoredSubDirectories' => ['bar'],
-                'optionalPrefix' => 'baz'
+                'optionalPrefix' => 'baz',
             ],
             (new DirectoryNameRule(
                 DirectoryNameRule::PASCAL_CASE,

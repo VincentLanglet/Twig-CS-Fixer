@@ -53,7 +53,6 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
             $this->baseDirectory,
             $this->ignoredSubDirectories,
         );
-        
 
         foreach ($directories as $directory) {
             $prefix = '';
