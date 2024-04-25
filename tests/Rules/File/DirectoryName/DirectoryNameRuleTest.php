@@ -16,6 +16,7 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
                 'case' => DirectoryNameRule::SNAKE_CASE,
                 'baseDirectory' => null,
                 'ignoredSubDirectories' => [],
+                'optionalPrefix' => ''
             ],
             (new DirectoryNameRule())->getConfiguration()
         );
@@ -25,11 +26,13 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
                 'case' => DirectoryNameRule::PASCAL_CASE,
                 'baseDirectory' => 'foo',
                 'ignoredSubDirectories' => ['bar'],
+                'optionalPrefix' => 'baz'
             ],
             (new DirectoryNameRule(
                 DirectoryNameRule::PASCAL_CASE,
                 'foo',
-                ['bar']
+                ['bar'],
+                'baz'
             ))->getConfiguration()
         );
     }
@@ -56,6 +59,26 @@ final class DirectoryNameRuleTest extends AbstractRuleTestCase
                 'DirectoryName.Error' => 'The directory name must use snake_case; expected directory_name_rule_test.',
             ],
             __DIR__.'/templates/directoryNameRuleTest/DirectoryNameRuleTest.twig'
+        );
+    }
+
+    public function testRuleValidPrefixDirectory(): void
+    {
+        $this->checkRule(
+            new DirectoryNameRule(baseDirectory: __DIR__.'/templates', optionalPrefix: '_'),
+            [],
+            __DIR__.'/templates/_directory_name_rule_test/DirectoryNameRuleTest.twig'
+        );
+    }
+
+    public function testRuleInvalidPrefixDirectory(): void
+    {
+        $this->checkRule(
+            new DirectoryNameRule(baseDirectory: __DIR__.'/templates', optionalPrefix: '!'),
+            [
+                'DirectoryName.Error' => 'The directory name must use snake_case; expected directory_name_rule_test.',
+            ],
+            __DIR__.'/templates/_directory_name_rule_test/DirectoryNameRuleTest.twig'
         );
     }
 
