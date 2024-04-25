@@ -39,7 +39,7 @@ final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableR
             return;
         }
 
-        $fixer = $this->addFixableError('String should be defined with single quotes.', $token);
+        $fixer = $this->addFixableError('String should be declared with single quotes.', $token);
         if (null === $fixer) {
             return;
         }
