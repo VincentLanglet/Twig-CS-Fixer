@@ -27,6 +27,7 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
         private string $case = self::SNAKE_CASE,
         private ?string $baseDirectory = null,
         private array $ignoredSubDirectories = [],
+        private string $optionalPrefix = '',
     ) {
     }
 
@@ -36,6 +37,7 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
             'case' => $this->case,
             'baseDirectory' => $this->baseDirectory,
             'ignoredSubDirectories' => $this->ignoredSubDirectories,
+            'optionalPrefix' => $this->optionalPrefix,
         ];
     }
 
@@ -53,6 +55,12 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
         );
 
         foreach ($directories as $directory) {
+            $prefix = '';
+            if (str_starts_with($directory, $this->optionalPrefix)) {
+                $prefix = $this->optionalPrefix;
+                $directory = substr($directory, \strlen($this->optionalPrefix));
+            }
+
             $expected = match ($this->case) {
                 self::SNAKE_CASE => StringUtil::toSnakeCase($directory),
                 self::CAMEL_CASE => StringUtil::toCamelCase($directory),
@@ -62,7 +70,7 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
 
             if ($expected !== $directory) {
                 $this->addFileError(
-                    sprintf('The directory name must use %s; expected %s.', $this->case, $expected),
+                    sprintf('The directory name must use %s; expected %s.', $this->case, $prefix.$expected),
                     $token,
                 );
             }
