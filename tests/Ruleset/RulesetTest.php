@@ -7,9 +7,7 @@ namespace TwigCsFixer\Tests\Ruleset;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\AbstractRule;
-use TwigCsFixer\Rules\RuleInterface;
-use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
-use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;
+use TwigCsFixer\Rules\String\SingleQuoteRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\StandardInterface;
 
@@ -24,33 +22,26 @@ final class RulesetTest extends TestCase
     public function testAddAndRemoveRule(): void
     {
         $ruleset = new Ruleset();
-        $rule = self::createStub(RuleInterface::class);
+        $rule1 = new SingleQuoteRule(true);
+        $rule2 = new SingleQuoteRule(false);
 
-        $ruleset->addRule($rule);
+        $ruleset->addRule($rule1);
         static::assertCount(1, $ruleset->getRules());
 
-        $ruleset->addRule($rule);
+        $ruleset->addRule($rule1);
+        static::assertCount(1, $ruleset->getRules());
+
+        $ruleset->addRule($rule2);
         static::assertCount(2, $ruleset->getRules());
 
-        $ruleset->overrideRule($rule);
-        static::assertCount(1, $ruleset->getRules());
-
-        $ruleset->removeRule($rule::class);
+        $ruleset->removeRule(SingleQuoteRule::class);
         static::assertCount(0, $ruleset->getRules());
-    }
 
-    public function testAddStandard(): void
-    {
-        $ruleset = new Ruleset();
+        $ruleset->addRule($rule1);
+        static::assertCount(1, $ruleset->getRules());
 
-        // Using real rule to have different class name
-        $rule1 = new BlankEOFRule();
-        $rule2 = new TrailingSpaceRule();
-        $standard = self::createStub(StandardInterface::class);
-        $standard->method('getRules')->willReturn([$rule1, $rule2]);
-
-        $ruleset->addStandard($standard);
-        static::assertCount(2, $ruleset->getRules());
+        $ruleset->overrideRule($rule2);
+        static::assertCount(1, $ruleset->getRules());
     }
 
     public function testAllowNonFixableRules(): void

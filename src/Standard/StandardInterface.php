@@ -9,7 +9,7 @@ use TwigCsFixer\Rules\RuleInterface;
 interface StandardInterface
 {
     /**
-     * @return RuleInterface[]
+     * @return list<RuleInterface>
      */
     public function getRules(): array;
 }
