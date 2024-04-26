@@ -11,6 +11,7 @@
 - **OperatorSpacingRule**: ensures there is one space before and after an operator except for `..`.
 - **PunctuationSpacingRule**: ensures there is no space before and after a punctuation except for `:` and `,` (configurable).
 - **TrailingCommaSingleLineRule**: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
+- **SingleQuoteRule**: ensures that strings use single quotes when possible (configurable).
 - **BlankEOFRule**: ensures that files ends with one blank line.
 - **EmptyLinesRule**: ensures that 2 empty lines do not follow each other.
 - **IndentRule**: ensures that files are not indented with tabs (configurable).
@@ -55,6 +56,7 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 - BlockNameSpacingRule
 - EmptyLinesRule
 - IndentRule
+- SingleQuoteRule
 - TrailingCommaSingleLineRule
 - TrailingSpaceRule
 
