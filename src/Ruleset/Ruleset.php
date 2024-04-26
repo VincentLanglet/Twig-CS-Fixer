@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Ruleset;
 
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Rules\FixableRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Standard\StandardInterface;
@@ -14,7 +15,7 @@ use TwigCsFixer\Standard\StandardInterface;
 final class Ruleset
 {
     /**
-     * @var array<RuleInterface>
+     * @var array<string, RuleInterface>
      */
     private array $rules = [];
 
@@ -28,18 +29,18 @@ final class Ruleset
     }
 
     /**
-     * @return array<RuleInterface>
+     * @return list<RuleInterface>
      */
     public function getRules(): array
     {
         if (!$this->allowNonFixableRules) {
-            return array_filter(
+            return array_values(array_filter(
                 $this->rules,
                 static fn (RuleInterface $rule): bool => $rule instanceof FixableRuleInterface,
-            );
+            ));
         }
 
-        return $this->rules;
+        return array_values($this->rules);
     }
 
     /**
@@ -47,7 +48,12 @@ final class Ruleset
      */
     public function addRule(RuleInterface $rule): self
     {
-        $this->rules[] = $rule;
+        $config = $rule instanceof ConfigurableRuleInterface
+            ? $rule->getConfiguration()
+            : null;
+        $key = $rule::class.md5(serialize($config));
+
+        $this->rules[$key] = $rule;
 
         return $this;
     }
