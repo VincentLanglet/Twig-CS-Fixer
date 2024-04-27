@@ -44,6 +44,28 @@ final class RulesetTest extends TestCase
         static::assertCount(1, $ruleset->getRules());
     }
 
+    public function testAddStandard(): void
+    {
+        $ruleset = new Ruleset();
+        $rule1 = new SingleQuoteRule(true);
+        $rule2 = new SingleQuoteRule(false);
+
+        $standard1 = self::createStub(StandardInterface::class);
+        $standard1->method('getRules')->willReturn([$rule1]);
+
+        $standard2 = self::createStub(StandardInterface::class);
+        $standard2->method('getRules')->willReturn([$rule2]);
+
+        $ruleset->addStandard($standard1);
+        static::assertCount(1, $ruleset->getRules());
+
+        $ruleset->addStandard($standard2);
+        static::assertCount(2, $ruleset->getRules());
+
+        $ruleset->overrideStandard($standard2);
+        static::assertSame([$rule2], $ruleset->getRules());
+    }
+
     public function testAllowNonFixableRules(): void
     {
         $ruleset = new Ruleset();
