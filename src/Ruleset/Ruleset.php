@@ -96,4 +96,16 @@ final class Ruleset
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function overrideStandard(StandardInterface $standard): self
+    {
+        foreach ($standard->getRules() as $rule) {
+            $this->overrideRule($rule);
+        }
+
+        return $this;
+    }
 }
