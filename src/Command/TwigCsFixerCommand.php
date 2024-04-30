@@ -22,7 +22,7 @@ use TwigCsFixer\Token\Tokenizer;
 use Webmozart\Assert\Assert;
 
 /**
- * TwigCsFixer stands for "Twig Code Style Fixer" and will check twig template of your project.
+ * TwigCsFixer stands for "Twig Code Style Fixer" and will lint/fix twig template of your project.
  */
 final class TwigCsFixerCommand extends Command
 {
