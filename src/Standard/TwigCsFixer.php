@@ -25,7 +25,7 @@ final class TwigCsFixer implements StandardInterface
             new BlankEOFRule(),
             new BlockNameSpacingRule(),
             new EmptyLinesRule(),
-            new IncludeFunctionRule();
+            new IncludeFunctionRule(),
             new IndentRule(),
             new SingleQuoteRule(),
             new TrailingCommaSingleLineRule(),
