@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
+use TwigCsFixer\Rules\Function\IncludeFunctionRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
 use TwigCsFixer\Rules\String\SingleQuoteRule;
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
@@ -24,6 +25,7 @@ final class TwigCsFixer implements StandardInterface
             new BlankEOFRule(),
             new BlockNameSpacingRule(),
             new EmptyLinesRule(),
+            new IncludeFunctionRule();
             new IndentRule(),
             new SingleQuoteRule(),
             new TrailingCommaSingleLineRule(),
