@@ -20,7 +20,7 @@ final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableR
     public function getConfiguration(): array
     {
         return [
-            'skip_string_containing_single_quote' => $this->skipStringContainingSingleQuote,
+            'skipStringContainingSingleQuote' => $this->skipStringContainingSingleQuote,
         ];
     }
 

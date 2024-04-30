@@ -12,11 +12,11 @@ class SingleQuoteRuleTest extends AbstractRuleTestCase
     public function testConfiguration(): void
     {
         static::assertSame(
-            ['skip_string_containing_single_quote' => true],
+            ['skipStringContainingSingleQuote' => true],
             (new SingleQuoteRule())->getConfiguration()
         );
         static::assertSame(
-            ['skip_string_containing_single_quote' => false],
+            ['skipStringContainingSingleQuote' => false],
             (new SingleQuoteRule(false))->getConfiguration()
         );
     }
