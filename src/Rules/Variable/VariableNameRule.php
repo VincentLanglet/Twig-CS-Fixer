@@ -23,14 +23,17 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
     /**
      * @param self::* $case
      */
-    public function __construct(private string $case = self::SNAKE_CASE)
-    {
+    public function __construct(
+        private string $case = self::SNAKE_CASE,
+        private string $optionalPrefix = '',
+    ) {
     }
 
     public function getConfiguration(): array
     {
         return [
             'case' => $this->case,
+            'optionalPrefix' => $this->optionalPrefix,
         ];
     }
 
@@ -60,6 +63,12 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
     private function validateVariable(Token $token): void
     {
         $name = $token->getValue();
+        $prefix = '';
+        if (str_starts_with($name, $this->optionalPrefix)) {
+            $prefix = $this->optionalPrefix;
+            $name = substr($name, \strlen($this->optionalPrefix));
+        }
+
         $expected = match ($this->case) {
             self::SNAKE_CASE => StringUtil::toSnakeCase($name),
             self::CAMEL_CASE => StringUtil::toCamelCase($name),
@@ -68,7 +77,7 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
 
         if ($expected !== $name) {
             $this->addError(
-                sprintf('The var name must use %s; expected %s.', $this->case, $expected),
+                sprintf('The var name must use %s; expected %s.', $this->case, $prefix.$expected),
                 $token,
             );
         }

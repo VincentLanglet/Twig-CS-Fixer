@@ -11,8 +11,8 @@ final class IndentRuleTest extends AbstractRuleTestCase
 {
     public function testConfiguration(): void
     {
-        static::assertSame(['space_ratio' => 4], (new IndentRule())->getConfiguration());
-        static::assertSame(['space_ratio' => 2], (new IndentRule(2))->getConfiguration());
+        static::assertSame(['spaceRatio' => 4], (new IndentRule())->getConfiguration());
+        static::assertSame(['spaceRatio' => 2], (new IndentRule(2))->getConfiguration());
     }
 
     public function testRule(): void

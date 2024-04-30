@@ -20,7 +20,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
     public function getConfiguration(): array
     {
         return [
-            'space_ratio' => $this->spaceRatio,
+            'spaceRatio' => $this->spaceRatio,
         ];
     }
 
