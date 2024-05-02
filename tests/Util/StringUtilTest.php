@@ -28,6 +28,10 @@ class StringUtilTest extends TestCase
         yield ['foo-bar', 'foo_bar'];
         yield ['FooBar', 'foo_bar'];
         yield ['FOOBar', 'foo_bar'];
+        yield ['foo_bar1', 'foo_bar1'];
+        yield ['foo_bar_1', 'foo_bar_1'];
+        yield ['foo__bar', 'foo_bar'];
+        yield ['_foo_bar_', 'foo_bar'];
     }
 
     /**
@@ -49,6 +53,10 @@ class StringUtilTest extends TestCase
         yield ['foo-bar', 'fooBar'];
         yield ['FooBar', 'fooBar'];
         yield ['FOOBar', 'fooBar'];
+        yield ['foo_bar1', 'fooBar1'];
+        yield ['foo_bar_1', 'fooBar1'];
+        yield ['foo__bar', 'fooBar'];
+        yield ['_foo_bar_', 'fooBar'];
     }
 
     /**
@@ -70,6 +78,10 @@ class StringUtilTest extends TestCase
         yield ['foo-bar', 'FooBar'];
         yield ['FooBar', 'FooBar'];
         yield ['FOOBar', 'FOOBar'];
+        yield ['foo_bar1', 'FooBar1'];
+        yield ['foo_bar_1', 'FooBar1'];
+        yield ['foo__bar', 'FooBar'];
+        yield ['_foo_bar_', 'FooBar'];
     }
 
     /**
@@ -91,5 +103,9 @@ class StringUtilTest extends TestCase
         yield ['foo-bar', 'foo-bar'];
         yield ['FooBar', 'foo-bar'];
         yield ['FOOBar', 'foo-bar'];
+        yield ['foo_bar1', 'foo-bar1'];
+        yield ['foo_bar_1', 'foo-bar-1'];
+        yield ['foo__bar', 'foo-bar'];
+        yield ['_foo_bar_', 'foo-bar'];
     }
 }
