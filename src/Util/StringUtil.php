@@ -8,9 +8,20 @@ use Symfony\Component\String\UnicodeString;
 
 class StringUtil
 {
+    /**
+     * @see UnicodeString::camel()
+     * @see UnicodeString::snake()
+     */
     public static function toSnakeCase(string $string): string
     {
-        return (new UnicodeString($string))->snake()->toString();
+        return (new UnicodeString($string))
+            ->replaceMatches('/[^\pL_0-9]++/u', '_')
+            ->replaceMatches('/(\p{Lu}+)(\p{Lu}\p{Ll})/u', '\1_\2')
+            ->replaceMatches('/([\p{Ll}0-9])(\p{Lu})/u', '\1_\2')
+            ->replaceMatches('/_+/', '_')
+            ->trim('_')
+            ->lower()
+            ->toString();
     }
 
     public static function toCamelCase(string $string): string
@@ -25,6 +36,6 @@ class StringUtil
 
     public static function toKebabCase(string $string): string
     {
-        return (new UnicodeString($string))->snake()->replace('_', '-')->toString();
+        return str_replace('_', '-', self::toSnakeCase($string));
     }
 }
