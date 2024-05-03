@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests\Standard;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
+use TwigCsFixer\Rules\Function\IncludeFunctionRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
@@ -34,6 +35,7 @@ final class TwigCsFixerTest extends TestCase
             new BlankEOFRule(),
             new BlockNameSpacingRule(),
             new EmptyLinesRule(),
+            new IncludeFunctionRule(),
             new IndentRule(),
             new SingleQuoteRule(),
             new TrailingCommaSingleLineRule(),
