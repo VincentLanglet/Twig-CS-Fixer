@@ -22,8 +22,10 @@ final class Tokenizer implements TokenizerInterface
     private const STATE_INTERPOLATION = 4;
     private const STATE_COMMENT = 5;
 
-    private const SQ_STRING_PART = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
-    private const DQ_STRING_PART = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
+    public const NAME_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
+    public const NUMBER_PATTERN = '[0-9]+(?:\.[0-9]+)?([Ee][+\-][0-9]+)?';
+    private const SQ_STRING_PATTERN = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
+    private const DQ_STRING_PATTERN = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
 
     private const REGEX_EXPRESSION_START = '/({%|{#|{{)[-~]?/';
     private const REGEX_BLOCK_END = '/[-~]?%}/A';
@@ -33,10 +35,10 @@ final class Tokenizer implements TokenizerInterface
     private const REGEX_INTERPOLATION_START = '/#{/A';
     private const REGEX_INTERPOLATION_END = '/}/A';
 
-    private const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    private const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][+\-][0-9]+)?/A';
-    private const REGEX_STRING = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
-    private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PART.'/As';
+    private const REGEX_NAME = '/'.self::NAME_PATTERN.'/A';
+    private const REGEX_NUMBER = '/'.self::NUMBER_PATTERN.'/A';
+    private const REGEX_STRING = '/"('.self::DQ_STRING_PATTERN.')"|\'('.self::SQ_STRING_PATTERN.')\'/As';
+    private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PATTERN.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
 
     /**

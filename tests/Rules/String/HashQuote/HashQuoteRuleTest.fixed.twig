@@ -1,0 +1,17 @@
+{% set foo = 42 %}
+{% set expression = {(foo): 'foo', (1 + 1): 'bar', (foo ~ 'b'): 'baz'} %}
+
+{% set conditional1 = true ? 'foo' : 'bar' %}
+{% set conditional2 = 'foo' ?: 'bar' %}
+
+{% set text = {'a': a} %}
+{% set text = {'a': a} %}
+
+{% set number = {'123': a} %}
+{% set number = {'123': a} %}
+{% set numberWithZero = {0123: a} %} {# It's the same than `{123: a}` #}
+{% set numberWithZero = {'0123': a} %}
+{% set float = {12.3: a} %} {# It's the same than `{123: a}` #}
+{% set float = {'12.3': a} %}
+
+{% set needQuote = {'data-foo': a} %}
