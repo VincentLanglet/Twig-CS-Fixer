@@ -14,9 +14,9 @@ By default, the twig-cs-fixer standard is enabled with the twig coding standard 
 - `TrailingCommaSingleLineRule`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
 - `TrailingSpaceRule`: ensures that files have no trailing spaces.
 
-If you want to use the basic Twig standard, another standard and/or add/disable a rule, you can provide
+If you want to use the basic Twig standard, another standard and/or add/remove a rule, you can provide
 your own configuration with a `.twig-cs-fixer.php` or `.twig-cs-fixer.dist.php` file which returns
-a `TwigCsFixer\Config\Config` class:
+a `TwigCsFixer\Config\Config` instance:
 
 ```php
 <?php
@@ -65,8 +65,8 @@ return $config;
 
 By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.
 
-If you want to lint specific files or directories you can pass them as argument. If you want a more sophisticated
-rule, you can configure it in the config file:
+If you want to lint specific files or directories you can pass them as argument.
+If you want a more sophisticated rule, you can configure it in the config file:
 
 ```php
 <?php
