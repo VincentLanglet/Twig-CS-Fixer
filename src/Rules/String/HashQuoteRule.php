@@ -12,11 +12,11 @@ use TwigCsFixer\Token\Tokenizer;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensures that hashes key use quotes (or not).
+ * Ensures that hashes key are not unnecessarily quoted (or enforce them).
  */
 final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
-    public function __construct(private bool $useQuote = true)
+    public function __construct(private bool $useQuote = false)
     {
     }
 
@@ -69,7 +69,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             : $this->addError($error, $token);
 
         if ($fixer instanceof FixerInterface) {
-            $success = $fixer->replaceToken($tokenPosition, '\''.$value.'\'');
+            $fixer->replaceToken($tokenPosition, '\''.$value.'\'');
         }
     }
 
