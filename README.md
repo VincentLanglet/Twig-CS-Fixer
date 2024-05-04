@@ -59,6 +59,11 @@ Removes any space before and after opening and closing of arrays and hashes.
 
 ## Custom configuration
 
+By default, the twig-cs-fixer standard is enabled with the twig coding standard rules and some extra rules.
+This tool also provides a standard with only the twig rules
+and another standard with extra rules from the symfony coding standards.
+
+Everything is configurable, so take a look at the following documentation:
 - [CLI options](docs/command.md)
 - [Configuration file](docs/configuration.md)
 - [How to disable a rule on a specific file or line](docs/identifiers.md)
