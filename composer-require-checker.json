@@ -6,6 +6,7 @@
         "Symfony\\Bridge\\Twig\\TokenParser\\StopwatchTokenParser",
         "Symfony\\Bridge\\Twig\\TokenParser\\TransDefaultDomainTokenParser",
         "Symfony\\Bridge\\Twig\\TokenParser\\TransTokenParser",
+        "Symfony\\UX\\TwigComponent\\Twig\\ComponentLexer",
         "Symfony\\UX\\TwigComponent\\Twig\\ComponentTokenParser",
         "Symfony\\UX\\TwigComponent\\Twig\\PropsTokenParser",
         "Twig\\Extra\\Cache\\TokenParser\\CacheTokenParser"

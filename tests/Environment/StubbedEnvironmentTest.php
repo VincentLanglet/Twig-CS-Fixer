@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Environment;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Node\DumpNode;
 use Symfony\Bridge\Twig\Node\FormThemeNode;
 use Symfony\Bridge\Twig\Node\StopwatchNode;
 use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
 use Symfony\Bridge\Twig\Node\TransNode;
-use Symfony\UX\TwigComponent\Twig\ComponentTokenParser;
-use Symfony\UX\TwigComponent\Twig\PropsTokenParser;
-use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 use Twig\Node\TextNode;
 use Twig\Source;
 use Twig\TwigFilter;
@@ -124,7 +123,7 @@ final class StubbedEnvironmentTest extends TestCase
 
     public function testParseCacheTag(): void
     {
-        if (!class_exists(CacheTokenParser::class)) {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.2.0')) {
             static::markTestSkipped('twig/twig ^3.2.0 is required.');
         }
 
@@ -139,7 +138,7 @@ final class StubbedEnvironmentTest extends TestCase
 
     public function testParseComponentTag(): void
     {
-        if (!class_exists(ComponentTokenParser::class)) {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'symfony/ux-twig-component', '>=2.2.0')) {
             static::markTestSkipped('symfony/ux-twig-component ^2.2.0 is required.');
         }
 
@@ -154,8 +153,8 @@ final class StubbedEnvironmentTest extends TestCase
 
     public function testParsePropsTag(): void
     {
-        if (!class_exists(PropsTokenParser::class)) {
-            static::markTestSkipped('symfony/ux-twig-component ^2.11.0 is required.');
+        if (!InstalledVersions::satisfies(new VersionParser(), 'symfony/ux-twig-component', '>=2.11.0')) {
+            static::markTestSkipped('symfony/ux-twig-component >=2.11.0 is required.');
         }
 
         $content = file_get_contents(__DIR__.'/Fixtures/props_tag.html.twig');
@@ -185,6 +184,21 @@ final class StubbedEnvironmentTest extends TestCase
 
         $env = new StubbedEnvironment([new CustomTwigExtension()]);
         $source = new Source($content, 'custom_tags.html.twig');
+
+        $env->parse($env->tokenize($source));
+    }
+
+    public function testParseComponentSpreadOperator(): void
+    {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'symfony/ux-twig-component', '>=2.11.0')) {
+            static::markTestSkipped('symfony/ux-twig-component ^2.11.0 is required.');
+        }
+
+        $content = file_get_contents(__DIR__.'/Fixtures/component_lexer.html.twig');
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment();
+        $source = new Source($content, 'component_lexer.html.twig');
 
         $env->parse($env->tokenize($source));
     }
