@@ -10,6 +10,7 @@ use Symfony\Bridge\Twig\Node\FormThemeNode;
 use Symfony\Bridge\Twig\Node\StopwatchNode;
 use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
 use Symfony\Bridge\Twig\Node\TransNode;
+use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\ComponentTokenParser;
 use Symfony\UX\TwigComponent\Twig\PropsTokenParser;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
@@ -185,6 +186,21 @@ final class StubbedEnvironmentTest extends TestCase
 
         $env = new StubbedEnvironment([new CustomTwigExtension()]);
         $source = new Source($content, 'custom_tags.html.twig');
+
+        $env->parse($env->tokenize($source));
+    }
+
+    public function testParseComponentSpreadOperator(): void
+    {
+        if (!class_exists(ComponentLexer::class)) {
+            static::markTestSkipped('symfony/ux-twig-component ^2.11.0 is required.');
+        }
+
+        $content = file_get_contents(__DIR__.'/Fixtures/component_lexer.html.twig');
+        static::assertNotFalse($content);
+
+        $env = new StubbedEnvironment();
+        $source = new Source($content, 'component_lexer.html.twig');
 
         $env->parse($env->tokenize($source));
     }

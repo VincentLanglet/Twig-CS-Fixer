@@ -9,6 +9,7 @@ use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
+use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\ComponentTokenParser as TwigComponentTokenParser;
 use Symfony\UX\TwigComponent\Twig\PropsTokenParser;
 use Twig\Environment;
@@ -139,6 +140,10 @@ final class StubbedEnvironment extends Environment
         if (class_exists(PropsTokenParser::class)) {
             /** @psalm-suppress InternalClass */
             $this->addTokenParser(new PropsTokenParser());
+        }
+        if (class_exists(ComponentLexer::class)) {
+            /** @psalm-suppress InternalClass */
+            $this->setLexer(new ComponentLexer($this));
         }
     }
 }
