@@ -193,6 +193,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
         ]);
         $commandTester->execute([
             'paths' => [$path],
+        ], [
+            'verbosity' => OutputInterface::VERBOSITY_DEBUG,
         ]);
 
         static::assertStringContainsString(
@@ -218,6 +220,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
         $commandTester->execute([
             'paths' => [$path],
             '--no-cache' => true,
+        ], [
+            'verbosity' => OutputInterface::VERBOSITY_DEBUG,
         ]);
 
         static::assertStringNotContainsString(

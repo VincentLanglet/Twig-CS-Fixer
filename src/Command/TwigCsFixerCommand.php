@@ -111,7 +111,7 @@ final class TwigCsFixerCommand extends Command
 
         $cacheFile = $config->getCacheFile();
         if (null !== $cacheFile && is_file($cacheFile)) {
-            $output->writeln(sprintf('Using cache file "%s".', $cacheFile));
+            $output->writeln(sprintf('Using cache file "%s".', $cacheFile), OutputInterface::OUTPUT_NORMAL | OutputInterface::VERBOSITY_DEBUG);
         }
 
         return $config;
