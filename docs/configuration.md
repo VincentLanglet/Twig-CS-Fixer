@@ -11,6 +11,7 @@ By default, the twig-cs-fixer standard is enabled with the twig coding standard 
 - `IncludeFunctionRule`: ensures that include function is used instead of function tag.
 - `IndentRule`: ensures that files are not indented with tabs.
 - `SingleQuoteRule`: ensures that strings use single quotes when possible.
+- `TrailingCommaMultiLineRule`: ensures that multi-line arrays, objects and argument lists have a trailing comma.
 - `TrailingCommaSingleLineRule`: ensures that single-line arrays, objects and argument lists do not have a trailing comma.
 - `TrailingSpaceRule`: ensures that files have no trailing spaces.
 

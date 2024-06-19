@@ -15,6 +15,7 @@ final class TrailingCommaSingleLineRuleTest extends AbstractRuleTestCase
             'TrailingCommaSingleLine.Error:2:9' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
             'TrailingCommaSingleLine.Error:4:13' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
             'TrailingCommaSingleLine.Error:6:12' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
+            'TrailingCommaSingleLine.Error:34:7' => 'Single-line arrays, objects and parameters lists should not have trailing comma.',
         ]);
     }
 }

@@ -20,16 +20,13 @@ final class TrailingCommaSingleLineRule extends AbstractFixableRule
             return;
         }
 
-        $relatedToken = $token->getRelatedToken();
-        Assert::notNull($relatedToken, 'A closer must have a related token.');
-
-        if ($relatedToken->getLine() !== $token->getLine()) {
-            // Multiline.
-            return;
-        }
-
         $previousPosition = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
         Assert::notFalse($previousPosition, 'A closer cannot be the first token.');
+
+        if ($tokens[$previousPosition]->getLine() !== $token->getLine()) {
+            // The closer is on a different line than the last element.
+            return;
+        }
 
         if (!$this->isTokenMatching($tokens[$previousPosition], Token::PUNCTUATION_TYPE, ',')) {
             return;
