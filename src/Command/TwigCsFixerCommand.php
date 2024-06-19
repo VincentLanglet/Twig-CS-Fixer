@@ -30,6 +30,7 @@ final class TwigCsFixerCommand extends Command
     {
         $this
             ->setName('lint')
+            ->setAliases(['check', 'fix'])
             ->setDescription('Lints a template and outputs encountered errors')
             ->setDefinition([
                 new InputArgument(
@@ -79,6 +80,14 @@ final class TwigCsFixerCommand extends Command
         ;
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
+        // @phpstan-ignore-next-line https://github.com/phpstan/phpstan-symfony/pull/398
+        if ($input->hasArgument('command') && 'fix' === $input->getArgument('command')) {
+            $input->setOption('fix', true);
+        }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
@@ -111,7 +120,7 @@ final class TwigCsFixerCommand extends Command
 
         $cacheFile = $config->getCacheFile();
         if (null !== $cacheFile && is_file($cacheFile)) {
-            $output->writeln(sprintf('Using cache file "%s".', $cacheFile), OutputInterface::OUTPUT_NORMAL | OutputInterface::VERBOSITY_DEBUG);
+            $output->writeln(sprintf('Using cache file "%s".', $cacheFile), OutputInterface::VERBOSITY_DEBUG);
         }
 
         return $config;
