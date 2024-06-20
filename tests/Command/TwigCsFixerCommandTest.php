@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Command;
 
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -33,23 +34,6 @@ final class TwigCsFixerCommandTest extends FileTestCase
         static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
     }
 
-    public function testExecuteWithOptionFix(): void
-    {
-        $command = new TwigCsFixerCommand();
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures/file.twig')],
-            '--fix' => true,
-        ]);
-
-        static::assertStringContainsString(
-            '[OK] Files linted: 1, notices: 0, warnings: 0, errors: 0',
-            $commandTester->getDisplay()
-        );
-        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
-    }
-
     public function testExecuteWithReportErrors(): void
     {
         $command = new TwigCsFixerCommand();
@@ -60,8 +44,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
         ]);
 
         $display = $commandTester->getDisplay();
-        static::assertStringContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
-        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/fixable/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/error/file.twig'), $display);
         static::assertStringNotContainsString('DelimiterSpacing.After', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
@@ -81,8 +65,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
         ]);
 
         $display = $commandTester->getDisplay();
-        static::assertStringContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
-        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/fixable/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/error/file.twig'), $display);
         static::assertStringContainsString('DelimiterSpacing.After', $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 3',
@@ -103,8 +87,8 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $display = $commandTester->getDisplay();
         static::assertStringNotContainsString('Changed', $display);
-        static::assertStringNotContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
-        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
+        static::assertStringNotContainsString(TestHelper::getOsPath('directory/fixable/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/error/file.twig'), $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $display
@@ -124,13 +108,45 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $display = $commandTester->getDisplay();
         static::assertStringContainsString('Changed', $display);
-        static::assertStringContainsString(TestHelper::getOsPath('directory/subdirectory/file.twig'), $display);
-        static::assertStringContainsString(TestHelper::getOsPath('directory/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/fixable/file.twig'), $display);
+        static::assertStringContainsString(TestHelper::getOsPath('directory/error/file.twig'), $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
             $display
         );
         static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+    }
+
+    /**
+     * @dataProvider aliasesDataProvider
+     */
+    public function testExecuteAliases(string $alias, bool $shouldFix): void
+    {
+        $command = new TwigCsFixerCommand();
+        $command->setApplication(new Application());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'command' => $alias,
+            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures/directory/fixable')],
+        ]);
+
+        if ($shouldFix) {
+            static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+            static::assertStringContainsString('OK', $commandTester->getDisplay());
+        } else {
+            static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+            static::assertStringContainsString('KO', $commandTester->getDisplay());
+        }
+    }
+
+    /**
+     * @return iterable<array-key, array{string, bool}>
+     */
+    public static function aliasesDataProvider(): iterable
+    {
+        yield ['check', false];
+        yield ['fix', true];
     }
 
     public function testExecuteWithReportOption(): void

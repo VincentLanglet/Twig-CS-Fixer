@@ -18,39 +18,10 @@ final class TwigCsFixerTest extends FileTestCase
         $process = new Process([
             TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer'),
             'lint',
-            'Fixtures/file.twig',
+            'Fixtures',
         ]);
 
         static::assertSame(0, $process->run(), $process->getErrorOutput());
         static::assertStringContainsString('OK', $process->getOutput());
-    }
-
-    /**
-     * @dataProvider aliasesDataProvider
-     */
-    public function testAliases(string $alias, bool $shouldFix): void
-    {
-        $process = new Process([
-            TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer'),
-            $alias,
-            'Fixtures',
-        ]);
-
-        if ($shouldFix) {
-            static::assertSame(0, $process->run());
-            static::assertStringContainsString('OK', $process->getOutput());
-        } else {
-            static::assertSame(1, $process->run());
-            static::assertStringContainsString('KO', $process->getOutput());
-        }
-    }
-
-    /**
-     * @return iterable<array-key, array{string, bool}>
-     */
-    public static function aliasesDataProvider(): iterable
-    {
-        yield ['check', false];
-        yield ['fix', true];
     }
 }
