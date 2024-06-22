@@ -22,5 +22,6 @@ final class TwigCsFixerTest extends FileTestCase
         ]);
 
         static::assertSame(0, $process->run(), $process->getErrorOutput());
+        static::assertStringContainsString('OK', $process->getOutput());
     }
 }
