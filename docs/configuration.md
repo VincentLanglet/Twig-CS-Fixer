@@ -73,7 +73,7 @@ If you want a more sophisticated rule, you can configure it in the config file:
 <?php
 
 $finder = new TwigCsFixer\File\Finder();
-$finder->in(__DIR__.'/templates'); // only lint files in the given directory
+$finder->in('templates');
 $finder->exclude('myCustomDirectory');
 
 $config = new TwigCsFixer\Config\Config();
