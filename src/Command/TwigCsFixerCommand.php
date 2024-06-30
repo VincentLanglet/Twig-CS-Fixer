@@ -82,7 +82,6 @@ final class TwigCsFixerCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        // @phpstan-ignore-next-line https://github.com/phpstan/phpstan-symfony/pull/398
         if ($input->hasArgument('command') && 'fix' === $input->getArgument('command')) {
             $input->setOption('fix', true);
         }
