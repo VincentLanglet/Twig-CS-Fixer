@@ -16,6 +16,7 @@ use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extra\Cache\TokenParser\CacheTokenParser;
 use Twig\Loader\ArrayLoader;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -48,10 +49,12 @@ final class StubbedEnvironment extends Environment
     /**
      * @param ExtensionInterface[]   $customTwigExtensions
      * @param TokenParserInterface[] $customTokenParsers
+     * @param NodeVisitorInterface[] $customNodeVisitors
      */
     public function __construct(
         array $customTwigExtensions = [],
-        array $customTokenParsers = []
+        array $customTokenParsers = [],
+        array $customNodeVisitors = [],
     ) {
         parent::__construct(new ArrayLoader());
 
@@ -63,6 +66,10 @@ final class StubbedEnvironment extends Environment
 
         foreach ($customTokenParsers as $customTokenParser) {
             $this->addTokenParser($customTokenParser);
+        }
+
+        foreach ($customNodeVisitors as $customNodeVisitor) {
+            $this->addNodeVisitor($customNodeVisitor);
         }
     }
 

@@ -115,7 +115,7 @@ $config->setCacheFile(null);
 return $config;
 ```
 
-## Token parser & Twig Extension
+## Token parser, Twig Extension & Node Visitors
 
 If you're using custom token parsers or binary/unary operators, they can be added in your config:
 
@@ -125,6 +125,7 @@ If you're using custom token parsers or binary/unary operators, they can be adde
 $config = new TwigCsFixer\Config\Config();
 $config->addTwigExtension(new App\Twig\CustomTwigExtension());
 $config->addTokenParser(new App\Twig\CustomTokenParser());
+$config->addNodeVisitor(new App\Twig\CustomNodeVisitor());
 
 return $config;
 ```
