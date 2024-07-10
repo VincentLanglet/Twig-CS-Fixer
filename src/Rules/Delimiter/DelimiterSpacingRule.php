@@ -5,13 +5,26 @@ declare(strict_types=1);
 namespace TwigCsFixer\Rules\Delimiter;
 
 use TwigCsFixer\Rules\AbstractSpacingRule;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 
 /**
  * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
  */
-final class DelimiterSpacingRule extends AbstractSpacingRule
+final class DelimiterSpacingRule extends AbstractSpacingRule implements ConfigurableRuleInterface
 {
+    public function __construct(bool $skipIfNewLine = true)
+    {
+        $this->skipIfNewLine = $skipIfNewLine;
+    }
+
+    public function getConfiguration(): array
+    {
+        return [
+            'skipIfNewLine' => $this->skipIfNewLine,
+        ];
+    }
+
     /**
      * @param array<int, Token> $tokens
      */

@@ -6,20 +6,14 @@
 {#- comment -#}
 {%- if foo -%}{%- endif -%}
 
-{{
-    shouldNotCareAboutNewLine
-}}
-{#
-    shouldNotCareAboutNewLine
-#}
-{%-if foo  -%}{%-  endif-%}
+{{ shouldNotCareAboutNewLine }}
+{# shouldNotCareAboutNewLine #}
+{%- if foo -%}{%- endif -%}
 
 {{ foo({'bar': {'baz': 'shouldNotCareAboutDoubleHashes'}}) }}
 
 <div>
-    {{
-        shouldNotCareAboutNewLine
-    }}
+    {{ shouldNotCareAboutNewLine }}
 </div>
 
 {% verbatim %}
@@ -30,10 +24,6 @@
     </ul>
 {% endverbatim %}
 
-{%
-
-    trans with {
+{% trans with {
     contactUrl: 'http://contact',
-}
-
- %}my.key{% endtrans %}
+} %}my.key{% endtrans %}
