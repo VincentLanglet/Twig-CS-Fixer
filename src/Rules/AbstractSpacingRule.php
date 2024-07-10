@@ -44,18 +44,19 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->skipIfNewLine) {
-            // Ignore new line
-            $next = $this->findNext(Token::INDENT_TOKENS, $tokens, $tokenPosition + 1, true);
-            if (false === $next || $this->isTokenMatching($tokens[$next], Token::EOL_TOKENS)) {
-                return;
-            }
+        $next = $this->findNext(Token::INDENT_TOKENS, $tokens, $tokenPosition + 1, true);
+        if (false === $next) {
+            return;
         }
 
-        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $found = \strlen($tokens[$tokenPosition + 1]->getValue());
-        } elseif ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::EOL_TOKENS)) {
+        if ($this->isTokenMatching($tokens[$next], Token::EOL_TOKENS)) {
+            if ($this->skipIfNewLine) {
+                return;
+            }
+
             $found = 'newline';
+        } elseif ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
+            $found = \strlen($tokens[$tokenPosition + 1]->getValue());
         } else {
             $found = 0;
         }
@@ -98,18 +99,19 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->skipIfNewLine) {
-            // Ignore new line
-            $previous = $this->findPrevious(Token::INDENT_TOKENS, $tokens, $tokenPosition - 1, true);
-            if (false === $previous || $this->isTokenMatching($tokens[$previous], Token::EOL_TOKENS)) {
-                return;
-            }
+        $previous = $this->findPrevious(Token::INDENT_TOKENS, $tokens, $tokenPosition - 1, true);
+        if (false === $previous) {
+            return;
         }
 
-        if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
-            $found = \strlen($tokens[$tokenPosition - 1]->getValue());
-        } elseif ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::EOL_TOKENS)) {
+        if ($this->isTokenMatching($tokens[$previous], Token::EOL_TOKENS)) {
+            if ($this->skipIfNewLine) {
+                return;
+            }
+
             $found = 'newline';
+        } elseif ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
+            $found = \strlen($tokens[$tokenPosition - 1]->getValue());
         } else {
             $found = 0;
         }
