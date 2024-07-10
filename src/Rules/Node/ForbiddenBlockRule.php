@@ -28,7 +28,6 @@ final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableR
     public function enterNode(Node $node, Environment $env): Node
     {
         $blockName = $node->getNodeTag();
-
         if (null === $blockName) {
             return $node;
         }

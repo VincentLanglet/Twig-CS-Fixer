@@ -33,7 +33,6 @@ final class ForbiddenFilterRule extends AbstractNodeRule implements Configurable
         }
 
         $filterName = $node->getNode('filter')->getAttribute('value');
-
         if (!\is_string($filterName)) {
             return $node;
         }

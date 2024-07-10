@@ -9,17 +9,13 @@ use Twig\Node\Node;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Rules\RuleTrait;
 
 abstract class AbstractNodeRule implements NodeRuleInterface
 {
-    private ?Report $report = null;
+    use RuleTrait;
 
     private ?string $filePath = null;
-
-    /**
-     * @var list<ViolationId>
-     */
-    private array $ignoredViolations = [];
 
     public function getName(): string
     {
@@ -89,48 +85,5 @@ abstract class AbstractNodeRule implements NodeRuleInterface
             null,
             $messageId,
         );
-    }
-
-    private function addMessage(
-        int $messageType,
-        string $message,
-        ?string $fileName,
-        ?int $line = null,
-        ?int $position = null,
-        ?string $messageId = null
-    ): bool {
-        $fileName ??= $this->filePath;
-
-        if (null === $fileName) {
-            return false;
-        }
-
-        $id = new ViolationId(
-            $this->getShortName(),
-            $messageId ?? ucfirst(strtolower(Violation::getLevelAsString($messageType))),
-            $line,
-            $position,
-        );
-        foreach ($this->ignoredViolations as $ignoredViolation) {
-            if ($ignoredViolation->match($id)) {
-                return false;
-            }
-        }
-
-        $violation = new Violation(
-            $messageType,
-            $message,
-            $fileName,
-            $this->getName(),
-            $id,
-        );
-
-        if (null !== $this->report) {
-            $this->report->addViolation($violation);
-
-            return true;
-        }
-
-        return false;
     }
 }
