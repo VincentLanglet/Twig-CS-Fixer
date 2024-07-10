@@ -1,0 +1,6 @@
+{% block content%}
+    {{ 'Hello' | trans }}
+    {% if isAdmin %}
+        {{ 'World' | trans }}
+    {% endif %}
+{% endblock %}

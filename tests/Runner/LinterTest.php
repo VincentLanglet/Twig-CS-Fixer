@@ -6,11 +6,14 @@ namespace TwigCsFixer\Tests\Runner;
 
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Node;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Rules\AbstractNodeVisitorRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Runner\Linter;
@@ -290,5 +293,62 @@ final class LinterTest extends FileTestCase
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
         $linter->run([new \SplFileInfo($filePath)], $ruleset);
+    }
+
+    public function testViolationsFromNodeVisitorRule(): void
+    {
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/forbidden_filter.twig');
+
+        $nodeVisitorRule = new class(['trans']) extends AbstractNodeVisitorRule {
+            /**
+             * @param list<string> $forbidden
+             */
+            public function __construct(
+                private array $forbidden,
+            ) {
+            }
+
+            public function enterNode(Node $node, Environment $env): Node
+            {
+                if (!$node instanceof FilterExpression) {
+                    return $node;
+                }
+
+                if (!\in_array($node->getNode('filter')->getAttribute('value'), $this->forbidden, true)) {
+                    return $node;
+                }
+
+                $this->addError(
+                    sprintf('Filter "%s" is not allowed.', $node->getNode('filter')->getAttribute('value')),
+                    $node,
+                );
+
+                return $node;
+            }
+        };
+
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $ruleset = new Ruleset();
+        $ruleset->addRule($nodeVisitorRule);
+
+        $linter = new Linter($env, $tokenizer);
+
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
+
+        $messages = $report->getFileViolations($filePath);
+        static::assertCount(2, $messages);
+
+        $message = $messages[0];
+        static::assertSame('Filter "trans" is not allowed.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+        static::assertSame(2, $message->getLine());
+
+        $message = $messages[1];
+        static::assertSame('Filter "trans" is not allowed.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+        static::assertSame(4, $message->getLine());
     }
 }

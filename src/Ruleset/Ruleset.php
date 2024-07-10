@@ -6,6 +6,8 @@ namespace TwigCsFixer\Ruleset;
 
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Rules\FixableRuleInterface;
+use TwigCsFixer\Rules\Node\ConfigurableNodeRuleInterface;
+use TwigCsFixer\Rules\Node\NodeRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Standard\StandardInterface;
 
@@ -15,7 +17,7 @@ use TwigCsFixer\Standard\StandardInterface;
 final class Ruleset
 {
     /**
-     * @var array<string, RuleInterface>
+     * @var array<string, RuleInterface|NodeRuleInterface>
      */
     private array $rules = [];
 
@@ -29,14 +31,14 @@ final class Ruleset
     }
 
     /**
-     * @return list<RuleInterface>
+     * @return list<RuleInterface|NodeRuleInterface>
      */
     public function getRules(): array
     {
         if (!$this->allowNonFixableRules) {
             return array_values(array_filter(
                 $this->rules,
-                static fn (RuleInterface $rule): bool => $rule instanceof FixableRuleInterface,
+                static fn ($rule): bool => $rule instanceof FixableRuleInterface,
             ));
         }
 
@@ -46,9 +48,9 @@ final class Ruleset
     /**
      * @return $this
      */
-    public function addRule(RuleInterface $rule): self
+    public function addRule(RuleInterface|NodeRuleInterface $rule): self
     {
-        $config = $rule instanceof ConfigurableRuleInterface
+        $config = $rule instanceof ConfigurableRuleInterface || $rule instanceof ConfigurableNodeRuleInterface
             ? $rule->getConfiguration()
             : null;
         $key = $rule::class.md5(serialize($config));
@@ -61,7 +63,7 @@ final class Ruleset
     /**
      * @return $this
      */
-    public function overrideRule(RuleInterface $rule): self
+    public function overrideRule(RuleInterface|NodeRuleInterface $rule): self
     {
         $this->removeRule($rule::class);
         $this->addRule($rule);
@@ -70,7 +72,7 @@ final class Ruleset
     }
 
     /**
-     * @param class-string<RuleInterface> $class
+     * @param class-string<RuleInterface|NodeRuleInterface> $class
      *
      * @return $this
      */
