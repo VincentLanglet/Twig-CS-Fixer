@@ -6,6 +6,7 @@ namespace TwigCsFixer\Runner;
 
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\NodeTraverser;
 use Twig\Source;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
@@ -14,6 +15,8 @@ use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Rules\Node\NodeRuleInterface;
+use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
 
@@ -39,6 +42,18 @@ final class Linter
     {
         $report = new Report($files);
 
+        /**
+         * @var list<RuleInterface> $rules
+         */
+        $rules = array_filter($ruleset->getRules(), fn ($rule) => $rule instanceof RuleInterface);
+
+        /**
+         * @var list<NodeRuleInterface> $nodeVisitorRules
+         */
+        $nodeVisitorRules = array_filter($ruleset->getRules(), fn ($rule) => $rule instanceof NodeRuleInterface);
+
+        $traverser = new NodeTraverser($this->env, $nodeVisitorRules);
+
         // Process
         foreach ($files as $file) {
             $filePath = $file->getPathname();
@@ -60,9 +75,10 @@ final class Linter
             }
 
             // Validate the file with twig parser.
+            $node = null;
             try {
                 $twigSource = new Source($content, $filePath);
-                $this->env->parse($this->env->tokenize($twigSource));
+                $node = $this->env->parse($this->env->tokenize($twigSource));
             } catch (Error $error) {
                 $violation = new Violation(
                     Violation::LEVEL_FATAL,
@@ -81,6 +97,7 @@ final class Linter
                     $newContent = $fixer->fixFile($content, $ruleset);
                     // Don't write the file if it is unchanged in order not to invalidate mtime based caches.
                     if ($newContent !== $content) {
+                        $node = null;
                         file_put_contents($filePath, $newContent);
                         $content = $newContent;
                         $report->addFixedFile($filePath);
@@ -122,9 +139,34 @@ final class Linter
             }
             restore_error_handler();
 
-            $rules = $ruleset->getRules();
             foreach ($rules as $rule) {
                 $rule->lintFile($stream, $report, $ignoredViolations);
+            }
+
+            if ([] !== $nodeVisitorRules) {
+                if (null === $node) {
+                    try {
+                        $twigSource = new Source($content, $filePath);
+                        $node = $this->env->parse($this->env->tokenize($twigSource));
+                    } catch (Error $error) {
+                        $violation = new Violation(
+                            Violation::LEVEL_FATAL,
+                            sprintf('File is invalid: %s', $error->getRawMessage()),
+                            $filePath,
+                            null,
+                            new ViolationId(line: $error->getTemplateLine())
+                        );
+
+                        $report->addViolation($violation);
+                        continue;
+                    }
+                }
+
+                foreach ($nodeVisitorRules as $nodeVisitor) {
+                    $nodeVisitor->enterFile($report, $filePath, $ignoredViolations);
+                }
+
+                $traverser->traverse($node);
             }
 
             // Only cache the file if there is no error in order to

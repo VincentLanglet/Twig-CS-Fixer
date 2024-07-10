@@ -11,6 +11,9 @@ use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Rules\Node\ForbiddenBlockRule;
+use TwigCsFixer\Rules\Node\ForbiddenFilterRule;
+use TwigCsFixer\Rules\Node\ForbiddenFunctionRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Runner\Linter;
@@ -290,5 +293,48 @@ final class LinterTest extends FileTestCase
 
         $linter = new Linter($env, $tokenizer, $cacheManager);
         $linter->run([new \SplFileInfo($filePath)], $ruleset);
+    }
+
+    public function testViolationsFromNodeVisitorRule(): void
+    {
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/forbidden_filter.twig');
+
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $ruleset = new Ruleset();
+        $ruleset->addRule(new ForbiddenFilterRule(['trans']));
+        $ruleset->addRule(new ForbiddenBlockRule(['trans']));
+        $ruleset->addRule(new ForbiddenFunctionRule(['t']));
+
+        $linter = new Linter($env, $tokenizer);
+
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
+
+        $messages = $report->getFileViolations($filePath);
+        static::assertCount(4, $messages);
+
+        $message = $messages[0];
+        static::assertSame('Filter "trans" is not allowed.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+        static::assertSame(2, $message->getLine());
+
+        $message = $messages[1];
+        static::assertSame('Filter "trans" is not allowed.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+        static::assertSame(4, $message->getLine());
+
+        $message = $messages[2];
+        static::assertSame('Block "trans" is not allowed.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+        static::assertSame(6, $message->getLine());
+
+        $message = $messages[3];
+        static::assertSame('Function "t" is not allowed.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+        static::assertSame(7, $message->getLine());
     }
 }

@@ -1,0 +1,8 @@
+{% block content %}
+    {{ 'Hello' | trans }}
+    {% if isAdmin %}
+        {{ 'World' | trans }}
+    {% endif %}
+    {% trans %}my.key{% endtrans %}
+    {{ t('hi') }}
+{% endblock %}
