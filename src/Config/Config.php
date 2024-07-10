@@ -6,6 +6,7 @@ namespace TwigCsFixer\Config;
 
 use Symfony\Component\Finder\Finder;
 use Twig\Extension\ExtensionInterface;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\File\Finder as TwigCsFinder;
@@ -38,6 +39,11 @@ final class Config
      * @var list<TokenParserInterface>
      */
     private array $tokenParsers = [];
+
+    /**
+     * @var list<NodeVisitorInterface>
+     */
+    private array $nodeVisitors = [];
 
     private bool $allowNonFixableRules = false;
 
@@ -144,6 +150,24 @@ final class Config
     public function getTokenParsers(): array
     {
         return $this->tokenParsers;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addNodeVisitor(NodeVisitorInterface $nodeVisitor): self
+    {
+        $this->nodeVisitors[] = $nodeVisitor;
+
+        return $this;
+    }
+
+    /**
+     * @return list<NodeVisitorInterface>
+     */
+    public function getNodeVisitors(): array
+    {
+        return $this->nodeVisitors;
     }
 
     /**

@@ -129,7 +129,8 @@ final class TwigCsFixerCommand extends Command
     {
         $twig = new StubbedEnvironment(
             $config->getTwigExtensions(),
-            $config->getTokenParsers()
+            $config->getTokenParsers(),
+            $config->getNodeVisitors()
         );
         $tokenizer = new Tokenizer($twig);
         $linter = new Linter($twig, $tokenizer, $config->getCacheManager());

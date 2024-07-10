@@ -12,7 +12,10 @@ use Symfony\Bridge\Twig\Node\FormThemeNode;
 use Symfony\Bridge\Twig\Node\StopwatchNode;
 use Symfony\Bridge\Twig\Node\TransDefaultDomainNode;
 use Symfony\Bridge\Twig\Node\TransNode;
+use Twig\Environment;
+use Twig\Node\Node;
 use Twig\Node\TextNode;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -175,6 +178,39 @@ final class StubbedEnvironmentTest extends TestCase
         $source = new Source($content, 'custom_tags.html.twig');
 
         $env->parse($env->tokenize($source));
+    }
+
+    public function testParseWithCustomNodeVisitor(): void
+    {
+        $content = file_get_contents(__DIR__.'/Fixtures/node_visitor.html.twig');
+        static::assertNotFalse($content);
+
+        $visitor = new class() implements NodeVisitorInterface {
+            public int $called = 0;
+
+            public function enterNode(Node $node, Environment $env): Node
+            {
+                ++$this->called;
+
+                return $node;
+            }
+
+            public function leaveNode(Node $node, Environment $env): Node
+            {
+                return $node;
+            }
+
+            public function getPriority(): int
+            {
+                return 0;
+            }
+        };
+        $env = new StubbedEnvironment([], [], [$visitor]);
+        $source = new Source($content, 'node_visitor.html.twig');
+
+        $env->parse($env->tokenize($source));
+
+        static::assertSame(23, $visitor->called);
     }
 
     public function testParseWithCustomTwigExtension(): void

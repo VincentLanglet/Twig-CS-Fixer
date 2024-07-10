@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Config;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Twig\NodeVisitor\TranslationNodeVisitor;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Symfony\Component\Finder\Finder;
@@ -84,6 +85,18 @@ final class ConfigTest extends TestCase
         $config->addTokenParser($tokenParser2);
 
         static::assertSame([$tokenParser1, $tokenParser2], $config->getTokenParsers());
+    }
+
+    public function testConfigNodeVisitors(): void
+    {
+        $config = new Config();
+
+        static::assertSame([], $config->getNodeVisitors());
+
+        $nodeVisitor1 = new TranslationNodeVisitor();
+        $config->addNodeVisitor($nodeVisitor1);
+
+        static::assertSame([$nodeVisitor1], $config->getNodeVisitors());
     }
 
     public function testConfigTwigExtensions(): void
