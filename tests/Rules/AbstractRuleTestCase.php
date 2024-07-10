@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests\Rules;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Rules\Node\NodeRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
@@ -17,11 +18,11 @@ use TwigCsFixer\Token\Tokenizer;
 abstract class AbstractRuleTestCase extends TestCase
 {
     /**
-     * @param RuleInterface|array<RuleInterface> $rules
-     * @param array<string|null>                 $expects
+     * @param RuleInterface|NodeRuleInterface|array<RuleInterface|NodeRuleInterface> $rules
+     * @param array<string|null>                                                     $expects
      */
     protected function checkRule(
-        RuleInterface|array $rules,
+        RuleInterface|NodeRuleInterface|array $rules,
         array $expects,
         ?string $filePath = null,
         string|false|null $fixedFilePath = null,
