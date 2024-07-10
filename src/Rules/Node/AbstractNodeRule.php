@@ -62,18 +62,6 @@ abstract class AbstractNodeRule implements NodeRuleInterface
         );
     }
 
-    protected function addFileWarning(string $message, Node $node, ?string $messageId = null): bool
-    {
-        return $this->addMessage(
-            Violation::LEVEL_WARNING,
-            $message,
-            $node->getTemplateName(),
-            $node->getTemplateLine(),
-            null,
-            $messageId,
-        );
-    }
-
     protected function addError(string $message, Node $node, ?string $messageId = null): bool
     {
         return $this->addMessage(
