@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Rules\Node\ForbiddenFunction;
 
 use TwigCsFixer\Rules\Node\ForbiddenFunctionRule;

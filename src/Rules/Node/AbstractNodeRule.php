@@ -8,7 +8,6 @@ use Twig\Environment;
 use Twig\Node\Node;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
-use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Rules\RuleTrait;
 
 abstract class AbstractNodeRule implements NodeRuleInterface
