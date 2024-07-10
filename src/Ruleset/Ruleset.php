@@ -6,7 +6,6 @@ namespace TwigCsFixer\Ruleset;
 
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Rules\FixableRuleInterface;
-use TwigCsFixer\Rules\Node\ConfigurableNodeRuleInterface;
 use TwigCsFixer\Rules\Node\NodeRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Standard\StandardInterface;
@@ -50,7 +49,7 @@ final class Ruleset
      */
     public function addRule(RuleInterface|NodeRuleInterface $rule): self
     {
-        $config = $rule instanceof ConfigurableRuleInterface || $rule instanceof ConfigurableNodeRuleInterface
+        $config = $rule instanceof ConfigurableRuleInterface
             ? $rule->getConfiguration()
             : null;
         $key = $rule::class.md5(serialize($config));

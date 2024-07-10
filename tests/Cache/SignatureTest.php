@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Cache;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\RuleInterface;
@@ -29,8 +30,16 @@ final class SignatureTest extends TestCase
         $rule = self::createStub(RuleInterface::class);
         $ruleset->addRule($rule);
 
-        $configurableRule = self::createStub(ConfigurableRuleInterface::class);
-        $configurableRule->method('getConfiguration')->willReturn(['a' => 1]);
+        $configurableRule = new class() extends AbstractRule implements ConfigurableRuleInterface {
+            public function getConfiguration(): array
+            {
+                return ['a' => 1];
+            }
+
+            protected function process(int $tokenPosition, array $tokens): void
+            {
+            }
+        };
         $ruleset->addRule($configurableRule);
 
         $signature = Signature::fromRuleset('8.0', '1', $ruleset);

@@ -6,8 +6,9 @@ namespace TwigCsFixer\Rules\Node;
 
 use Twig\Environment;
 use Twig\Node\Node;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
-final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableNodeRuleInterface
+final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
      * @param list<string> $blocks

@@ -7,8 +7,9 @@ namespace TwigCsFixer\Rules\Node;
 use Twig\Environment;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
-final class ForbiddenFunctionRule extends AbstractNodeRule implements ConfigurableNodeRuleInterface
+final class ForbiddenFunctionRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
      * @param list<string> $functions
