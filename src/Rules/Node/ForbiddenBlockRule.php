@@ -8,6 +8,9 @@ use Twig\Environment;
 use Twig\Node\Node;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
+/**
+ * Ensures some blocks are not used.
+ */
 final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
