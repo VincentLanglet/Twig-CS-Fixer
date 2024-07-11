@@ -33,10 +33,6 @@ final class ForbiddenFunctionRule extends AbstractNodeRule implements Configurab
         }
 
         $functionName = $node->getAttribute('name');
-        if (!\is_string($functionName)) {
-            return $node;
-        }
-
         if (!\in_array($functionName, $this->functions, true)) {
             return $node;
         }

@@ -1,0 +1,14 @@
+{# twig-cs-fixer-disable Fake.Error:1 #} This comment disable for the first line. {{ node }}
+{# twig-cs-fixer-disable Fake.Error:2:1 #} This comment disable for the first token of the line. => NOT WORKING {{ node }}
+{# twig-cs-fixer-disable Fake.Error:3:2 #} This comment disable for the second token of the line. => ERROR ON THIS LINE {{ node }}
+{# twig-cs-fixer-disable-line Fake.Error #} This comment disable for the line. {{ node }}
+{# twig-cs-fixer-disable-line Foo.Error, Fake.Error #} This comment disable for the line. {{ node }}
+ERROR ON THIS LINE {{ node }} {#
+twig-cs-fixer-disable-line Fake.Error #} This comment disable for the line with "#}" {{ node }}
+{# twig-cs-fixer-disable-line Fake.Error::1 #} This comment disable for the first token of the line. => NOT WORKING {{ node }}
+{# twig-cs-fixer-disable-line Fake.Error::2 #} This comment disable for the second token of the line. => ERROR ON THIS LINE {{ node }}
+{# twig-cs-fixer-disable-line #} This comment disable for the line for every rule {{ node }}
+{# this comment use twig-cs-fixer-disable Fake.Error #} But not at the start of the comment => ERROR ON THIS LINE {{ node }}
+{# twig-cs-fixer-disable-next-line Fake.Error #} This comment disable for the first token of the next-line. => ERROR ON THIS LINE {{ node }}
+{# twig-cs-fixer-disable-next-line Fake.Error
+#} This comment disable for the next line. => ERROR ON THIS LINE {{ node }}

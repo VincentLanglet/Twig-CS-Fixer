@@ -29,8 +29,8 @@ final class RuleTest extends TestCase
                 if (0 === $tokenPosition) {
                     $this->addWarning('Fake Warning', $token);
                     $this->addFileWarning('Fake File Warning', $token);
-                    $this->addError('Fake File Error', $token);
-                    $this->addFileError('Fake Error', $token);
+                    $this->addError('Fake Error', $token);
+                    $this->addFileError('Fake File Error', $token);
                     $this->addFixableWarning('Fake fixable warning', $token);
                     $this->addFixableError('Fake fixable error', $token);
                 }
