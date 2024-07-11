@@ -43,15 +43,8 @@ final class Linter
     {
         $report = new Report($files);
 
-        /**
-         * @var list<RuleInterface> $rules
-         */
-        $rules = array_filter($ruleset->getRules(), fn ($rule) => $rule instanceof RuleInterface);
-
-        /**
-         * @var list<NodeRuleInterface> $nodeVisitorRules
-         */
-        $nodeVisitorRules = array_filter($ruleset->getRules(), fn ($rule) => $rule instanceof NodeRuleInterface);
+        $rules = array_filter($ruleset->getRules(), static fn ($rule) => $rule instanceof RuleInterface);
+        $nodeVisitorRules = array_filter($ruleset->getRules(), static fn ($rule) => $rule instanceof NodeRuleInterface);
 
         $traverser = new NodeTraverser($this->env, $nodeVisitorRules);
 
@@ -141,7 +134,7 @@ final class Linter
                 }
 
                 foreach ($nodeVisitorRules as $nodeVisitor) {
-                    $nodeVisitor->enterFile($report, $filePath, $ignoredViolations);
+                    $nodeVisitor->enterFile($report, $ignoredViolations);
                 }
 
                 $traverser->traverse($node);

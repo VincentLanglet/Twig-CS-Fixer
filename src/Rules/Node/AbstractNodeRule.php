@@ -9,29 +9,15 @@ use Twig\Node\Node;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Rules\RuleTrait;
+use Webmozart\Assert\Assert;
 
 abstract class AbstractNodeRule implements NodeRuleInterface
 {
     use RuleTrait;
 
-    private ?string $filePath = null;
-
-    public function getName(): string
-    {
-        return static::class;
-    }
-
-    public function getShortName(): string
-    {
-        $shortName = (new \ReflectionClass($this))->getShortName();
-
-        return str_ends_with($shortName, 'Rule') ? substr($shortName, 0, -4) : $shortName;
-    }
-
-    public function enterFile(Report $report, string $filePath, array $ignoredViolations = []): void
+    public function enterFile(Report $report, array $ignoredViolations = []): void
     {
         $this->report = $report;
-        $this->filePath = $filePath;
         $this->ignoredViolations = $ignoredViolations;
     }
 
@@ -52,10 +38,13 @@ abstract class AbstractNodeRule implements NodeRuleInterface
 
     protected function addWarning(string $message, Node $node, ?string $messageId = null): bool
     {
+        $templateName = $node->getTemplateName();
+        Assert::notNull($templateName);
+
         return $this->addMessage(
             Violation::LEVEL_WARNING,
             $message,
-            $node->getTemplateName(),
+            $templateName,
             $node->getTemplateLine(),
             null,
             $messageId,
@@ -64,10 +53,13 @@ abstract class AbstractNodeRule implements NodeRuleInterface
 
     protected function addError(string $message, Node $node, ?string $messageId = null): bool
     {
+        $templateName = $node->getTemplateName();
+        Assert::notNull($templateName);
+
         return $this->addMessage(
             Violation::LEVEL_ERROR,
             $message,
-            $node->getTemplateName(),
+            $templateName,
             $node->getTemplateLine(),
             null,
             $messageId,
