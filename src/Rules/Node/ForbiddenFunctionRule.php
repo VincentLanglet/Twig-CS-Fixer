@@ -9,6 +9,9 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
+/**
+ * Ensures some functions are not used.
+ */
 final class ForbiddenFunctionRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**

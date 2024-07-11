@@ -9,6 +9,9 @@ use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Node;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
+/**
+ * Ensures some filters are not used.
+ */
 final class ForbiddenFilterRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
