@@ -15,7 +15,7 @@ abstract class AbstractNodeRule implements NodeRuleInterface
 {
     use RuleTrait;
 
-    public function enterFile(Report $report, array $ignoredViolations = []): void
+    public function setReport(Report $report, array $ignoredViolations = []): void
     {
         $this->report = $report;
         $this->ignoredViolations = $ignoredViolations;
@@ -39,7 +39,7 @@ abstract class AbstractNodeRule implements NodeRuleInterface
     protected function addWarning(string $message, Node $node, ?string $messageId = null): bool
     {
         $templateName = $node->getTemplateName();
-        Assert::notNull($templateName);
+        Assert::notNull($templateName, 'Parsed node should always have a source context.');
 
         return $this->addMessage(
             Violation::LEVEL_WARNING,
@@ -54,7 +54,7 @@ abstract class AbstractNodeRule implements NodeRuleInterface
     protected function addError(string $message, Node $node, ?string $messageId = null): bool
     {
         $templateName = $node->getTemplateName();
-        Assert::notNull($templateName);
+        Assert::notNull($templateName, 'Parsed node should always have a source context.');
 
         return $this->addMessage(
             Violation::LEVEL_ERROR,

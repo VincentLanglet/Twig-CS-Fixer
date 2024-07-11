@@ -134,7 +134,7 @@ final class Linter
                 }
 
                 foreach ($nodeVisitorRules as $nodeVisitor) {
-                    $nodeVisitor->enterFile($report, $ignoredViolations);
+                    $nodeVisitor->setReport($report, $ignoredViolations);
                 }
 
                 $traverser->traverse($node);
