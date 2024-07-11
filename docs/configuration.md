@@ -61,7 +61,6 @@ $config->allowNonFixableRules();
 return $config;
 ```
 
-
 ## Files
 
 By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.
