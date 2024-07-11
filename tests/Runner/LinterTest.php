@@ -301,14 +301,14 @@ final class LinterTest extends FileTestCase
     {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/node_visitor.twig');
 
-        $env = new StubbedEnvironment();
-        $tokenizer = new Tokenizer($env);
         $ruleset = new Ruleset();
         $ruleset->addRule(new EmptyLinesRule()); // Will be fixed before visitors
         $ruleset->addRule(new ForbiddenFilterRule(['trans']));
         $ruleset->addRule(new ForbiddenBlockRule(['trans']));
         $ruleset->addRule(new ForbiddenFunctionRule(['t']));
 
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
         $linter = new Linter($env, $tokenizer);
 
         $report = $linter->run([new \SplFileInfo($filePath)], $ruleset, new Fixer($tokenizer));
@@ -339,5 +339,29 @@ final class LinterTest extends FileTestCase
         static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
         static::assertSame(13, $message->getLine());
+    }
+
+    public function testNodeVisitorWithBuggyFixer(): void
+    {
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
+
+        $ruleset = new Ruleset();
+        $ruleset->addRule(new EmptyLinesRule());
+        $ruleset->addRule(new ForbiddenFilterRule(['trans']));
+        $ruleset->addRule(new ForbiddenBlockRule(['trans']));
+        $ruleset->addRule(new ForbiddenFunctionRule(['t']));
+
+        $env = new StubbedEnvironment();
+        $tokenizer = static::createStub(TokenizerInterface::class);
+        $tokenizer->method('tokenize')->willReturn([[], []]);
+        $linter = new Linter($env, $tokenizer);
+
+        $fixer = static::createStub(FixerInterface::class);
+        $fixer->method('fixFile')->willReturn('{{');
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset, $fixer);
+
+        $messages = $report->getFileViolations($filePath);
+        static::assertCount(1, $messages);
+        static::assertSame('File is invalid: Unexpected token "end of template" of value "".', $messages[0]->getMessage());
     }
 }

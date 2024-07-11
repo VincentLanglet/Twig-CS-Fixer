@@ -79,6 +79,12 @@ final class NodeRuleTest extends TestCase
         static::assertSame('Fake', $rule->getShortName());
     }
 
+    public function testNodeVisitorPriority(): void
+    {
+        $rule = new class() extends AbstractNodeRule {};
+        static::assertSame(0, $rule->getPriority());
+    }
+
     /**
      * @param array<int> $expectedLines
      *
