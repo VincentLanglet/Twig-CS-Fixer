@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache;
 
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
-use TwigCsFixer\Rules\Node\ConfigurableNodeRuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 
 final class Signature
@@ -27,7 +26,7 @@ final class Signature
     ): self {
         $rules = [];
         foreach ($ruleset->getRules() as $rule) {
-            $rules[$rule::class] = $rule instanceof ConfigurableRuleInterface || $rule instanceof ConfigurableNodeRuleInterface
+            $rules[$rule::class] = $rule instanceof ConfigurableRuleInterface
                 ? $rule->getConfiguration()
                 : null;
         }

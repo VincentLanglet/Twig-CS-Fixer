@@ -7,8 +7,9 @@ namespace TwigCsFixer\Rules\Node;
 use Twig\Environment;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Node;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
-final class ForbiddenFilterRule extends AbstractNodeRule implements ConfigurableNodeRuleInterface
+final class ForbiddenFilterRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
      * @param list<string> $filters
@@ -32,7 +33,6 @@ final class ForbiddenFilterRule extends AbstractNodeRule implements Configurable
         }
 
         $filterName = $node->getNode('filter')->getAttribute('value');
-
         if (!\is_string($filterName)) {
             return $node;
         }

@@ -6,6 +6,7 @@ namespace TwigCsFixer\Runner;
 
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Node\ModuleNode;
 use Twig\NodeTraverser;
 use Twig\Source;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
@@ -42,15 +43,8 @@ final class Linter
     {
         $report = new Report($files);
 
-        /**
-         * @var list<RuleInterface> $rules
-         */
-        $rules = array_filter($ruleset->getRules(), fn ($rule) => $rule instanceof RuleInterface);
-
-        /**
-         * @var list<NodeRuleInterface> $nodeVisitorRules
-         */
-        $nodeVisitorRules = array_filter($ruleset->getRules(), fn ($rule) => $rule instanceof NodeRuleInterface);
+        $rules = array_filter($ruleset->getRules(), static fn ($rule) => $rule instanceof RuleInterface);
+        $nodeVisitorRules = array_filter($ruleset->getRules(), static fn ($rule) => $rule instanceof NodeRuleInterface);
 
         $traverser = new NodeTraverser($this->env, $nodeVisitorRules);
 
@@ -75,20 +69,8 @@ final class Linter
             }
 
             // Validate the file with twig parser.
-            $node = null;
-            try {
-                $twigSource = new Source($content, $filePath);
-                $node = $this->env->parse($this->env->tokenize($twigSource));
-            } catch (Error $error) {
-                $violation = new Violation(
-                    Violation::LEVEL_FATAL,
-                    sprintf('File is invalid: %s', $error->getRawMessage()),
-                    $filePath,
-                    null,
-                    new ViolationId(line: $error->getTemplateLine())
-                );
-
-                $report->addViolation($violation);
+            $node = $this->parseTemplate($content, $filePath, $report);
+            if (null === $node) {
                 continue;
             }
 
@@ -145,25 +127,14 @@ final class Linter
 
             if ([] !== $nodeVisitorRules) {
                 if (null === $node) {
-                    try {
-                        $twigSource = new Source($content, $filePath);
-                        $node = $this->env->parse($this->env->tokenize($twigSource));
-                    } catch (Error $error) {
-                        $violation = new Violation(
-                            Violation::LEVEL_FATAL,
-                            sprintf('File is invalid: %s', $error->getRawMessage()),
-                            $filePath,
-                            null,
-                            new ViolationId(line: $error->getTemplateLine())
-                        );
-
-                        $report->addViolation($violation);
+                    $node = $this->parseTemplate($content, $filePath, $report);
+                    if (null === $node) {
                         continue;
                     }
                 }
 
                 foreach ($nodeVisitorRules as $nodeVisitor) {
-                    $nodeVisitor->enterFile($report, $filePath, $ignoredViolations);
+                    $nodeVisitor->setReport($report, $ignoredViolations);
                 }
 
                 $traverser->traverse($node);
@@ -178,6 +149,27 @@ final class Linter
         }
 
         return $report;
+    }
+
+    private function parseTemplate(string $content, string $filePath, Report $report): ?ModuleNode
+    {
+        try {
+            $twigSource = new Source($content, $filePath);
+
+            return $this->env->parse($this->env->tokenize($twigSource));
+        } catch (Error $error) {
+            $violation = new Violation(
+                Violation::LEVEL_FATAL,
+                sprintf('File is invalid: %s', $error->getRawMessage()),
+                $filePath,
+                null,
+                new ViolationId(line: $error->getTemplateLine())
+            );
+
+            $report->addViolation($violation);
+
+            return null;
+        }
     }
 
     private function setErrorHandler(Report $report, string $file): void

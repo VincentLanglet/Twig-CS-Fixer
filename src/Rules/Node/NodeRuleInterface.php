@@ -13,5 +13,5 @@ interface NodeRuleInterface extends NodeVisitorInterface
     /**
      * @param list<ViolationId> $ignoredViolations
      */
-    public function enterFile(Report $report, string $filePath, array $ignoredViolations = []): void;
+    public function setReport(Report $report, array $ignoredViolations = []): void;
 }

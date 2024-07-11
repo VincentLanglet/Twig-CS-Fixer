@@ -1,0 +1,10 @@
+{% block content %}
+    {{ 'Hello' | trans }}
+    {{ 'Hello_uppercase' | TRANS }}
+    {% if isAdmin %}
+        {{ 'World' | trans }}
+    {% endif %}
+    {% trans %}my.key{% endtrans %}
+    {{ trans('hi') }}
+    {{ TRANS('hi_uppercase') }}
+{% endblock %}

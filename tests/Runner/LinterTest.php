@@ -297,7 +297,7 @@ final class LinterTest extends FileTestCase
 
     public function testViolationsFromNodeVisitorRule(): void
     {
-        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/forbidden_filter.twig');
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/node_visitor.twig');
 
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);

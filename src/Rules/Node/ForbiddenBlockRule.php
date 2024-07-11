@@ -6,8 +6,9 @@ namespace TwigCsFixer\Rules\Node;
 
 use Twig\Environment;
 use Twig\Node\Node;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
-final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableNodeRuleInterface
+final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
      * @param list<string> $blocks
@@ -27,7 +28,6 @@ final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableN
     public function enterNode(Node $node, Environment $env): Node
     {
         $blockName = $node->getNodeTag();
-
         if (null === $blockName) {
             return $node;
         }

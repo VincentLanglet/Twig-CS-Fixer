@@ -7,8 +7,9 @@ namespace TwigCsFixer\Rules\Node;
 use Twig\Environment;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 
-final class ForbiddenFunctionRule extends AbstractNodeRule implements ConfigurableNodeRuleInterface
+final class ForbiddenFunctionRule extends AbstractNodeRule implements ConfigurableRuleInterface
 {
     /**
      * @param list<string> $functions
@@ -32,7 +33,6 @@ final class ForbiddenFunctionRule extends AbstractNodeRule implements Configurab
         }
 
         $functionName = $node->getAttribute('name');
-
         if (!\is_string($functionName)) {
             return $node;
         }
