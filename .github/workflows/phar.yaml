@@ -1,0 +1,53 @@
+name: PHAR build
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+        
+jobs:
+    phar:
+        name: BOX compile
+
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                os:
+                    - ubuntu-22.04
+                php:
+                    - 8.2
+                tools:
+                    - box:4.6  # available since https://github.com/shivammathur/setup-php/releases/tag/2.27.0
+
+        steps:
+            -   # https://github.com/actions/checkout
+                name: Checkout
+                uses: actions/checkout@v4
+
+            -   # https://github.com/shivammathur/setup-php
+                name: Setup PHP runtime
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: "none"
+                    tools: ${{ matrix.tools }}
+
+            -   # https://getcomposer.org/doc/06-config.md#platform
+                name: Setup Composer Platform
+                run: |
+                    composer config platform.php 8.0
+
+            -   # https://github.com/ramsey/composer-install
+                name: Install Composer dependencies
+                uses: ramsey/composer-install@v3
+                with:
+                    composer-options: "--prefer-dist"
+
+            -   # https://github.com/box-project/box
+                name: Build Release Artifact
+                run: |
+                    box compile --ansi
