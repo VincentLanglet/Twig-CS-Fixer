@@ -15,4 +15,4 @@ To report a vulnerability, please follow [https://docs.github.com/en/code-securi
 
 Once your report is received, the project maintainers will review it and respond accordingly. We appreciate your responsible disclosure and will make every effort to address the issue in a timely manner.
 
-Thank you for helping us maintain the security of Twif-CS-Fixer!
+Thank you for helping us maintain the security of Twig-CS-Fixer!
