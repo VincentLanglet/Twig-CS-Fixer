@@ -6,7 +6,6 @@ namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
-use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
 use TwigCsFixer\Rules\String\HashQuoteRule;
 use TwigCsFixer\Rules\String\SingleQuoteRule;
@@ -31,7 +30,6 @@ final class TwigCsFixer implements StandardInterface
             new IncludeFunctionRule(),
             new IndentRule(),
             new SingleQuoteRule(),
-            new TrailingCommaMultiLineRule(),
             new TrailingCommaSingleLineRule(),
             new TrailingSpaceRule(),
         ];
