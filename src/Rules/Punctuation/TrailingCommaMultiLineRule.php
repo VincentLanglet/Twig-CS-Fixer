@@ -28,7 +28,7 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
             return;
         }
 
@@ -40,7 +40,7 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
             return;
         }
 
-        $isMatchingComma = $this->isTokenMatching($tokens[$previousPosition], Token::PUNCTUATION_TYPE, ',');
+        $isMatchingComma = $tokens[$previousPosition]->isMatching(Token::PUNCTUATION_TYPE, ',');
         if ($this->useTrailingComma === $isMatchingComma) {
             return;
         }

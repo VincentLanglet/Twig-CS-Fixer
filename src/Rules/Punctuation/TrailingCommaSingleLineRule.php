@@ -16,7 +16,7 @@ final class TrailingCommaSingleLineRule extends AbstractFixableRule
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
             return;
         }
 
@@ -28,7 +28,7 @@ final class TrailingCommaSingleLineRule extends AbstractFixableRule
             return;
         }
 
-        if (!$this->isTokenMatching($tokens[$previousPosition], Token::PUNCTUATION_TYPE, ',')) {
+        if (!$tokens[$previousPosition]->isMatching(Token::PUNCTUATION_TYPE, ',')) {
             return;
         }
 

@@ -49,13 +49,13 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
             return;
         }
 
-        if ($this->isTokenMatching($tokens[$next], Token::EOL_TOKENS)) {
+        if ($tokens[$next]->isMatching(Token::EOL_TOKENS)) {
             if ($this->skipIfNewLine) {
                 return;
             }
 
             $found = 'newline';
-        } elseif ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
+        } elseif ($tokens[$tokenPosition + 1]->isMatching(Token::WHITESPACE_TOKENS)) {
             $found = \strlen($tokens[$tokenPosition + 1]->getValue());
         } else {
             $found = 0;
@@ -83,7 +83,7 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
         $fixer->beginChangeSet();
         while (
             isset($tokens[$index])
-            && $this->isTokenMatching($tokens[$index], $tokensToReplace)
+            && $tokens[$index]->isMatching($tokensToReplace)
         ) {
             $fixer->replaceToken($index, '');
             ++$index;
@@ -104,13 +104,13 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
             return;
         }
 
-        if ($this->isTokenMatching($tokens[$previous], Token::EOL_TOKENS)) {
+        if ($tokens[$previous]->isMatching(Token::EOL_TOKENS)) {
             if ($this->skipIfNewLine) {
                 return;
             }
 
             $found = 'newline';
-        } elseif ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
+        } elseif ($tokens[$tokenPosition - 1]->isMatching(Token::WHITESPACE_TOKENS)) {
             $found = \strlen($tokens[$tokenPosition - 1]->getValue());
         } else {
             $found = 0;
@@ -138,7 +138,7 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
         $fixer->beginChangeSet();
         while (
             isset($tokens[$index])
-            && $this->isTokenMatching($tokens[$index], $tokensToReplace)
+            && $tokens[$index]->isMatching($tokensToReplace)
         ) {
             $fixer->replaceToken($index, '');
             --$index;

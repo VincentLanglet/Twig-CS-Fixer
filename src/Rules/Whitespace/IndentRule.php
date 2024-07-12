@@ -42,7 +42,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
     private function tabToSpace(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::TAB_TOKENS)) {
+        if (!$token->isMatching(Token::TAB_TOKENS)) {
             return;
         }
 
@@ -67,7 +67,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
             return;
         }
 
-        if (!$this->isTokenMatching($token, Token::WHITESPACE_TOKENS)) {
+        if (!$token->isMatching(Token::WHITESPACE_TOKENS)) {
             return;
         }
 

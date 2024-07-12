@@ -33,9 +33,11 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         $token = $tokens[$tokenPosition];
 
         if (
-            $this->isTokenMatching($token, Token::BLOCK_END_TYPE)
-            || $this->isTokenMatching($token, Token::COMMENT_END_TYPE)
-            || $this->isTokenMatching($token, Token::VAR_END_TYPE)
+            $token->isMatching([
+                Token::BLOCK_END_TYPE,
+                Token::COMMENT_END_TYPE,
+                Token::VAR_END_TYPE,
+            ])
         ) {
             return 1;
         }
@@ -51,9 +53,11 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         $token = $tokens[$tokenPosition];
 
         if (
-            $this->isTokenMatching($token, Token::BLOCK_START_TYPE)
-            || $this->isTokenMatching($token, Token::COMMENT_START_TYPE)
-            || $this->isTokenMatching($token, Token::VAR_START_TYPE)
+            $token->isMatching([
+                Token::BLOCK_START_TYPE,
+                Token::COMMENT_START_TYPE,
+                Token::VAR_START_TYPE,
+            ])
         ) {
             return 1;
         }

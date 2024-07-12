@@ -30,7 +30,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE, ':')) {
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE, ':')) {
             return;
         }
 
@@ -54,11 +54,11 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         $value = $token->getValue();
         $error = sprintf('The hash key "%s" should be quoted.', $value);
 
-        if ($this->isTokenMatching($token, Token::NUMBER_TYPE)) {
+        if ($token->isMatching(Token::NUMBER_TYPE)) {
             // A value like `012` or `12.3` is cast to `12` by twig,
             // so we let the developer chose the right value.
             $fixable = $this->isInteger($value);
-        } elseif ($this->isTokenMatching($token, Token::NAME_TYPE)) {
+        } elseif ($token->isMatching(Token::NAME_TYPE)) {
             $fixable = true;
         } else {
             return;
@@ -79,7 +79,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
     private function stringShouldBeName(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::STRING_TYPE)) {
+        if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }
 

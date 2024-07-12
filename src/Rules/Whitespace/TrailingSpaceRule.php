@@ -15,13 +15,13 @@ final class TrailingSpaceRule extends AbstractFixableRule
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::EOL_TOKENS)) {
+        if (!$token->isMatching(Token::EOL_TOKENS)) {
             return;
         }
 
         if (
             !isset($tokens[$tokenPosition - 1])
-            || !$this->isTokenMatching($tokens[$tokenPosition - 1], Token::INDENT_TOKENS)
+            || !$tokens[$tokenPosition - 1]->isMatching(Token::INDENT_TOKENS)
         ) {
             return;
         }

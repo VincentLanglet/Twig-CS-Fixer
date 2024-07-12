@@ -19,7 +19,7 @@ final class BlockNameSpacingRule extends AbstractSpacingRule
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::BLOCK_NAME_TYPE)) {
+        if ($token->isMatching(Token::BLOCK_NAME_TYPE)) {
             return 1;
         }
 
@@ -33,7 +33,7 @@ final class BlockNameSpacingRule extends AbstractSpacingRule
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::BLOCK_NAME_TYPE)) {
+        if ($token->isMatching(Token::BLOCK_NAME_TYPE)) {
             return 1;
         }
 

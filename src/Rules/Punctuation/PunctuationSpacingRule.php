@@ -65,7 +65,7 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
     protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE)) {
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE)) {
             return null;
         }
 
@@ -78,8 +78,7 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
     protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
-
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE)) {
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE)) {
             return null;
         }
 

@@ -39,18 +39,12 @@ abstract class AbstractRule implements RuleInterface
     /**
      * @param int|string|array<int|string> $type
      * @param string|string[]              $value
+     *
+     * @deprecated use Token::isMatching() instead
      */
     protected function isTokenMatching(Token $token, int|string|array $type, string|array $value = []): bool
     {
-        if (!\is_array($type)) {
-            $type = [$type];
-        }
-        if (!\is_array($value)) {
-            $value = [$value];
-        }
-
-        return \in_array($token->getType(), $type, true)
-            && ([] === $value || \in_array($token->getValue(), $value, true));
+        return $token->isMatching($type, $value);
     }
 
     /**
@@ -63,7 +57,7 @@ abstract class AbstractRule implements RuleInterface
 
         while (
             isset($tokens[$start + $i])
-            && $exclude === $this->isTokenMatching($tokens[$start + $i], $type)
+            && $exclude === $tokens[$start + $i]->isMatching($tokens[$start + $i], $type)
         ) {
             ++$i;
         }
@@ -85,7 +79,7 @@ abstract class AbstractRule implements RuleInterface
 
         while (
             isset($tokens[$start - $i])
-            && $exclude === $this->isTokenMatching($tokens[$start - $i], $type)
+            && $exclude === $tokens[$start - $i]->isMatching($tokens[$start - $i], $type)
         ) {
             ++$i;
         }

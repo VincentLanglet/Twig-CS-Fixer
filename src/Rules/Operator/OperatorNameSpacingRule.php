@@ -15,7 +15,7 @@ final class OperatorNameSpacingRule extends AbstractFixableRule
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
+        if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return;
         }
 

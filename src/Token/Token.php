@@ -97,8 +97,30 @@ final class Token
         return $this->value;
     }
 
+    public function setRelatedToken(self $token): void
+    {
+        $this->relatedToken = $token;
+    }
+
     public function getRelatedToken(): ?self
     {
         return $this->relatedToken;
+    }
+
+    /**
+     * @param int|string|array<int|string> $type
+     * @param string|string[]              $value
+     */
+    public function isMatching(int|string|array $type, string|array $value = []): bool
+    {
+        if (!\is_array($type)) {
+            $type = [$type];
+        }
+        if (!\is_array($value)) {
+            $value = [$value];
+        }
+
+        return \in_array($this->getType(), $type, true)
+            && ([] === $value || \in_array($this->getValue(), $value, true));
     }
 }

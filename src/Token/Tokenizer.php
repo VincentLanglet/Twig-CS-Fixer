@@ -292,6 +292,8 @@ final class Tokenizer implements TokenizerInterface
             $value,
             $relatedToken
         );
+        $relatedToken?->setRelatedToken($token);
+
         $this->tokens[] = $token;
 
         $this->cursor += \strlen($value);

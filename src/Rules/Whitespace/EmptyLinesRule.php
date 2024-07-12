@@ -17,12 +17,12 @@ final class EmptyLinesRule extends AbstractFixableRule
     {
         $token = $tokens[$tokenPosition];
 
-        if (!$this->isTokenMatching($token, Token::EOL_TYPE)) {
+        if (!$token->isMatching(Token::EOL_TYPE)) {
             return;
         }
 
         Assert::keyExists($tokens, $tokenPosition + 1, 'An EOL_TYPE cannot be the last token');
-        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::EOL_TYPE)) {
+        if ($tokens[$tokenPosition + 1]->isMatching(Token::EOL_TYPE)) {
             // Rely on the next token check instead to avoid duplicate errors
             return;
         }

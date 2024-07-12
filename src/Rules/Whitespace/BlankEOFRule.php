@@ -15,7 +15,7 @@ final class BlankEOFRule extends AbstractFixableRule
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::EOF_TYPE)) {
+        if (!$token->isMatching(Token::EOF_TYPE)) {
             return;
         }
 

@@ -16,7 +16,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'include')) {
+        if (!$token->isMatching(Token::BLOCK_NAME_TYPE, 'include')) {
             return;
         }
 
@@ -45,7 +45,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
         $withVariable = false;
         foreach (range($tokenPosition, $closingTag) as $position) {
             $token = $tokens[$position];
-            if (!$this->isTokenMatching($token, Token::NAME_TYPE)) {
+            if (!$token->isMatching(Token::NAME_TYPE)) {
                 continue;
             }
             switch ($token->getValue()) {

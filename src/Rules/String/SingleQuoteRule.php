@@ -27,7 +27,7 @@ final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableR
     protected function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::STRING_TYPE)) {
+        if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }
 

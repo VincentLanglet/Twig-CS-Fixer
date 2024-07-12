@@ -41,12 +41,12 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'set')) {
+        if ($token->isMatching(Token::BLOCK_NAME_TYPE, 'set')) {
             $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
             Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "set" must be followed by a name');
 
             $this->validateVariable($tokens[$nameTokenPosition]);
-        } elseif ($this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'for')) {
+        } elseif ($token->isMatching(Token::BLOCK_NAME_TYPE, 'for')) {
             $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
             Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "for" must be followed by a name');
 
@@ -54,7 +54,7 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
             Assert::notFalse($secondNameTokenPosition, 'A BLOCK_NAME_TYPE "for" must use the "in" operator');
 
             $this->validateVariable($tokens[$nameTokenPosition]);
-            if ($this->isTokenMatching($tokens[$secondNameTokenPosition], Token::NAME_TYPE)) {
+            if ($tokens[$secondNameTokenPosition]->isMatching(Token::NAME_TYPE)) {
                 $this->validateVariable($tokens[$secondNameTokenPosition]);
             }
         }
