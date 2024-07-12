@@ -12,8 +12,8 @@ if (file_exists(__DIR__.'/../../../autoload.php')) {
     exit(1);
 }
 
-use Symfony\Component\Console\Application;
 use TwigCsFixer\Command\TwigCsFixerCommand;
+use TwigCsFixer\Console\Application;
 
 $command = new TwigCsFixerCommand();
 
