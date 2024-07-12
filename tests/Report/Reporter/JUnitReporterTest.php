@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Report\Reporter;
 
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
@@ -22,10 +23,10 @@ final class JUnitReporterTest extends TestCase
     {
         $textFormatter = new JUnitReporter();
 
-        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
-        $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
-        $file3 = TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig');
-        $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
+        $file = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
+        $file2 = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file2.twig');
+        $file3 = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file3.twig');
+        $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
 
         $violation0 = new Violation(
             Violation::LEVEL_NOTICE,
@@ -82,7 +83,7 @@ final class JUnitReporterTest extends TestCase
         $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
-        static::assertSame($expected, rtrim($text));
+        self::assertSame($expected, rtrim($text));
     }
 
     /**
@@ -167,7 +168,7 @@ final class JUnitReporterTest extends TestCase
         $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
         $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
         $file3 = TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig');
-        $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
+        $report = new Report([new SplFileInfo($file), new SplFileInfo($file2), new SplFileInfo($file3)]);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
         $textFormatter->display($output, $report, null, false);

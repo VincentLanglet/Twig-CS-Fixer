@@ -22,13 +22,13 @@ final class CheckstyleReporter implements ReporterInterface
 
         $text .= '<checkstyle>'.\PHP_EOL;
 
-        foreach ($report->getFiles() as $file) {
+        foreach ($report->getFiles(true) as $file => $realPath) {
             $fileViolations = $report->getFileViolations($file, $level);
             if (0 === \count($fileViolations)) {
                 continue;
             }
 
-            $text .= sprintf('  <file name="%s">', $this->xmlEncode($file)).\PHP_EOL;
+            $text .= sprintf('  <file name="%s">', $this->xmlEncode($realPath)).\PHP_EOL;
             foreach ($fileViolations as $violation) {
                 $line = (string) $violation->getLine();
                 $linePosition = (string) $violation->getLinePosition();

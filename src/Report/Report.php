@@ -30,12 +30,15 @@ final class Report
 
     private int $totalErrors = 0;
 
+    private array $realPaths = [];
+
     /**
      * @param iterable<\SplFileInfo> $files
      */
     public function __construct(iterable $files)
     {
         foreach ($files as $file) {
+            $this->realPaths[$file->getPathname()] = $file->getRealPath();
             $this->violationsByFile[$file->getPathname()] = [];
         }
     }
@@ -113,8 +116,11 @@ final class Report
     /**
      * @return list<string>
      */
-    public function getFiles(): array
+    public function getFiles(bool $absolute = false): array
     {
+        if ($absolute) {
+            return $this->realPaths;
+        }
         return array_keys($this->violationsByFile);
     }
 
