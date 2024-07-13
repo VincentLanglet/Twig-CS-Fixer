@@ -121,6 +121,7 @@ final class Report
         if ($absolute) {
             return $this->realPaths;
         }
+
         return array_keys($this->violationsByFile);
     }
 
