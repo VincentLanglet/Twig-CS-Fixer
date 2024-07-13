@@ -57,7 +57,7 @@ abstract class AbstractRule implements RuleInterface
 
         while (
             isset($tokens[$start + $i])
-            && $exclude === $tokens[$start + $i]->isMatching($tokens[$start + $i], $type)
+            && $exclude === $tokens[$start + $i]->isMatching($type)
         ) {
             ++$i;
         }
@@ -79,7 +79,7 @@ abstract class AbstractRule implements RuleInterface
 
         while (
             isset($tokens[$start - $i])
-            && $exclude === $tokens[$start - $i]->isMatching($tokens[$start - $i], $type)
+            && $exclude === $tokens[$start - $i]->isMatching($type)
         ) {
             ++$i;
         }
