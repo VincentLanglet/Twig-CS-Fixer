@@ -30,6 +30,9 @@ final class Report
 
     private int $totalErrors = 0;
 
+    /**
+     * @var array<string, string>
+     */
     private array $realPaths = [];
 
     /**
@@ -38,7 +41,10 @@ final class Report
     public function __construct(iterable $files)
     {
         foreach ($files as $file) {
-            $this->realPaths[$file->getPathname()] = $file->getRealPath();
+            $realPath = $file->getRealPath();
+            if (\is_string($realPath)) {
+                $this->realPaths[$file->getPathname()] = $realPath;
+            }
             $this->violationsByFile[$file->getPathname()] = [];
         }
     }
@@ -114,7 +120,7 @@ final class Report
     }
 
     /**
-     * @return list<string>
+     * @return array<string|int, string>
      */
     public function getFiles(bool $absolute = false): array
     {
