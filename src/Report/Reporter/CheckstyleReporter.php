@@ -23,8 +23,8 @@ final class CheckstyleReporter implements ReporterInterface
         $text .= '<checkstyle>'.\PHP_EOL;
 
         foreach ($report->getFiles(true) as $file => $realPath) {
-            /** @var string $file */
             /** @var string $realPath */
+            /** @var string $file */
             $fileViolations = $report->getFileViolations($file, $level);
             if (0 === \count($fileViolations)) {
                 continue;
