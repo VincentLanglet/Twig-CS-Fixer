@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Variable;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use TwigCsFixer\Util\StringUtil;
 use Webmozart\Assert\Assert;
 
@@ -37,25 +38,25 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
 
         if ($token->isMatching(Token::BLOCK_NAME_TYPE, 'set')) {
-            $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
+            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenPosition);
             Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "set" must be followed by a name');
 
-            $this->validateVariable($tokens[$nameTokenPosition]);
+            $this->validateVariable($tokens->get($nameTokenPosition));
         } elseif ($token->isMatching(Token::BLOCK_NAME_TYPE, 'for')) {
-            $nameTokenPosition = $this->findNext(Token::NAME_TYPE, $tokens, $tokenPosition);
+            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenPosition);
             Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "for" must be followed by a name');
 
-            $secondNameTokenPosition = $this->findNext([Token::NAME_TYPE, Token::OPERATOR_TYPE], $tokens, $nameTokenPosition + 1);
+            $secondNameTokenPosition = $tokens->findNext([Token::NAME_TYPE, Token::OPERATOR_TYPE], $nameTokenPosition + 1);
             Assert::notFalse($secondNameTokenPosition, 'A BLOCK_NAME_TYPE "for" must use the "in" operator');
 
-            $this->validateVariable($tokens[$nameTokenPosition]);
-            if ($tokens[$secondNameTokenPosition]->isMatching(Token::NAME_TYPE)) {
-                $this->validateVariable($tokens[$secondNameTokenPosition]);
+            $this->validateVariable($tokens->get($nameTokenPosition));
+            if ($tokens->get($secondNameTokenPosition)->isMatching(Token::NAME_TYPE)) {
+                $this->validateVariable($tokens->get($secondNameTokenPosition));
             }
         }
     }

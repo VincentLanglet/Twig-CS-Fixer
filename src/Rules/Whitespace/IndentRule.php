@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Whitespace;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures that files are indented with spaces (or tabs).
@@ -27,7 +28,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
         if ($this->useTab) {
             $this->spaceToTab($tokenPosition, $tokens);
@@ -36,12 +37,9 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function tabToSpace(int $tokenPosition, array $tokens): void
+    private function tabToSpace(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::TAB_TOKENS)) {
             return;
         }
@@ -57,12 +55,9 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         );
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function spaceToTab(int $tokenPosition, array $tokens): void
+    private function spaceToTab(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (1 !== $token->getPosition()) {
             return;
         }

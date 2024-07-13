@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Operator;
 
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -13,12 +14,9 @@ use Webmozart\Assert\Assert;
  */
 final class OperatorSpacingRule extends AbstractSpacingRule
 {
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return null;
         }
@@ -40,12 +38,9 @@ final class OperatorSpacingRule extends AbstractSpacingRule
         return 1;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return null;
         }
@@ -67,15 +62,12 @@ final class OperatorSpacingRule extends AbstractSpacingRule
         return 1;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function isUnary(int $tokenPosition, array $tokens): bool
+    private function isUnary(int $tokenPosition, Tokens $tokens): bool
     {
-        $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
         Assert::notFalse($previous, 'An OPERATOR_TYPE cannot be the first non-empty token');
 
-        $previousToken = $tokens[$previous];
+        $previousToken = $tokens->get($previous);
 
         return $previousToken->isMatching([
             // {{ 1 * -2 }}

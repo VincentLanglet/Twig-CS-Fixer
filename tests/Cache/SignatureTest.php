@@ -11,6 +11,7 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Token\Tokens;
 
 final class SignatureTest extends TestCase
 {
@@ -36,7 +37,7 @@ final class SignatureTest extends TestCase
                 return ['a' => 1];
             }
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenPosition, Tokens $tokens): void
             {
             }
         };

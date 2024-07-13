@@ -21,6 +21,16 @@ final class Tokens
      */
     private array $indexes = [];
 
+    /**
+     * @param array<Token> $tokens
+     */
+    public function __construct(array $tokens = [])
+    {
+        foreach ($tokens as $token) {
+            $this->add($token);
+        }
+    }
+
     public function add(Token $token): self
     {
         $this->tokens[] = $token;
@@ -52,6 +62,14 @@ final class Tokens
     public function has(int $index): bool
     {
         return isset($this->tokens[$index]);
+    }
+
+    /**
+     * @return list<Token>
+     */
+    public function toArray(): array
+    {
+        return $this->tokens;
     }
 
     /**

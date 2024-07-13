@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Function;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -13,9 +14,9 @@ use Webmozart\Assert\Assert;
  */
 final class IncludeFunctionRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::BLOCK_NAME_TYPE, 'include')) {
             return;
         }
@@ -28,23 +29,23 @@ final class IncludeFunctionRule extends AbstractFixableRule
             return;
         }
 
-        $openingTag = $this->findPrevious(Token::BLOCK_START_TYPE, $tokens, $tokenPosition);
+        $openingTag = $tokens->findPrevious(Token::BLOCK_START_TYPE, $tokenPosition);
         Assert::notFalse($openingTag, 'Opening tag cannot be null.');
 
-        $closingTag = $this->findNext(Token::BLOCK_END_TYPE, $tokens, $tokenPosition);
+        $closingTag = $tokens->findNext(Token::BLOCK_END_TYPE, $tokenPosition);
         Assert::notFalse($closingTag, 'Closing tag cannot be null.');
 
         $fixer->beginChangeSet();
 
         // Replace opening tag (and keep eventual whitespace modifiers)
-        $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens[$openingTag]->getValue()));
+        $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens->get($openingTag)->getValue()));
         $fixer->replaceToken($tokenPosition, 'include(');
 
         $ignoreMissing = false;
         $withoutContext = false;
         $withVariable = false;
         foreach (range($tokenPosition, $closingTag) as $position) {
-            $token = $tokens[$position];
+            $token = $tokens->get($position);
             if (!$token->isMatching(Token::NAME_TYPE)) {
                 continue;
             }
@@ -67,7 +68,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
             }
         }
 
-        $endInclude = ') '.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
+        $endInclude = ') '.str_replace('%}', '}}', $tokens->get($closingTag)->getValue());
         if ($ignoreMissing) {
             $endInclude = ', true'.$endInclude;
         }

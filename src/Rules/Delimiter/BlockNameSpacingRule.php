@@ -6,19 +6,16 @@ namespace TwigCsFixer\Rules\Delimiter;
 
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is one space before and after block names.
  */
 final class BlockNameSpacingRule extends AbstractSpacingRule
 {
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenPosition);
         if ($token->isMatching(Token::BLOCK_NAME_TYPE)) {
             return 1;
         }
@@ -26,13 +23,9 @@ final class BlockNameSpacingRule extends AbstractSpacingRule
         return null;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenPosition);
         if ($token->isMatching(Token::BLOCK_NAME_TYPE)) {
             return 1;
         }

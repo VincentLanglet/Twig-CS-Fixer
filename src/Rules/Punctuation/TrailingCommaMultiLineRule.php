@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Punctuation;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -25,22 +26,22 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
             return;
         }
 
-        $previousPosition = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previousPosition = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
         Assert::notFalse($previousPosition, 'A closer cannot be the first token.');
 
-        if ($tokens[$previousPosition]->getLine() === $token->getLine()) {
+        if ($tokens->get($previousPosition)->getLine() === $token->getLine()) {
             // The closer is on the same line as the last element.
             return;
         }
 
-        $isMatchingComma = $tokens[$previousPosition]->isMatching(Token::PUNCTUATION_TYPE, ',');
+        $isMatchingComma = $tokens->get($previousPosition)->isMatching(Token::PUNCTUATION_TYPE, ',');
         if ($this->useTrailingComma === $isMatchingComma) {
             return;
         }

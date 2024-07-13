@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\String;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures that strings use single quotes when possible.
@@ -24,9 +25,9 @@ final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableR
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }

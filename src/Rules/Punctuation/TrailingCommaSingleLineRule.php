@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Punctuation;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -13,22 +14,22 @@ use Webmozart\Assert\Assert;
  */
 final class TrailingCommaSingleLineRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
             return;
         }
 
-        $previousPosition = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previousPosition = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
         Assert::notFalse($previousPosition, 'A closer cannot be the first token.');
 
-        if ($tokens[$previousPosition]->getLine() !== $token->getLine()) {
+        if ($tokens->get($previousPosition)->getLine() !== $token->getLine()) {
             // The closer is on a different line than the last element.
             return;
         }
 
-        if (!$tokens[$previousPosition]->isMatching(Token::PUNCTUATION_TYPE, ',')) {
+        if (!$tokens->get($previousPosition)->isMatching(Token::PUNCTUATION_TYPE, ',')) {
             return;
         }
 

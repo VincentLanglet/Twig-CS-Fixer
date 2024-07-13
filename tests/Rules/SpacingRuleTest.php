@@ -8,15 +8,16 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 final class SpacingRuleTest extends TestCase
 {
     public function testSpacingRule(): void
     {
         $rule = new class() extends AbstractSpacingRule {
-            protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+            protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
             {
-                $token = $tokens[$tokenPosition];
+                $token = $tokens->get($tokenPosition);
                 if (0 === $tokenPosition) {
                     // Check it does not crash
                     return 1;
@@ -29,9 +30,9 @@ final class SpacingRuleTest extends TestCase
                 return null;
             }
 
-            protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+            protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
             {
-                $token = $tokens[$tokenPosition];
+                $token = $tokens->get($tokenPosition);
                 if (0 === $tokenPosition) {
                     return 2;
                 }
@@ -49,13 +50,13 @@ final class SpacingRuleTest extends TestCase
         $fixer->expects(static::once())->method('addContent')->with(0, '  ');
         $fixer->expects(static::once())->method('addContentBefore')->with(5, '  ');
 
-        $rule->fixFile([
+        $rule->fixFile(new Tokens([
             new Token(Token::TEXT_TYPE, 0, 0, 'fakeFile.html.twig'),
             new Token(Token::TEXT_TYPE, 1, 0, 'fakeFile.html.twig'),
             new Token(Token::TEXT_TYPE, 2, 0, 'fakeFile.html.twig'),
             new Token(Token::TEXT_TYPE, 3, 0, 'fakeFile.html.twig'),
             new Token(Token::TEXT_TYPE, 4, 0, 'fakeFile.html.twig'),
             new Token(Token::EOF_TYPE, 5, 0, 'fakeFile.html.twig'),
-        ], $fixer);
+        ]), $fixer);
     }
 }

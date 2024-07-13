@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Delimiter;
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
@@ -25,13 +26,9 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         ];
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenPosition);
         if (
             $token->isMatching([
                 Token::BLOCK_END_TYPE,
@@ -45,13 +42,9 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         return null;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenPosition);
         if (
             $token->isMatching([
                 Token::BLOCK_START_TYPE,

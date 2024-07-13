@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Whitespace;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -13,21 +14,19 @@ use Webmozart\Assert\Assert;
  */
 final class EmptyLinesRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::EOL_TYPE)) {
             return;
         }
 
-        Assert::keyExists($tokens, $tokenPosition + 1, 'An EOL_TYPE cannot be the last token');
-        if ($tokens[$tokenPosition + 1]->isMatching(Token::EOL_TYPE)) {
+        if ($tokens->get($tokenPosition + 1)->isMatching(Token::EOL_TYPE)) {
             // Rely on the next token check instead to avoid duplicate errors
             return;
         }
 
-        $previous = $this->findPrevious(Token::EOL_TYPE, $tokens, $tokenPosition, true);
+        $previous = $tokens->findPrevious(Token::EOL_TYPE, $tokenPosition, exclude: true);
         if (false === $previous) {
             // If all previous tokens are EOL_TYPE, we have to count one more
             // since $tokenPosition start at 0

@@ -11,6 +11,7 @@ use TwigCsFixer\Rules\FixableRuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\TokenizerInterface;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -217,13 +218,13 @@ final class Fixer implements FixerInterface
     }
 
     /**
-     * @param list<Token> $tokens
+     * @param Tokens $tokens
      */
-    private function startFile(array $tokens): void
+    private function startFile(Tokens $tokens): void
     {
         $this->fixedTokens = [];
 
-        $this->tokens = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
+        $this->tokens = array_map(static fn (Token $token): string => $token->getValue(), $tokens->toArray());
 
         $this->eolChar = FileHelper::detectEOL($this->getContent());
     }

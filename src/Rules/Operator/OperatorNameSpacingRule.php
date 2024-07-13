@@ -6,15 +6,16 @@ namespace TwigCsFixer\Rules\Operator;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is no consecutive spaces inside operator names.
  */
 final class OperatorNameSpacingRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return;
         }

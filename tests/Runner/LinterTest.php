@@ -23,6 +23,7 @@ use TwigCsFixer\Standard\TwigCsFixer;
 use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
+use TwigCsFixer\Token\Tokens;
 
 final class LinterTest extends FileTestCase
 {
@@ -353,7 +354,7 @@ final class LinterTest extends FileTestCase
 
         $env = new StubbedEnvironment();
         $tokenizer = static::createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willReturn([[], []]);
+        $tokenizer->method('tokenize')->willReturn([new Tokens(), []]);
         $linter = new Linter($env, $tokenizer);
 
         $fixer = static::createStub(FixerInterface::class);

@@ -9,6 +9,7 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -27,14 +28,14 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE, ':')) {
             return;
         }
 
-        $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
         Assert::notFalse($previous, 'A punctuation cannot be the first token.');
 
         if ($this->useQuote) {
@@ -44,12 +45,9 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function nameShouldBeString(int $tokenPosition, array $tokens): void
+    private function nameShouldBeString(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
 
         $value = $token->getValue();
         $error = sprintf('The hash key "%s" should be quoted.', $value);
@@ -73,12 +71,9 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function stringShouldBeName(int $tokenPosition, array $tokens): void
+    private function stringShouldBeName(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }

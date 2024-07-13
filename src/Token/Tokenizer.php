@@ -57,9 +57,9 @@ final class Tokenizer implements TokenizerInterface
     private int $currentExpressionStarter = 0;
 
     /**
-     * @var list<Token>
+     * @var Tokens
      */
-    private array $tokens = [];
+    private Tokens $tokens;
 
     /**
      * @var list<ViolationId>
@@ -91,10 +91,11 @@ final class Tokenizer implements TokenizerInterface
     {
         // Caching the regex.
         $this->operatorRegex = $this->getOperatorRegex($env);
+        $this->tokens = new Tokens();
     }
 
     /**
-     * @return array{list<Token>, list<ViolationId>}
+     * @return array{Tokens, list<ViolationId>}
      *
      * @throws CannotTokenizeException
      */
@@ -169,7 +170,7 @@ final class Tokenizer implements TokenizerInterface
         $this->lastEOL = 0;
         $this->line = 1;
         $this->currentExpressionStarter = 0;
-        $this->tokens = [];
+        $this->tokens = new Tokens();
         $this->state = [];
         $this->bracketsAndTernary = [];
 
@@ -294,7 +295,7 @@ final class Tokenizer implements TokenizerInterface
         );
         $relatedToken?->setRelatedToken($token);
 
-        $this->tokens[] = $token;
+        $this->tokens->add($token);
 
         $this->cursor += \strlen($value);
 

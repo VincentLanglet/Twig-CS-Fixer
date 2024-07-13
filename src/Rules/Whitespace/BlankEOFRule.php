@@ -6,20 +6,21 @@ namespace TwigCsFixer\Rules\Whitespace;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures that files end with one blank line.
  */
 final class BlankEOFRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenPosition, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenPosition);
         if (!$token->isMatching(Token::EOF_TYPE)) {
             return;
         }
 
-        $previous = $this->findPrevious(Token::EOL_TYPE, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::EOL_TYPE, $tokenPosition - 1, exclude: true);
         if (false === $previous) {
             // If all previous tokens are EOL_TYPE, we have to count one more
             // since $tokenPosition start at 0

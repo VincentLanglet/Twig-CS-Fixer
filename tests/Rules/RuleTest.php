@@ -14,6 +14,7 @@ use TwigCsFixer\Runner\Linter;
 use TwigCsFixer\Tests\Rules\Fixtures\FakeRule;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
+use TwigCsFixer\Token\Tokens;
 
 final class RuleTest extends TestCase
 {
@@ -22,9 +23,9 @@ final class RuleTest extends TestCase
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
         $rule = new class() extends AbstractFixableRule {
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenPosition, Tokens $tokens): void
             {
-                $token = $tokens[$tokenPosition];
+                $token = $tokens->get($tokenPosition);
 
                 if (0 === $tokenPosition) {
                     $this->addWarning('Fake Warning', $token);
@@ -37,7 +38,7 @@ final class RuleTest extends TestCase
             }
         };
 
-        $rule->lintFile([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')], $report);
+        $rule->lintFile(new Tokens([new Token(Token::EOF_TYPE, 0, 0, 'fakeFile.html.twig')]), $report);
 
         static::assertSame(3, $report->getTotalWarnings());
         static::assertSame(3, $report->getTotalErrors());
@@ -55,25 +56,25 @@ final class RuleTest extends TestCase
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
         $rule = new class() extends AbstractFixableRule {
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenPosition, Tokens $tokens): void
             {
-                $token = $tokens[$tokenPosition];
+                $token = $tokens->get($tokenPosition);
 
                 if (0 === $tokenPosition) {
                     // Ensure calling findPrevious on first token doesn't fail
-                    $previousEol = $this->findPrevious(Token::TEXT_TYPE, $tokens, $tokenPosition - 1);
+                    $previousEol = $tokens->findPrevious(Token::TEXT_TYPE, $tokenPosition - 1);
                     if (false !== $previousEol) {
                         $this->addWarning('Previous Text found', $token);
                     }
 
                     // This error shouldn't be reported
-                    $nextText = $this->findNext(Token::TEXT_TYPE, $tokens, $tokenPosition + 1);
+                    $nextText = $tokens->findNext(Token::TEXT_TYPE, $tokenPosition + 1);
                     if (false !== $nextText) {
                         $this->addWarning('Next Text found', $token);
                     }
 
                     // This error should be reported
-                    $nextEol = $this->findNext(Token::EOF_TYPE, $tokens, $tokenPosition + 1);
+                    $nextEol = $tokens->findNext(Token::EOF_TYPE, $tokenPosition + 1);
                     if (false !== $nextEol) {
                         $this->addError('Next EOL found', $token);
                     }
@@ -81,33 +82,33 @@ final class RuleTest extends TestCase
 
                 if (Token::EOF_TYPE === $token->getType()) {
                     // Ensure calling findNext on last token doesn't fail
-                    $nextEof = $this->findNext(Token::EOF_TYPE, $tokens, $tokenPosition + 1);
+                    $nextEof = $tokens->findNext(Token::EOF_TYPE, $tokenPosition + 1);
                     if (false !== $nextEof) {
                         $this->addWarning('Next EOF found', $token);
                     }
 
                     // This error shouldn't be reported
-                    $previousEof = $this->findPrevious(Token::EOF_TYPE, $tokens, $tokenPosition - 1);
+                    $previousEof = $tokens->findPrevious(Token::EOF_TYPE, $tokenPosition - 1);
                     if (false !== $previousEof) {
                         $this->addWarning('Previous Text found', $token);
                     }
 
                     // This error should be reported
-                    $previousText = $this->findPrevious(Token::TEXT_TYPE, $tokens, $tokenPosition - 1);
+                    $previousText = $tokens->findPrevious(Token::TEXT_TYPE, $tokenPosition - 1);
                     if (false !== $previousText) {
                         $this->addError('Previous Text found', $token);
                     }
                 }
             }
         };
-        $rule->lintFile([
+        $rule->lintFile(new Tokens([
             new Token(Token::TEXT_TYPE, 0, 0, 'fakeFile.html.twig'),
             new Token(Token::EOL_TYPE, 1, 0, 'fakeFile.html.twig'),
             new Token(Token::EOL_TYPE, 2, 0, 'fakeFile.html.twig'),
             new Token(Token::EOL_TYPE, 3, 0, 'fakeFile.html.twig'),
             new Token(Token::EOL_TYPE, 4, 0, 'fakeFile.html.twig'),
             new Token(Token::EOF_TYPE, 5, 0, 'fakeFile.html.twig'),
-        ], $report);
+        ]), $report);
 
         static::assertSame(0, $report->getTotalWarnings());
         static::assertSame(2, $report->getTotalErrors());
