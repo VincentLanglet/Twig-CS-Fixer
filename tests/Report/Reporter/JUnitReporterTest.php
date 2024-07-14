@@ -132,22 +132,22 @@ final class JUnitReporterTest extends TestCase
                     <testsuites>
                       <testsuite name="Twig CS Fixer" tests="6" failures="6">
                         <testcase name="%1\$s:1">
-                          <failure type="notice" message="NoticeId:1" />
+                          <failure type="notice" message="NoticeId:1 -- Notice" />
                         </testcase>
                         <testcase name="%1\$s:2">
-                          <failure type="warning" message="WarningId:2:22" />
+                          <failure type="warning" message="WarningId:2:22 -- Warning" />
                         </testcase>
                         <testcase name="%1\$s:3">
-                          <failure type="error" message="ErrorId:3:33" />
+                          <failure type="error" message="ErrorId:3:33 -- Error" />
                         </testcase>
                         <testcase name="%1\$s:0">
-                          <failure type="fatal" message="FatalId" />
+                          <failure type="fatal" message="FatalId -- Fatal" />
                         </testcase>
                         <testcase name="%2\$s:1">
-                          <failure type="notice" message="NoticeId:1" />
+                          <failure type="notice" message="NoticeId:1 -- Notice2" />
                         </testcase>
                         <testcase name="%3\$s:0">
-                          <failure type="fatal" message="FatalId" />
+                          <failure type="fatal" message="FatalId -- &apos;&quot;&lt;&amp;&gt;&quot;&apos;" />
                         </testcase>
                       </testsuite>
                     </testsuites>

@@ -86,10 +86,10 @@ final class GithubReporterTest extends TestCase
         yield [
             sprintf(
                 <<<EOD
-                    ::notice file=%1\$s,line=1::NoticeId:1
-                    ::warning file=%1\$s,line=2,col=22::WarningId:2:22
-                    ::error file=%1\$s,line=3,col=33::ErrorId:3:33
-                    ::error file=%1\$s::FatalId
+                    ::notice file=%1\$s,line=1::NoticeId:1 -- Notice
+                    ::warning file=%1\$s,line=2,col=22::WarningId:2:22 -- Warning
+                    ::error file=%1\$s,line=3,col=33::ErrorId:3:33 -- Error
+                    ::error file=%1\$s::FatalId -- Fatal%%0Awith new line
                     EOD,
                 TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig'),
             ),

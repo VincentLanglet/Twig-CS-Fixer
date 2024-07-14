@@ -17,7 +17,7 @@ final class ViolationTest extends TestCase
 
         static::assertSame(Violation::LEVEL_WARNING, $violation->getLevel());
         static::assertSame('message', $violation->getMessage());
-        static::assertSame('nameId:42:33', $violation->getDebugMessage());
+        static::assertSame('nameId:42:33 -- message', $violation->getDebugMessage());
         static::assertSame('message', $violation->getDebugMessage(false));
         static::assertSame('filename', $violation->getFilename());
         static::assertSame(42, $violation->getLine());

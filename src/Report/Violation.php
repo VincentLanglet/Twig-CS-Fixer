@@ -61,11 +61,15 @@ final class Violation
 
     public function getDebugMessage(bool $debug = true): string
     {
-        if (!$debug) {
-            return $this->message;
+        $prefix = '';
+        if ($debug) {
+            $identifier = $this->getIdentifier()?->toString();
+            if (null !== $identifier) {
+                $prefix = $identifier.' -- ';
+            }
         }
 
-        return $this->identifier?->toString() ?? $this->message;
+        return $prefix.$this->message;
     }
 
     public function getFilename(): string
