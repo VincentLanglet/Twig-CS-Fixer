@@ -77,3 +77,7 @@ The `Token::NAME_TYPE` has been split in four:
 - `Token::FUNCTION_NAME_TYPE`
 - `Token::TEST_NAME_TYPE`
 - `Token::NAME_TYPE`
+
+### Reporters
+
+The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.
