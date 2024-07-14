@@ -2,6 +2,7 @@ UPGRADE FROM 2.x to 3.0
 =======================
 
 - The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.
+- In debug mode, the report now contains both the identifier and the message of the error.
 - The position of `TrailingCommaMultiLineRule` error changed.
 - The position of `TrailingCommaSingleLineRule` error changed.
 
