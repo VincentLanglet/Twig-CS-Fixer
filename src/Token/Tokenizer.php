@@ -604,6 +604,7 @@ final class Tokenizer implements TokenizerInterface
             } elseif ($lastNonEmptyToken->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
                 $this->pushToken(Token::TEST_NAME_TYPE, $name);
             } elseif (
+                // Tests can be using 2-words.
                 $lastNonEmptyToken->isMatching(Token::TEST_NAME_TYPE)
                 && null === $lastNonEmptyToken->getRelatedToken()
             ) {

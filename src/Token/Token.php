@@ -105,14 +105,14 @@ final class Token
         return $this->value;
     }
 
-    public function setRelatedToken(self $token): void
-    {
-        $this->relatedToken = $token;
-    }
-
     public function getRelatedToken(): ?self
     {
         return $this->relatedToken;
+    }
+
+    public function setRelatedToken(self $token): void
+    {
+        $this->relatedToken = $token;
     }
 
     /**
