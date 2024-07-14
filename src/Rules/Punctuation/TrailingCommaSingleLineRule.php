@@ -35,7 +35,7 @@ final class TrailingCommaSingleLineRule extends AbstractFixableRule
 
         $fixer = $this->addFixableError(
             'Single-line arrays, objects and parameters lists should not have trailing comma.',
-            $token
+            $tokens->get($previous)
         );
 
         if (null === $fixer) {

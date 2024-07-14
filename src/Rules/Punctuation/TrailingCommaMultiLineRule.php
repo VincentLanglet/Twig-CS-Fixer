@@ -61,7 +61,9 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
             $this->useTrailingComma
                 ? 'Multi-line arrays, objects and parameters lists should have trailing comma.'
                 : 'Multi-line arrays, objects and parameters lists should not have trailing comma.',
-            $token
+            $this->useTrailingComma
+                ? $tokens->get($previous + 1)
+                : $tokens->get($previous)
         );
 
         if (null === $fixer) {
