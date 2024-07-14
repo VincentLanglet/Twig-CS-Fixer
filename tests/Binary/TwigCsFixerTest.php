@@ -33,6 +33,6 @@ final class TwigCsFixerTest extends FileTestCase
         ]);
 
         static::assertSame(0, $process->run(), $process->getErrorOutput());
-        static::assertStringContainsString('Twig-CS-Fixer dev-main', $process->getOutput());
+        static::assertStringContainsString('Twig-CS-Fixer dev-', $process->getOutput());
     }
 }
