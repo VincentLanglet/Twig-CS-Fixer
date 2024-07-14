@@ -69,3 +69,11 @@ If you never implemented a custom rule, nothing change. Otherwise, ...
 +   */
 +  public function tokenize(Source $source): array;
 ```
+
+### Token
+
+The `Token::NAME_TYPE` has been split in four:
+- `Token::FILTER_NAME_TYPE`
+- `Token::FUNCTION_NAME_TYPE`
+- `Token::TEST_NAME_TYPE`
+- `Token::NAME_TYPE`

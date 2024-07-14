@@ -61,6 +61,8 @@ final class Tokenizer implements TokenizerInterface
      */
     private Tokens $tokens;
 
+    private ?Token $lastNonEmptyToken = null;
+
     /**
      * @var list<ViolationId>
      */
@@ -171,6 +173,7 @@ final class Tokenizer implements TokenizerInterface
         $this->line = 1;
         $this->currentExpressionStarter = 0;
         $this->tokens = new Tokens();
+        $this->lastNonEmptyToken = null;
         $this->state = [];
         $this->bracketsAndTernary = [];
 
@@ -295,6 +298,9 @@ final class Tokenizer implements TokenizerInterface
         );
         $relatedToken?->setRelatedToken($token);
 
+        if (!\in_array($type, Token::EMPTY_TOKENS, true)) {
+            $this->lastNonEmptyToken = $token;
+        }
         $this->tokens->add($token);
 
         $this->cursor += \strlen($value);
@@ -592,6 +598,15 @@ final class Tokenizer implements TokenizerInterface
         if (self::STATE_BLOCK === $this->getState() && !$this->hasStateParam('blockName')) {
             $this->pushToken(Token::BLOCK_NAME_TYPE, $name);
             $this->setStateParam('blockName', $name);
+        } elseif (true === $this->lastNonEmptyToken?->isMatching(Token::PUNCTUATION_TYPE, '|')) {
+            $this->pushToken(Token::FILTER_NAME_TYPE, $name);
+        } elseif (true === $this->lastNonEmptyToken?->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
+            $this->pushToken(Token::TEST_NAME_TYPE, $name);
+        } elseif (
+            true === $this->lastNonEmptyToken?->isMatching(Token::TEST_NAME_TYPE)
+            && null === $this->lastNonEmptyToken?->getRelatedToken()
+        ) {
+            $this->pushToken(Token::TEST_NAME_TYPE, $name, $this->lastNonEmptyToken);
         } else {
             $this->pushToken(Token::NAME_TYPE, $name);
         }
@@ -625,7 +640,17 @@ final class Tokenizer implements TokenizerInterface
             }
         }
 
-        if (\in_array($currentCode, ['(', '[', '{'], true)) {
+        if ('(' === $currentCode) {
+            if (
+                null !== $this->lastNonEmptyToken
+                && Token::NAME_TYPE === $this->lastNonEmptyToken->getType()
+            ) {
+                $this->lastNonEmptyToken->setType(Token::FUNCTION_NAME_TYPE);
+            }
+
+            $token = $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
+            $this->bracketsAndTernary[] = $token;
+        } elseif (\in_array($currentCode, ['[', '{'], true)) {
             $token = $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
             $this->bracketsAndTernary[] = $token;
         } elseif (\in_array($currentCode, [')', ']', '}'], true)) {

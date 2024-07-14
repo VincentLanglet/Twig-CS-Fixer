@@ -29,6 +29,9 @@ final class Token
     public const DQ_STRING_START_TYPE = 'DQ_STRING_START_TYPE';
     public const DQ_STRING_END_TYPE = 'DQ_STRING_END_TYPE';
     public const BLOCK_NAME_TYPE = 'BLOCK_NAME_TYPE';
+    public const FUNCTION_NAME_TYPE = 'FUNCTION_NAME_TYPE';
+    public const FILTER_NAME_TYPE = 'FILTER_NAME_TYPE';
+    public const TEST_NAME_TYPE = 'TEST_NAME_TYPE';
     public const WHITESPACE_TYPE = 'WHITESPACE_TYPE';
     public const TAB_TYPE = 'TAB_TYPE';
     public const EOL_TYPE = 'EOL_TYPE';
@@ -75,6 +78,11 @@ final class Token
     public function getType(): int|string
     {
         return $this->type;
+    }
+
+    public function setType(int|string $type): void
+    {
+        $this->type = $type;
     }
 
     public function getLine(): int
