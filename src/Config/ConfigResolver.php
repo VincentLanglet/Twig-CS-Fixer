@@ -10,6 +10,7 @@ use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Signature;
+use TwigCsFixer\Console\Application;
 use TwigCsFixer\Exception\CannotResolveConfigException;
 use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\File\Finder as TwigCsFinder;
@@ -20,8 +21,6 @@ use TwigCsFixer\Ruleset\Ruleset;
  */
 final class ConfigResolver
 {
-    private const PACKAGE_NAME = 'vincentlanglet/twig-cs-fixer';
-
     public function __construct(private string $workingDir)
     {
     }
@@ -149,7 +148,7 @@ final class ConfigResolver
             new CacheFileHandler(FileHelper::getAbsolutePath($cacheFile, $this->workingDir)),
             Signature::fromRuleset(
                 \PHP_VERSION,
-                InstalledVersions::getReference(self::PACKAGE_NAME) ?? '0',
+                InstalledVersions::getReference(Application::PACKAGE_NAME) ?? '0',
                 $ruleset,
             )
         );

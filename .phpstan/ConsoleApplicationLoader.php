@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Symfony\Component\Console\Application;
-use TwigCsFixer\Command\TwigCsFixerCommand;
+use TwigCsFixer\Console\Command\TwigCsFixerCommand;
 
 require __DIR__.'/../vendor/autoload.php';
 

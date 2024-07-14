@@ -24,4 +24,15 @@ final class TwigCsFixerTest extends FileTestCase
         static::assertSame(0, $process->run(), $process->getErrorOutput());
         static::assertStringContainsString('OK', $process->getOutput());
     }
+
+    public function testBinaryVersion(): void
+    {
+        $process = new Process([
+            TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer'),
+            '--version',
+        ]);
+
+        static::assertSame(0, $process->run(), $process->getErrorOutput());
+        static::assertStringContainsString('Twig-CS-Fixer dev-', $process->getOutput());
+    }
 }
