@@ -12,24 +12,12 @@ final class Application extends BaseApplication
     public const APPLICATION_NAME = 'Twig-CS-Fixer';
     public const PACKAGE_NAME = 'vincentlanglet/twig-cs-fixer';
 
-    /**
-     * @throws \OutOfBoundsException
-     */
-    public function __construct(string $name = 'UNKNOWN', string $version = 'UNKNOWN')
+    public function __construct()
     {
-        if ('UNKNOWN' === $name) {
-            $name = self::APPLICATION_NAME;
-        }
-        if ('UNKNOWN' === $version) {
-            $version = self::getPrettyVersion();
-        }
-        parent::__construct($name, $version);
+        parent::__construct(self::APPLICATION_NAME, $this->getPackageVersion());
     }
 
-    /**
-     * @throws \OutOfBoundsException
-     */
-    public static function getPrettyVersion(): string
+    private function getPackageVersion(): string
     {
         foreach (InstalledVersions::getAllRawData() as $installed) {
             if (!isset($installed['versions'][self::PACKAGE_NAME])) {
@@ -38,13 +26,11 @@ final class Application extends BaseApplication
 
             $version = $installed['versions'][self::PACKAGE_NAME]['pretty_version']
                 ?? $installed['versions'][self::PACKAGE_NAME]['version']
-                ?? 'dev'
-            ;
+                ?? 'dev';
 
             $aliases = $installed['versions'][self::PACKAGE_NAME]['aliases'] ?? [];
 
             $reference = InstalledVersions::getReference(self::PACKAGE_NAME);
-
             if (null === $reference) {
                 return $aliases[0] ?? $version;
             }
@@ -56,6 +42,6 @@ final class Application extends BaseApplication
             );
         }
 
-        throw new \OutOfBoundsException(sprintf('Package "%s" is not installed', self::PACKAGE_NAME));
+        return 'UNKNOWN';
     }
 }

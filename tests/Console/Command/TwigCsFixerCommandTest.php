@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Command;
+namespace TwigCsFixer\Tests\Console\Command;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -11,8 +11,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
 use TwigCsFixer\Cache\Signature;
-use TwigCsFixer\Command\TwigCsFixerCommand;
 use TwigCsFixer\Config\Config;
+use TwigCsFixer\Console\Command\TwigCsFixerCommand;
 use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Tests\TestHelper;
 

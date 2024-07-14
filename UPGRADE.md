@@ -4,6 +4,7 @@ UPGRADE FROM 2.x to 3.0
 - The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.
 - The position of `TrailingCommaMultiLineRule` error changed.
 - The position of `TrailingCommaSingleLineRule` error changed.
+- `TwigCsFixer\Command\TwigCsFixerCommand` class moved to `TwigCsFixer\Console\Command` folder.
 
 If you never implemented a custom rule, nothing else changed. Otherwise, ...
 
