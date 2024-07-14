@@ -10,6 +10,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\String\SingleQuoteRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\StandardInterface;
+use TwigCsFixer\Token\Tokens;
 
 final class RulesetTest extends TestCase
 {
@@ -71,12 +72,12 @@ final class RulesetTest extends TestCase
         $ruleset = new Ruleset();
 
         $rule1 = new class() extends AbstractRule {
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
             }
         };
         $rule2 = new class() extends AbstractFixableRule {
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
             }
         };

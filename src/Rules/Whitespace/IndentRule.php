@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Whitespace;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures that files are indented with spaces (or tabs).
@@ -27,22 +28,19 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
         if ($this->useTab) {
-            $this->spaceToTab($tokenPosition, $tokens);
+            $this->spaceToTab($tokenIndex, $tokens);
         } else {
-            $this->tabToSpace($tokenPosition, $tokens);
+            $this->tabToSpace($tokenIndex, $tokens);
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function tabToSpace(int $tokenPosition, array $tokens): void
+    private function tabToSpace(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::TAB_TOKENS)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::TAB_TOKENS)) {
             return;
         }
 
@@ -52,22 +50,19 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         }
 
         $fixer->replaceToken(
-            $tokenPosition,
+            $tokenIndex,
             str_replace("\t", str_repeat(' ', $this->spaceRatio), $token->getValue())
         );
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function spaceToTab(int $tokenPosition, array $tokens): void
+    private function spaceToTab(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenIndex);
         if (1 !== $token->getPosition()) {
             return;
         }
 
-        if (!$this->isTokenMatching($token, Token::WHITESPACE_TOKENS)) {
+        if (!$token->isMatching(Token::WHITESPACE_TOKENS)) {
             return;
         }
 
@@ -81,7 +76,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         }
 
         $fixer->replaceToken(
-            $tokenPosition,
+            $tokenIndex,
             str_replace(str_repeat(' ', $this->spaceRatio), "\t", $token->getValue())
         );
     }

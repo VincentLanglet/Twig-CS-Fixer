@@ -6,19 +6,20 @@ namespace TwigCsFixer\Rules\File;
 
 use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\AbstractRule;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures that file name uses two extensions (e.g. index.html.twig).
  */
 final class FileExtensionRule extends AbstractRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        if (0 !== $tokenPosition) {
+        if (0 !== $tokenIndex) {
             return;
         }
 
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenIndex);
         $fileName = FileHelper::getFileName($token->getFilename()) ?? '';
         $fileParts = explode('.', FileHelper::removeDot($fileName));
 

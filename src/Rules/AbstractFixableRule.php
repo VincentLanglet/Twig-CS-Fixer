@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 abstract class AbstractFixableRule extends AbstractRule implements FixableRuleInterface
 {
@@ -21,12 +22,12 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
         $this->fixer = $fixer;
     }
 
-    public function fixFile(array $stream, FixerInterface $fixer, array $ignoredViolations = []): void
+    public function fixFile(Tokens $tokens, FixerInterface $fixer, array $ignoredViolations = []): void
     {
         $this->init(null, $ignoredViolations, $fixer);
 
-        foreach (array_keys($stream) as $index) {
-            $this->process($index, $stream);
+        foreach (array_keys($tokens->toArray()) as $index) {
+            $this->process($index, $tokens);
         }
     }
 

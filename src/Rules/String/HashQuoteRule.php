@@ -9,6 +9,7 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Runner\FixerInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -27,14 +28,14 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE, ':')) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE, ':')) {
             return;
         }
 
-        $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
         Assert::notFalse($previous, 'A punctuation cannot be the first token.');
 
         if ($this->useQuote) {
@@ -44,21 +45,18 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function nameShouldBeString(int $tokenPosition, array $tokens): void
+    private function nameShouldBeString(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenIndex);
 
         $value = $token->getValue();
         $error = sprintf('The hash key "%s" should be quoted.', $value);
 
-        if ($this->isTokenMatching($token, Token::NUMBER_TYPE)) {
+        if ($token->isMatching(Token::NUMBER_TYPE)) {
             // A value like `012` or `12.3` is cast to `12` by twig,
             // so we let the developer chose the right value.
             $fixable = $this->isInteger($value);
-        } elseif ($this->isTokenMatching($token, Token::NAME_TYPE)) {
+        } elseif ($token->isMatching(Token::NAME_TYPE)) {
             $fixable = true;
         } else {
             return;
@@ -69,17 +67,14 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             : $this->addError($error, $token);
 
         if ($fixer instanceof FixerInterface) {
-            $fixer->replaceToken($tokenPosition, '\''.$value.'\'');
+            $fixer->replaceToken($tokenIndex, '\''.$value.'\'');
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function stringShouldBeName(int $tokenPosition, array $tokens): void
+    private function stringShouldBeName(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::STRING_TYPE)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }
 
@@ -96,7 +91,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             $token
         );
         if (null !== $fixer) {
-            $fixer->replaceToken($tokenPosition, $expectedValue);
+            $fixer->replaceToken($tokenIndex, $expectedValue);
         }
     }
 

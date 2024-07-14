@@ -6,26 +6,27 @@ namespace TwigCsFixer\Rules\Whitespace;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures that files end with one blank line.
  */
 final class BlankEOFRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::EOF_TYPE)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::EOF_TYPE)) {
             return;
         }
 
-        $previous = $this->findPrevious(Token::EOL_TYPE, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::EOL_TYPE, $tokenIndex - 1, exclude: true);
         if (false === $previous) {
             // If all previous tokens are EOL_TYPE, we have to count one more
-            // since $tokenPosition start at 0
-            $i = $tokenPosition + 1;
+            // since $tokenIndex start at 0
+            $i = $tokenIndex + 1;
         } else {
-            $i = $tokenPosition - $previous - 1;
+            $i = $tokenIndex - $previous - 1;
         }
 
         // Only 0 or 2+ blank lines are reported.
@@ -43,14 +44,14 @@ final class BlankEOFRule extends AbstractFixableRule
         }
 
         // Because we added manually extra empty lines to the count
-        $i = min($i, $tokenPosition);
+        $i = min($i, $tokenIndex);
 
         if (0 === $i) {
-            $fixer->addNewlineBefore($tokenPosition);
+            $fixer->addNewlineBefore($tokenIndex);
         } else {
             $fixer->beginChangeSet();
-            while ($i >= 2 || $i === $tokenPosition) {
-                $fixer->replaceToken($tokenPosition - $i, '');
+            while ($i >= 2 || $i === $tokenIndex) {
+                $fixer->replaceToken($tokenIndex - $i, '');
                 --$i;
             }
             $fixer->endChangeSet();

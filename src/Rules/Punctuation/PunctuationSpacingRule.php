@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Punctuation;
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -59,31 +60,24 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
         ];
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE)) {
             return null;
         }
 
         return $this->punctuationWithSpaceBefore[$token->getValue()] ?? null;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
-        if (!$this->isTokenMatching($token, Token::PUNCTUATION_TYPE)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::PUNCTUATION_TYPE)) {
             return null;
         }
 
-        $nextPosition = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
+        $nextPosition = $tokens->findNext(Token::WHITESPACE_TOKENS, $tokenIndex + 1, exclude: true);
         Assert::notFalse($nextPosition, 'A PUNCTUATION_TYPE cannot be the last non-empty token');
 
         // We cannot change spaces after a token, if the next one has a constraint: `[1,2,3,]`.

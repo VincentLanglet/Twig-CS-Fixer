@@ -56,10 +56,9 @@ final class Tokenizer implements TokenizerInterface
 
     private int $currentExpressionStarter = 0;
 
-    /**
-     * @var list<Token>
-     */
-    private array $tokens = [];
+    private Tokens $tokens;
+
+    private ?Token $lastNonEmptyToken = null;
 
     /**
      * @var list<ViolationId>
@@ -91,10 +90,11 @@ final class Tokenizer implements TokenizerInterface
     {
         // Caching the regex.
         $this->operatorRegex = $this->getOperatorRegex($env);
+        $this->tokens = new Tokens();
     }
 
     /**
-     * @return array{list<Token>, list<ViolationId>}
+     * @return array{Tokens, list<ViolationId>}
      *
      * @throws CannotTokenizeException
      */
@@ -169,7 +169,8 @@ final class Tokenizer implements TokenizerInterface
         $this->lastEOL = 0;
         $this->line = 1;
         $this->currentExpressionStarter = 0;
-        $this->tokens = [];
+        $this->tokens = new Tokens();
+        $this->lastNonEmptyToken = null;
         $this->state = [];
         $this->bracketsAndTernary = [];
 
@@ -292,12 +293,24 @@ final class Tokenizer implements TokenizerInterface
             $value,
             $relatedToken
         );
-        $this->tokens[] = $token;
+        $relatedToken?->setRelatedToken($token);
+
+        if (!\in_array($type, Token::EMPTY_TOKENS, true)) {
+            $this->lastNonEmptyToken = $token;
+        }
+        $this->tokens->add($token);
 
         $this->cursor += \strlen($value);
 
-        $eolNb = preg_match_all("/\r\n?|\n/", $value);
-        $this->line += false !== $eolNb ? $eolNb : 0;
+        $splitByLine = preg_split("/\r\n?|\n/", $value);
+        if (false !== $splitByLine) {
+            $count = \count($splitByLine);
+            $this->line += $count - 1;
+
+            if ($count > 1) {
+                $this->lastEOL = $this->cursor - \strlen($splitByLine[$count - 1]);
+            }
+        }
 
         return $token;
     }
@@ -590,7 +603,22 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::BLOCK_NAME_TYPE, $name);
             $this->setStateParam('blockName', $name);
         } else {
-            $this->pushToken(Token::NAME_TYPE, $name);
+            $lastNonEmptyToken = $this->lastNonEmptyToken;
+            Assert::notNull($lastNonEmptyToken, 'A name cannot be the first non empty token.');
+
+            if ($lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, '|')) {
+                $this->pushToken(Token::FILTER_NAME_TYPE, $name);
+            } elseif ($lastNonEmptyToken->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
+                $this->pushToken(Token::TEST_NAME_TYPE, $name);
+            } elseif (
+                // Tests can be using 2-words.
+                $lastNonEmptyToken->isMatching(Token::TEST_NAME_TYPE)
+                && null === $lastNonEmptyToken->getRelatedToken()
+            ) {
+                $this->pushToken(Token::TEST_NAME_TYPE, $name, $lastNonEmptyToken);
+            } else {
+                $this->pushToken(Token::NAME_TYPE, $name);
+            }
         }
     }
 
@@ -622,7 +650,17 @@ final class Tokenizer implements TokenizerInterface
             }
         }
 
-        if (\in_array($currentCode, ['(', '[', '{'], true)) {
+        if ('(' === $currentCode) {
+            if (
+                null !== $this->lastNonEmptyToken
+                && Token::NAME_TYPE === $this->lastNonEmptyToken->getType()
+            ) {
+                $this->lastNonEmptyToken->setType(Token::FUNCTION_NAME_TYPE);
+            }
+
+            $token = $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
+            $this->bracketsAndTernary[] = $token;
+        } elseif (\in_array($currentCode, ['[', '{'], true)) {
             $token = $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode);
             $this->bracketsAndTernary[] = $token;
         } elseif (\in_array($currentCode, [')', ']', '}'], true)) {

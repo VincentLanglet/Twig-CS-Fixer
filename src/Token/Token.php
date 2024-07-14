@@ -29,6 +29,9 @@ final class Token
     public const DQ_STRING_START_TYPE = 'DQ_STRING_START_TYPE';
     public const DQ_STRING_END_TYPE = 'DQ_STRING_END_TYPE';
     public const BLOCK_NAME_TYPE = 'BLOCK_NAME_TYPE';
+    public const FUNCTION_NAME_TYPE = 'FUNCTION_NAME_TYPE';
+    public const FILTER_NAME_TYPE = 'FILTER_NAME_TYPE';
+    public const TEST_NAME_TYPE = 'TEST_NAME_TYPE';
     public const WHITESPACE_TYPE = 'WHITESPACE_TYPE';
     public const TAB_TYPE = 'TAB_TYPE';
     public const EOL_TYPE = 'EOL_TYPE';
@@ -77,6 +80,11 @@ final class Token
         return $this->type;
     }
 
+    public function setType(int|string $type): void
+    {
+        $this->type = $type;
+    }
+
     public function getLine(): int
     {
         return $this->line;
@@ -100,5 +108,27 @@ final class Token
     public function getRelatedToken(): ?self
     {
         return $this->relatedToken;
+    }
+
+    public function setRelatedToken(self $token): void
+    {
+        $this->relatedToken = $token;
+    }
+
+    /**
+     * @param int|string|array<int|string> $type
+     * @param string|string[]              $value
+     */
+    public function isMatching(int|string|array $type, string|array $value = []): bool
+    {
+        if (!\is_array($type)) {
+            $type = [$type];
+        }
+        if (!\is_array($value)) {
+            $value = [$value];
+        }
+
+        return \in_array($this->getType(), $type, true)
+            && ([] === $value || \in_array($this->getValue(), $value, true));
     }
 }

@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\Delimiter;
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
@@ -25,17 +26,15 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         ];
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenIndex);
         if (
-            $this->isTokenMatching($token, Token::BLOCK_END_TYPE)
-            || $this->isTokenMatching($token, Token::COMMENT_END_TYPE)
-            || $this->isTokenMatching($token, Token::VAR_END_TYPE)
+            $token->isMatching([
+                Token::BLOCK_END_TYPE,
+                Token::COMMENT_END_TYPE,
+                Token::VAR_END_TYPE,
+            ])
         ) {
             return 1;
         }
@@ -43,17 +42,15 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         return null;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-
+        $token = $tokens->get($tokenIndex);
         if (
-            $this->isTokenMatching($token, Token::BLOCK_START_TYPE)
-            || $this->isTokenMatching($token, Token::COMMENT_START_TYPE)
-            || $this->isTokenMatching($token, Token::VAR_START_TYPE)
+            $token->isMatching([
+                Token::BLOCK_START_TYPE,
+                Token::COMMENT_START_TYPE,
+                Token::VAR_START_TYPE,
+            ])
         ) {
             return 1;
         }

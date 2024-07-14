@@ -26,17 +26,16 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
+        $result = $tokenizer->tokenize($source);
         static::assertEquals(
             [
-                [
-                    new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
-                    new Token(Token::EOL_TYPE, 1, 16, $filePath, \PHP_EOL),
-                    new Token(Token::EOF_TYPE, 2, 1, $filePath),
-                ],
-                [],
+                new Token(Token::TEXT_TYPE, 1, 1, $filePath, '<div>test</div>'),
+                new Token(Token::EOL_TYPE, 1, 16, $filePath, \PHP_EOL),
+                new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
-            $tokenizer->tokenize($source)
+            $result[0]->toArray()
         );
+        static::assertEquals([], $result[1]);
     }
 
     public function testTokenizeMixedEOL(): void
@@ -45,21 +44,20 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source("{#\r\n\n#}\r\n\n", 'path');
 
+        $result = $tokenizer->tokenize($source);
         static::assertEquals(
             [
-                [
-                    new Token(Token::COMMENT_START_TYPE, 1, 1, 'path', '{#'),
-                    new Token(Token::COMMENT_EOL_TYPE, 1, 3, 'path', "\r\n"),
-                    new Token(Token::COMMENT_EOL_TYPE, 2, 1, 'path', "\n"),
-                    new Token(Token::COMMENT_END_TYPE, 3, 1, 'path', '#}'),
-                    new Token(Token::EOL_TYPE, 3, 3, 'path', "\r\n"),
-                    new Token(Token::EOL_TYPE, 4, 1, 'path', "\n"),
-                    new Token(Token::EOF_TYPE, 5, 1, 'path'),
-                ],
-                [],
+                new Token(Token::COMMENT_START_TYPE, 1, 1, 'path', '{#'),
+                new Token(Token::COMMENT_EOL_TYPE, 1, 3, 'path', "\r\n"),
+                new Token(Token::COMMENT_EOL_TYPE, 2, 1, 'path', "\n"),
+                new Token(Token::COMMENT_END_TYPE, 3, 1, 'path', '#}'),
+                new Token(Token::EOL_TYPE, 3, 3, 'path', "\r\n"),
+                new Token(Token::EOL_TYPE, 4, 1, 'path', "\n"),
+                new Token(Token::EOF_TYPE, 5, 1, 'path'),
             ],
-            $tokenizer->tokenize($source)
+            $result[0]->toArray()
         );
+        static::assertEquals([], $result[1]);
     }
 
     public function testTokenizeWithCustomOperators(): void
@@ -91,7 +89,7 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOL_TYPE, 1, 36, $filePath, \PHP_EOL),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
-            $tokenizer->tokenize($source)[0]
+            $tokenizer->tokenize($source)[0]->toArray()
         );
     }
 
@@ -137,14 +135,14 @@ final class TokenizerTest extends TestCase
 
         $tokens = $tokenizer->tokenize($source)[0];
 
-        $tokenValues = array_map(static fn (Token $token): string => $token->getValue(), $tokens);
+        $tokenValues = array_map(static fn (Token $token): string => $token->getValue(), $tokens->toArray());
 
         $diff = TestHelper::generateDiff(implode('', $tokenValues), $filePath);
         if ('' !== $diff) {
             static::fail($diff);
         }
 
-        $tokenTypes = array_map(static fn (Token $token): int|string => $token->getType(), $tokens);
+        $tokenTypes = array_map(static fn (Token $token): int|string => $token->getType(), $tokens->toArray());
         static::assertSame($expectedTokenTypes, $tokenTypes);
     }
 
@@ -301,7 +299,7 @@ final class TokenizerTest extends TestCase
                 1 => Token::WHITESPACE_TYPE,
                 2 => Token::NAME_TYPE,
                 3 => Token::PUNCTUATION_TYPE,
-                4 => Token::NAME_TYPE,
+                4 => Token::FILTER_NAME_TYPE,
                 5 => Token::PUNCTUATION_TYPE,
                 6 => Token::NAME_TYPE,
                 7 => Token::WHITESPACE_TYPE,
@@ -322,7 +320,7 @@ final class TokenizerTest extends TestCase
                 22 => Token::DQ_STRING_END_TYPE,
                 23 => Token::PUNCTUATION_TYPE,
                 24 => Token::PUNCTUATION_TYPE,
-                25 => Token::NAME_TYPE,
+                25 => Token::FILTER_NAME_TYPE,
                 26 => Token::PUNCTUATION_TYPE,
                 27 => Token::STRING_TYPE,
                 28 => Token::PUNCTUATION_TYPE,
@@ -344,9 +342,9 @@ final class TokenizerTest extends TestCase
                 5 => Token::WHITESPACE_TYPE,
                 6 => Token::OPERATOR_TYPE,
                 7 => Token::WHITESPACE_TYPE,
-                8 => Token::NAME_TYPE,
+                8 => Token::TEST_NAME_TYPE,
                 9 => Token::WHITESPACE_TYPE,
-                10 => Token::NAME_TYPE,
+                10 => Token::TEST_NAME_TYPE,
                 11 => Token::PUNCTUATION_TYPE,
                 12 => Token::NAME_TYPE,
                 13 => Token::PUNCTUATION_TYPE,
@@ -366,9 +364,9 @@ final class TokenizerTest extends TestCase
                 27 => Token::WHITESPACE_TYPE,
                 28 => Token::OPERATOR_TYPE,
                 29 => Token::WHITESPACE_TYPE,
-                30 => Token::NAME_TYPE,
+                30 => Token::TEST_NAME_TYPE,
                 31 => Token::WHITESPACE_TYPE,
-                32 => Token::NAME_TYPE,
+                32 => Token::TEST_NAME_TYPE,
                 33 => Token::PUNCTUATION_TYPE,
                 34 => Token::NAME_TYPE,
                 35 => Token::PUNCTUATION_TYPE,
@@ -488,13 +486,13 @@ final class TokenizerTest extends TestCase
                 3 => Token::WHITESPACE_TYPE,
                 4 => Token::OPERATOR_TYPE,
                 5 => Token::WHITESPACE_TYPE,
-                6 => Token::NAME_TYPE,
+                6 => Token::TEST_NAME_TYPE,
                 7 => Token::WHITESPACE_TYPE,
                 8 => Token::OPERATOR_TYPE,
                 9 => Token::WHITESPACE_TYPE,
                 10 => Token::NAME_TYPE,
                 11 => Token::PUNCTUATION_TYPE,
-                12 => Token::NAME_TYPE,
+                12 => Token::FILTER_NAME_TYPE,
                 13 => Token::WHITESPACE_TYPE,
                 14 => Token::VAR_END_TYPE,
                 15 => Token::EOL_TYPE,
@@ -517,7 +515,7 @@ final class TokenizerTest extends TestCase
                 9 => Token::WHITESPACE_TYPE,
                 10 => Token::NAME_TYPE,
                 11 => Token::PUNCTUATION_TYPE,
-                12 => Token::NAME_TYPE,
+                12 => Token::FILTER_NAME_TYPE,
                 13 => Token::WHITESPACE_TYPE,
                 14 => Token::VAR_END_TYPE,
                 15 => Token::EOL_TYPE,
@@ -638,6 +636,49 @@ final class TokenizerTest extends TestCase
                 42 => Token::VAR_END_TYPE,
                 43 => Token::EOL_TYPE,
                 44 => Token::EOF_TYPE,
+            ],
+        ];
+
+        yield [
+            __DIR__.'/Fixtures/test14.twig',
+            [
+                0 => Token::VAR_START_TYPE,
+                1 => Token::WHITESPACE_TYPE,
+                2 => Token::NAME_TYPE,
+                3 => Token::WHITESPACE_TYPE,
+                4 => Token::OPERATOR_TYPE,
+                5 => Token::WHITESPACE_TYPE,
+                6 => Token::TEST_NAME_TYPE,
+                7 => Token::WHITESPACE_TYPE,
+                8 => Token::TEST_NAME_TYPE,
+                9 => Token::WHITESPACE_TYPE,
+                10 => Token::NAME_TYPE,
+                11 => Token::WHITESPACE_TYPE,
+                12 => Token::VAR_END_TYPE,
+                13 => Token::EOL_TYPE,
+                14 => Token::VAR_START_TYPE,
+                15 => Token::WHITESPACE_TYPE,
+                16 => Token::NAME_TYPE,
+                17 => Token::WHITESPACE_TYPE,
+                18 => Token::OPERATOR_TYPE,
+                19 => Token::WHITESPACE_TYPE,
+                20 => Token::TEST_NAME_TYPE,
+                21 => Token::WHITESPACE_TYPE,
+                22 => Token::TEST_NAME_TYPE,
+                23 => Token::WHITESPACE_TYPE,
+                24 => Token::NAME_TYPE,
+                25 => Token::WHITESPACE_TYPE,
+                26 => Token::VAR_END_TYPE,
+                27 => Token::EOL_TYPE,
+                28 => Token::VAR_START_TYPE,
+                29 => Token::WHITESPACE_TYPE,
+                30 => Token::FUNCTION_NAME_TYPE,
+                31 => Token::PUNCTUATION_TYPE,
+                32 => Token::PUNCTUATION_TYPE,
+                33 => Token::WHITESPACE_TYPE,
+                34 => Token::VAR_END_TYPE,
+                35 => Token::EOL_TYPE,
+                36 => Token::EOF_TYPE,
             ],
         ];
     }

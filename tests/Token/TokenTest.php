@@ -27,4 +27,13 @@ final class TokenTest extends TestCase
         $token = new Token(Token::EOF_TYPE, 2, 1, 'file.twig');
         static::assertSame('', $token->getValue());
     }
+
+    public function testIsMatching(): void
+    {
+        $token = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '(');
+
+        static::assertTrue($token->isMatching(Token::PUNCTUATION_TYPE));
+        static::assertTrue($token->isMatching(Token::PUNCTUATION_TYPE, '('));
+        static::assertFalse($token->isMatching(Token::TEXT_TYPE, '('));
+    }
 }

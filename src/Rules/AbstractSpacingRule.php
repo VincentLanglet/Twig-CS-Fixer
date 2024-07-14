@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Rules;
 
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is one space before or after some tokens.
@@ -13,50 +14,40 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
 {
     protected bool $skipIfNewLine = true;
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $spaceAfter = $this->getSpaceAfter($tokenPosition, $tokens);
-        $spaceBefore = $this->getSpaceBefore($tokenPosition, $tokens);
+        $spaceAfter = $this->getSpaceAfter($tokenIndex, $tokens);
+        $spaceBefore = $this->getSpaceBefore($tokenIndex, $tokens);
 
         if (null !== $spaceAfter) {
-            $this->checkSpaceAfter($tokenPosition, $tokens, $spaceAfter);
+            $this->checkSpaceAfter($tokenIndex, $tokens, $spaceAfter);
         }
 
         if (null !== $spaceBefore) {
-            $this->checkSpaceBefore($tokenPosition, $tokens, $spaceBefore);
+            $this->checkSpaceBefore($tokenIndex, $tokens, $spaceBefore);
         }
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    abstract protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int;
+    abstract protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int;
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    abstract protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int;
+    abstract protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int;
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function checkSpaceAfter(int $tokenPosition, array $tokens, int $expected): void
+    private function checkSpaceAfter(int $tokenIndex, Tokens $tokens, int $expected): void
     {
-        $token = $tokens[$tokenPosition];
-
-        $next = $this->findNext(Token::INDENT_TOKENS, $tokens, $tokenPosition + 1, true);
+        $token = $tokens->get($tokenIndex);
+        $next = $tokens->findNext(Token::INDENT_TOKENS, $tokenIndex + 1, exclude: true);
         if (false === $next) {
             return;
         }
 
-        if ($this->isTokenMatching($tokens[$next], Token::EOL_TOKENS)) {
+        if ($tokens->get($next)->isMatching(Token::EOL_TOKENS)) {
             if ($this->skipIfNewLine) {
                 return;
             }
 
             $found = 'newline';
-        } elseif ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
-            $found = \strlen($tokens[$tokenPosition + 1]->getValue());
+        } elseif ($tokens->get($tokenIndex + 1)->isMatching(Token::WHITESPACE_TOKENS)) {
+            $found = \strlen($tokens->get($tokenIndex + 1)->getValue());
         } else {
             $found = 0;
         }
@@ -75,43 +66,40 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
             return;
         }
 
-        $index = $tokenPosition + 1;
+        $index = $tokenIndex + 1;
         $tokensToReplace = $this->skipIfNewLine
             ? Token::INDENT_TOKENS
             : Token::INDENT_TOKENS + Token::EOL_TOKENS;
 
         $fixer->beginChangeSet();
         while (
-            isset($tokens[$index])
-            && $this->isTokenMatching($tokens[$index], $tokensToReplace)
+            $tokens->has($index)
+            && $tokens->get($index)->isMatching($tokensToReplace)
         ) {
             $fixer->replaceToken($index, '');
             ++$index;
         }
-        $fixer->addContent($tokenPosition, str_repeat(' ', $expected));
+        $fixer->addContent($tokenIndex, str_repeat(' ', $expected));
         $fixer->endChangeSet();
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function checkSpaceBefore(int $tokenPosition, array $tokens, int $expected): void
+    private function checkSpaceBefore(int $tokenIndex, Tokens $tokens, int $expected): void
     {
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenIndex);
 
-        $previous = $this->findPrevious(Token::INDENT_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::INDENT_TOKENS, $tokenIndex - 1, exclude: true);
         if (false === $previous) {
             return;
         }
 
-        if ($this->isTokenMatching($tokens[$previous], Token::EOL_TOKENS)) {
+        if ($tokens->get($previous)->isMatching(Token::EOL_TOKENS)) {
             if ($this->skipIfNewLine) {
                 return;
             }
 
             $found = 'newline';
-        } elseif ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
-            $found = \strlen($tokens[$tokenPosition - 1]->getValue());
+        } elseif ($tokens->get($tokenIndex - 1)->isMatching(Token::WHITESPACE_TOKENS)) {
+            $found = \strlen($tokens->get($tokenIndex - 1)->getValue());
         } else {
             $found = 0;
         }
@@ -130,20 +118,20 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
             return;
         }
 
-        $index = $tokenPosition - 1;
+        $index = $tokenIndex - 1;
         $tokensToReplace = $this->skipIfNewLine
             ? Token::INDENT_TOKENS
             : Token::INDENT_TOKENS + Token::EOL_TOKENS;
 
         $fixer->beginChangeSet();
         while (
-            isset($tokens[$index])
-            && $this->isTokenMatching($tokens[$index], $tokensToReplace)
+            $tokens->has($index)
+            && $tokens->get($index)->isMatching($tokensToReplace)
         ) {
             $fixer->replaceToken($index, '');
             --$index;
         }
-        $fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
+        $fixer->addContentBefore($tokenIndex, str_repeat(' ', $expected));
         $fixer->endChangeSet();
     }
 }

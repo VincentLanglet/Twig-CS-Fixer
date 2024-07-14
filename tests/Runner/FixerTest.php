@@ -15,6 +15,7 @@ use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;
 use TwigCsFixer\Token\TokenizerInterface;
+use TwigCsFixer\Token\Tokens;
 
 final class FixerTest extends TestCase
 {
@@ -36,9 +37,9 @@ final class FixerTest extends TestCase
     {
         $tokenizer = $this->createMock(TokenizerInterface::class);
         $tokenizer->expects(static::once())->method('tokenize')->willReturn([
-            [
+            new Tokens([
                 new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
-            ],
+            ]),
             [],
         ]);
 
@@ -54,33 +55,33 @@ final class FixerTest extends TestCase
         $rule = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
                 if ($this->isAlreadyExecuted) {
                     return;
                 }
                 $this->isAlreadyExecuted = true;
 
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 if (null === $fixer) {
                     return;
                 }
 
-                TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'a'));
+                TestCase::assertTrue($fixer->replaceToken($tokenIndex, 'a'));
 
                 // True for change set
                 $fixer->beginChangeSet();
-                TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'b'));
-                TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'c'));
+                TestCase::assertTrue($fixer->replaceToken($tokenIndex, 'b'));
+                TestCase::assertTrue($fixer->replaceToken($tokenIndex, 'c'));
                 $fixer->endChangeSet();
 
                 // False if you replace multiple times the same token
-                TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'd'));
+                TestCase::assertFalse($fixer->replaceToken($tokenIndex, 'd'));
 
                 // Still true for change set
                 $fixer->beginChangeSet();
-                TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'e'));
-                TestCase::assertTrue($fixer->replaceToken($tokenPosition, 'f'));
+                TestCase::assertTrue($fixer->replaceToken($tokenIndex, 'e'));
+                TestCase::assertTrue($fixer->replaceToken($tokenIndex, 'f'));
                 $fixer->endChangeSet();
             }
         };
@@ -98,14 +99,14 @@ final class FixerTest extends TestCase
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $rule = new class() extends AbstractFixableRule {
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 if (null === $fixer) {
                     return;
                 }
 
-                $fixer->replaceToken($tokenPosition, 'a');
+                $fixer->replaceToken($tokenIndex, 'a');
             }
         };
 
@@ -125,73 +126,73 @@ final class FixerTest extends TestCase
         $rule1 = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
                 if ($this->isAlreadyExecuted) {
                     return;
                 }
                 $this->isAlreadyExecuted = true;
 
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 if (null === $fixer) {
                     return;
                 }
 
-                $fixer->replaceToken($tokenPosition, 'rule');
+                $fixer->replaceToken($tokenIndex, 'rule');
             }
         };
         $rule2 = new class() extends AbstractFixableRule {
             private int $error = 0;
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
-                if ($tokenPosition > 0) {
+                if ($tokenIndex > 0) {
                     return;
                 }
 
                 if (
-                    str_starts_with($tokens[$tokenPosition]->getValue(), 'test')
-                    || is_numeric($tokens[$tokenPosition + 2]->getValue())
-                    || is_numeric($tokens[$tokenPosition + 4]->getValue())
+                    str_starts_with($tokens->get($tokenIndex)->getValue(), 'test')
+                    || is_numeric($tokens->get($tokenIndex + 2)->getValue())
+                    || is_numeric($tokens->get($tokenIndex + 4)->getValue())
                 ) {
                     return;
                 }
 
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 ++$this->error;
                 if (null === $fixer) {
                     return;
                 }
 
                 $fixer->beginChangeSet();
-                $fixer->replaceToken($tokenPosition + 2, (string) $this->error);
+                $fixer->replaceToken($tokenIndex + 2, (string) $this->error);
                 // Order matter, to check we revert the previous change
-                $fixer->replaceToken($tokenPosition, 'test');
+                $fixer->replaceToken($tokenIndex, 'test');
                 // And to check we're not applying the next change
-                $fixer->replaceToken($tokenPosition + 4, (string) $this->error);
+                $fixer->replaceToken($tokenIndex + 4, (string) $this->error);
                 $fixer->endChangeSet();
             }
         };
         $rule3 = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
-                if ($this->isAlreadyExecuted || 'rule' !== $tokens[$tokenPosition]->getValue()) {
+                if ($this->isAlreadyExecuted || 'rule' !== $tokens->get($tokenIndex)->getValue()) {
                     return;
                 }
                 $this->isAlreadyExecuted = true;
 
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 if (null === $fixer) {
                     return;
                 }
 
                 // On the first execution, a conflict is created by rule 1 and 2
                 // So the fixer won't try to fix anything else
-                TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
+                TestCase::assertFalse($fixer->replaceToken($tokenIndex, 'b'));
                 $fixer->beginChangeSet();
-                TestCase::assertFalse($fixer->replaceToken($tokenPosition, 'b'));
+                TestCase::assertFalse($fixer->replaceToken($tokenIndex, 'b'));
                 $fixer->endChangeSet();
             }
         };
@@ -216,16 +217,16 @@ final class FixerTest extends TestCase
                 return 'Rule';
             }
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
-                $fixer = $this->addFixableWarning('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableWarning('Error', $tokens->get($tokenIndex));
                 if (null !== $fixer) {
-                    $fixer->replaceToken($tokenPosition, 'a');
+                    $fixer->replaceToken($tokenIndex, 'a');
                 }
 
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 if (null !== $fixer) {
-                    $fixer->replaceToken($tokenPosition, 'b');
+                    $fixer->replaceToken($tokenIndex, 'b');
                 }
             }
         };
@@ -250,23 +251,23 @@ final class FixerTest extends TestCase
         $rule = new class() extends AbstractFixableRule {
             private bool $isAlreadyExecuted = false;
 
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
                 if ($this->isAlreadyExecuted) {
                     return;
                 }
                 $this->isAlreadyExecuted = true;
 
-                $fixer = $this->addFixableError('Error', $tokens[$tokenPosition]);
+                $fixer = $this->addFixableError('Error', $tokens->get($tokenIndex));
                 if (null === $fixer) {
                     return;
                 }
 
                 $fixer->beginChangeSet();
-                TestCase::assertTrue($fixer->addContent($tokenPosition, 'a'));
-                TestCase::assertTrue($fixer->addContentBefore($tokenPosition, 'b'));
-                TestCase::assertTrue($fixer->addNewline($tokenPosition));
-                TestCase::assertTrue($fixer->addNewlineBefore($tokenPosition));
+                TestCase::assertTrue($fixer->addContent($tokenIndex, 'a'));
+                TestCase::assertTrue($fixer->addContentBefore($tokenIndex, 'b'));
+                TestCase::assertTrue($fixer->addNewline($tokenIndex));
+                TestCase::assertTrue($fixer->addNewlineBefore($tokenIndex));
                 $fixer->endChangeSet();
             }
         };
@@ -314,7 +315,7 @@ final class FixerTest extends TestCase
         $tokenizer = new Tokenizer(new StubbedEnvironment());
 
         $rule = new class() extends AbstractRule {
-            protected function process(int $tokenPosition, array $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
                 throw new \LogicException('Should be skipped');
             }

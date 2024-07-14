@@ -7,6 +7,7 @@ namespace TwigCsFixer\Rules\File;
 use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
+use TwigCsFixer\Token\Tokens;
 use TwigCsFixer\Util\StringUtil;
 
 /**
@@ -41,13 +42,13 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
         ];
     }
 
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        if (0 !== $tokenPosition) {
+        if (0 !== $tokenIndex) {
             return;
         }
 
-        $token = $tokens[$tokenPosition];
+        $token = $tokens->get($tokenIndex);
         $directories = FileHelper::getDirectories(
             $token->getFilename(),
             $this->baseDirectory,

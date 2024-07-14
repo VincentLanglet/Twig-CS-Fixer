@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Operator;
 
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -13,25 +14,22 @@ use Webmozart\Assert\Assert;
  */
 final class OperatorSpacingRule extends AbstractSpacingRule
 {
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return null;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ['not', '-', '+'])) {
-            return $this->isUnary($tokenPosition, $tokens) ? null : 1;
+        if ($token->isMatching(Token::OPERATOR_TYPE, ['not', '-', '+'])) {
+            return $this->isUnary($tokenIndex, $tokens) ? null : 1;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, '..')) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, '..')) {
             return 0;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ':')) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, ':')) {
             $relatedToken = $token->getRelatedToken();
 
             return null !== $relatedToken && '?' === $relatedToken->getValue() ? 1 : 0;
@@ -40,25 +38,22 @@ final class OperatorSpacingRule extends AbstractSpacingRule
         return 1;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return null;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ['-', '+'])) {
-            return $this->isUnary($tokenPosition, $tokens) ? 0 : 1;
+        if ($token->isMatching(Token::OPERATOR_TYPE, ['-', '+'])) {
+            return $this->isUnary($tokenIndex, $tokens) ? 0 : 1;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, '..')) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, '..')) {
             return 0;
         }
 
-        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ':')) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, ':')) {
             $relatedToken = $token->getRelatedToken();
 
             return null !== $relatedToken && '?' === $relatedToken->getValue() ? 1 : 0;
@@ -67,23 +62,22 @@ final class OperatorSpacingRule extends AbstractSpacingRule
         return 1;
     }
 
-    /**
-     * @param array<int, Token> $tokens
-     */
-    private function isUnary(int $tokenPosition, array $tokens): bool
+    private function isUnary(int $tokenIndex, Tokens $tokens): bool
     {
-        $previous = $this->findPrevious(Token::EMPTY_TOKENS, $tokens, $tokenPosition - 1, true);
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
         Assert::notFalse($previous, 'An OPERATOR_TYPE cannot be the first non-empty token');
 
-        $previousToken = $tokens[$previous];
+        $previousToken = $tokens->get($previous);
 
-        // {{ 1 * -2 }}
-        return $this->isTokenMatching($previousToken, Token::OPERATOR_TYPE)
+        return $previousToken->isMatching([
+            // {{ 1 * -2 }}
+            Token::OPERATOR_TYPE,
             // {{ -2 }}
-            || $this->isTokenMatching($previousToken, Token::VAR_START_TYPE)
-            // {{ 1 + (-2) }}
-            || $this->isTokenMatching($previousToken, Token::PUNCTUATION_TYPE, ['(', '[', ':', ','])
+            Token::VAR_START_TYPE,
             // {% if -2 ... %}
-            || $this->isTokenMatching($previousToken, Token::BLOCK_NAME_TYPE);
+            Token::BLOCK_NAME_TYPE,
+        ])
+        // {{ 1 + (-2) }}
+        || $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', ':', ',']);
     }
 }

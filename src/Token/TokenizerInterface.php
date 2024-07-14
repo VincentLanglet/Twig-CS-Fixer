@@ -11,7 +11,7 @@ use TwigCsFixer\Report\ViolationId;
 interface TokenizerInterface
 {
     /**
-     * @return array{list<Token>, list<ViolationId>}
+     * @return array{Tokens, list<ViolationId>}
      *
      * @throws CannotTokenizeException
      */

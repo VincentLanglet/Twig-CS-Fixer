@@ -6,13 +6,12 @@ namespace TwigCsFixer\Rules;
 
 use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Runner\FixerInterface;
-use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 
 interface FixableRuleInterface
 {
     /**
-     * @param array<int, Token> $stream
      * @param list<ViolationId> $ignoredViolations
      */
-    public function fixFile(array $stream, FixerInterface $fixer, array $ignoredViolations = []): void;
+    public function fixFile(Tokens $tokens, FixerInterface $fixer, array $ignoredViolations = []): void;
 }

@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Function;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
+use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
@@ -13,10 +14,10 @@ use Webmozart\Assert\Assert;
  */
 final class IncludeFunctionRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, array $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens[$tokenPosition];
-        if (!$this->isTokenMatching($token, Token::BLOCK_NAME_TYPE, 'include')) {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(Token::BLOCK_NAME_TYPE, 'include')) {
             return;
         }
 
@@ -28,24 +29,24 @@ final class IncludeFunctionRule extends AbstractFixableRule
             return;
         }
 
-        $openingTag = $this->findPrevious(Token::BLOCK_START_TYPE, $tokens, $tokenPosition);
+        $openingTag = $tokens->findPrevious(Token::BLOCK_START_TYPE, $tokenIndex);
         Assert::notFalse($openingTag, 'Opening tag cannot be null.');
 
-        $closingTag = $this->findNext(Token::BLOCK_END_TYPE, $tokens, $tokenPosition);
+        $closingTag = $tokens->findNext(Token::BLOCK_END_TYPE, $tokenIndex);
         Assert::notFalse($closingTag, 'Closing tag cannot be null.');
 
         $fixer->beginChangeSet();
 
         // Replace opening tag (and keep eventual whitespace modifiers)
-        $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens[$openingTag]->getValue()));
-        $fixer->replaceToken($tokenPosition, 'include(');
+        $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens->get($openingTag)->getValue()));
+        $fixer->replaceToken($tokenIndex, 'include(');
 
         $ignoreMissing = false;
         $withoutContext = false;
         $withVariable = false;
-        foreach (range($tokenPosition, $closingTag) as $position) {
-            $token = $tokens[$position];
-            if (!$this->isTokenMatching($token, Token::NAME_TYPE)) {
+        foreach (range($tokenIndex, $closingTag) as $position) {
+            $token = $tokens->get($position);
+            if (!$token->isMatching(Token::NAME_TYPE)) {
                 continue;
             }
             switch ($token->getValue()) {
@@ -67,7 +68,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
             }
         }
 
-        $endInclude = ') '.str_replace('%}', '}}', $tokens[$closingTag]->getValue());
+        $endInclude = ') '.str_replace('%}', '}}', $tokens->get($closingTag)->getValue());
         if ($ignoreMissing) {
             $endInclude = ', true'.$endInclude;
         }
