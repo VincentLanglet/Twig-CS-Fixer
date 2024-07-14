@@ -58,8 +58,8 @@ final class OperatorSpacingRuleTest extends AbstractRuleTestCase
             'OperatorSpacing.Before:37:13' => 'Expecting 1 whitespace before "matches"; found 2.',
             'OperatorSpacing.After:51:7' => 'Expecting 1 whitespace after "is not"; found 2.',
             'OperatorSpacing.Before:51:7' => 'Expecting 1 whitespace before "is not"; found 2.',
-            'OperatorSpacing.After:52:7' => "Expecting 1 whitespace after \"is\n         not\"; found 2.",
-            'OperatorSpacing.Before:52:7' => "Expecting 1 whitespace before \"is\n         not\"; found 2.",
+            'OperatorSpacing.After:52:7' => 'Expecting 1 whitespace after "is'.\PHP_EOL.'         not"; found 2.',
+            'OperatorSpacing.Before:52:7' => 'Expecting 1 whitespace before "is'.\PHP_EOL.'         not"; found 2.',
             'OperatorSpacing.After:53:27' => 'Expecting 1 whitespace after "is"; found 2.',
             'OperatorSpacing.Before:53:27' => 'Expecting 1 whitespace before "is"; found 2.',
         ]);
