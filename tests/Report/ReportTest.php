@@ -120,6 +120,14 @@ final class ReportTest extends TestCase
         $report->getFileViolations('another_file.twig');
     }
 
+    public function testGetRealPathForAnotherFile(): void
+    {
+        $report = new Report([new \SplFileInfo('file.twig')]);
+
+        $this->expectExceptionMessage('The file "another_file.twig" is not handled by this report.');
+        $report->getRealPath('another_file.twig');
+    }
+
     public function testAddFixedFile(): void
     {
         $report = new Report([new \SplFileInfo('file.twig')]);
