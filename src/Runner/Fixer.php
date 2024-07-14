@@ -217,9 +217,6 @@ final class Fixer implements FixerInterface
         return $this->replaceToken($tokenPosition, $content.$current);
     }
 
-    /**
-     * @param Tokens $tokens
-     */
     private function startFile(Tokens $tokens): void
     {
         $this->fixedTokens = [];

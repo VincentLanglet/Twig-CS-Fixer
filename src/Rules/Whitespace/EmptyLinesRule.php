@@ -7,7 +7,6 @@ namespace TwigCsFixer\Rules\Whitespace;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
-use Webmozart\Assert\Assert;
 
 /**
  * Ensures that 2 empty lines do not follow each other.

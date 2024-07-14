@@ -56,9 +56,6 @@ final class Tokenizer implements TokenizerInterface
 
     private int $currentExpressionStarter = 0;
 
-    /**
-     * @var Tokens
-     */
     private Tokens $tokens;
 
     private ?Token $lastNonEmptyToken = null;
@@ -598,17 +595,22 @@ final class Tokenizer implements TokenizerInterface
         if (self::STATE_BLOCK === $this->getState() && !$this->hasStateParam('blockName')) {
             $this->pushToken(Token::BLOCK_NAME_TYPE, $name);
             $this->setStateParam('blockName', $name);
-        } elseif (true === $this->lastNonEmptyToken?->isMatching(Token::PUNCTUATION_TYPE, '|')) {
-            $this->pushToken(Token::FILTER_NAME_TYPE, $name);
-        } elseif (true === $this->lastNonEmptyToken?->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
-            $this->pushToken(Token::TEST_NAME_TYPE, $name);
-        } elseif (
-            true === $this->lastNonEmptyToken?->isMatching(Token::TEST_NAME_TYPE)
-            && null === $this->lastNonEmptyToken?->getRelatedToken()
-        ) {
-            $this->pushToken(Token::TEST_NAME_TYPE, $name, $this->lastNonEmptyToken);
         } else {
-            $this->pushToken(Token::NAME_TYPE, $name);
+            $lastNonEmptyToken = $this->lastNonEmptyToken;
+            Assert::notNull($lastNonEmptyToken, 'A name cannot be the first non empty token.');
+
+            if ($lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, '|')) {
+                $this->pushToken(Token::FILTER_NAME_TYPE, $name);
+            } elseif ($lastNonEmptyToken->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
+                $this->pushToken(Token::TEST_NAME_TYPE, $name);
+            } elseif (
+                $lastNonEmptyToken->isMatching(Token::TEST_NAME_TYPE)
+                && null === $lastNonEmptyToken->getRelatedToken()
+            ) {
+                $this->pushToken(Token::TEST_NAME_TYPE, $name, $lastNonEmptyToken);
+            } else {
+                $this->pushToken(Token::NAME_TYPE, $name);
+            }
         }
     }
 

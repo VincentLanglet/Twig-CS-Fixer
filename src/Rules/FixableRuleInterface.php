@@ -6,7 +6,6 @@ namespace TwigCsFixer\Rules;
 
 use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Runner\FixerInterface;
-use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
 interface FixableRuleInterface
