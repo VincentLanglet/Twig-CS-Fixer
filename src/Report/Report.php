@@ -31,12 +31,21 @@ final class Report
     private int $totalErrors = 0;
 
     /**
+     * @var array<string, string>
+     */
+    private array $realPaths = [];
+
+    /**
      * @param iterable<\SplFileInfo> $files
      */
     public function __construct(iterable $files)
     {
         foreach ($files as $file) {
-            $this->violationsByFile[$file->getPathname()] = [];
+            $pathName = $file->getPathname();
+            $realPath = $file->getRealPath();
+
+            $this->realPaths[$pathName] = false !== $realPath ? $realPath : $pathName;
+            $this->violationsByFile[$pathName] = [];
         }
     }
 
@@ -116,6 +125,17 @@ final class Report
     public function getFiles(): array
     {
         return array_keys($this->violationsByFile);
+    }
+
+    public function getRealPath(string $filename): string
+    {
+        if (!isset($this->realPaths[$filename])) {
+            throw new \InvalidArgumentException(
+                sprintf('The file "%s" is not handled by this report.', $filename)
+            );
+        }
+
+        return $this->realPaths[$filename];
     }
 
     public function getTotalFiles(): int

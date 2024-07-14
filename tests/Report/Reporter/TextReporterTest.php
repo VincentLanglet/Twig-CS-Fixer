@@ -22,7 +22,7 @@ final class TextReporterTest extends TestCase
     {
         $textFormatter = new TextReporter();
 
-        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $file = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(
@@ -93,7 +93,7 @@ final class TextReporterTest extends TestCase
                       \e[33mFATAL\e[39m     \e[31m>>   | Fatal\e[39m                           
                      --------- --------------------------------------- 
                     EOD,
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig')
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig')
             ),
             null,
             false,
@@ -112,7 +112,7 @@ final class TextReporterTest extends TestCase
                       \e[33mFATAL\e[39m   \e[31m>>   | Fatal\e[39m                       
                      ------- ----------------------------------- 
                     EOD,
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig')
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig')
             ),
             Report::MESSAGE_TYPE_ERROR,
             false,
@@ -131,7 +131,7 @@ final class TextReporterTest extends TestCase
                       \e[33mFATAL\e[39m   \e[31m>>   | FatalId\e[39m                     
                      ------- ----------------------------------- 
                     EOD,
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig')
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig')
             ),
             Report::MESSAGE_TYPE_ERROR,
             true,

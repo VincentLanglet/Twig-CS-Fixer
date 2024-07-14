@@ -28,7 +28,8 @@ final class CheckstyleReporter implements ReporterInterface
                 continue;
             }
 
-            $text .= sprintf('  <file name="%s">', $this->xmlEncode($file)).\PHP_EOL;
+            $realPath = $report->getRealPath($file);
+            $text .= sprintf('  <file name="%s">', $this->xmlEncode($realPath)).\PHP_EOL;
             foreach ($fileViolations as $violation) {
                 $line = (string) $violation->getLine();
                 $linePosition = (string) $violation->getLinePosition();
