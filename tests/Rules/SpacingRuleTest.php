@@ -15,10 +15,10 @@ final class SpacingRuleTest extends TestCase
     public function testSpacingRule(): void
     {
         $rule = new class() extends AbstractSpacingRule {
-            protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
+            protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
             {
-                $token = $tokens->get($tokenPosition);
-                if (0 === $tokenPosition) {
+                $token = $tokens->get($tokenIndex);
+                if (0 === $tokenIndex) {
                     // Check it does not crash
                     return 1;
                 }
@@ -30,10 +30,10 @@ final class SpacingRuleTest extends TestCase
                 return null;
             }
 
-            protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
+            protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
             {
-                $token = $tokens->get($tokenPosition);
-                if (0 === $tokenPosition) {
+                $token = $tokens->get($tokenIndex);
+                if (0 === $tokenIndex) {
                     return 2;
                 }
 

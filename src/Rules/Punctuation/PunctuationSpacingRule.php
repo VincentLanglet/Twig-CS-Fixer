@@ -60,9 +60,9 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
         ];
     }
 
-    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE)) {
             return null;
         }
@@ -70,14 +70,14 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
         return $this->punctuationWithSpaceBefore[$token->getValue()] ?? null;
     }
 
-    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE)) {
             return null;
         }
 
-        $nextPosition = $tokens->findNext(Token::WHITESPACE_TOKENS, $tokenPosition + 1, exclude: true);
+        $nextPosition = $tokens->findNext(Token::WHITESPACE_TOKENS, $tokenIndex + 1, exclude: true);
         Assert::notFalse($nextPosition, 'A PUNCTUATION_TYPE cannot be the last non-empty token');
 
         // We cannot change spaces after a token, if the next one has a constraint: `[1,2,3,]`.

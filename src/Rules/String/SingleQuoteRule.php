@@ -25,9 +25,9 @@ final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableR
         ];
     }
 
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }
@@ -51,6 +51,6 @@ final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableR
             ['"', '#{', '#{', '\'', '\\\''],
             $content
         );
-        $fixer->replaceToken($tokenPosition, '\''.$content.'\'');
+        $fixer->replaceToken($tokenIndex, '\''.$content.'\'');
     }
 }

@@ -37,7 +37,7 @@ final class SignatureTest extends TestCase
                 return ['a' => 1];
             }
 
-            protected function process(int $tokenPosition, Tokens $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
             }
         };

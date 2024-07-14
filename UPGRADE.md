@@ -1,7 +1,9 @@
 UPGRADE FROM 2.x to 3.0
 =======================
 
-If you never implemented a custom rule, nothing change. Otherwise, ...
+- The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.
+
+If you never implemented a custom rule, nothing else changed. Otherwise, ...
 
 ### AbstractRule
 
@@ -15,7 +17,7 @@ If you never implemented a custom rule, nothing change. Otherwise, ...
 + $tokens->findNext($type, $start)
 
 - $this->findNext($type, $tokens, $start, true)
-- $tokens->findNext($type, $start, null, true)
++ $tokens->findNext($type, $start, null, true)
 ```
 
 ```diff
@@ -23,24 +25,24 @@ If you never implemented a custom rule, nothing change. Otherwise, ...
 + $tokens->findPrevious($type, $start)
 
 - $this->findPrevious($type, $tokens, $start, true)
-- $tokens->findPrevious($type, $start, null, true)
++ $tokens->findPrevious($type, $start, null, true)
 ```
 
 ```diff
 - protected function process(int $tokenPosition, array $tokens): void;
-+ protected function process(int $tokenPosition, Tokens $tokens): ?int;
++ protected function process(int $tokenIndex, Tokens $tokens): ?int;
 ```
 
 ### AbstractSpacingRule
 
 ```diff
 - protected function getSpaceAfter(int $tokenPosition, array $tokens): ?int;
-+ protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int;
++ protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int;
 ```
 
 ```diff
 - protected function getSpaceBefore(int $tokenPosition, array $tokens): ?int;
-+ protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int;
++ protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int;
 ```
 
 ### RuleInterface
@@ -77,7 +79,3 @@ The `Token::NAME_TYPE` has been split in four:
 - `Token::FUNCTION_NAME_TYPE`
 - `Token::TEST_NAME_TYPE`
 - `Token::NAME_TYPE`
-
-### Reporters
-
-The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.

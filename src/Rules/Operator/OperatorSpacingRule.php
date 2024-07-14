@@ -14,15 +14,15 @@ use Webmozart\Assert\Assert;
  */
 final class OperatorSpacingRule extends AbstractSpacingRule
 {
-    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return null;
         }
 
         if ($token->isMatching(Token::OPERATOR_TYPE, ['not', '-', '+'])) {
-            return $this->isUnary($tokenPosition, $tokens) ? null : 1;
+            return $this->isUnary($tokenIndex, $tokens) ? null : 1;
         }
 
         if ($token->isMatching(Token::OPERATOR_TYPE, '..')) {
@@ -38,15 +38,15 @@ final class OperatorSpacingRule extends AbstractSpacingRule
         return 1;
     }
 
-    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return null;
         }
 
         if ($token->isMatching(Token::OPERATOR_TYPE, ['-', '+'])) {
-            return $this->isUnary($tokenPosition, $tokens) ? 0 : 1;
+            return $this->isUnary($tokenIndex, $tokens) ? 0 : 1;
         }
 
         if ($token->isMatching(Token::OPERATOR_TYPE, '..')) {
@@ -62,9 +62,9 @@ final class OperatorSpacingRule extends AbstractSpacingRule
         return 1;
     }
 
-    private function isUnary(int $tokenPosition, Tokens $tokens): bool
+    private function isUnary(int $tokenIndex, Tokens $tokens): bool
     {
-        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
         Assert::notFalse($previous, 'An OPERATOR_TYPE cannot be the first non-empty token');
 
         $previousToken = $tokens->get($previous);

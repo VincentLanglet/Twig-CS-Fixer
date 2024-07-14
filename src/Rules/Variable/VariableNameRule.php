@@ -38,17 +38,17 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
         ];
     }
 
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
 
         if ($token->isMatching(Token::BLOCK_NAME_TYPE, 'set')) {
-            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenPosition);
+            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenIndex);
             Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "set" must be followed by a name');
 
             $this->validateVariable($tokens->get($nameTokenPosition));
         } elseif ($token->isMatching(Token::BLOCK_NAME_TYPE, 'for')) {
-            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenPosition);
+            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenIndex);
             Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "for" must be followed by a name');
 
             $secondNameTokenPosition = $tokens->findNext([Token::NAME_TYPE, Token::OPERATOR_TYPE], $nameTokenPosition + 1);

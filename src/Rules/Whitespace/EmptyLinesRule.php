@@ -13,25 +13,25 @@ use TwigCsFixer\Token\Tokens;
  */
 final class EmptyLinesRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::EOL_TYPE)) {
             return;
         }
 
-        if ($tokens->get($tokenPosition + 1)->isMatching(Token::EOL_TYPE)) {
+        if ($tokens->get($tokenIndex + 1)->isMatching(Token::EOL_TYPE)) {
             // Rely on the next token check instead to avoid duplicate errors
             return;
         }
 
-        $previous = $tokens->findPrevious(Token::EOL_TYPE, $tokenPosition, exclude: true);
+        $previous = $tokens->findPrevious(Token::EOL_TYPE, $tokenIndex, exclude: true);
         if (false === $previous) {
             // If all previous tokens are EOL_TYPE, we have to count one more
-            // since $tokenPosition start at 0
-            $i = $tokenPosition + 1;
+            // since $tokenIndex start at 0
+            $i = $tokenIndex + 1;
         } else {
-            $i = $tokenPosition - $previous - 1;
+            $i = $tokenIndex - $previous - 1;
         }
 
         if ($i < 2) {
@@ -48,11 +48,11 @@ final class EmptyLinesRule extends AbstractFixableRule
         }
 
         // Because we added manually extra empty lines to the count
-        $i = min($i, $tokenPosition);
+        $i = min($i, $tokenIndex);
 
         $fixer->beginChangeSet();
-        while ($i >= 2 || $i === $tokenPosition) {
-            $fixer->replaceToken($tokenPosition - $i, '');
+        while ($i >= 2 || $i === $tokenIndex) {
+            $fixer->replaceToken($tokenIndex - $i, '');
             --$i;
         }
         $fixer->endChangeSet();

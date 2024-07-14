@@ -12,9 +12,9 @@ use TwigCsFixer\Token\Tokens;
  */
 final class FakeRule extends AbstractRule
 {
-    public function process(int $tokenPosition, Tokens $tokens): void
+    public function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (1 === $token->getPosition()) {
             $this->addError('First token of the line', $token);
         }

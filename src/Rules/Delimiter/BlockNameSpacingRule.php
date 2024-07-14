@@ -13,9 +13,9 @@ use TwigCsFixer\Token\Tokens;
  */
 final class BlockNameSpacingRule extends AbstractSpacingRule
 {
-    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if ($token->isMatching(Token::BLOCK_NAME_TYPE)) {
             return 1;
         }
@@ -23,9 +23,9 @@ final class BlockNameSpacingRule extends AbstractSpacingRule
         return null;
     }
 
-    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if ($token->isMatching(Token::BLOCK_NAME_TYPE)) {
             return 1;
         }

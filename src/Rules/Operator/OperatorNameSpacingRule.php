@@ -13,9 +13,9 @@ use TwigCsFixer\Token\Tokens;
  */
 final class OperatorNameSpacingRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::OPERATOR_TYPE)) {
             return;
         }
@@ -40,6 +40,6 @@ final class OperatorNameSpacingRule extends AbstractFixableRule
             return;
         }
 
-        $fixer->replaceToken($tokenPosition, $newValue);
+        $fixer->replaceToken($tokenIndex, $newValue);
     }
 }

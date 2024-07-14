@@ -42,13 +42,13 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
         ];
     }
 
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        if (0 !== $tokenPosition) {
+        if (0 !== $tokenIndex) {
             return;
         }
 
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         $fileName = FileHelper::getFileName(
             $token->getFilename(),
             $this->baseDirectory,

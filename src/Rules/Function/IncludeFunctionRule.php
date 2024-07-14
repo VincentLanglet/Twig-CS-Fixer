@@ -14,9 +14,9 @@ use Webmozart\Assert\Assert;
  */
 final class IncludeFunctionRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::BLOCK_NAME_TYPE, 'include')) {
             return;
         }
@@ -29,22 +29,22 @@ final class IncludeFunctionRule extends AbstractFixableRule
             return;
         }
 
-        $openingTag = $tokens->findPrevious(Token::BLOCK_START_TYPE, $tokenPosition);
+        $openingTag = $tokens->findPrevious(Token::BLOCK_START_TYPE, $tokenIndex);
         Assert::notFalse($openingTag, 'Opening tag cannot be null.');
 
-        $closingTag = $tokens->findNext(Token::BLOCK_END_TYPE, $tokenPosition);
+        $closingTag = $tokens->findNext(Token::BLOCK_END_TYPE, $tokenIndex);
         Assert::notFalse($closingTag, 'Closing tag cannot be null.');
 
         $fixer->beginChangeSet();
 
         // Replace opening tag (and keep eventual whitespace modifiers)
         $fixer->replaceToken($openingTag, str_replace('{%', '{{', $tokens->get($openingTag)->getValue()));
-        $fixer->replaceToken($tokenPosition, 'include(');
+        $fixer->replaceToken($tokenIndex, 'include(');
 
         $ignoreMissing = false;
         $withoutContext = false;
         $withVariable = false;
-        foreach (range($tokenPosition, $closingTag) as $position) {
+        foreach (range($tokenIndex, $closingTag) as $position) {
             $token = $tokens->get($position);
             if (!$token->isMatching(Token::NAME_TYPE)) {
                 continue;

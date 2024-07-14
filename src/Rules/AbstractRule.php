@@ -32,7 +32,7 @@ abstract class AbstractRule implements RuleInterface
         $this->ignoredViolations = $ignoredViolations;
     }
 
-    abstract protected function process(int $tokenPosition, Tokens $tokens): void;
+    abstract protected function process(int $tokenIndex, Tokens $tokens): void;
 
     protected function addWarning(string $message, Token $token, ?string $messageId = null): bool
     {

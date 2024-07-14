@@ -26,9 +26,9 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         ];
     }
 
-    protected function getSpaceBefore(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (
             $token->isMatching([
                 Token::BLOCK_END_TYPE,
@@ -42,9 +42,9 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         return null;
     }
 
-    protected function getSpaceAfter(int $tokenPosition, Tokens $tokens): ?int
+    protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (
             $token->isMatching([
                 Token::BLOCK_START_TYPE,

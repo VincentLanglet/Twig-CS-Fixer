@@ -28,14 +28,14 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         ];
     }
 
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE, ':')) {
             return;
         }
 
-        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
         Assert::notFalse($previous, 'A punctuation cannot be the first token.');
 
         if ($this->useQuote) {
@@ -45,9 +45,9 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         }
     }
 
-    private function nameShouldBeString(int $tokenPosition, Tokens $tokens): void
+    private function nameShouldBeString(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
 
         $value = $token->getValue();
         $error = sprintf('The hash key "%s" should be quoted.', $value);
@@ -67,13 +67,13 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             : $this->addError($error, $token);
 
         if ($fixer instanceof FixerInterface) {
-            $fixer->replaceToken($tokenPosition, '\''.$value.'\'');
+            $fixer->replaceToken($tokenIndex, '\''.$value.'\'');
         }
     }
 
-    private function stringShouldBeName(int $tokenPosition, Tokens $tokens): void
+    private function stringShouldBeName(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::STRING_TYPE)) {
             return;
         }
@@ -91,7 +91,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             $token
         );
         if (null !== $fixer) {
-            $fixer->replaceToken($tokenPosition, $expectedValue);
+            $fixer->replaceToken($tokenIndex, $expectedValue);
         }
     }
 

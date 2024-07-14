@@ -28,18 +28,18 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         ];
     }
 
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
         if ($this->useTab) {
-            $this->spaceToTab($tokenPosition, $tokens);
+            $this->spaceToTab($tokenIndex, $tokens);
         } else {
-            $this->tabToSpace($tokenPosition, $tokens);
+            $this->tabToSpace($tokenIndex, $tokens);
         }
     }
 
-    private function tabToSpace(int $tokenPosition, Tokens $tokens): void
+    private function tabToSpace(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::TAB_TOKENS)) {
             return;
         }
@@ -50,14 +50,14 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         }
 
         $fixer->replaceToken(
-            $tokenPosition,
+            $tokenIndex,
             str_replace("\t", str_repeat(' ', $this->spaceRatio), $token->getValue())
         );
     }
 
-    private function spaceToTab(int $tokenPosition, Tokens $tokens): void
+    private function spaceToTab(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (1 !== $token->getPosition()) {
             return;
         }
@@ -76,7 +76,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
         }
 
         $fixer->replaceToken(
-            $tokenPosition,
+            $tokenIndex,
             str_replace(str_repeat(' ', $this->spaceRatio), "\t", $token->getValue())
         );
     }

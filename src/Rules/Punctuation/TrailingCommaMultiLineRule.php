@@ -26,22 +26,33 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
         ];
     }
 
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
-        if (!$token->isMatching(Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
+        $token = $tokens->get($tokenIndex);
+        if ($token->isMatching(Token::PUNCTUATION_TYPE, ')')) {
+            $related = $token->getRelatedToken();
+            Assert::notNull($related, 'A closer is always related to an opener.');
+
+            $relatedIndex = $tokens->getIndex($related);
+            $relatedPrevious = $tokens->findPrevious(Token::EMPTY_TOKENS, $relatedIndex - 1, exclude: true);
+            Assert::notFalse($relatedPrevious, 'An opener cannot be the first token.');
+
+            if (!$tokens->get($relatedPrevious)->isMatching([Token::FUNCTION_NAME_TYPE, Token::FILTER_NAME_TYPE])) {
+                return;
+            }
+        } elseif (!$token->isMatching(Token::PUNCTUATION_TYPE, ['}', ']'])) {
             return;
         }
 
-        $previousPosition = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
-        Assert::notFalse($previousPosition, 'A closer cannot be the first token.');
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
+        Assert::notFalse($previous, 'A closer cannot be the first token.');
 
-        if ($tokens->get($previousPosition)->getLine() === $token->getLine()) {
+        if (false === $tokens->findNext(Token::EOL_TYPE, $previous, $tokenIndex)) {
             // The closer is on the same line as the last element.
             return;
         }
 
-        $isMatchingComma = $tokens->get($previousPosition)->isMatching(Token::PUNCTUATION_TYPE, ',');
+        $isMatchingComma = $tokens->get($previous)->isMatching(Token::PUNCTUATION_TYPE, ',');
         if ($this->useTrailingComma === $isMatchingComma) {
             return;
         }
@@ -58,9 +69,9 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
         }
 
         if ($this->useTrailingComma) {
-            $fixer->addContent($previousPosition, ',');
+            $fixer->addContent($previous, ',');
         } else {
-            $fixer->replaceToken($previousPosition, '');
+            $fixer->replaceToken($previous, '');
         }
     }
 }

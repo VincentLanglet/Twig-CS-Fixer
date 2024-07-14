@@ -23,11 +23,11 @@ final class RuleTest extends TestCase
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
         $rule = new class() extends AbstractFixableRule {
-            protected function process(int $tokenPosition, Tokens $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
-                $token = $tokens->get($tokenPosition);
+                $token = $tokens->get($tokenIndex);
 
-                if (0 === $tokenPosition) {
+                if (0 === $tokenIndex) {
                     $this->addWarning('Fake Warning', $token);
                     $this->addFileWarning('Fake File Warning', $token);
                     $this->addError('Fake Error', $token);
@@ -56,25 +56,25 @@ final class RuleTest extends TestCase
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
         $rule = new class() extends AbstractFixableRule {
-            protected function process(int $tokenPosition, Tokens $tokens): void
+            protected function process(int $tokenIndex, Tokens $tokens): void
             {
-                $token = $tokens->get($tokenPosition);
+                $token = $tokens->get($tokenIndex);
 
-                if (0 === $tokenPosition) {
+                if (0 === $tokenIndex) {
                     // Ensure calling findPrevious on first token doesn't fail
-                    $previousEol = $tokens->findPrevious(Token::TEXT_TYPE, $tokenPosition - 1);
+                    $previousEol = $tokens->findPrevious(Token::TEXT_TYPE, $tokenIndex - 1);
                     if (false !== $previousEol) {
                         $this->addWarning('Previous Text found', $token);
                     }
 
                     // This error shouldn't be reported
-                    $nextText = $tokens->findNext(Token::TEXT_TYPE, $tokenPosition + 1);
+                    $nextText = $tokens->findNext(Token::TEXT_TYPE, $tokenIndex + 1);
                     if (false !== $nextText) {
                         $this->addWarning('Next Text found', $token);
                     }
 
                     // This error should be reported
-                    $nextEol = $tokens->findNext(Token::EOF_TYPE, $tokenPosition + 1);
+                    $nextEol = $tokens->findNext(Token::EOF_TYPE, $tokenIndex + 1);
                     if (false !== $nextEol) {
                         $this->addError('Next EOL found', $token);
                     }
@@ -82,19 +82,19 @@ final class RuleTest extends TestCase
 
                 if (Token::EOF_TYPE === $token->getType()) {
                     // Ensure calling findNext on last token doesn't fail
-                    $nextEof = $tokens->findNext(Token::EOF_TYPE, $tokenPosition + 1);
+                    $nextEof = $tokens->findNext(Token::EOF_TYPE, $tokenIndex + 1);
                     if (false !== $nextEof) {
                         $this->addWarning('Next EOF found', $token);
                     }
 
                     // This error shouldn't be reported
-                    $previousEof = $tokens->findPrevious(Token::EOF_TYPE, $tokenPosition - 1);
+                    $previousEof = $tokens->findPrevious(Token::EOF_TYPE, $tokenIndex - 1);
                     if (false !== $previousEof) {
                         $this->addWarning('Previous Text found', $token);
                     }
 
                     // This error should be reported
-                    $previousText = $tokens->findPrevious(Token::TEXT_TYPE, $tokenPosition - 1);
+                    $previousText = $tokens->findPrevious(Token::TEXT_TYPE, $tokenIndex - 1);
                     if (false !== $previousText) {
                         $this->addError('Previous Text found', $token);
                     }

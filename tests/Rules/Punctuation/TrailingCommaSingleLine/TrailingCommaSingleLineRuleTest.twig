@@ -32,3 +32,9 @@
 
 {{ changed_multiline(1,
     2,) }}
+
+{{ foo('string
+    endofstring',) }}
+
+{{ foo("#{p.first}
+    #{p.last}",) }}

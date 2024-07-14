@@ -14,22 +14,22 @@ use Webmozart\Assert\Assert;
  */
 final class TrailingCommaSingleLineRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::PUNCTUATION_TYPE, [')', '}', ']'])) {
             return;
         }
 
-        $previousPosition = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenPosition - 1, exclude: true);
-        Assert::notFalse($previousPosition, 'A closer cannot be the first token.');
+        $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
+        Assert::notFalse($previous, 'A closer cannot be the first token.');
 
-        if ($tokens->get($previousPosition)->getLine() !== $token->getLine()) {
+        if (false !== $tokens->findNext(Token::EOL_TYPE, $previous, $tokenIndex)) {
             // The closer is on a different line than the last element.
             return;
         }
 
-        if (!$tokens->get($previousPosition)->isMatching(Token::PUNCTUATION_TYPE, ',')) {
+        if (!$tokens->get($previous)->isMatching(Token::PUNCTUATION_TYPE, ',')) {
             return;
         }
 
@@ -42,6 +42,6 @@ final class TrailingCommaSingleLineRule extends AbstractFixableRule
             return;
         }
 
-        $fixer->replaceToken($previousPosition, '');
+        $fixer->replaceToken($previous, '');
     }
 }

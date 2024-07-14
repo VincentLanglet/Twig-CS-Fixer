@@ -13,16 +13,16 @@ use TwigCsFixer\Token\Tokens;
  */
 final class TrailingSpaceRule extends AbstractFixableRule
 {
-    protected function process(int $tokenPosition, Tokens $tokens): void
+    protected function process(int $tokenIndex, Tokens $tokens): void
     {
-        $token = $tokens->get($tokenPosition);
+        $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::EOL_TOKENS)) {
             return;
         }
 
         if (
-            !$tokens->has($tokenPosition - 1)
-            || !$tokens->get($tokenPosition - 1)->isMatching(Token::INDENT_TOKENS)
+            !$tokens->has($tokenIndex - 1)
+            || !$tokens->get($tokenIndex - 1)->isMatching(Token::INDENT_TOKENS)
         ) {
             return;
         }
@@ -36,6 +36,6 @@ final class TrailingSpaceRule extends AbstractFixableRule
             return;
         }
 
-        $fixer->replaceToken($tokenPosition - 1, '');
+        $fixer->replaceToken($tokenIndex - 1, '');
     }
 }
