@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCsFixer\Console;
 
 use Composer\InstalledVersions;
-use OutOfBoundsException;
 use Symfony\Component\Console\Application as BaseApplication;
 
 final class Application extends BaseApplication
@@ -13,6 +12,9 @@ final class Application extends BaseApplication
     public const APPLICATION_NAME = 'Twig-CS-Fixer';
     public const PACKAGE_NAME = 'vincentlanglet/twig-cs-fixer';
 
+    /**
+     * @throws \OutOfBoundsException
+     */
     public function __construct(string $name = 'UNKNOWN', string $version = 'UNKNOWN')
     {
         if ('UNKNOWN' === $name) {
@@ -24,6 +26,9 @@ final class Application extends BaseApplication
         parent::__construct($name, $version);
     }
 
+    /**
+     * @throws \OutOfBoundsException
+     */
     public static function getPrettyVersion(): string
     {
         foreach (InstalledVersions::getAllRawData() as $installed) {
@@ -38,13 +43,19 @@ final class Application extends BaseApplication
 
             $aliases = $installed['versions'][self::PACKAGE_NAME]['aliases'] ?? [];
 
+            $reference = InstalledVersions::getReference(self::PACKAGE_NAME);
+
+            if (null === $reference) {
+                return $aliases[0] ?? $version;
+            }
+
             return sprintf(
                 '%s@%s',
                 $aliases[0] ?? $version,
-                substr(InstalledVersions::getReference(self::PACKAGE_NAME), 0, 7)
+                substr($reference, 0, 7)
             );
         }
 
-        throw new OutOfBoundsException(sprintf('Package "%s" is not installed', self::PACKAGE_NAME));
+        throw new \OutOfBoundsException(sprintf('Package "%s" is not installed', self::PACKAGE_NAME));
     }
 }
