@@ -22,7 +22,7 @@ final class GithubReporterTest extends TestCase
     {
         $textFormatter = new GithubReporter();
 
-        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $file = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
         $report = new Report([new \SplFileInfo($file)]);
 
         $violation0 = new Violation(
@@ -78,7 +78,7 @@ final class GithubReporterTest extends TestCase
                     ::error file=%1\$s,line=3,col=33::Error
                     ::error file=%1\$s::Fatal%%0Awith new line
                     EOD,
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig'),
             ),
             null,
             false,
@@ -91,7 +91,7 @@ final class GithubReporterTest extends TestCase
                     ::error file=%1\$s,line=3,col=33::ErrorId:3:33
                     ::error file=%1\$s::FatalId
                     EOD,
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig'),
             ),
             null,
             true,

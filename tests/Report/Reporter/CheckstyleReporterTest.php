@@ -22,9 +22,10 @@ final class CheckstyleReporterTest extends TestCase
     {
         $textFormatter = new CheckstyleReporter();
 
+        // Use a mix of relative and absolute path.
         $file = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
-        $file2 = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file2.twig');
-        $file3 = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file3.twig');
+        $file2 = TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig');
+        $file3 = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file3.twig'); // Non-existing file
         $report = new Report([new \SplFileInfo($file), new \SplFileInfo($file2), new \SplFileInfo($file3)]);
 
         $violation0 = new Violation(
@@ -111,7 +112,7 @@ final class CheckstyleReporterTest extends TestCase
                     EOD,
                 TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
                 TestHelper::getOsPath(__DIR__.'/Fixtures/file2.twig'),
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file3.twig'),
             ),
             null,
             false,
@@ -132,7 +133,7 @@ final class CheckstyleReporterTest extends TestCase
                     </checkstyle>
                     EOD,
                 TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file3.twig'),
             ),
             Report::MESSAGE_TYPE_ERROR,
             false,
@@ -153,7 +154,7 @@ final class CheckstyleReporterTest extends TestCase
                     </checkstyle>
                     EOD,
                 TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig'),
-                TestHelper::getOsPath(__DIR__.'/Fixtures/file3.twig'),
+                TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file3.twig'),
             ),
             Report::MESSAGE_TYPE_ERROR,
             true,

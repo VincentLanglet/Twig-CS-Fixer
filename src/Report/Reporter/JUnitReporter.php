@@ -29,12 +29,10 @@ final class JUnitReporter implements ReporterInterface
             $count
         ).\PHP_EOL;
 
-        $absoluteFiles = $report->getFiles(true);
-
         if ($count > 0) {
             foreach ($violations as $violation) {
                 $text .= $this->createTestCase(
-                    sprintf('%s:%s', $absoluteFiles[$violation->getFilename()], $violation->getLine() ?? 0),
+                    sprintf('%s:%s', $report->getRealPath($violation->getFilename()), $violation->getLine() ?? 0),
                     strtolower(Violation::getLevelAsString($violation->getLevel())),
                     $violation->getDebugMessage($debug)
                 );

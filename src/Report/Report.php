@@ -41,11 +41,11 @@ final class Report
     public function __construct(iterable $files)
     {
         foreach ($files as $file) {
+            $pathName = $file->getPathname();
             $realPath = $file->getRealPath();
-            if (\is_string($realPath)) {
-                $this->realPaths[$file->getPathname()] = $realPath;
-            }
-            $this->violationsByFile[$file->getPathname()] = [];
+
+            $this->realPaths[$pathName] = false !== $realPath ? $realPath : $pathName;
+            $this->violationsByFile[$pathName] = [];
         }
     }
 
@@ -120,15 +120,22 @@ final class Report
     }
 
     /**
-     * @return array<string|int, string>
+     * @return list<string>
      */
-    public function getFiles(bool $absolute = false): array
+    public function getFiles(): array
     {
-        if ($absolute) {
-            return $this->realPaths;
+        return array_keys($this->violationsByFile);
+    }
+
+    public function getRealPath(string $filename): string
+    {
+        if (!isset($this->realPaths[$filename])) {
+            throw new \InvalidArgumentException(
+                sprintf('The file "%s" is not handled by this report.', $filename)
+            );
         }
 
-        return array_keys($this->violationsByFile);
+        return $this->realPaths[$filename];
     }
 
     public function getTotalFiles(): int
