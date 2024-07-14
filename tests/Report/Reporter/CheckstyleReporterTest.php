@@ -145,11 +145,11 @@ final class CheckstyleReporterTest extends TestCase
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
                       <file name="%1\$s">
-                        <error line="3" column="33" severity="error" message="ErrorId:3:33" source="ErrorRule"/>
-                        <error severity="fatal" message="FatalId"/>
+                        <error line="3" column="33" severity="error" message="ErrorId:3:33 -- Error" source="ErrorRule"/>
+                        <error severity="fatal" message="FatalId -- Fatal"/>
                       </file>
                       <file name="%2\$s">
-                        <error severity="fatal" message="FatalId"/>
+                        <error severity="fatal" message="FatalId -- &apos;&quot;&lt;&amp;&gt;&quot;&apos;"/>
                       </file>
                     </checkstyle>
                     EOD,

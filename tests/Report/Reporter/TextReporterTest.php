@@ -125,10 +125,10 @@ final class TextReporterTest extends TestCase
                      ------- ----------------------------------- 
                       \e[33mERROR\e[39m   2    |     {# Some text line 2 #}  
                               3    | {# Some text line 3 #}      
-                              \e[31m>>   | ErrorId:3\e[39m                   
+                              \e[31m>>   | ErrorId:3 -- Error\e[39m          
                               4    |                             
                      ------- ----------------------------------- 
-                      \e[33mFATAL\e[39m   \e[31m>>   | FatalId\e[39m                     
+                      \e[33mFATAL\e[39m   \e[31m>>   | FatalId -- Fatal\e[39m            
                      ------- ----------------------------------- 
                     EOD,
                 TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig')
