@@ -22,7 +22,7 @@ final class OperatorNameSpacingRule extends AbstractFixableRule
 
         $value = $token->getValue();
         // Ignore multi lines operators
-        if (1 === preg_match('#\n#', $value)) {
+        if (1 === preg_match('/\r\n?|\n/', $value)) {
             return;
         }
 

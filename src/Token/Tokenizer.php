@@ -302,8 +302,15 @@ final class Tokenizer implements TokenizerInterface
 
         $this->cursor += \strlen($value);
 
-        $eolNb = preg_match_all("/\r\n?|\n/", $value);
-        $this->line += false !== $eolNb ? $eolNb : 0;
+        $splitByLine = preg_split("/\r\n?|\n/", $value);
+        if (false !== $splitByLine) {
+            $count = \count($splitByLine);
+            $this->line += $count - 1;
+
+            if ($count > 1) {
+                $this->lastEOL = $this->cursor - \strlen($splitByLine[$count - 1]);
+            }
+        }
 
         return $token;
     }
@@ -412,11 +419,6 @@ final class Tokenizer implements TokenizerInterface
             && '' !== $match[0]
         ) {
             $this->pushToken(Token::STRING_TYPE, $match[0]);
-
-            $split = preg_split("/\r\n?|\n/", $match[0]);
-            if (false !== $split && \count($split) > 1) {
-                $this->lastEOL = $this->cursor - \strlen($split[\count($split) - 1]) + 1;
-            }
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $bracket = array_pop($this->bracketsAndTernary);
             $this->popState();
@@ -694,11 +696,6 @@ final class Tokenizer implements TokenizerInterface
     private function lexString(string $string): void
     {
         $this->pushToken(Token::STRING_TYPE, $string);
-
-        $split = preg_split("/\r\n?|\n/", $string);
-        if (false !== $split && \count($split) > 1) {
-            $this->lastEOL = $this->cursor - \strlen($split[\count($split) - 1]) + 1;
-        }
     }
 
     /**
