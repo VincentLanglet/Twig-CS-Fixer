@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Node\ForbiddenBlock;
 use TwigCsFixer\Rules\Node\ForbiddenBlockRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-class ForbiddenBlockRuleTest extends AbstractRuleTestCase
+final class ForbiddenBlockRuleTest extends AbstractRuleTestCase
 {
     public function testConfiguration(): void
     {

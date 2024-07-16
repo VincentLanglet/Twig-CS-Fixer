@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Node\ForbiddenFilter;
 use TwigCsFixer\Rules\Node\ForbiddenFilterRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-class ForbiddenFilterRuleTest extends AbstractRuleTestCase
+final class ForbiddenFilterRuleTest extends AbstractRuleTestCase
 {
     public function testConfiguration(): void
     {
