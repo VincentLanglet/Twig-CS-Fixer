@@ -6,7 +6,7 @@ namespace TwigCsFixer\Util;
 
 use Symfony\Component\String\UnicodeString;
 
-class StringUtil
+final class StringUtil
 {
     /**
      * @see UnicodeString::camel()

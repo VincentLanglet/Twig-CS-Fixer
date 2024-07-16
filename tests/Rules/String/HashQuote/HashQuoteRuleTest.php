@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\String\HashQuote;
 use TwigCsFixer\Rules\String\HashQuoteRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-class HashQuoteRuleTest extends AbstractRuleTestCase
+final class HashQuoteRuleTest extends AbstractRuleTestCase
 {
     public function testConfiguration(): void
     {

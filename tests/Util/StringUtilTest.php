@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Util;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Util\StringUtil;
 
-class StringUtilTest extends TestCase
+final class StringUtilTest extends TestCase
 {
     /**
      * @dataProvider toSnakeCaseDataProvider
