@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Console;
 
 use PHPUnit\Framework\TestCase;
@@ -11,6 +13,20 @@ final class ApplicationTest extends TestCase
     {
         $app = new Application();
         static::assertSame(Application::APPLICATION_NAME, $app->getName());
-        static::assertStringStartsWith('dev-', $app->getVersion());
+        static::assertMatchesRegularExpression('/^dev-.+@.{7}$/', $app->getVersion());
+    }
+
+    public function testNotInstalledLib(): void
+    {
+        $app = new Application('Foo', 'foo');
+        static::assertSame('Foo', $app->getName());
+        static::assertSame('UNKNOWN', $app->getVersion());
+    }
+
+    public function testLibWithoutVersion(): void
+    {
+        $app = new Application('Psalm', 'psalm/psalm');
+        static::assertSame('Psalm', $app->getName());
+        static::assertSame('dev', $app->getVersion());
     }
 }
