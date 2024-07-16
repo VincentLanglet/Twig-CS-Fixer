@@ -14,6 +14,7 @@ use Twig\Extension\DebugExtension;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder as TwigCsFinder;
+use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\TwigCsFixer;
 
@@ -71,6 +72,15 @@ final class ConfigTest extends TestCase
 
         $config->setCacheFile(null);
         static::assertNull($config->getCacheFile());
+    }
+
+    public function testConfigCustomReporters(): void
+    {
+        $config = new Config();
+        static::assertCount(0, $config->getCustomReporters());
+
+        $config->addCustomReporter(new NullReporter());
+        static::assertCount(1, $config->getCustomReporters());
     }
 
     public function testConfigTokenParsers(): void

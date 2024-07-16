@@ -10,6 +10,7 @@ use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\File\Finder as TwigCsFinder;
+use TwigCsFixer\Report\Reporter\ReporterInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\TwigCsFixer;
 
@@ -29,6 +30,11 @@ final class Config
     private ?string $cacheFile = self::DEFAULT_CACHE_PATH;
 
     private ?CacheManagerInterface $cacheManager = null;
+
+    /**
+     * @var list<ReporterInterface>
+     */
+    private array $customReporters = [];
 
     /**
      * @var list<ExtensionInterface>
@@ -109,11 +115,29 @@ final class Config
         return $this->cacheFile;
     }
 
+    /**
+     * @return $this
+     */
     public function setCacheFile(?string $cacheFile): self
     {
         $this->cacheFile = $cacheFile;
 
         return $this;
+    }
+
+    public function addCustomReporter(ReporterInterface $reporter): self
+    {
+        $this->customReporters[] = $reporter;
+
+        return $this;
+    }
+
+    /**
+     * @return list<ReporterInterface>
+     */
+    public function getCustomReporters(): array
+    {
+        return $this->customReporters;
     }
 
     /**

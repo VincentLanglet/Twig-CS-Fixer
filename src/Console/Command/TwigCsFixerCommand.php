@@ -141,7 +141,7 @@ final class TwigCsFixerCommand extends Command
             $input->getOption('fix') ? new Fixer($tokenizer) : null,
         );
 
-        $reporterFactory = new ReporterFactory();
+        $reporterFactory = new ReporterFactory($config->getCustomReporters());
         $reporter = $reporterFactory->getReporter($input->getOption('report'));
         $reporter->display($output, $report, $input->getOption('level'), $input->getOption('debug'));
 

@@ -12,6 +12,11 @@ final class CheckstyleReporter implements ReporterInterface
 {
     public const NAME = 'checkstyle';
 
+    public function getName(): string
+    {
+        return self::NAME;
+    }
+
     public function display(
         OutputInterface $output,
         Report $report,

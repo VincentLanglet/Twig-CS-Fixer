@@ -15,6 +15,12 @@ use TwigCsFixer\Tests\TestHelper;
 
 final class JUnitReporterTest extends TestCase
 {
+
+    public function testGetName(): void
+    {
+        static::assertSame(JUnitReporter::NAME, (new JUnitReporter())->getName());
+    }
+
     /**
      * @dataProvider displayDataProvider
      */

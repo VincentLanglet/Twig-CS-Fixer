@@ -14,6 +14,11 @@ final class NullReporter implements ReporterInterface
 {
     public const NAME = 'null';
 
+    public function getName(): string
+    {
+        return self::NAME;
+    }
+
     public function display(
         OutputInterface $output,
         Report $report,

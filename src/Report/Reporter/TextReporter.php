@@ -23,6 +23,11 @@ final class TextReporter implements ReporterInterface
     private const ERROR_LINE_FORMAT = '%-5s| %s';
     private const ERROR_LINE_WIDTH = 120;
 
+    public function getName(): string
+    {
+        return self::NAME;
+    }
+
     public function display(
         OutputInterface $output,
         Report $report,

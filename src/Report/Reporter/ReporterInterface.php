@@ -15,4 +15,6 @@ interface ReporterInterface
         ?string $level,
         bool $debug
     ): void;
+
+    public function getName(): string;
 }
