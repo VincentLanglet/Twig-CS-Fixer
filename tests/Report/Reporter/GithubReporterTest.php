@@ -15,12 +15,10 @@ use TwigCsFixer\Tests\TestHelper;
 
 final class GithubReporterTest extends TestCase
 {
-
     public function testGetName(): void
     {
         static::assertSame(GithubReporter::NAME, (new GithubReporter())->getName());
     }
-
 
     /**
      * @dataProvider displayDataProvider

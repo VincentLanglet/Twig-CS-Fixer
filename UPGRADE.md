@@ -6,6 +6,7 @@ UPGRADE FROM 2.x to 3.0
 - The position of `TrailingCommaMultiLineRule` error changed.
 - The position of `TrailingCommaSingleLineRule` error changed.
 - `TwigCsFixer\Command\TwigCsFixerCommand` class moved to `TwigCsFixer\Console\Command` folder.
+- `TwigCsFixer\Report\Reporter\ReporterInterface` now require a `getName` method.
 
 If you never implemented a custom rule, nothing else changed. Otherwise, ...
 
