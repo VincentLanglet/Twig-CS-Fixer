@@ -25,17 +25,12 @@ final class Application extends BaseApplication
             }
 
             $version = $installed['versions'][$package]['pretty_version'] ?? 'dev';
-            $aliases = $installed['versions'][$package]['aliases'] ?? [];
             $reference = $installed['versions'][$package]['reference'] ?? null;
             if (null === $reference) {
-                return $aliases[0] ?? $version;
+                return $version;
             }
 
-            return sprintf(
-                '%s@%s',
-                $aliases[0] ?? $version,
-                substr($reference, 0, 7)
-            );
+            return sprintf('%s@%s', $version, substr($reference, 0, 7));
         }
 
         return 'UNKNOWN';
