@@ -14,6 +14,11 @@ use TwigCsFixer\Tests\TestHelper;
 
 final class NullReporterTest extends TestCase
 {
+    public function testGetName(): void
+    {
+        static::assertSame(NullReporter::NAME, (new NullReporter())->getName());
+    }
+
     /**
      * @dataProvider displayDataProvider
      */

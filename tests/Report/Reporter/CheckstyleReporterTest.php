@@ -15,6 +15,11 @@ use TwigCsFixer\Tests\TestHelper;
 
 final class CheckstyleReporterTest extends TestCase
 {
+    public function testGetName(): void
+    {
+        static::assertSame(CheckstyleReporter::NAME, (new CheckstyleReporter())->getName());
+    }
+
     /**
      * @dataProvider displayDataProvider
      */

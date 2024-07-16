@@ -13,8 +13,22 @@ use TwigCsFixer\Report\Reporter\TextReporter;
 
 final class ReporterFactory
 {
+    /**
+     * @param list<ReporterInterface> $customReporters
+     */
+    public function __construct(
+        private array $customReporters = []
+    ) {
+    }
+
     public function getReporter(string $format = TextReporter::NAME): ReporterInterface
     {
+        foreach ($this->customReporters as $reporter) {
+            if ($format === $reporter->getName()) {
+                return $reporter;
+            }
+        }
+
         return match ($format) {
             NullReporter::NAME => new NullReporter(),
             TextReporter::NAME => new TextReporter(),

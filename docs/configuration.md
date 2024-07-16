@@ -50,7 +50,7 @@ vendor/bin/twig-cs-fixer lint --config=dir/.twig-cs-fixer.php /path/to/code
 ## Non fixable rules
 
 Most of the rules are automatically fixable but some of them are not.
-By default, the twig-cs-fixer disable all the non-fixable-rules, but you can still allow them in the config file:
+By default, the twig-cs-fixer disable all the non-fixable-rules, but you can still allow them in your config file:
 
 ```php
 <?php
@@ -75,7 +75,7 @@ Still, these rules can be useful for some static analysis. All of them can be fo
 By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.
 
 If you want to lint specific files or directories you can pass them as argument.
-If you want a more sophisticated rule, you can configure it in the config file:
+If you want a more sophisticated rule, you can configure it in your config file:
 
 ```php
 <?php
@@ -119,6 +119,21 @@ or set the cache file to `null` in your config:
 
 $config = new TwigCsFixer\Config\Config();
 $config->setCacheFile(null);
+
+return $config;
+```
+
+## Custom Reporters
+
+By default, the output of the tool is rendered in one the following formats:
+`text`, `checkstyle`, `github`, `junit`, `null`. If you want to use a custom
+format for reporting, you can configure it in your config file:
+
+```php
+<?php
+
+$config = new TwigCsFixer\Config\Config();
+$config->addCustomReporter(new App\Twig\CustomReporter());
 
 return $config;
 ```

@@ -17,6 +17,11 @@ final class GithubReporter implements ReporterInterface
 {
     public const NAME = 'github';
 
+    public function getName(): string
+    {
+        return self::NAME;
+    }
+
     public function display(
         OutputInterface $output,
         Report $report,
