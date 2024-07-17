@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Console;
 
+use Composer\InstalledVersions;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Console\Application;
 
@@ -13,7 +14,10 @@ final class ApplicationTest extends TestCase
     {
         $app = new Application();
         static::assertSame(Application::APPLICATION_NAME, $app->getName());
-        static::assertMatchesRegularExpression('/^dev-.+@.{7}$/', $app->getVersion());
+
+        $version = InstalledVersions::getPrettyVersion(Application::PACKAGE_NAME) ?? '';
+        $ref = InstalledVersions::getReference(Application::PACKAGE_NAME) ?? '';
+        static::assertSame($version.'@'.substr($ref, 0, 7), $app->getVersion());
     }
 
     public function testNotInstalledLib(): void
