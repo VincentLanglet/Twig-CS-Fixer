@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Binary;
 
+use Composer\InstalledVersions;
 use Symfony\Component\Process\Process;
+use TwigCsFixer\Console\Application;
 use TwigCsFixer\Tests\FileTestCase;
 use TwigCsFixer\Tests\TestHelper;
 
@@ -33,6 +35,8 @@ final class TwigCsFixerTest extends FileTestCase
         ]);
 
         static::assertSame(0, $process->run(), $process->getErrorOutput());
-        static::assertStringContainsString('Twig-CS-Fixer dev-', $process->getOutput());
+
+        $version = InstalledVersions::getPrettyVersion(Application::PACKAGE_NAME) ?? '';
+        static::assertStringContainsString('Twig-CS-Fixer '.$version, $process->getOutput());
     }
 }
