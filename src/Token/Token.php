@@ -68,7 +68,7 @@ final class Token
     public function __construct(
         private int|string $type,
         private int $line,
-        private int $position,
+        private int $linePosition,
         private string $filename,
         private string $value = '',
         private ?self $relatedToken = null
@@ -90,9 +90,9 @@ final class Token
         return $this->line;
     }
 
-    public function getPosition(): int
+    public function getLinePosition(): int
     {
-        return $this->position;
+        return $this->linePosition;
     }
 
     public function getFilename(): string

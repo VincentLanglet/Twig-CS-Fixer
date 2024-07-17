@@ -77,11 +77,11 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
             return null;
         }
 
-        $nextPosition = $tokens->findNext(Token::WHITESPACE_TOKENS, $tokenIndex + 1, exclude: true);
-        Assert::notFalse($nextPosition, 'A PUNCTUATION_TYPE cannot be the last non-empty token');
+        $nextIndex = $tokens->findNext(Token::WHITESPACE_TOKENS, $tokenIndex + 1, exclude: true);
+        Assert::notFalse($nextIndex, 'A PUNCTUATION_TYPE cannot be the last non-empty token');
 
         // We cannot change spaces after a token, if the next one has a constraint: `[1,2,3,]`.
-        if (null !== $this->getSpaceBefore($nextPosition, $tokens)) {
+        if (null !== $this->getSpaceBefore($nextIndex, $tokens)) {
             return null;
         }
 

@@ -31,13 +31,13 @@ final class ViolationId
         $explodedName = '' !== $name ? explode('.', $name) : null;
 
         $line ??= isset($exploded[1]) && '' !== $exploded[1] ? (int) $exploded[1] : null;
-        $position = isset($exploded[2]) && '' !== $exploded[2] ? (int) $exploded[2] : null;
+        $linePosition = isset($exploded[2]) && '' !== $exploded[2] ? (int) $exploded[2] : null;
 
         return new self(
             $explodedName[0] ?? null,
             $explodedName[1] ?? null,
             $line,
-            $position
+            $linePosition
         );
     }
 

@@ -115,18 +115,18 @@ final class TextReporter implements ReporterInterface
      */
     private function getContext(array $templatesLines, int $line): array
     {
-        $position = max(0, $line - 2);
+        $lineIndex = max(0, $line - 2);
         $max = min(\count($templatesLines), $line + 1);
 
         $result = [];
         $indents = [];
 
         do {
-            preg_match('/^[\s\t]+/', $templatesLines[$position], $match);
+            preg_match('/^[\s\t]+/', $templatesLines[$lineIndex], $match);
             $indents[] = \strlen($match[0] ?? '');
-            $result[$position + 1] = $templatesLines[$position];
-            ++$position;
-        } while ($position < $max);
+            $result[$lineIndex + 1] = $templatesLines[$lineIndex];
+            ++$lineIndex;
+        } while ($lineIndex < $max);
 
         return array_map(fn (string $code): string => substr($code, min($indents)), $result);
     }

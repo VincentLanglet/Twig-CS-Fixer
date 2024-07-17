@@ -34,14 +34,14 @@ trait RuleTrait
         string $message,
         string $fileName,
         ?int $line = null,
-        ?int $position = null,
+        ?int $linePosition = null,
         ?string $messageId = null
     ): bool {
         $id = new ViolationId(
             $this->getShortName(),
             $messageId ?? ucfirst(strtolower(Violation::getLevelAsString($messageType))),
             $line,
-            $position,
+            $linePosition,
         );
         foreach ($this->ignoredViolations as $ignoredViolation) {
             if ($ignoredViolation->match($id)) {

@@ -131,90 +131,90 @@ final class Fixer implements FixerInterface
 
         if (!$this->inConflict) {
             $applied = [];
-            foreach ($this->changeSet as $tokenPosition => $content) {
-                $success = $this->replaceToken($tokenPosition, $content);
+            foreach ($this->changeSet as $tokenIndex => $content) {
+                $success = $this->replaceToken($tokenIndex, $content);
                 if (!$success) {
                     // Rolling back all changes.
-                    foreach ($applied as $appliedTokenPosition) {
-                        $this->revertToken($appliedTokenPosition);
+                    foreach ($applied as $appliedTokenIndex) {
+                        $this->revertToken($appliedTokenIndex);
                     }
                     break;
                 }
 
-                $applied[] = $tokenPosition;
+                $applied[] = $tokenIndex;
             }
         }
 
         $this->changeSet = [];
     }
 
-    public function replaceToken(int $tokenPosition, string $content): bool
+    public function replaceToken(int $tokenIndex, string $content): bool
     {
         if ($this->inConflict) {
             return false;
         }
 
-        if (!$this->inChangeSet && isset($this->fixedTokens[$tokenPosition])) {
+        if (!$this->inChangeSet && isset($this->fixedTokens[$tokenIndex])) {
             return false;
         }
 
         if ($this->inChangeSet) {
-            $this->changeSet[$tokenPosition] = $content;
+            $this->changeSet[$tokenIndex] = $content;
 
             return true;
         }
 
-        if (!isset($this->oldTokenValues[$tokenPosition])) {
-            $this->oldTokenValues[$tokenPosition] = [
-                'prev' => $this->tokens[$tokenPosition],
+        if (!isset($this->oldTokenValues[$tokenIndex])) {
+            $this->oldTokenValues[$tokenIndex] = [
+                'prev' => $this->tokens[$tokenIndex],
                 'curr' => $content,
                 'loop' => $this->loops,
             ];
         } elseif (
-            $content === $this->oldTokenValues[$tokenPosition]['prev']
-            && ($this->loops - 1) === $this->oldTokenValues[$tokenPosition]['loop']
+            $content === $this->oldTokenValues[$tokenIndex]['prev']
+            && ($this->loops - 1) === $this->oldTokenValues[$tokenIndex]['loop']
         ) {
             $this->inConflict = true;
 
             return false;
         } else {
-            $this->oldTokenValues[$tokenPosition]['prev'] = $this->oldTokenValues[$tokenPosition]['curr'];
-            $this->oldTokenValues[$tokenPosition]['curr'] = $content;
-            $this->oldTokenValues[$tokenPosition]['loop'] = $this->loops;
+            $this->oldTokenValues[$tokenIndex]['prev'] = $this->oldTokenValues[$tokenIndex]['curr'];
+            $this->oldTokenValues[$tokenIndex]['curr'] = $content;
+            $this->oldTokenValues[$tokenIndex]['loop'] = $this->loops;
         }
 
-        $this->fixedTokens[$tokenPosition] = $this->tokens[$tokenPosition];
-        $this->tokens[$tokenPosition] = $content;
+        $this->fixedTokens[$tokenIndex] = $this->tokens[$tokenIndex];
+        $this->tokens[$tokenIndex] = $content;
 
         return true;
     }
 
-    public function addNewline(int $tokenPosition): bool
+    public function addNewline(int $tokenIndex): bool
     {
-        $current = $this->getTokenContent($tokenPosition);
+        $current = $this->getTokenContent($tokenIndex);
 
-        return $this->replaceToken($tokenPosition, $current.$this->eolChar);
+        return $this->replaceToken($tokenIndex, $current.$this->eolChar);
     }
 
-    public function addNewlineBefore(int $tokenPosition): bool
+    public function addNewlineBefore(int $tokenIndex): bool
     {
-        $current = $this->getTokenContent($tokenPosition);
+        $current = $this->getTokenContent($tokenIndex);
 
-        return $this->replaceToken($tokenPosition, $this->eolChar.$current);
+        return $this->replaceToken($tokenIndex, $this->eolChar.$current);
     }
 
-    public function addContent(int $tokenPosition, string $content): bool
+    public function addContent(int $tokenIndex, string $content): bool
     {
-        $current = $this->getTokenContent($tokenPosition);
+        $current = $this->getTokenContent($tokenIndex);
 
-        return $this->replaceToken($tokenPosition, $current.$content);
+        return $this->replaceToken($tokenIndex, $current.$content);
     }
 
-    public function addContentBefore(int $tokenPosition, string $content): bool
+    public function addContentBefore(int $tokenIndex, string $content): bool
     {
-        $current = $this->getTokenContent($tokenPosition);
+        $current = $this->getTokenContent($tokenIndex);
 
-        return $this->replaceToken($tokenPosition, $content.$current);
+        return $this->replaceToken($tokenIndex, $content.$current);
     }
 
     private function startFile(Tokens $tokens): void
@@ -235,21 +235,21 @@ final class Fixer implements FixerInterface
      * This function takes change sets into account so should be used
      * instead of directly accessing the token array.
      */
-    private function getTokenContent(int $tokenPosition): string
+    private function getTokenContent(int $tokenIndex): string
     {
-        if ($this->inChangeSet && isset($this->changeSet[$tokenPosition])) {
-            return $this->changeSet[$tokenPosition];
+        if ($this->inChangeSet && isset($this->changeSet[$tokenIndex])) {
+            return $this->changeSet[$tokenIndex];
         }
 
-        return $this->tokens[$tokenPosition];
+        return $this->tokens[$tokenIndex];
     }
 
-    private function revertToken(int $tokenPosition): void
+    private function revertToken(int $tokenIndex): void
     {
-        $errorMessage = sprintf('Nothing to revert at position %s', $tokenPosition);
-        Assert::keyExists($this->fixedTokens, $tokenPosition, $errorMessage);
+        $errorMessage = sprintf('Nothing to revert at index %s', $tokenIndex);
+        Assert::keyExists($this->fixedTokens, $tokenIndex, $errorMessage);
 
-        $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
-        unset($this->fixedTokens[$tokenPosition]);
+        $this->tokens[$tokenIndex] = $this->fixedTokens[$tokenIndex];
+        unset($this->fixedTokens[$tokenIndex]);
     }
 }

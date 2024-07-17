@@ -16,7 +16,7 @@ final class TokenTest extends TestCase
 
         static::assertSame(Token::PUNCTUATION_TYPE, $token->getType());
         static::assertSame(1, $token->getLine());
-        static::assertSame(2, $token->getPosition());
+        static::assertSame(2, $token->getLinePosition());
         static::assertSame('file.twig', $token->getFilename());
         static::assertSame(']', $token->getValue());
         static::assertSame($relatedToken, $token->getRelatedToken());
