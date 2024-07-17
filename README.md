@@ -1,8 +1,8 @@
 # Twig CS Fixer
 
-[![PHP Version](http://poser.pugx.org/vincentlanglet/twig-cs-fixer/require/php)](https://packagist.org/packages/vincentlanglet/twig-cs-fixer)
-[![Latest Stable Version](http://poser.pugx.org/vincentlanglet/twig-cs-fixer/v)](https://github.com/VincentLanglet/Twig-CS-Fixer/releases/latest)
-[![License](http://poser.pugx.org/vincentlanglet/twig-cs-fixer/license)](https://github.com/VincentLanglet/Twig-CS-Fixer/blob/main/LICENCE)
+[![PHP Version](https://poser.pugx.org/vincentlanglet/twig-cs-fixer/require/php)](https://packagist.org/packages/vincentlanglet/twig-cs-fixer)
+[![Latest Stable Version](https://poser.pugx.org/vincentlanglet/twig-cs-fixer/v)](https://github.com/VincentLanglet/Twig-CS-Fixer/releases/latest)
+[![License](https://poser.pugx.org/vincentlanglet/twig-cs-fixer/license)](https://github.com/VincentLanglet/Twig-CS-Fixer/blob/main/LICENCE)
 [![Actions Status](https://github.com/VincentLanglet/Twig-CS-Fixer/workflows/Test/badge.svg)](https://github.com/RobDWaller/csp-generator/actions)
 [![Coverage](https://codecov.io/gh/VincentLanglet/Twig-CS-Fixer/branch/main/graph/badge.svg)](https://codecov.io/gh/VincentLanglet/Twig-CS-Fixer/branch/main)
 [![Type Coverage](https://shepherd.dev/github/VincentLanglet/Twig-CS-Fixer/coverage.svg)](https://shepherd.dev/github/VincentLanglet/Twig-CS-Fixer)
