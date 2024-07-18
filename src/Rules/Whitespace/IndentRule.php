@@ -58,7 +58,7 @@ final class IndentRule extends AbstractFixableRule implements ConfigurableRuleIn
     private function spaceToTab(int $tokenIndex, Tokens $tokens): void
     {
         $token = $tokens->get($tokenIndex);
-        if (1 !== $token->getPosition()) {
+        if (1 !== $token->getLinePosition()) {
             return;
         }
 

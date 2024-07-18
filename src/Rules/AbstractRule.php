@@ -41,7 +41,7 @@ abstract class AbstractRule implements RuleInterface
             $message,
             $token->getFilename(),
             $token->getLine(),
-            $token->getPosition(),
+            $token->getLinePosition(),
             $messageId,
         );
     }
@@ -65,7 +65,7 @@ abstract class AbstractRule implements RuleInterface
             $message,
             $token->getFilename(),
             $token->getLine(),
-            $token->getPosition(),
+            $token->getLinePosition(),
             $messageId,
         );
     }

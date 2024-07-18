@@ -15,7 +15,7 @@ final class FakeRule extends AbstractRule
     public function process(int $tokenIndex, Tokens $tokens): void
     {
         $token = $tokens->get($tokenIndex);
-        if (1 === $token->getPosition()) {
+        if (1 === $token->getLinePosition()) {
             $this->addError('First token of the line', $token);
         }
     }

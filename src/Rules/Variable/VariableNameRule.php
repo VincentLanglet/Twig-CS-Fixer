@@ -43,20 +43,20 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
         $token = $tokens->get($tokenIndex);
 
         if ($token->isMatching(Token::BLOCK_NAME_TYPE, 'set')) {
-            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenIndex);
-            Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "set" must be followed by a name');
+            $nameTokenIndex = $tokens->findNext(Token::NAME_TYPE, $tokenIndex);
+            Assert::notFalse($nameTokenIndex, 'A BLOCK_NAME_TYPE "set" must be followed by a name');
 
-            $this->validateVariable($tokens->get($nameTokenPosition));
+            $this->validateVariable($tokens->get($nameTokenIndex));
         } elseif ($token->isMatching(Token::BLOCK_NAME_TYPE, 'for')) {
-            $nameTokenPosition = $tokens->findNext(Token::NAME_TYPE, $tokenIndex);
-            Assert::notFalse($nameTokenPosition, 'A BLOCK_NAME_TYPE "for" must be followed by a name');
+            $nameTokenIndex = $tokens->findNext(Token::NAME_TYPE, $tokenIndex);
+            Assert::notFalse($nameTokenIndex, 'A BLOCK_NAME_TYPE "for" must be followed by a name');
 
-            $secondNameTokenPosition = $tokens->findNext([Token::NAME_TYPE, Token::OPERATOR_TYPE], $nameTokenPosition + 1);
-            Assert::notFalse($secondNameTokenPosition, 'A BLOCK_NAME_TYPE "for" must use the "in" operator');
+            $secondNameTokenIndex = $tokens->findNext([Token::NAME_TYPE, Token::OPERATOR_TYPE], $nameTokenIndex + 1);
+            Assert::notFalse($secondNameTokenIndex, 'A BLOCK_NAME_TYPE "for" must use the "in" operator');
 
-            $this->validateVariable($tokens->get($nameTokenPosition));
-            if ($tokens->get($secondNameTokenPosition)->isMatching(Token::NAME_TYPE)) {
-                $this->validateVariable($tokens->get($secondNameTokenPosition));
+            $this->validateVariable($tokens->get($nameTokenIndex));
+            if ($tokens->get($secondNameTokenIndex)->isMatching(Token::NAME_TYPE)) {
+                $this->validateVariable($tokens->get($secondNameTokenIndex));
             }
         }
     }

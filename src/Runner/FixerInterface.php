@@ -26,13 +26,13 @@ interface FixerInterface
      */
     public function endChangeSet(): void;
 
-    public function replaceToken(int $tokenPosition, string $content): bool;
+    public function replaceToken(int $tokenIndex, string $content): bool;
 
-    public function addNewline(int $tokenPosition): bool;
+    public function addNewline(int $tokenIndex): bool;
 
-    public function addNewlineBefore(int $tokenPosition): bool;
+    public function addNewlineBefore(int $tokenIndex): bool;
 
-    public function addContent(int $tokenPosition, string $content): bool;
+    public function addContent(int $tokenIndex, string $content): bool;
 
-    public function addContentBefore(int $tokenPosition, string $content): bool;
+    public function addContentBefore(int $tokenIndex, string $content): bool;
 }

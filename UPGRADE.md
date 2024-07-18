@@ -84,3 +84,8 @@ The `Token::NAME_TYPE` has been split in four:
 - `Token::FUNCTION_NAME_TYPE`
 - `Token::TEST_NAME_TYPE`
 - `Token::NAME_TYPE`
+
+```diff
+- $token->getPosition();
++ $token->getLinePosition();
+```
