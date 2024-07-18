@@ -1,0 +1,91 @@
+name: PHAR
+
+on:
+    push:
+        branches: [ main ]
+    pull_request: ~
+    workflow_dispatch:
+    release:
+        types: [ created ]
+
+# See https://stackoverflow.com/a/72408109
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Build PHAR
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.2
+                  ini-values: phar.readonly=0
+                  tools: box
+                  coverage: none
+
+            - name: Setup Composer Platform
+              run: composer config platform.php 8.0
+
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v3
+
+            - name: Build PHAR
+              run: box compile --ansi
+
+            - name: Ensure the PHAR works
+              run: bin/twig-cs-fixer.phar --ansi --version
+
+            - name: Import GPG key
+              if: github.event_name == 'release'
+              uses: crazy-max/ghaction-import-gpg@v6
+              with:
+                  gpg_private_key: ${{ secrets.GPG_KEY_AC0E7FD8858D80003AA88FF8DEBB71EDE9601234 }}
+                  passphrase: ${{ secrets.GPG_KEY_AC0E7FD8858D80003AA88FF8DEBB71EDE9601234_PASSPHRASE }}
+
+            - name: Sign the PHAR
+              if: github.event_name == 'release'
+              run: |
+                  gpg --local-user VincentLanglet@users.noreply.github.com \
+                      --batch \
+                      --yes \
+                      --passphrase="${{ secrets.GPG_KEY_AC0E7FD8858D80003AA88FF8DEBB71EDE9601234_PASSPHRASE }}" \
+                      --detach-sign \
+                      --output bin/twig-cs-fixer.phar.asc \
+                      bin/twig-cs-fixer.phar
+
+            - name: Upload the PHAR artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: twig-cs-fixer-phar
+                  path: |
+                      bin/twig-cs-fixer.phar
+                      bin/twig-cs-fixer.phar.asc
+
+    publish:
+        runs-on: ubuntu-latest
+        name: Publish PHAR
+        needs:
+            - build
+        if: github.event_name == 'release'
+        permissions:
+            contents: write
+        steps:
+            - name: Download PHAR
+              uses: actions/download-artifact@v4
+              with:
+                  name: twig-cs-fixer-phar
+                  path: .
+
+            - name: Upload PHAR to the release
+              uses: softprops/action-gh-release@v2
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  files: |
+                      twig-cs-fixer.phar
+                      twig-cs-fixer.phar.asc
