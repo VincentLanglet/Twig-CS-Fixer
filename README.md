@@ -10,9 +10,9 @@
 
 ## Installation
 
-This standard can be installed with [Composer](https://getcomposer.org/).
+This tool can be installed with [Composer](https://getcomposer.org/).
 
-Add the coding standard as a dependency of your project
+Add the package as a dependency of your project
 
 ```bash
 composer require --dev vincentlanglet/twig-cs-fixer
