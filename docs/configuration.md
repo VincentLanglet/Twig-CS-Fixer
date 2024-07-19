@@ -138,9 +138,10 @@ $config->addCustomReporter(new App\Twig\CustomReporter());
 return $config;
 ```
 
-## Token parser, Twig Extension & Node Visitors
+## Token parsers & more
 
-If you're using custom token parsers or binary/unary operators, they can be added in your config:
+If you're using custom token parsers, twig extensions or node visitors, they can
+be added in your config:
 
 ```php
 <?php

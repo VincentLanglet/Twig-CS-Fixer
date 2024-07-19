@@ -68,12 +68,6 @@ final class Linter
                 continue;
             }
 
-            // Validate the file with twig parser.
-            $node = $this->parseTemplate($content, $filePath, $report);
-            if (null === $node) {
-                continue;
-            }
-
             if (null !== $fixer) {
                 try {
                     $newContent = $fixer->fixFile($content, $ruleset);
@@ -126,11 +120,9 @@ final class Linter
             }
 
             if ([] !== $nodeVisitorRules) {
+                $node = $this->parseTemplate($content, $filePath, $report);
                 if (null === $node) {
-                    $node = $this->parseTemplate($content, $filePath, $report);
-                    if (null === $node) {
-                        continue;
-                    }
+                    continue;
                 }
 
                 foreach ($nodeVisitorRules as $nodeVisitor) {

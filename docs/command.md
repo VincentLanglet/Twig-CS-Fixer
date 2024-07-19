@@ -11,7 +11,7 @@ Supported formats are:
 - `junit` following JUnit schema XML from Jenkins.
 - `null` if you don't want any reporting.
 
-If you implemented and configured [a custom reporter](configuration.md#Custom-Reporters),
+If you implemented and configured [a custom reporter](configuration.md#custom-reporters),
 it can be used too.
 
 ## Debug mode

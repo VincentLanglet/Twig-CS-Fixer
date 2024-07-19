@@ -10,6 +10,8 @@
 
 ## Installation
 
+### From composer
+
 This tool can be installed with [Composer](https://getcomposer.org/).
 
 Add the package as a dependency of your project
@@ -24,6 +26,23 @@ Then, use it!
 vendor/bin/twig-cs-fixer lint /path/to/code
 vendor/bin/twig-cs-fixer lint --fix /path/to/code
 ```
+
+### As a PHAR
+
+You can always fetch the latest stable version as a Phar archive through the
+following version agnostic link:
+
+```bash
+wget -c https://github.com/VincentLanglet/Twig-CS-Fixer/releases/download/3.0.0-rc-1/twig-cs-fixer.phar
+```
+
+The PHAR files are signed with a public key which can be queried at 
+`keys.openpgp.org` with the id `AC0E7FD8858D80003AA88FF8DEBB71EDE9601234`.
+
+NB: If you want to [use node based rules](docs/configuration.md#node-based-rules) with the PHAR,
+you may need to [configure token parsers](docs/configuration.md#token-parsers--more).
+You can take a look into [StubbedEnvironment::handleOptionalDependencies()](https://github.com/VincentLanglet/Twig-CS-Fixer/blob/main/src/Environment/StubbedEnvironment.php)
+method to know which ones are generally needed.
 
 ## Twig Coding Standard Rules
 
