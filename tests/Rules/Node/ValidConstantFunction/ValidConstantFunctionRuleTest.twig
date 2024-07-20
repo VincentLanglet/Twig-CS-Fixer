@@ -1,0 +1,9 @@
+{% block content %}
+    {{ constant('DateTimeInterface::ATOM') }}
+    {{ constant('DATE_ATOM') }}
+    {{ constant('class', someObject) }}
+
+    {{ constant('ThisDoesNotExist::SomeKey') }}
+    {{ constant(someVar) }}
+    {{ constant('ThisDoesNotExist::class') }}
+{% endblock %}
