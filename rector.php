@@ -14,6 +14,7 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__.'/tests',
         __DIR__.'/.php-cs-fixer.php',
         __DIR__.'/rector.php',
+        __DIR__.'/scoper.inc.php',
     ]);
 
     $rectorConfig->sets([
