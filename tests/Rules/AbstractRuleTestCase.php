@@ -75,7 +75,12 @@ abstract class AbstractRuleTestCase extends TestCase
 
             $id = $violation->getIdentifier()?->toString() ?? '';
             if (isset($messages[$id])) {
-                static::fail(sprintf('Two violations have the same identifier "%s".', $id));
+                static::fail(sprintf(
+                    'Two violations have the same identifier "%s": the messages are "%s" and "%s".',
+                    $id,
+                    $messages[$id],
+                    $message,
+                ));
             }
 
             $messages[$id] = $message;
