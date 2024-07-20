@@ -17,3 +17,6 @@ composer.lock
 ## Infection
 infection.log
 infection.html
+
+## Box
+bin/twig-cs-fixer.phar
