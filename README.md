@@ -29,11 +29,11 @@ vendor/bin/twig-cs-fixer lint --fix /path/to/code
 
 ### As a PHAR
 
-You can always fetch the latest stable version as a Phar archive through the
-following version agnostic link:
+You can always fetch the stable version as a Phar archive through the following
+link with the `VERSION` you're looking for:
 
 ```bash
-wget -c https://github.com/VincentLanglet/Twig-CS-Fixer/releases/download/3.0.0-rc-1/twig-cs-fixer.phar
+wget -c https://github.com/VincentLanglet/Twig-CS-Fixer/releases/download/VERSION/twig-cs-fixer.phar
 ```
 
 The PHAR files are signed with a public key which can be queried at 
