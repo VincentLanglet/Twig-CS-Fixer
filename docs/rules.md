@@ -107,13 +107,13 @@ To use these rules, you have to [allow non-fixable rules](configuration.md#non-f
 
 - **ForbiddenFilterRule** (Configurable):
 
-  Ensures some blocks are not used. Options are:
-    - `filter`: the name of the forbidden blocks.
+  Ensures some filters are not used. Options are:
+    - `filter`: the name of the forbidden filters.
 
 - **ForbiddenFunctionRule** (Configurable):
 
-  Ensures some blocks are not used. Options are:
-    - `function`: the name of the forbidden blocks.
+  Ensures some functions are not used. Options are:
+    - `function`: the name of the forbidden functions.
 
 ### Configurable rules
 
