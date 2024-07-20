@@ -85,12 +85,18 @@ final class RulesetTest extends TestCase
         $standard->method('getRules')->willReturn([$rule1, $rule2]);
 
         $ruleset->addStandard($standard);
-        static::assertCount(2, $ruleset->getRules());
+        $rules = $ruleset->getRules();
+        static::assertCount(2, $rules);
+        static::assertSame($rule1, $rules[0]);
+        static::assertSame($rule2, $rules[1]);
 
         $ruleset->allowNonFixableRules(false);
-        static::assertCount(1, $ruleset->getRules());
+        $rules = $ruleset->getRules();
+        static::assertCount(1, $rules);
+        static::assertSame($rule2, $rules[0]);
 
         $ruleset->allowNonFixableRules();
-        static::assertCount(2, $ruleset->getRules());
+        $rules = $ruleset->getRules();
+        static::assertCount(2, $rules);
     }
 }

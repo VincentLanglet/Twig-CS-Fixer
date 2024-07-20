@@ -62,32 +62,6 @@ final class LinterTest extends FileTestCase
         static::assertCount(0, $report->getFileViolations($filePath));
     }
 
-    public function testInvalidFilesAreReported(): void
-    {
-        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
-        $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
-
-        $env = self::createStub(Environment::class);
-        $env->method('tokenize')->willThrowException(new SyntaxError('Error.'));
-        $tokenizer = self::createStub(TokenizerInterface::class);
-        $ruleset = new Ruleset();
-
-        $linter = new Linter($env, $tokenizer);
-        $report = $linter->run([new \SplFileInfo($filePath), new \SplFileInfo($filePath2)], $ruleset);
-
-        $messages = $report->getFileViolations($filePath);
-        static::assertCount(1, $messages);
-
-        $message = $messages[0];
-        static::assertSame('File is invalid: Error.', $message->getMessage());
-        static::assertSame(Violation::LEVEL_FATAL, $message->getLevel());
-        static::assertSame($filePath, $message->getFilename());
-
-        // We still validate other files
-        $messages = $report->getFileViolations($filePath2);
-        static::assertCount(1, $messages);
-    }
-
     public function testUntokenizableFilesAreReported(): void
     {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
@@ -340,6 +314,38 @@ final class LinterTest extends FileTestCase
         static::assertSame(Violation::LEVEL_ERROR, $message->getLevel());
         static::assertSame($filePath, $message->getFilename());
         static::assertSame(13, $message->getLine());
+    }
+
+    public function testNodeVisitorWithInvalidFiles(): void
+    {
+        $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
+        $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
+
+        $ruleset = new Ruleset();
+        $ruleset->addRule(new EmptyLinesRule());
+        $ruleset->addRule(new ForbiddenFilterRule(['trans']));
+        $ruleset->addRule(new ForbiddenBlockRule(['trans']));
+        $ruleset->addRule(new ForbiddenFunctionRule(['t']));
+
+        $env = self::createStub(Environment::class);
+        $env->method('tokenize')->willThrowException(new SyntaxError('Error.'));
+        $tokenizer = self::createStub(TokenizerInterface::class);
+        $tokenizer->method('tokenize')->willReturn([new Tokens(), []]);
+
+        $linter = new Linter($env, $tokenizer);
+        $report = $linter->run([new \SplFileInfo($filePath), new \SplFileInfo($filePath2)], $ruleset);
+
+        $messages = $report->getFileViolations($filePath);
+        static::assertCount(1, $messages);
+
+        $message = $messages[0];
+        static::assertSame('File is invalid: Error.', $message->getMessage());
+        static::assertSame(Violation::LEVEL_FATAL, $message->getLevel());
+        static::assertSame($filePath, $message->getFilename());
+
+        // We still validate other files
+        $messages = $report->getFileViolations($filePath2);
+        static::assertCount(1, $messages);
     }
 
     public function testNodeVisitorWithBuggyFixer(): void
