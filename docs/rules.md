@@ -115,6 +115,10 @@ To use these rules, you have to [allow non-fixable rules](configuration.md#non-f
   Ensures some functions are not used. Options are:
     - `function`: the name of the forbidden functions.
 
+- **ValidConstantRule**:
+
+  Ensures constant function is used on defined constant strings.
+
 ### Configurable rules
 
 Some rules are configurable, those rule are implementing `\TwigCsFixer\Rules\ConfigurableRuleInterface`.

@@ -9,6 +9,9 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
 
+/**
+ * Ensures constant function is used on defined constant strings.
+ */
 final class ValidConstantFunctionRule extends AbstractNodeRule
 {
     public function enterNode(Node $node, Environment $env): Node
@@ -23,23 +26,16 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
         }
 
         $arguments = $node->getNode('arguments');
-
         if (1 !== $arguments->count()) {
             return $node;
         }
 
-        if (!$arguments->getNode('0') instanceof ConstantExpression) {
-            $this->addError(
-                'Function "constant" expects a constant (string value) as argument.',
-                $node,
-                'ArgumentNotConstant'
-            );
-
+        $argument = $arguments->getNode('0');
+        if (!$argument instanceof ConstantExpression) {
             return $node;
         }
 
-        $constant = $arguments->getNode('0')->getAttribute('value');
-
+        $constant = $argument->getAttribute('value');
         if (!\is_string($constant)) {
             return $node;
         }
@@ -54,15 +50,13 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
                 $node,
                 'ClassConstant'
             );
-
-            return $node;
+        } else {
+            $this->addError(
+                sprintf('Constant "%s" is undefined.', $constant),
+                $node,
+                'ConstantUndefined'
+            );
         }
-
-        $this->addError(
-            sprintf('Constant "%s" is undefined.', $constant),
-            $node,
-            'ConstantUndefined'
-        );
 
         return $node;
     }
