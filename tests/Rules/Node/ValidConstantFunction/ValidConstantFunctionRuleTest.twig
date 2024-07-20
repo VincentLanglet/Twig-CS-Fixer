@@ -1,0 +1,10 @@
+{% block content %}
+    {{ constant('DateTimeInterface::ATOM') }}
+    {{ constant('DATE_ATOM') }}
+    {{ constant('TwigCsFixer\\Tests\\Rules\\Node\\ValidConstantFunction\\ValidConstantFunctionRuleTest::SOME_CONSTANT') }}
+    {{ constant('class', someObject) }}
+
+    {{ constant('ThisDoesNotExist::SomeKey') }}
+    {{ constant(someVar) }}
+    {{ constant('ThisDoesNotExist::class') }}
+{% endblock %}
