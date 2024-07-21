@@ -7,4 +7,6 @@
     {{ constant('ThisDoesNotExist::SomeKey') }}
     {{ constant(someVar) }}
     {{ constant('ThisDoesNotExist::class') }}
+    {{ constant(1) }}
+    {{ notConstant('ThisDoesNotExist::class') }}
 {% endblock %}
