@@ -41,6 +41,9 @@ jobs:
             - name: Ensure the PHAR works
               run: bin/twig-cs-fixer.phar --ansi --version
 
+            - name: E2E test
+              run: bin/twig-cs-fixer.phar lint -c tests/Binary/Fixtures/.twig-cs-fixer.php tests/Binary/Fixtures/file.twig
+
             - name: Import GPG key
               if: github.event_name == 'release'
               uses: crazy-max/ghaction-import-gpg@v6
