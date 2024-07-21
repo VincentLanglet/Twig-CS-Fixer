@@ -26,17 +26,28 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
         }
 
         $arguments = $node->getNode('arguments');
-        if (1 !== $arguments->count()) {
-            return $node;
+        $argument = $arguments->hasNode('0') ? $arguments->getNode('0') : null;
+        // Try for named parameters
+        if (null === $argument && $arguments->hasNode('constant')) {
+            $argument = $arguments->getNode('constant');
         }
-
-        $argument = $arguments->getNode('0');
         if (!$argument instanceof ConstantExpression) {
             return $node;
         }
 
         $constant = $argument->getAttribute('value');
         if (!\is_string($constant)) {
+            $this->addError(
+                'The first param of the function "constant()" must be a string.',
+                $node,
+                'StringConstant'
+            );
+
+            return $node;
+        }
+
+        // The object to get the constant from cannot be resolved statically.
+        if (1 !== $arguments->count()) {
             return $node;
         }
 
@@ -46,7 +57,7 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
 
         if ('::class' === strtolower(substr($constant, -7))) {
             $this->addError(
-                sprintf('You cannot use the Twig function "constant()" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant),
+                'You cannot use the function "constant()" to resolve class names.',
                 $node,
                 'ClassConstant'
             );
