@@ -26,10 +26,13 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
         }
 
         $arguments = $node->getNode('arguments');
-        $argument = $arguments->hasNode('0') ? $arguments->getNode('0') : null;
-        // Try for named parameters
-        if (null === $argument && $arguments->hasNode('constant')) {
+        if ($arguments->hasNode('0')) {
+            $argument = $arguments->getNode('0');
+        } elseif ($arguments->hasNode('constant')) {
+            // Try for named parameters
             $argument = $arguments->getNode('constant');
+        } else {
+            return $node;
         }
         if (!$argument instanceof ConstantExpression) {
             return $node;
