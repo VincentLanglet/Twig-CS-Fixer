@@ -32,6 +32,12 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
             // Try for named parameters
             $argument = $arguments->getNode('constant');
         } else {
+            $this->addError(
+                'The first param of the function "constant()" is required.',
+                $node,
+                'NoConstant'
+            );
+
             return $node;
         }
         if (!$argument instanceof ConstantExpression) {

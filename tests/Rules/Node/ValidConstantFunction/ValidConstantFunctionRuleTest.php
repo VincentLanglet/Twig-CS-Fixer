@@ -22,6 +22,7 @@ final class ValidConstantFunctionRuleTest extends AbstractRuleTestCase
             'ValidConstantFunction.ClassConstant:20' => 'You cannot use the function "constant()" to resolve class names.',
             'ValidConstantFunction.ClassConstant:21' => 'You cannot use the function "constant()" to resolve class names.',
             'ValidConstantFunction.StringConstant:22' => 'The first param of the function "constant()" must be a string.',
+            'ValidConstantFunction.NoConstant:24' => 'The first param of the function "constant()" is required.',
         ]);
     }
 }
