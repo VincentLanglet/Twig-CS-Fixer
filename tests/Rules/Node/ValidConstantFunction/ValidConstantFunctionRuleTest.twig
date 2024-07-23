@@ -7,4 +7,17 @@
     {{ constant('ThisDoesNotExist::SomeKey') }}
     {{ constant(someVar) }}
     {{ constant('ThisDoesNotExist::class') }}
+    {{ constant(1) }}
+
+    {{ constant(constant='DateTimeInterface::ATOM') }}
+    {{ constant(constant='DATE_ATOM') }}
+    {{ constant(constant='TwigCsFixer\\Tests\\Rules\\Node\\ValidConstantFunction\\ValidConstantFunctionRuleTest::SOME_CONSTANT') }}
+    {{ constant(constant='class', someObject) }}
+
+    {{ constant(constant='ThisDoesNotExist::SomeKey') }}
+    {{ constant(constant=someVar) }}
+    {{ constant(constant='ThisDoesNotExist::class') }}
+    {{ constant(constant=1) }}
+
+    {{ notConstant('ThisDoesNotExist::class') }}
 {% endblock %}
