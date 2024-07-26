@@ -89,3 +89,10 @@ The `Token::NAME_TYPE` has been split in four:
 - $token->getPosition();
 + $token->getLinePosition();
 ```
+
+### Directory
+
+```diff
+- (new Directory($dir))->getRelativePathTo($file);
++ FileHelper::getRelativePath($file, $dir);
+```

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace TwigCsFixer\Cache\Manager;
 
 use TwigCsFixer\Cache\Cache;
-use TwigCsFixer\Cache\Directory;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandlerInterface;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Exception\CannotWriteCacheException;
+use TwigCsFixer\File\FileHelper;
 
 /**
  * Class supports caching information about state of fixing files.
@@ -26,13 +26,13 @@ final class FileCacheManager implements CacheManagerInterface
 {
     private Cache $cache;
 
-    private Directory $cacheDirectory;
+    private string $cacheDirectory;
 
     public function __construct(
         private CacheFileHandlerInterface $handler,
         private Signature $signature
     ) {
-        $this->cacheDirectory = new Directory(\dirname($handler->getFile()));
+        $this->cacheDirectory = \dirname($handler->getFile());
 
         $this->readCache();
     }
@@ -67,14 +67,14 @@ final class FileCacheManager implements CacheManagerInterface
 
     public function needFixing(string $file, string $fileContent): bool
     {
-        $file = $this->cacheDirectory->getRelativePathTo($file);
+        $file = FileHelper::getRelativePath($file, $this->cacheDirectory);
 
         return !$this->cache->has($file) || $this->cache->get($file) !== $this->calcHash($fileContent);
     }
 
     public function setFile(string $file, string $fileContent): void
     {
-        $file = $this->cacheDirectory->getRelativePathTo($file);
+        $file = FileHelper::getRelativePath($file, $this->cacheDirectory);
 
         $hash = $this->calcHash($fileContent);
 
