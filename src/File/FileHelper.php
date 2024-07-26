@@ -20,6 +20,25 @@ final class FileHelper
         return $matches[0] ?? \PHP_EOL;
     }
 
+    public static function normalizePath(string $path): string
+    {
+        return str_replace(['\\', '/'], \DIRECTORY_SEPARATOR, $path);
+    }
+
+    public static function getRelativePath(string $path, string $baseDir): string
+    {
+        $path = static::normalizePath($path);
+
+        if (
+            '' === $baseDir
+            || 0 !== stripos($path, $baseDir.\DIRECTORY_SEPARATOR)
+        ) {
+            return $path;
+        }
+
+        return substr($path, \strlen($baseDir) + 1);
+    }
+
     public static function getAbsolutePath(string $path, ?string $workingDir = null): string
     {
         if (Path::isAbsolute($path)) {
