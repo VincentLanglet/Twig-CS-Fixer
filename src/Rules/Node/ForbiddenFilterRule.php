@@ -41,7 +41,7 @@ final class ForbiddenFilterRule extends AbstractNodeRule implements Configurable
         }
 
         $this->addError(
-            sprintf('Filter "%s" is not allowed.', $filterName),
+            \sprintf('Filter "%s" is not allowed.', $filterName),
             $node,
         );
 

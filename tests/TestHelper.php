@@ -36,7 +36,7 @@ final class TestHelper
 
         $fixedFile = fopen($tempName, 'w');
         if (false === $fixedFile) {
-            throw new \LogicException(sprintf('Cannot open temporary file "%s".', $tempName));
+            throw new \LogicException(\sprintf('Cannot open temporary file "%s".', $tempName));
         }
 
         fwrite($fixedFile, $contents);

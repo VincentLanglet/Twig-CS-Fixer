@@ -246,7 +246,7 @@ final class Fixer implements FixerInterface
 
     private function revertToken(int $tokenIndex): void
     {
-        $errorMessage = sprintf('Nothing to revert at index %s', $tokenIndex);
+        $errorMessage = \sprintf('Nothing to revert at index %s', $tokenIndex);
         Assert::keyExists($this->fixedTokens, $tokenIndex, $errorMessage);
 
         $this->tokens[$tokenIndex] = $this->fixedTokens[$tokenIndex];

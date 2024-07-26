@@ -77,7 +77,7 @@ final class TextReporterTest extends TestCase
     public static function displayDataProvider(): iterable
     {
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                      \e[31mKO\e[39m %s
                      --------- --------------------------------------- 
@@ -105,7 +105,7 @@ final class TextReporterTest extends TestCase
         ];
 
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                      \e[31mKO\e[39m %s
                      ------- ----------------------------------- 
@@ -124,7 +124,7 @@ final class TextReporterTest extends TestCase
         ];
 
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                      \e[31mKO\e[39m %s
                      ------- ----------------------------------- 
@@ -154,7 +154,7 @@ final class TextReporterTest extends TestCase
         $textFormatter->display($output, $report, null, false);
 
         $text = $output->fetch();
-        static::assertStringNotContainsString(sprintf('KO %s', $file), $text);
+        static::assertStringNotContainsString(\sprintf('KO %s', $file), $text);
         static::assertStringContainsString('[OK]', $text);
     }
 
@@ -173,7 +173,7 @@ final class TextReporterTest extends TestCase
         $textFormatter->display($output, $report, null, false);
 
         static::assertStringContainsString(
-            sprintf(
+            \sprintf(
                 <<<EOD
                      KO %s
                      ------- ----------------------------------- 
@@ -205,7 +205,7 @@ final class TextReporterTest extends TestCase
         $textFormatter->display($output, $report, null, false);
 
         static::assertStringContainsString(
-            sprintf(
+            \sprintf(
                 <<<EOD
                      KO %s
                      ------- -------------- 

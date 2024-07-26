@@ -77,7 +77,7 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
 
         if ($expected !== $fileName) {
             $this->addFileError(
-                sprintf('The file name must use %s; expected %s.', $this->case, $prefix.$expected),
+                \sprintf('The file name must use %s; expected %s.', $this->case, $prefix.$expected),
                 $token,
             );
         }

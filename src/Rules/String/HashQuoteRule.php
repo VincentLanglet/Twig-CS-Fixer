@@ -50,7 +50,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         $token = $tokens->get($tokenIndex);
 
         $value = $token->getValue();
-        $error = sprintf('The hash key "%s" should be quoted.', $value);
+        $error = \sprintf('The hash key "%s" should be quoted.', $value);
 
         if ($token->isMatching(Token::NUMBER_TYPE)) {
             // A value like `012` or `12.3` is cast to `12` by twig,
@@ -87,7 +87,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
         }
 
         $fixer = $this->addFixableError(
-            sprintf('The hash key "%s" does not require to be quoted.', $expectedValue),
+            \sprintf('The hash key "%s" does not require to be quoted.', $expectedValue),
             $token
         );
         if (null !== $fixer) {

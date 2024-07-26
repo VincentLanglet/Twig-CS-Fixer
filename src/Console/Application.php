@@ -30,7 +30,7 @@ final class Application extends BaseApplication
                 return $version;
             }
 
-            return sprintf('%s@%s', $version, substr($reference, 0, 7));
+            return \sprintf('%s@%s', $version, substr($reference, 0, 7));
         }
 
         return 'UNKNOWN';

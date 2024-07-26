@@ -36,7 +36,7 @@ final class Cache
     public function get(string $file): string
     {
         if (!$this->has($file)) {
-            throw new \InvalidArgumentException(sprintf('The file "%s" is not cached', $file));
+            throw new \InvalidArgumentException(\sprintf('The file "%s" is not cached', $file));
         }
 
         return $this->hashes[$file];

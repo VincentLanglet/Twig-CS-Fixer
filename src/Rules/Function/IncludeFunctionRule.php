@@ -73,7 +73,7 @@ final class IncludeFunctionRule extends AbstractFixableRule
             $endInclude = ', true'.$endInclude;
         }
         if ($ignoreMissing || $withoutContext) {
-            $endInclude = sprintf(', %s', $withoutContext ? 'false' : 'true').$endInclude;
+            $endInclude = \sprintf(', %s', $withoutContext ? 'false' : 'true').$endInclude;
 
             if (!$withVariable) {
                 $endInclude = ', []'.$endInclude;

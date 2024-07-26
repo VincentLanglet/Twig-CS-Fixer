@@ -97,7 +97,7 @@ final class CheckstyleReporterTest extends TestCase
     public static function displayDataProvider(): iterable
     {
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
@@ -124,7 +124,7 @@ final class CheckstyleReporterTest extends TestCase
         ];
 
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>
@@ -145,7 +145,7 @@ final class CheckstyleReporterTest extends TestCase
         ];
 
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <checkstyle>

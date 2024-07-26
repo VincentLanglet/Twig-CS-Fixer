@@ -76,7 +76,7 @@ final class GithubReporterTest extends TestCase
     public static function displayDataProvider(): iterable
     {
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     ::notice file=%1\$s,line=1::Notice
                     ::warning file=%1\$s,line=2,col=22::Warning
@@ -89,7 +89,7 @@ final class GithubReporterTest extends TestCase
             false,
         ];
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     ::notice file=%1\$s,line=1::NoticeId:1 -- Notice
                     ::warning file=%1\$s,line=2,col=22::WarningId:2:22 -- Warning

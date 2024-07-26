@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 $rules = [
     // Default
@@ -41,6 +42,7 @@ $finder = Finder::create()->in(__DIR__)->ignoreDotFiles(false);
 
 $config = new Config();
 $config
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setFinder($finder)
     ->setRiskyAllowed(true)
     ->setRules($rules)

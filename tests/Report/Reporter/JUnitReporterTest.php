@@ -97,7 +97,7 @@ final class JUnitReporterTest extends TestCase
     public static function displayDataProvider(): iterable
     {
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <testsuites>
@@ -131,7 +131,7 @@ final class JUnitReporterTest extends TestCase
             false,
         ];
         yield [
-            sprintf(
+            \sprintf(
                 <<<EOD
                     <?xml version="1.0" encoding="UTF-8"?>
                     <testsuites>
