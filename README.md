@@ -27,8 +27,9 @@ vendor/bin/twig-cs-fixer lint /path/to/code
 vendor/bin/twig-cs-fixer lint --fix /path/to/code
 ```
 
-Although [bin-dependencies may have composer conflicts](https://github.com/bamarni/composer-bin-plugin#why-a-hard-problem-with-a-simple-solution),
-this is the recommended way because it will autoload everything you need.
+> [!NOTE]
+> Although [bin-dependencies may have composer conflicts](https://github.com/bamarni/composer-bin-plugin#why-a-hard-problem-with-a-simple-solution),
+> this is the recommended way because it will autoload everything you need.
 
 ### As a PHAR
 
@@ -46,13 +47,14 @@ wget -c https://github.com/VincentLanglet/Twig-CS-Fixer/releases/download/VERSIO
 The PHAR files are signed with a public key which can be queried at 
 `keys.openpgp.org` with the id `AC0E7FD8858D80003AA88FF8DEBB71EDE9601234`.
 
-NB: You will certainly need to add
-```php
-require_once __DIR__.'/vendor/autoload.php';
-```
-in your [config file](docs/configuration.md) in order to:
-- Use existing [node based rules](docs/configuration.md#node-based-rules).
-- Write your own custom rules.
+> [!TIP]
+> You will certainly need to add
+> ```php
+> require_once __DIR__.'/vendor/autoload.php';
+> ```
+> in your [config file](docs/configuration.md) in order to:
+> - Use existing [node based rules](docs/configuration.md#node-based-rules).
+> - Write your own custom rules.
 
 ## Twig Coding Standard Rules
 
