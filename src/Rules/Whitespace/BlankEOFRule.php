@@ -35,7 +35,7 @@ final class BlankEOFRule extends AbstractFixableRule
         }
 
         $fixer = $this->addFixableError(
-            sprintf('A file must end with 1 blank line; found %d', $i),
+            \sprintf('A file must end with 1 blank line; found %d', $i),
             $token
         );
 

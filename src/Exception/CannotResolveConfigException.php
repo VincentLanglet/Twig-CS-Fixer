@@ -15,11 +15,11 @@ final class CannotResolveConfigException extends \RuntimeException
 
     public static function fileNotFound(string $path): self
     {
-        return new self(sprintf('Cannot find the config file "%s".', $path));
+        return new self(\sprintf('Cannot find the config file "%s".', $path));
     }
 
     public static function fileMustReturnConfig(string $path): self
     {
-        return new self(sprintf('The config file "%s" must return a "%s" object.', $path, Config::class));
+        return new self(\sprintf('The config file "%s" must return a "%s" object.', $path, Config::class));
     }
 }

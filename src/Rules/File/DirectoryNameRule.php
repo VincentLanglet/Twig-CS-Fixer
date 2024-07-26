@@ -71,7 +71,7 @@ final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleIn
 
             if ($expected !== $directory) {
                 $this->addFileError(
-                    sprintf('The directory name must use %s; expected %s.', $this->case, $prefix.$expected),
+                    \sprintf('The directory name must use %s; expected %s.', $this->case, $prefix.$expected),
                     $token,
                 );
             }

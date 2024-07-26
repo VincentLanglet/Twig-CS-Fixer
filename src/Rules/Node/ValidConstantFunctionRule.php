@@ -72,7 +72,7 @@ final class ValidConstantFunctionRule extends AbstractNodeRule
             );
         } else {
             $this->addError(
-                sprintf('Constant "%s" is undefined.', $constant),
+                \sprintf('Constant "%s" is undefined.', $constant),
                 $node,
                 'ConstantUndefined'
             );

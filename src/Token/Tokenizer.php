@@ -425,7 +425,7 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::DQ_STRING_END_TYPE, $match[0], $bracket);
         } else {
             // @codeCoverageIgnoreStart
-            throw new \LogicException(sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
+            throw new \LogicException(\sprintf('Unhandled character "%s" in lexDqString.', $this->code[$this->cursor]));
             // @codeCoverageIgnoreEnd
         }
     }
@@ -480,7 +480,7 @@ final class Tokenizer implements TokenizerInterface
             }
         } else {
             // @codeCoverageIgnoreStart
-            throw new \LogicException(sprintf('Unhandled character "%s" in lexData.', $currentCode));
+            throw new \LogicException(\sprintf('Unhandled character "%s" in lexData.', $currentCode));
             // @codeCoverageIgnoreEnd
         }
     }
@@ -509,7 +509,7 @@ final class Tokenizer implements TokenizerInterface
             $tokenType = Token::VAR_START_TYPE;
         } else {
             // @codeCoverageIgnoreStart
-            throw new \LogicException(sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
+            throw new \LogicException(\sprintf('Unhandled tag "%s" in lexStart.', $expressionStarter['match']));
             // @codeCoverageIgnoreEnd
         }
 

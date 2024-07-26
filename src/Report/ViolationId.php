@@ -43,13 +43,13 @@ final class ViolationId
 
     public function toString(): string
     {
-        $name = rtrim(sprintf(
+        $name = rtrim(\sprintf(
             '%s.%s',
             $this->ruleIdentifier ?? '',
             $this->messageIdentifier ?? '',
         ), '.');
 
-        return rtrim(sprintf(
+        return rtrim(\sprintf(
             '%s:%s:%s',
             $name,
             $this->line ?? '',

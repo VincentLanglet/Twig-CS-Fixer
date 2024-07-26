@@ -54,7 +54,7 @@ final class Report
         $filename = $violation->getFilename();
         if (!isset($this->violationsByFile[$filename])) {
             throw new \InvalidArgumentException(
-                sprintf('The file "%s" is not handled by this report.', $filename)
+                \sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
 
@@ -84,7 +84,7 @@ final class Report
     {
         if (!isset($this->violationsByFile[$filename])) {
             throw new \InvalidArgumentException(
-                sprintf('The file "%s" is not handled by this report.', $filename)
+                \sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
 
@@ -131,7 +131,7 @@ final class Report
     {
         if (!isset($this->realPaths[$filename])) {
             throw new \InvalidArgumentException(
-                sprintf('The file "%s" is not handled by this report.', $filename)
+                \sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
 
@@ -147,7 +147,7 @@ final class Report
     {
         if (!isset($this->violationsByFile[$filename])) {
             throw new \InvalidArgumentException(
-                sprintf('The file "%s" is not handled by this report.', $filename)
+                \sprintf('The file "%s" is not handled by this report.', $filename)
             );
         }
 

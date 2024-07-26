@@ -39,7 +39,7 @@ final class EmptyLinesRule extends AbstractFixableRule
         }
 
         $fixer = $this->addFixableError(
-            sprintf('More than 1 empty line is not allowed, found %d', $i),
+            \sprintf('More than 1 empty line is not allowed, found %d', $i),
             $token
         );
 

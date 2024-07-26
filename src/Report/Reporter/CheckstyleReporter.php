@@ -34,7 +34,7 @@ final class CheckstyleReporter implements ReporterInterface
             }
 
             $realPath = $report->getRealPath($file);
-            $text .= sprintf('  <file name="%s">', $this->xmlEncode($realPath)).\PHP_EOL;
+            $text .= \sprintf('  <file name="%s">', $this->xmlEncode($realPath)).\PHP_EOL;
             foreach ($fileViolations as $violation) {
                 $line = (string) $violation->getLine();
                 $linePosition = (string) $violation->getLinePosition();

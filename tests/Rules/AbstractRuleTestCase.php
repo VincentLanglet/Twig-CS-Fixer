@@ -68,14 +68,14 @@ abstract class AbstractRuleTestCase extends TestCase
                 $line = $violation->getLine();
 
                 if (null !== $line) {
-                    $message = sprintf('Line %s: %s', $line, $message);
+                    $message = \sprintf('Line %s: %s', $line, $message);
                 }
                 static::fail($message);
             }
 
             $id = $violation->getIdentifier()?->toString() ?? '';
             if (isset($messages[$id])) {
-                static::fail(sprintf(
+                static::fail(\sprintf(
                     'Two violations have the same identifier "%s": the messages are "%s" and "%s".',
                     $id,
                     $messages[$id],

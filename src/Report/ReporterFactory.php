@@ -36,7 +36,7 @@ final class ReporterFactory
             JUnitReporter::NAME => new JUnitReporter(),
             GithubReporter::NAME => new GithubReporter(),
             default => throw new \InvalidArgumentException(
-                sprintf('No reporter supports the format "%s".', $format)
+                \sprintf('No reporter supports the format "%s".', $format)
             ),
         };
     }

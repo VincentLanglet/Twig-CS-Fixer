@@ -214,7 +214,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
         ]);
 
         static::assertStringContainsString(
-            sprintf('Using cache file "%s".', Config::DEFAULT_CACHE_PATH),
+            \sprintf('Using cache file "%s".', Config::DEFAULT_CACHE_PATH),
             $commandTester->getDisplay()
         );
         static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());

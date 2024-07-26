@@ -43,7 +43,7 @@ final class Tokens
     public function get(int $index): Token
     {
         if (!$this->has($index)) {
-            throw new \OutOfRangeException(sprintf('There is no token for the index "%s".', $index));
+            throw new \OutOfRangeException(\sprintf('There is no token for the index "%s".', $index));
         }
 
         return $this->tokens[$index];

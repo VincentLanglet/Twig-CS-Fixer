@@ -93,7 +93,7 @@ final class TwigCsFixerCommand extends Command
             $config = $this->resolveConfig($input, $output);
             $report = $this->runLinter($config, $input, $output);
         } catch (\Throwable $exception) {
-            $output->writeln(sprintf('<error>Error: %s</error>', $exception->getMessage()));
+            $output->writeln(\sprintf('<error>Error: %s</error>', $exception->getMessage()));
 
             return self::INVALID;
         }
@@ -119,7 +119,7 @@ final class TwigCsFixerCommand extends Command
 
         $cacheFile = $config->getCacheFile();
         if (null !== $cacheFile && is_file($cacheFile)) {
-            $output->writeln(sprintf('Using cache file "%s".', $cacheFile), OutputInterface::VERBOSITY_DEBUG);
+            $output->writeln(\sprintf('Using cache file "%s".', $cacheFile), OutputInterface::VERBOSITY_DEBUG);
         }
 
         return $config;

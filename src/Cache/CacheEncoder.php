@@ -16,7 +16,7 @@ final class CacheEncoder
         try {
             $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Value needs to be a valid JSON string, got "%s", error: "%s".',
                 $json,
                 $e->getMessage()

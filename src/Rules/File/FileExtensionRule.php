@@ -30,7 +30,7 @@ final class FileExtensionRule extends AbstractRule
 
         if (\count($fileParts) < 2) {
             $this->addFileError(
-                sprintf('The file must use two extensions; found ".%s".', $fileExtension),
+                \sprintf('The file must use two extensions; found ".%s".', $fileExtension),
                 $token,
             );
         }

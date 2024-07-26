@@ -41,7 +41,7 @@ final class ForbiddenFunctionRule extends AbstractNodeRule implements Configurab
         }
 
         $this->addError(
-            sprintf('Function "%s" is not allowed.', $functionName),
+            \sprintf('Function "%s" is not allowed.', $functionName),
             $node,
         );
 

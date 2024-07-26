@@ -78,7 +78,7 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
 
         if ($expected !== $name) {
             $this->addError(
-                sprintf('The var name must use %s; expected %s.', $this->case, $prefix.$expected),
+                \sprintf('The var name must use %s; expected %s.', $this->case, $prefix.$expected),
                 $token,
             );
         }

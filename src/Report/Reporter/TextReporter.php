@@ -47,7 +47,7 @@ final class TextReporter implements ReporterInterface
         foreach ($report->getFiles() as $file) {
             $fileViolations = $report->getFileViolations($file, $level);
             if (\count($fileViolations) > 0) {
-                $io->text(sprintf('<fg=red>KO</fg=red> %s', $file));
+                $io->text(\sprintf('<fg=red>KO</fg=red> %s', $file));
             }
 
             $content = @file_get_contents($file);
@@ -63,7 +63,7 @@ final class TextReporter implements ReporterInterface
                 } else {
                     $context = $this->getContext($lines, $line);
                     foreach ($context as $no => $code) {
-                        $formattedText[] = sprintf(
+                        $formattedText[] = \sprintf(
                             self::ERROR_LINE_FORMAT,
                             $no,
                             wordwrap($code, self::ERROR_LINE_WIDTH, \PHP_EOL)
@@ -81,7 +81,7 @@ final class TextReporter implements ReporterInterface
 
                 $messageLevel = Violation::getLevelAsString($violation->getLevel());
                 $rows[] = [
-                    new TableCell(sprintf('<comment>%s</comment>', $messageLevel)),
+                    new TableCell(\sprintf('<comment>%s</comment>', $messageLevel)),
                     implode(\PHP_EOL, $formattedText),
                 ];
             }
@@ -91,7 +91,7 @@ final class TextReporter implements ReporterInterface
             }
         }
 
-        $summaryString = sprintf(
+        $summaryString = \sprintf(
             'Files linted: %d, notices: %d, warnings: %d, errors: %d',
             $report->getTotalFiles(),
             $report->getTotalNotices(),
@@ -133,8 +133,8 @@ final class TextReporter implements ReporterInterface
 
     private function formatErrorMessage(Violation $message, bool $debug): string
     {
-        return sprintf(
-            sprintf('<fg=red>%s</fg=red>', self::ERROR_LINE_FORMAT),
+        return \sprintf(
+            \sprintf('<fg=red>%s</fg=red>', self::ERROR_LINE_FORMAT),
             self::ERROR_CURSOR_CHAR,
             wordwrap($message->getDebugMessage($debug), self::ERROR_LINE_WIDTH, \PHP_EOL)
         );

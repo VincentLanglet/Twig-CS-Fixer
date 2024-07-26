@@ -81,7 +81,7 @@ final class Linter
                 } catch (CannotTokenizeException $exception) {
                     $violation = new Violation(
                         Violation::LEVEL_FATAL,
-                        sprintf('Unable to tokenize file: %s', $exception->getMessage()),
+                        \sprintf('Unable to tokenize file: %s', $exception->getMessage()),
                         $filePath
                     );
 
@@ -90,7 +90,7 @@ final class Linter
                 } catch (CannotFixFileException $exception) {
                     $violation = new Violation(
                         Violation::LEVEL_FATAL,
-                        sprintf('Unable to fix file: %s', $exception->getMessage()),
+                        \sprintf('Unable to fix file: %s', $exception->getMessage()),
                         $filePath
                     );
 
@@ -106,7 +106,7 @@ final class Linter
             } catch (CannotTokenizeException $exception) {
                 $violation = new Violation(
                     Violation::LEVEL_FATAL,
-                    sprintf('Unable to tokenize file: %s', $exception->getMessage()),
+                    \sprintf('Unable to tokenize file: %s', $exception->getMessage()),
                     $filePath
                 );
 
@@ -152,7 +152,7 @@ final class Linter
         } catch (Error $error) {
             $violation = new Violation(
                 Violation::LEVEL_FATAL,
-                sprintf('File is invalid: %s', $error->getRawMessage()),
+                \sprintf('File is invalid: %s', $error->getRawMessage()),
                 $filePath,
                 null,
                 new ViolationId(line: $error->getTemplateLine())

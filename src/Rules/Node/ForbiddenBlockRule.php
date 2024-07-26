@@ -40,7 +40,7 @@ final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableR
         }
 
         $this->addError(
-            sprintf('Block "%s" is not allowed.', $blockName),
+            \sprintf('Block "%s" is not allowed.', $blockName),
             $node,
         );
 

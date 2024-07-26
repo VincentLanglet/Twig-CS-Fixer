@@ -95,6 +95,6 @@ final class CacheFileHandlerTest extends FileTestCase
 
         $permissions = fileperms($file);
         static::assertNotFalse($permissions);
-        static::assertSame('0666', substr(sprintf('%o', $permissions), -4));
+        static::assertSame('0666', substr(\sprintf('%o', $permissions), -4));
     }
 }
