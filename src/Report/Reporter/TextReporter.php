@@ -109,7 +109,7 @@ final class TextReporter implements ReporterInterface
     }
 
     /**
-     * @param array<string> $templatesLines
+     * @param list<string> $templatesLines
      *
      * @return array<int, string>
      */
@@ -128,7 +128,7 @@ final class TextReporter implements ReporterInterface
             ++$lineIndex;
         } while ($lineIndex < $max);
 
-        return array_map(fn (string $code): string => substr($code, min($indents)), $result);
+        return array_map(static fn (string $code): string => substr($code, min($indents)), $result);
     }
 
     private function formatErrorMessage(Violation $message, bool $debug): string

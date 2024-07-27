@@ -184,7 +184,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getBrackets(): array
     {
-        return array_filter($this->bracketsAndTernary, fn (Token $token): bool => '?' !== $token->getValue());
+        return array_filter($this->bracketsAndTernary, static fn (Token $token): bool => '?' !== $token->getValue());
     }
 
     private function isInTernary(): bool
