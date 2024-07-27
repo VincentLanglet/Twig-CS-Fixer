@@ -61,11 +61,6 @@ final class Tokenizer implements TokenizerInterface
     private ?Token $lastNonEmptyToken = null;
 
     /**
-     * @var list<ViolationId>
-     */
-    private array $ignoredViolations = [];
-
-    /**
      * @var list<array{fullMatch: string, position: int, match: string}>
      */
     private array $expressionStarters = [];
@@ -94,11 +89,9 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return array{Tokens, list<ViolationId>}
-     *
      * @throws CannotTokenizeException
      */
-    public function tokenize(Source $source): array
+    public function tokenize(Source $source): Tokens
     {
         $this->resetState($source);
         $this->pushState(self::STATE_DATA);
@@ -160,7 +153,9 @@ final class Tokenizer implements TokenizerInterface
 
         $this->pushToken(Token::EOF_TYPE);
 
-        return [$this->tokens, $this->ignoredViolations];
+        $this->tokens->setReadOnly();
+
+        return $this->tokens;
     }
 
     private function resetState(Source $source): void
@@ -764,7 +759,7 @@ final class Tokenizer implements TokenizerInterface
         };
 
         if ('' === $ignoredViolations) {
-            $this->ignoredViolations[] = ViolationId::fromString($ignoredViolations, $line);
+            $this->tokens->addIgnoredViolation(ViolationId::fromString($ignoredViolations, $line));
 
             return;
         }
@@ -774,7 +769,7 @@ final class Tokenizer implements TokenizerInterface
             if ('' === $ignoredViolation) {
                 continue;
             }
-            $this->ignoredViolations[] = ViolationId::fromString($ignoredViolation, $line);
+            $this->tokens->addIgnoredViolation(ViolationId::fromString($ignoredViolation, $line));
         }
     }
 }

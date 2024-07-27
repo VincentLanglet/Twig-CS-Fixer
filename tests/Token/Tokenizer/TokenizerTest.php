@@ -33,9 +33,10 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOL_TYPE, 1, 16, $filePath, \PHP_EOL),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
-            $result[0]->toArray()
+            $result->toArray()
         );
-        static::assertEquals([], $result[1]);
+        static::assertEquals([], $result->getIgnoredViolations());
+        static::assertTrue($result->isReadOnly());
     }
 
     public function testTokenizeMixedEOL(): void
@@ -55,9 +56,10 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOL_TYPE, 4, 1, 'path', "\n"),
                 new Token(Token::EOF_TYPE, 5, 1, 'path'),
             ],
-            $result[0]->toArray()
+            $result->toArray()
         );
-        static::assertEquals([], $result[1]);
+        static::assertEquals([], $result->getIgnoredViolations());
+        static::assertTrue($result->isReadOnly());
     }
 
     public function testTokenizeWithCustomOperators(): void
@@ -70,6 +72,7 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
+        $result = $tokenizer->tokenize($source);
         static::assertEquals(
             [
                 new Token(Token::VAR_START_TYPE, 1, 1, $filePath, '{{'),
@@ -89,8 +92,9 @@ final class TokenizerTest extends TestCase
                 new Token(Token::EOL_TYPE, 1, 36, $filePath, \PHP_EOL),
                 new Token(Token::EOF_TYPE, 2, 1, $filePath),
             ],
-            $tokenizer->tokenize($source)[0]->toArray()
+            $result->toArray()
         );
+        static::assertTrue($result->isReadOnly());
     }
 
     public function testTokenizeIgnoredViolations(): void
@@ -103,6 +107,7 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
+        $result = $tokenizer->tokenize($source);
         static::assertEquals(
             [
                 'Foo.Bar',
@@ -114,9 +119,10 @@ final class TokenizerTest extends TestCase
             ],
             array_map(
                 static fn (ViolationId $validationId) => $validationId->toString(),
-                $tokenizer->tokenize($source)[1]
+                $result->getIgnoredViolations()
             )
         );
+        static::assertTrue($result->isReadOnly());
     }
 
     /**
@@ -133,7 +139,7 @@ final class TokenizerTest extends TestCase
         $tokenizer = new Tokenizer($env);
         $source = new Source($content, $filePath);
 
-        $tokens = $tokenizer->tokenize($source)[0];
+        $tokens = $tokenizer->tokenize($source);
 
         $tokenValues = array_map(static fn (Token $token): string => $token->getValue(), $tokens->toArray());
 
@@ -144,6 +150,7 @@ final class TokenizerTest extends TestCase
 
         $tokenTypes = array_map(static fn (Token $token): int|string => $token->getType(), $tokens->toArray());
         static::assertSame($expectedTokenTypes, $tokenTypes);
+        static::assertTrue($tokens->isReadOnly());
     }
 
     /**

@@ -36,12 +36,11 @@ final class FixerTest extends TestCase
     public function testValidFile(): void
     {
         $tokenizer = $this->createMock(TokenizerInterface::class);
-        $tokenizer->expects(static::once())->method('tokenize')->willReturn([
+        $tokenizer->expects(static::once())->method('tokenize')->willReturn(
             new Tokens([
                 new Token(Token::EOF_TYPE, 0, 0, 'TwigCsFixer'),
             ]),
-            [],
-        ]);
+        );
 
         $ruleset = new Ruleset();
         $fixer = new Fixer($tokenizer);

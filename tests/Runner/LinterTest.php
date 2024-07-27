@@ -72,14 +72,14 @@ final class LinterTest extends FileTestCase
 
         $call = 0;
         $tokenizer->method('tokenize')->willReturnCallback(
-            static function () use (&$call): array {
+            static function () use (&$call): Tokens {
                 /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/10513 */
                 if (0 === $call) {
                     ++$call;
                     throw CannotTokenizeException::unknownError();
                 }
 
-                return [[], []];
+                return new Tokens();
             }
         );
         $ruleset = new Ruleset();
@@ -117,11 +117,11 @@ final class LinterTest extends FileTestCase
 
         $env = new StubbedEnvironment();
         $tokenizer = self::createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willReturnCallback(static function (): array {
+        $tokenizer->method('tokenize')->willReturnCallback(static function (): Tokens {
             @trigger_error('Default');
             trigger_error('User Deprecation', \E_USER_DEPRECATED);
 
-            return [[], []];
+            return new Tokens();
         });
         $ruleset = new Ruleset();
 
@@ -330,7 +330,7 @@ final class LinterTest extends FileTestCase
         $env = self::createStub(Environment::class);
         $env->method('tokenize')->willThrowException(new SyntaxError('Error.'));
         $tokenizer = self::createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willReturn([new Tokens(), []]);
+        $tokenizer->method('tokenize')->willReturn(new Tokens());
 
         $linter = new Linter($env, $tokenizer);
         $report = $linter->run([new \SplFileInfo($filePath), new \SplFileInfo($filePath2)], $ruleset);
@@ -360,7 +360,7 @@ final class LinterTest extends FileTestCase
 
         $env = new StubbedEnvironment();
         $tokenizer = static::createStub(TokenizerInterface::class);
-        $tokenizer->method('tokenize')->willReturn([new Tokens(), []]);
+        $tokenizer->method('tokenize')->willReturn(new Tokens());
         $linter = new Linter($env, $tokenizer);
 
         $fixer = static::createStub(FixerInterface::class);
