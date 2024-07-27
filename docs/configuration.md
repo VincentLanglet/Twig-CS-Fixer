@@ -61,15 +61,6 @@ $config->allowNonFixableRules();
 return $config;
 ```
 
-## Node-based rules
-
-A few rules are based on the Twig Node and NodeVisitor logic. Because they are different from the default token
-based rules, these rules have some limitations:
-- they cannot be fixable.
-- they can only report the line with the error but not the token position.
-
-Still, these rules can be useful for some static analysis. All of them can be found in `src/Rules/Node` folder.
-
 ## Files
 
 By default, all `.twig` files in the current directory are linted, except the ones in the `vendor` directory.
@@ -153,3 +144,6 @@ $config->addNodeVisitor(new App\Twig\CustomNodeVisitor());
 
 return $config;
 ```
+
+> [!NOTE]
+> This should only be needed if you plan to use the [node based rules](rules.md#node-based-rules).
