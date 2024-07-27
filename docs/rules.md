@@ -100,6 +100,14 @@ To use these rules, you have to [allow non-fixable rules](configuration.md#non-f
 
 ### Node-based rules
 
+A few rules are based on the Twig Node and NodeVisitor logic. Because they are
+different from the default token based rules, these rules have some limitations:
+- they cannot be fixable.
+- they can only report the line with the error but not the token position.
+
+Still, these rules can be useful for some static analysis.
+All of them can be found in `src/Rules/Node` folder.
+
 - **ForbiddenBlockRule** (Configurable):
 
   Ensures some blocks are not used. Options are:
