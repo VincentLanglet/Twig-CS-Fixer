@@ -22,12 +22,11 @@
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
+        "composer/semver": "3.4.2",
         "dereuromark/composer-prefer-lowest": "^0.1.10",
         "ergebnis/composer-normalize": "^2.29",
         "friendsofphp/php-cs-fixer": "^3.13.0",
-        "icanhazstring/composer-unused": "^0.8.5",
         "infection/infection": "^0.26.16 || ^0.27.0",
-        "maglnet/composer-require-checker": "^3.8 || ^4.3",
         "phpstan/phpstan": "^1.9.1",
         "phpstan/phpstan-phpunit": "^1.2.2",
         "phpstan/phpstan-strict-rules": "^1.4.4",
@@ -37,6 +36,7 @@
         "psalm/plugin-phpunit": "^0.18.4",
         "psalm/plugin-symfony": "^5.0.0",
         "rector/rector": "^1.0.0",
+        "shipmonk/composer-dependency-analyser": "^1.6",
         "symfony/process": "^5.4 || ^6.0 || ^7.0",
         "symfony/twig-bridge": "^5.4 || ^6.0 || ^7.0",
         "symfony/ux-twig-component": "^2.2.0",

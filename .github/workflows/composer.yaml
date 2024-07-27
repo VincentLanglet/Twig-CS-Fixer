@@ -18,7 +18,7 @@ jobs:
             - name: Install PHP with extensions
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.3
                   coverage: none
                   tools: composer:v2
                   ini-file: development
@@ -32,8 +32,8 @@ jobs:
             - name: Composer normalize
               run: composer normalize --dry-run
 
-    require-checker:
-        name: Require-checker
+    dependency-analyser:
+        name: Dependency analyser
         runs-on: ubuntu-latest
 
         steps:
@@ -43,7 +43,7 @@ jobs:
             - name: Install PHP with extensions
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.3
                   coverage: none
                   tools: composer:v2
                   ini-file: development
@@ -54,30 +54,5 @@ jobs:
                   dependency-versions: highest
                   composer-options: --prefer-dist --prefer-stable
 
-            - name: Composer require checker
-              run: vendor/bin/composer-require-checker
-
-    unused:
-        name: Unused
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Install PHP with extensions
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  coverage: none
-                  tools: composer:v2
-                  ini-file: development
-
-            - name: Install Composer dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  dependency-versions: highest
-                  composer-options: --prefer-dist --prefer-stable
-
-            - name: Composer unused
-              run: vendor/bin/composer-unused
+            - name: Composer dependency analyser
+              run: vendor/bin/composer-dependency-analyser
