@@ -15,7 +15,7 @@ final class FileHelper
     public static function detectEOL(string $content): string
     {
         preg_match("/\r\n?|\n/", $content, $matches);
-        /** @phpstan-var array<non-empty-string> $matches */
+        /** @phpstan-var list<non-empty-string> $matches */
 
         return $matches[0] ?? \PHP_EOL;
     }
