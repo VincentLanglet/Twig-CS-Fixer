@@ -26,10 +26,6 @@ rector:
 	vendor/bin/rector
 .PHONY: rector
 
-checker:
-	vendor/bin/composer-require-checker
-.PHONY: composer
-
-unused:
-	vendor/bin/composer-unused
+composer:
+	vendor/bin/composer-dependency-analyser
 .PHONY: composer
