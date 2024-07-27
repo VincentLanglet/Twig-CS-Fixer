@@ -14,9 +14,9 @@ abstract class AbstractRule implements RuleInterface
 {
     use RuleTrait;
 
-    public function lintFile(Tokens $tokens, Report $report, array $ignoredViolations = []): void
+    public function lintFile(Tokens $tokens, Report $report): void
     {
-        $this->init($report, $ignoredViolations);
+        $this->init($report, $tokens->getIgnoredViolations());
 
         foreach (array_keys($tokens->toArray()) as $index) {
             $this->process($index, $tokens);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Token;
 
+use TwigCsFixer\Report\ViolationId;
+
 final class Tokens
 {
     /**
@@ -22,6 +24,13 @@ final class Tokens
     private array $indexes = [];
 
     /**
+     * @var list<ViolationId>
+     */
+    private array $ignoredViolations = [];
+
+    private bool $readOnly = false;
+
+    /**
      * @param array<Token> $tokens
      */
     public function __construct(array $tokens = [])
@@ -31,8 +40,24 @@ final class Tokens
         }
     }
 
+    public function setReadOnly(): self
+    {
+        $this->readOnly = true;
+
+        return $this;
+    }
+
+    public function isReadOnly(): bool
+    {
+        return $this->readOnly;
+    }
+
     public function add(Token $token): self
     {
+        if ($this->readOnly) {
+            throw new \LogicException('Cannot add token because the tokens are in read-only mode.');
+        }
+
         $this->tokens[] = $token;
         $this->indexes[spl_object_id($token)] = $this->tokenCount;
         ++$this->tokenCount;
@@ -99,5 +124,24 @@ final class Tokens
         }
 
         return false;
+    }
+
+    public function addIgnoredViolation(ViolationId $violationId): self
+    {
+        if ($this->readOnly) {
+            throw new \LogicException('Cannot add ignored violation because the tokens are in read-only mode.');
+        }
+
+        $this->ignoredViolations[] = $violationId;
+
+        return $this;
+    }
+
+    /**
+     * @return list<ViolationId>
+     */
+    public function getIgnoredViolations(): array
+    {
+        return $this->ignoredViolations;
     }
 }

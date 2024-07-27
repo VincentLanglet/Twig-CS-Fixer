@@ -85,14 +85,14 @@ final class Fixer implements FixerInterface
             $this->inConflict = false;
 
             $twigSource = new Source($content, 'TwigCsFixer');
-            [$stream, $ignoredViolations] = $this->tokenizer->tokenize($twigSource);
+            $stream = $this->tokenizer->tokenize($twigSource);
 
             $this->startFile($stream);
 
             $rules = $ruleset->getRules();
             foreach ($rules as $rule) {
                 if ($rule instanceof FixableRuleInterface) {
-                    $rule->fixFile($stream, $this, $ignoredViolations);
+                    $rule->fixFile($stream, $this);
                 }
             }
 

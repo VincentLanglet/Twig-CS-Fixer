@@ -22,9 +22,9 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
         $this->fixer = $fixer;
     }
 
-    public function fixFile(Tokens $tokens, FixerInterface $fixer, array $ignoredViolations = []): void
+    public function fixFile(Tokens $tokens, FixerInterface $fixer): void
     {
-        $this->init(null, $ignoredViolations, $fixer);
+        $this->init(null, $tokens->getIgnoredViolations(), $fixer);
 
         foreach (array_keys($tokens->toArray()) as $index) {
             $this->process($index, $tokens);

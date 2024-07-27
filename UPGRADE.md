@@ -54,14 +54,14 @@ If you never implemented a custom rule, nothing else changed. Otherwise, ...
 
 ```diff
 - public function lintFile(array $tokens, Report $report, array $ignoredViolations = []): void;
-+ public function lintFile(Tokens $tokens, Report $report, array $ignoredViolations = []): void;
++ public function lintFile(Tokens $tokens, Report $report): void;
 ```
 
 ### FixableRuleInterface
 
 ```diff
 - public function fixFile(array $tokens, FixerInterface $fixer, array $ignoredViolations = []): void;
-+ public function fixFile(Tokens $tokens, FixerInterface $fixer, array $ignoredViolations = []): void;
++ public function fixFile(Tokens $tokens, FixerInterface $fixer): void;
 ```
 
 ### TokenizerInterface
@@ -71,10 +71,7 @@ If you never implemented a custom rule, nothing else changed. Otherwise, ...
 -   * @return array{list<Token>, list<ViolationId>}
 -   */
 -  public function tokenize(Source $source): array;
-+ /**
-+   * @return array{Tokens, list<ViolationId>}
-+   */
-+  public function tokenize(Source $source): array;
++  public function tokenize(Source $source): Tokens;
 ```
 
 ### Token

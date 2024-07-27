@@ -102,7 +102,7 @@ final class Linter
             $this->setErrorHandler($report, $filePath);
             try {
                 $twigSource = new Source($content, $filePath);
-                [$stream, $ignoredViolations] = $this->tokenizer->tokenize($twigSource);
+                $stream = $this->tokenizer->tokenize($twigSource);
             } catch (CannotTokenizeException $exception) {
                 $violation = new Violation(
                     Violation::LEVEL_FATAL,
@@ -116,7 +116,7 @@ final class Linter
             restore_error_handler();
 
             foreach ($rules as $rule) {
-                $rule->lintFile($stream, $report, $ignoredViolations);
+                $rule->lintFile($stream, $report);
             }
 
             if ([] !== $nodeVisitorRules) {
@@ -126,7 +126,7 @@ final class Linter
                 }
 
                 foreach ($nodeVisitorRules as $nodeVisitor) {
-                    $nodeVisitor->setReport($report, $ignoredViolations);
+                    $nodeVisitor->setReport($report, $stream->getIgnoredViolations());
                 }
 
                 $traverser->traverse($node);
