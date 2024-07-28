@@ -14,7 +14,7 @@ abstract class AbstractSpacingRule extends AbstractFixableRule
 {
     protected bool $skipIfNewLine = true;
 
-    protected function process(int $tokenIndex, Tokens $tokens): void
+    final protected function process(int $tokenIndex, Tokens $tokens): void
     {
         $spaceAfter = $this->getSpaceAfter($tokenIndex, $tokens);
         $spaceBefore = $this->getSpaceBefore($tokenIndex, $tokens);

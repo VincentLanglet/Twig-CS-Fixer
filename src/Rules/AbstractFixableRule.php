@@ -13,7 +13,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
 {
     private ?FixerInterface $fixer = null;
 
-    protected function init(
+    final protected function init(
         ?Report $report,
         array $ignoredViolations = [],
         ?FixerInterface $fixer = null
@@ -22,7 +22,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
         $this->fixer = $fixer;
     }
 
-    public function fixFile(Tokens $tokens, FixerInterface $fixer): void
+    final public function fixFile(Tokens $tokens, FixerInterface $fixer): void
     {
         $this->init(null, $tokens->getIgnoredViolations(), $fixer);
 
@@ -31,7 +31,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
         }
     }
 
-    protected function addFixableWarning(
+    final protected function addFixableWarning(
         string $message,
         Token $token,
         ?string $messageId = null
@@ -44,7 +44,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
         return $this->fixer;
     }
 
-    protected function addFixableError(
+    final protected function addFixableError(
         string $message,
         Token $token,
         ?string $messageId = null
