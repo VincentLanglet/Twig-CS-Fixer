@@ -52,7 +52,7 @@ abstract class FileTestCase extends TestCase
         chdir($this->cwd);
     }
 
-    protected function getFilesystem(): Filesystem
+    final protected function getFilesystem(): Filesystem
     {
         if (null === $this->filesystem) {
             $this->filesystem = new Filesystem();
@@ -61,7 +61,7 @@ abstract class FileTestCase extends TestCase
         return $this->filesystem;
     }
 
-    protected function getTmpPath(string $path): string
+    final protected function getTmpPath(string $path): string
     {
         $path = TestHelper::getOsPath($path);
         if (!str_starts_with($path, $this->getDir())) {

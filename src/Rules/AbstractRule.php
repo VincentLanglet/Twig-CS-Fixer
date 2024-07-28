@@ -14,7 +14,7 @@ abstract class AbstractRule implements RuleInterface
 {
     use RuleTrait;
 
-    public function lintFile(Tokens $tokens, Report $report): void
+    final public function lintFile(Tokens $tokens, Report $report): void
     {
         $this->init($report, $tokens->getIgnoredViolations());
 
@@ -34,7 +34,7 @@ abstract class AbstractRule implements RuleInterface
 
     abstract protected function process(int $tokenIndex, Tokens $tokens): void;
 
-    protected function addWarning(string $message, Token $token, ?string $messageId = null): bool
+    final protected function addWarning(string $message, Token $token, ?string $messageId = null): bool
     {
         return $this->addMessage(
             Violation::LEVEL_WARNING,
@@ -46,7 +46,7 @@ abstract class AbstractRule implements RuleInterface
         );
     }
 
-    protected function addFileWarning(string $message, Token $token, ?string $messageId = null): bool
+    final protected function addFileWarning(string $message, Token $token, ?string $messageId = null): bool
     {
         return $this->addMessage(
             Violation::LEVEL_WARNING,
@@ -58,7 +58,7 @@ abstract class AbstractRule implements RuleInterface
         );
     }
 
-    protected function addError(string $message, Token $token, ?string $messageId = null): bool
+    final protected function addError(string $message, Token $token, ?string $messageId = null): bool
     {
         return $this->addMessage(
             Violation::LEVEL_ERROR,
@@ -70,7 +70,7 @@ abstract class AbstractRule implements RuleInterface
         );
     }
 
-    protected function addFileError(string $message, Token $token, ?string $messageId = null): bool
+    final protected function addFileError(string $message, Token $token, ?string $messageId = null): bool
     {
         return $this->addMessage(
             Violation::LEVEL_ERROR,
