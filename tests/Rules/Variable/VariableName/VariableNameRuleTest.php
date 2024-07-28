@@ -47,7 +47,6 @@ final class VariableNameRuleTest extends AbstractRuleTestCase
         $this->checkRule(new VariableNameRule(VariableNameRule::CAMEL_CASE), [
             'VariableName.Error:3:8' => 'The var name must use camelCase; expected fooBar.',
             'VariableName.Error:4:8' => 'The var name must use camelCase; expected fooBar.',
-            'VariableName.Error:9:8' => 'The var name must use camelCase; expected fooBar.',
             'VariableName.Error:11:8' => 'The var name must use camelCase; expected fooBar.',
             'VariableName.Error:12:8' => 'The var name must use camelCase; expected fooBar.',
         ]);

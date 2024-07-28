@@ -26,12 +26,12 @@ final class StringUtil
 
     public static function toCamelCase(string $string): string
     {
-        return (new UnicodeString($string))->snake()->camel()->toString();
+        return (new UnicodeString($string))->camel()->toString();
     }
 
     public static function toPascalCase(string $string): string
     {
-        return ucfirst((new UnicodeString($string))->camel()->toString());
+        return ucfirst(static::toCamelCase($string));
     }
 
     public static function toKebabCase(string $string): string
