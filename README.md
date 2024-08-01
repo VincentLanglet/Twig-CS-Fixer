@@ -36,10 +36,6 @@ vendor/bin/twig-cs-fixer lint --fix /path/to/code
 You can always fetch the stable version as a Phar archive through the following
 link with the `VERSION` you're looking for:
 
-> [!WARNING]
-> Until a stable version for the `3.x` branch is published, you have to use a RC version like `3.0.0-rc-3`,
-> see the available versions on the [releases](https://github.com/VincentLanglet/Twig-CS-Fixer/releases) page.
-
 ```bash
 wget -c https://github.com/VincentLanglet/Twig-CS-Fixer/releases/download/VERSION/twig-cs-fixer.phar
 ```
