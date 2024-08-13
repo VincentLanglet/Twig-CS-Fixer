@@ -185,7 +185,7 @@ final class StubbedEnvironmentTest extends TestCase
         $content = file_get_contents(__DIR__.'/Fixtures/node_visitor.html.twig');
         static::assertNotFalse($content);
 
-        $visitor = new class() implements NodeVisitorInterface {
+        $visitor = new class implements NodeVisitorInterface {
             public int $called = 0;
 
             public function enterNode(Node $node, Environment $env): Node

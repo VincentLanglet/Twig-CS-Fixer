@@ -20,27 +20,27 @@ use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\StandardInterface;
 use TwigCsFixer\Token\Tokens;
 
-$rule = new class() extends AbstractRule {
+$rule = new class extends AbstractRule {
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
     }
 };
 
-$nodeRule = new class() extends AbstractNodeRule {
+$nodeRule = new class extends AbstractNodeRule {
     public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 };
 
-$standard = new class() implements StandardInterface {
+$standard = new class implements StandardInterface {
     public function getRules(): array
     {
         return [];
     }
 };
 
-$reporter = new class() implements ReporterInterface {
+$reporter = new class implements ReporterInterface {
     public function display(
         OutputInterface $output,
         Report $report,
@@ -55,7 +55,7 @@ $reporter = new class() implements ReporterInterface {
     }
 };
 
-$twigExtension = new class() implements ExtensionInterface {
+$twigExtension = new class implements ExtensionInterface {
     public function getTokenParsers(): array
     {
         return [];
@@ -87,7 +87,7 @@ $twigExtension = new class() implements ExtensionInterface {
     }
 };
 
-$tokenParser = new class() implements TokenParserInterface {
+$tokenParser = new class implements TokenParserInterface {
     public function setParser(Parser $parser): void
     {
     }
@@ -103,7 +103,7 @@ $tokenParser = new class() implements TokenParserInterface {
     }
 };
 
-$nodeVisitor = new class() implements NodeVisitorInterface {
+$nodeVisitor = new class implements NodeVisitorInterface {
     public function enterNode(Node $node, Environment $env): Node
     {
         return $node;

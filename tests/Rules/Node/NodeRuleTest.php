@@ -24,7 +24,7 @@ final class NodeRuleTest extends TestCase
     {
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
-        $rule = new class() extends AbstractNodeRule {
+        $rule = new class extends AbstractNodeRule {
             public function enterNode(Node $node, Environment $env): Node
             {
                 $this->addWarning('Fake Warning', $node);
@@ -50,7 +50,7 @@ final class NodeRuleTest extends TestCase
     {
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
-        $rule = new class() extends AbstractNodeRule {
+        $rule = new class extends AbstractNodeRule {
             public function leaveNode(Node $node, Environment $env): Node
             {
                 $this->addWarning('Fake Warning', $node);
@@ -81,7 +81,7 @@ final class NodeRuleTest extends TestCase
 
     public function testNodeVisitorPriority(): void
     {
-        $rule = new class() extends AbstractNodeRule {};
+        $rule = new class extends AbstractNodeRule {};
         static::assertSame(0, $rule->getPriority());
     }
 

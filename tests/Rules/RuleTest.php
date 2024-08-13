@@ -22,7 +22,7 @@ final class RuleTest extends TestCase
     {
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
-        $rule = new class() extends AbstractFixableRule {
+        $rule = new class extends AbstractFixableRule {
             protected function process(int $tokenIndex, Tokens $tokens): void
             {
                 $token = $tokens->get($tokenIndex);
@@ -55,7 +55,7 @@ final class RuleTest extends TestCase
     {
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
 
-        $rule = new class() extends AbstractFixableRule {
+        $rule = new class extends AbstractFixableRule {
             protected function process(int $tokenIndex, Tokens $tokens): void
             {
                 $token = $tokens->get($tokenIndex);
