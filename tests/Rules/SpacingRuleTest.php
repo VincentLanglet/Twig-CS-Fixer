@@ -14,7 +14,7 @@ final class SpacingRuleTest extends TestCase
 {
     public function testSpacingRule(): void
     {
-        $rule = new class() extends AbstractSpacingRule {
+        $rule = new class extends AbstractSpacingRule {
             protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
             {
                 $token = $tokens->get($tokenIndex);

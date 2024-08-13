@@ -31,7 +31,7 @@ final class SignatureTest extends TestCase
         $rule = self::createStub(RuleInterface::class);
         $ruleset->addRule($rule);
 
-        $configurableRule = new class() extends AbstractRule implements ConfigurableRuleInterface {
+        $configurableRule = new class extends AbstractRule implements ConfigurableRuleInterface {
             public function getConfiguration(): array
             {
                 return ['a' => 1];

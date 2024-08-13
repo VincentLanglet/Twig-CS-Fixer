@@ -39,7 +39,7 @@ final class ReporterFactoryTest extends TestCase
 
     public function testGetCustomReporter(): void
     {
-        $fooReporter = new class() implements ReporterInterface {
+        $fooReporter = new class implements ReporterInterface {
             public function getName(): string
             {
                 return 'foo';
