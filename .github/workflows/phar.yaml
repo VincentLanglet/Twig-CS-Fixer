@@ -48,16 +48,16 @@ jobs:
               if: github.event_name == 'release'
               uses: crazy-max/ghaction-import-gpg@v6
               with:
-                  gpg_private_key: ${{ secrets.GPG_KEY_AC0E7FD8858D80003AA88FF8DEBB71EDE9601234 }}
-                  passphrase: ${{ secrets.GPG_KEY_AC0E7FD8858D80003AA88FF8DEBB71EDE9601234_PASSPHRASE }}
+                  gpg_private_key: ${{ secrets.GPG_KEY_6371FDC534E47BD979208B6F21A10B2F4F0488C9 }}
+                  passphrase: ${{ secrets.GPG_KEY_6371FDC534E47BD979208B6F21A10B2F4F0488C9_PASSPHRASE }}
 
             - name: Sign the PHAR
               if: github.event_name == 'release'
               run: |
-                  gpg --local-user VincentLanglet@users.noreply.github.com \
+                  gpg --local-user 6371FDC534E47BD979208B6F21A10B2F4F0488C9 \
                       --batch \
                       --yes \
-                      --passphrase="${{ secrets.GPG_KEY_AC0E7FD8858D80003AA88FF8DEBB71EDE9601234_PASSPHRASE }}" \
+                      --passphrase="${{ secrets.GPG_KEY_6371FDC534E47BD979208B6F21A10B2F4F0488C9_PASSPHRASE }}" \
                       --detach-sign \
                       --output bin/twig-cs-fixer.phar.asc \
                       bin/twig-cs-fixer.phar
