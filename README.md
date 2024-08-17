@@ -94,3 +94,4 @@ Everything is configurable, so take a look at the following documentation:
 - [Configuration file](docs/configuration.md)
 - [How to disable a rule on a specific file or line](docs/identifiers.md)
 - [Rules & Standard](docs/rules.md)
+- [How to write a custom rule](docs/custom.md)
