@@ -14,6 +14,7 @@
         "ext-ctype": "*",
         "ext-json": "*",
         "composer-runtime-api": "^2.0.0",
+        "composer/semver": "^3.2.0",
         "symfony/console": "^5.4.9 || ^6.4 || ^7.0",
         "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
         "symfony/finder": "^5.4 || ^6.4 || ^7.0",
@@ -22,7 +23,6 @@
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
-        "composer/semver": "^3.4.2",
         "dereuromark/composer-prefer-lowest": "^0.1.10",
         "ergebnis/composer-normalize": "^2.29",
         "friendsofphp/php-cs-fixer": "^3.13.0",
