@@ -587,6 +587,16 @@ final class Tokenizer implements TokenizerInterface
         } elseif (':' === $operator && $this->isInTernary()) {
             $bracket = array_pop($this->bracketsAndTernary);
             $this->pushToken(Token::OPERATOR_TYPE, $operator, $bracket);
+        } elseif ('=' === $operator) {
+            $bracket = end($this->bracketsAndTernary);
+            if (false !== $bracket && '(' === $bracket->getValue()) {
+                // This is a named argument operator instead
+                $this->pushToken(Token::NAMED_ARGUMENT_OPERATOR_TYPE, $operator);
+
+                return;
+            }
+
+            $this->pushToken(Token::OPERATOR_TYPE, $operator);
         } else {
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
         }
@@ -678,6 +688,12 @@ final class Tokenizer implements TokenizerInterface
             if ('[' === $bracket->getValue()) {
                 // This is a slice shortcut '[0:1]' instead
                 $this->lexOperator($currentCode);
+
+                return;
+            }
+            if ('(' === $bracket->getValue()) {
+                // This is a named argument operator instead
+                $this->pushToken(Token::NAMED_ARGUMENT_OPERATOR_TYPE, $currentCode);
 
                 return;
             }

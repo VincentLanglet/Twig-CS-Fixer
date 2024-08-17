@@ -129,6 +129,10 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   The `#}` delimiter.
 
+- **TwigCsFixer\Token\Token::NAMED_ARGUMENT_OPERATOR_TYPE**:
+
+  The `=` or `:` operator used when using named argument. Like `{{ foo(bar=true, baz: false) }}`.
+
 ### Rule
 
 Then, the easiest way to write a custom rule is to implement the `TwigCsFixer\Rules\AbstractRule` class
