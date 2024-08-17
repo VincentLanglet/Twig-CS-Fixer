@@ -588,12 +588,17 @@ final class Tokenizer implements TokenizerInterface
             $bracket = array_pop($this->bracketsAndTernary);
             $this->pushToken(Token::OPERATOR_TYPE, $operator, $bracket);
         } elseif ('=' === $operator) {
-            $bracket = end($this->bracketsAndTernary);
-            if (false !== $bracket && '(' === $bracket->getValue()) {
-                // This is a named argument operator instead
-                $this->pushToken(Token::NAMED_ARGUMENT_OPERATOR_TYPE, $operator);
+            if (
+                self::STATE_BLOCK !== $this->getState()
+                || 'macro' !== $this->getStateParam('blockName')
+            ) {
+                $bracket = end($this->bracketsAndTernary);
+                if (false !== $bracket && '(' === $bracket->getValue()) {
+                    // This is a named argument operator instead
+                    $this->pushToken(Token::NAMED_ARGUMENT_OPERATOR_TYPE, $operator);
 
-                return;
+                    return;
+                }
             }
 
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
@@ -611,7 +616,9 @@ final class Tokenizer implements TokenizerInterface
             $lastNonEmptyToken = $this->lastNonEmptyToken;
             Assert::notNull($lastNonEmptyToken, 'A name cannot be the first non empty token.');
 
-            if ($lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, '|')) {
+            if ($lastNonEmptyToken->isMatching(Token::BLOCK_NAME_TYPE, 'macro')) {
+                $this->pushToken(Token::MACRO_NAME_TYPE, $name);
+            } elseif ($lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, '|')) {
                 $this->pushToken(Token::FILTER_NAME_TYPE, $name);
             } elseif ($lastNonEmptyToken->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
                 $this->pushToken(Token::TEST_NAME_TYPE, $name);

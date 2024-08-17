@@ -3,3 +3,4 @@
 {{ foo(foo:1) }}
 {{ foo({foo:1}) }}
 {{ (foo==1) }}
+{% macro input(name='foo') %}{{ name }}{% endmacro %}
