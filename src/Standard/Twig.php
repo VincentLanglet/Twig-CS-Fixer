@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
+use TwigCsFixer\Rules\Operator\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
@@ -21,6 +22,7 @@ final class Twig implements StandardInterface
     {
         return [
             new DelimiterSpacingRule(),
+            new NamedArgumentSpacingRule(),
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
