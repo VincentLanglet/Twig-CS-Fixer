@@ -594,8 +594,8 @@ final class Tokenizer implements TokenizerInterface
             ) {
                 $bracket = end($this->bracketsAndTernary);
                 if (false !== $bracket && '(' === $bracket->getValue()) {
-                    // This is a named argument operator instead
-                    $this->pushToken(Token::NAMED_ARGUMENT_OPERATOR_TYPE, $operator);
+                    // This is a named argument separator instead
+                    $this->pushToken(Token::NAMED_ARGUMENT_SEPARATOR_TYPE, $operator);
 
                     return;
                 }
@@ -699,8 +699,8 @@ final class Tokenizer implements TokenizerInterface
                 return;
             }
             if ('(' === $bracket->getValue()) {
-                // This is a named argument operator instead
-                $this->pushToken(Token::NAMED_ARGUMENT_OPERATOR_TYPE, $currentCode);
+                // This is a named argument separator instead
+                $this->pushToken(Token::NAMED_ARGUMENT_SEPARATOR_TYPE, $currentCode);
 
                 return;
             }

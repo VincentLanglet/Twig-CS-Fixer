@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Rules\Operator\NamedArgumentSpacing;
+namespace TwigCsFixer\Tests\Rules\Function\NamedArgumentSpacing;
 
-use TwigCsFixer\Rules\Operator\NamedArgumentSpacingRule;
+use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
 final class NamedArgumentSpacingRuleTest extends AbstractRuleTestCase

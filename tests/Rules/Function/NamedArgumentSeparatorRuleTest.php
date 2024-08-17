@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Rules\Operator\NamedArgumentOperator;
+namespace TwigCsFixer\Tests\Rules\Function;
 
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
-use TwigCsFixer\Rules\Operator\NamedArgumentOperatorRule;
+use TwigCsFixer\Rules\Function\NamedArgumentSeparatorRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
-final class NamedArgumentOperatorRuleTest extends AbstractRuleTestCase
+final class NamedArgumentSeparatorRuleTest extends AbstractRuleTestCase
 {
     public function testRule(): void
     {
@@ -17,8 +17,8 @@ final class NamedArgumentOperatorRuleTest extends AbstractRuleTestCase
             $this->expectException(\InvalidArgumentException::class);
         }
 
-        $this->checkRule(new NamedArgumentOperatorRule(), [
-            'NamedArgumentOperator.Error:1:11' => 'Named arguments should be declared with the operator ":".',
+        $this->checkRule(new NamedArgumentSeparatorRule(), [
+            'NamedArgumentSeparator.Error:1:11' => 'Named arguments should be declared with the separator ":".',
         ]);
     }
 }

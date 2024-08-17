@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
-use TwigCsFixer\Rules\Operator\NamedArgumentSpacingRule;
+use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;

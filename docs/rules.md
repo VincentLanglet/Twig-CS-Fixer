@@ -36,7 +36,7 @@
     - `spaceRatio`: how many spaces replace a tab (default 4).
     - `useTab`: indentation must be done with tab (default false).
 
-- **NamedArgumentOperatorRule**:
+- **NamedArgumentSeparatorRule**:
 
   Ensures named arguments use `:` syntax instead of `=` (For `twig/twig >= 3.12.0`).
 

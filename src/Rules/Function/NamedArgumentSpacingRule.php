@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Rules\Operator;
+namespace TwigCsFixer\Rules\Function;
 
 use TwigCsFixer\Rules\AbstractSpacingRule;
 use TwigCsFixer\Token\Token;
@@ -16,7 +16,7 @@ final class NamedArgumentSpacingRule extends AbstractSpacingRule
     protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
         $token = $tokens->get($tokenIndex);
-        if ($token->isMatching(Token::NAMED_ARGUMENT_OPERATOR_TYPE)) {
+        if ($token->isMatching(Token::NAMED_ARGUMENT_SEPARATOR_TYPE)) {
             return 0;
         }
 
@@ -26,10 +26,10 @@ final class NamedArgumentSpacingRule extends AbstractSpacingRule
     protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
         $token = $tokens->get($tokenIndex);
-        if ($token->isMatching(Token::NAMED_ARGUMENT_OPERATOR_TYPE, '=')) {
+        if ($token->isMatching(Token::NAMED_ARGUMENT_SEPARATOR_TYPE, '=')) {
             return 0;
         }
-        if ($token->isMatching(Token::NAMED_ARGUMENT_OPERATOR_TYPE, ':')) {
+        if ($token->isMatching(Token::NAMED_ARGUMENT_SEPARATOR_TYPE, ':')) {
             return 1;
         }
 

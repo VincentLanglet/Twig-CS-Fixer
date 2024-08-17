@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Environment;
 
-use Composer\InstalledVersions;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;

@@ -9,7 +9,7 @@ use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\File\DirectoryNameRule;
 use TwigCsFixer\Rules\File\FileExtensionRule;
 use TwigCsFixer\Rules\File\FileNameRule;
-use TwigCsFixer\Rules\Operator\NamedArgumentSpacingRule;
+use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
