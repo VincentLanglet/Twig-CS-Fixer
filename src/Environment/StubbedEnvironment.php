@@ -78,9 +78,22 @@ final class StubbedEnvironment extends Environment
      */
     public static function satisfiesTwigVersion(int $major, int $minor = 0, int $patch = 0): bool
     {
-        return $major + 1 >= self::MAJOR_VERSION
-            && $minor >= self::MINOR_VERSION
-            && $patch >= self::RELEASE_VERSION;
+        $version = explode('.', self::VERSION);
+
+        if ($major < $version[0]) {
+            return true;
+        }
+        if ($major > $version[0]) {
+            return false;
+        }
+        if ($minor < $version[1]) {
+            return true;
+        }
+        if ($minor > $version[1]) {
+            return false;
+        }
+
+        return $version[2] >= $patch;
     }
 
     /**
