@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Environment;
 
+use Composer\InstalledVersions;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
@@ -71,6 +72,16 @@ final class StubbedEnvironment extends Environment
         foreach ($customNodeVisitors as $customNodeVisitor) {
             $this->addNodeVisitor($customNodeVisitor);
         }
+    }
+
+    /**
+     * Avoid dependency to composer/semver for twig version comparison.
+     */
+    public static function satisfiesTwigVersion(int $major, int $minor = 0, int $patch = 0): bool
+    {
+        return $major + 1 >= self::MAJOR_VERSION
+            && $minor >= self::MINOR_VERSION
+            && $patch >= self::RELEASE_VERSION;
     }
 
     /**

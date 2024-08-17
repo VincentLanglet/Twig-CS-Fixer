@@ -6,6 +6,7 @@ namespace TwigCsFixer\Rules\Operator;
 
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
+use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
@@ -17,7 +18,7 @@ final class NamedArgumentOperatorRule extends AbstractFixableRule
 {
     public function __construct()
     {
-        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.12.0')) {
+        if (!StubbedEnvironment::satisfiesTwigVersion(3, 12)) {
             throw new \InvalidArgumentException('Named argument with semi colons requires twig/twig >= 3.12.0');
         }
     }
