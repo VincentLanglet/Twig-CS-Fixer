@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
@@ -274,6 +276,10 @@ final class LinterTest extends FileTestCase
 
     public function testViolationsFromNodeVisitorRule(): void
     {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.10.0')) {
+            static::markTestSkipped('twig/twig ^3.10.0 is required.');
+        }
+
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/node_visitor.twig');
 
         $ruleset = new Ruleset();
@@ -318,6 +324,10 @@ final class LinterTest extends FileTestCase
 
     public function testNodeVisitorWithInvalidFiles(): void
     {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.10.0')) {
+            static::markTestSkipped('twig/twig ^3.10.0 is required.');
+        }
+
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
         $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
 
@@ -350,6 +360,10 @@ final class LinterTest extends FileTestCase
 
     public function testNodeVisitorWithBuggyFixer(): void
     {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.10.0')) {
+            static::markTestSkipped('twig/twig ^3.10.0 is required.');
+        }
+
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
         $ruleset = new Ruleset();

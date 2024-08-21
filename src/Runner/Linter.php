@@ -11,6 +11,7 @@ use Twig\NodeTraverser;
 use Twig\Source;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
+use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Report;
@@ -145,6 +146,19 @@ final class Linter
 
     private function parseTemplate(string $content, string $filePath, Report $report): ?ModuleNode
     {
+        if (!StubbedEnvironment::satisfiesTwigVersion(3, 10)) {
+            // @codeCoverageIgnoreStart
+            $violation = new Violation(
+                Violation::LEVEL_FATAL,
+                'Node visitor rules require twig/twig >= 3.10.0',
+                $filePath,
+            );
+            $report->addViolation($violation);
+
+            return null;
+            // @codeCoverageIgnoreEnd
+        }
+
         try {
             $twigSource = new Source($content, $filePath);
 

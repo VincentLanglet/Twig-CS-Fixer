@@ -26,6 +26,28 @@ use TwigCsFixer\Tests\Environment\Fixtures\CustomTwigExtension;
 
 final class StubbedEnvironmentTest extends TestCase
 {
+    public function testSatisfiesTwigVersion(): void
+    {
+        $version = InstalledVersions::getVersion('twig/twig');
+        static::assertNotNull($version);
+        $explodedVersion = explode('.', $version);
+        $major = (int) $explodedVersion[0];
+        $minor = (int) $explodedVersion[1];
+        $patch = (int) $explodedVersion[2];
+
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor, $patch));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major - 1, $minor, $patch));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major - 1, $minor + 1, $patch + 1));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor - 1, $patch));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor - 1, $patch + 1));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor, $patch - 1));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major + 1, $minor, $patch));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major + 1, $minor - 1, $patch - 1));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major, $minor + 1, $patch));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major, $minor + 1, $patch - 1));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major, $minor, $patch + 1));
+    }
+
     public function testFilterIsStubbed(): void
     {
         $env = new StubbedEnvironment();
@@ -126,10 +148,6 @@ final class StubbedEnvironmentTest extends TestCase
 
     public function testParseCacheTag(): void
     {
-        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.2.0')) {
-            static::markTestSkipped('twig/twig ^3.2.0 is required.');
-        }
-
         $content = file_get_contents(__DIR__.'/Fixtures/cache_tag.html.twig');
         static::assertNotFalse($content);
 

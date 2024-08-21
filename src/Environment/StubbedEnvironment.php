@@ -74,6 +74,29 @@ final class StubbedEnvironment extends Environment
     }
 
     /**
+     * Avoid dependency to composer/semver for twig version comparison.
+     */
+    public static function satisfiesTwigVersion(int $major, int $minor = 0, int $patch = 0): bool
+    {
+        $version = explode('.', self::VERSION);
+
+        if ($major < $version[0]) {
+            return true;
+        }
+        if ($major > $version[0]) {
+            return false;
+        }
+        if ($minor < $version[1]) {
+            return true;
+        }
+        if ($minor > $version[1]) {
+            return false;
+        }
+
+        return $version[2] >= $patch;
+    }
+
+    /**
      * @param string $name
      */
     public function getFilter($name): ?TwigFilter

@@ -4,12 +4,23 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Rules\Node\ValidConstantFunction;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use TwigCsFixer\Rules\Node\ValidConstantFunctionRule;
 use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
 
 final class ValidConstantFunctionRuleTest extends AbstractRuleTestCase
 {
     public const SOME_CONSTANT = 'Foo';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.10.0')) {
+            static::markTestSkipped('twig/twig ^3.10.0 is required.');
+        }
+    }
 
     public function testRule(): void
     {
