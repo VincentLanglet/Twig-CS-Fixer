@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Rules\Node;
 
-use Composer\InstalledVersions;
-use Composer\Semver\VersionParser;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Node\Node;
@@ -22,15 +20,6 @@ use TwigCsFixer\Token\Tokenizer;
 
 final class NodeRuleTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.10.0')) {
-            static::markTestSkipped('twig/twig ^3.10.0 is required.');
-        }
-    }
-
     public function testEnterNodeRule(): void
     {
         $report = new Report([new \SplFileInfo('fakeFile.html.twig')]);
