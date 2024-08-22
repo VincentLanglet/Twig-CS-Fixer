@@ -148,7 +148,7 @@ final class Linter
         try {
             $twigSource = new Source($content, $filePath);
 
-            return $this->env->parse($this->env->tokenize($twigSource));
+            $node = $this->env->parse($this->env->tokenize($twigSource));
         } catch (Error $error) {
             $violation = new Violation(
                 Violation::LEVEL_FATAL,
@@ -162,6 +162,14 @@ final class Linter
 
             return null;
         }
+
+        // BC fix for twig/twig < 3.10.
+        $sourceContext = $node->getSourceContext();
+        if (null !== $sourceContext) {
+            $node->setSourceContext($sourceContext);
+        }
+
+        return $node;
     }
 
     private function setErrorHandler(Report $report, string $file): void

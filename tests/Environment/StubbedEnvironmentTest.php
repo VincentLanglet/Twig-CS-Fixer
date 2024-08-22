@@ -126,10 +126,6 @@ final class StubbedEnvironmentTest extends TestCase
 
     public function testParseCacheTag(): void
     {
-        if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.2.0')) {
-            static::markTestSkipped('twig/twig ^3.2.0 is required.');
-        }
-
         $content = file_get_contents(__DIR__.'/Fixtures/cache_tag.html.twig');
         static::assertNotFalse($content);
 
