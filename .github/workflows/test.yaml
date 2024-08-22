@@ -51,7 +51,7 @@ jobs:
                   composer global require --no-progress --no-scripts --no-plugins symfony/flex
 
             - name: Install Composer dependencies ${{ matrix.dependencies }}
-              uses: ramsey/composer-install@v2
+              uses: ramsey/composer-install@v3
               with:
                   dependency-versions: ${{ matrix.dependencies }}
                   composer-options: --prefer-dist --prefer-stable
