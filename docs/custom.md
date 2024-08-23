@@ -1,7 +1,12 @@
 # How to write a custom rule
 
+## Token-based rules
+
+### Token types
+
 In order to write a custom rule, you first need to understand how the twig file is parsed.
 The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which can be:
+
 - **TwigCsFixer\Token\Token::EOF_TYPE**:
 
   This token is the last one of the file.
@@ -124,13 +129,62 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   The `#}` delimiter.
 
+### Rule
+
 Then, the easiest way to write a custom rule is to implement the `TwigCsFixer\Rules\AbstractRule` class
 or the `TwigCsFixer\Rules\AbstractFixableRule` if the rule can be automatically fixed.
 
 ```php
 final class MyCustomRule extends \TwigCsFixer\Rules\AbstractRule {
-    protected function process(int $tokenIndex, \TwigCsFixer\Token\Tokens $tokens) : void{
-        // TODO: Implement process() method.
+    protected function process(int $tokenIndex, \TwigCsFixer\Token\Tokens $tokens): void
+    {
+        $token = $tokens->get($tokenIndex);
+        if (!$token->isMatching(...)) {
+            // Skip if the token is not matching some conditions.
+            return;
+        }
+        
+        $nextToken = $tokens->findNext(...); // Look for next token based on conditions.
+        $previousToken = $tokens->findPrevious(...); // Look for previous token based on conditions.
+        if (...) {
+            // Skip if the token is valid.
+            return;
+        }
+        
+        // Use $this->addError(...) if the error is not fixable.
+        $fixer = $this->addFixableError('Custom message.', $token);
+        if (null === $fixer) {
+            // Fixer is null when you're linting the file.
+            return;
+        }
+        
+        $fixer->beginChangeSet();
+        // Use some of the following functions base of the wanted behavior:
+        // $fixer->replaceToken(...);
+        // $fixer->addNewline(...);
+        // $fixer->addNewlineBefore(...);
+        // $fixer->addContent(...);
+        // $fixer->addContentBefore(...);
+        $fixer->endChangeSet();
+    }
+}
+```
+
+## Node-based rules
+
+Rules can also be based on the Twig Node and NodeVisitor logic. Because they are
+different from the default token based rules, these rules have some limitations:
+- they cannot be fixable.
+- they can only report the line with the error but not the token position.
+
+Still, these rules can be easier to be written for some static analysis.
+You can get inspiration from the `src/Rules/Node` folder.
+
+```php
+final class MyCustomRule extends \TwigCsFixer\Rules\Node\AbstractNodeRule {
+    public function enterNode(\Twig\Node\Node $node, \Twig\Environment $env): Node
+    {
+        // Do some logic
     }
 }
 ```
