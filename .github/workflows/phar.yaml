@@ -45,12 +45,14 @@ jobs:
               run: bin/twig-cs-fixer.phar lint -c tests/Binary/Fixtures/.twig-cs-fixer.php tests/Binary/Fixtures/file.twig
 
             - name: Import GPG key
+              if: github.event_name == 'release'
               uses: crazy-max/ghaction-import-gpg@v6
               with:
                   gpg_private_key: ${{ secrets.GPG_KEY_6371FDC534E47BD979208B6F21A10B2F4F0488C9 }}
                   passphrase: ${{ secrets.GPG_KEY_6371FDC534E47BD979208B6F21A10B2F4F0488C9_PASSPHRASE }}
 
             - name: Sign the PHAR
+              if: github.event_name == 'release'
               run: |
                   gpg --local-user 6371FDC534E47BD979208B6F21A10B2F4F0488C9 \
                       --batch \
