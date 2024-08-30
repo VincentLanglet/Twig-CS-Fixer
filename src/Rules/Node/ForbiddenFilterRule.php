@@ -35,7 +35,9 @@ final class ForbiddenFilterRule extends AbstractNodeRule implements Configurable
             return $node;
         }
 
-        $filterName = $node->getNode('filter')->getAttribute('value');
+        $filterName = $node->hasAttribute('name')
+            ? $node->getAttribute('name')
+            : $node->getNode('filter')->getAttribute('value'); // BC for twig/twig < 3.12
         if (!\in_array($filterName, $this->filters, true)) {
             return $node;
         }
