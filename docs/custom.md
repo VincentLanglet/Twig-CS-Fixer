@@ -89,6 +89,10 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   The name of a filter function. Like in `{{ foo|filter(bar) }}`.
 
+- **TwigCsFixer\Token\Token::MACRO_NAME_TYPE**:
+
+  The name used in the definition of a macro function. Like `foo` in `{% macro foo() %}`.
+
 - **TwigCsFixer\Token\Token::TEST_NAME_TYPE**:
 
   The name of a test function. Like in `{% if foo is test(bar) %}`.
@@ -128,6 +132,10 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 - **TwigCsFixer\Token\Token::COMMENT_END_TYPE**:
 
   The `#}` delimiter.
+
+- **TwigCsFixer\Token\Token::NAMED_ARGUMENT_SEPARATOR_TYPE**:
+
+  The `=` or `:` separator used when using named argument. Like `{{ foo(bar=true, baz: false) }}`.
 
 ### Rule
 

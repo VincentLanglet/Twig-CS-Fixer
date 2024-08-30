@@ -17,7 +17,7 @@ final class CustomTokenParser extends AbstractTokenParser
         }
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new Node([], [], $token->getLine(), $this->getTag());
+        return new Node([], [], $token->getLine());
     }
 
     public function getTag(): string

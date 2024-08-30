@@ -26,6 +26,28 @@ use TwigCsFixer\Tests\Environment\Fixtures\CustomTwigExtension;
 
 final class StubbedEnvironmentTest extends TestCase
 {
+    public function testSatisfiesTwigVersion(): void
+    {
+        $version = InstalledVersions::getVersion('twig/twig');
+        static::assertNotNull($version);
+        $explodedVersion = explode('.', $version);
+        $major = (int) $explodedVersion[0];
+        $minor = (int) $explodedVersion[1];
+        $patch = (int) $explodedVersion[2];
+
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor, $patch));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major - 1, $minor, $patch));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major - 1, $minor + 1, $patch + 1));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor - 1, $patch));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor - 1, $patch + 1));
+        static::assertTrue(StubbedEnvironment::satisfiesTwigVersion($major, $minor, $patch - 1));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major + 1, $minor, $patch));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major + 1, $minor - 1, $patch - 1));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major, $minor + 1, $patch));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major, $minor + 1, $patch - 1));
+        static::assertFalse(StubbedEnvironment::satisfiesTwigVersion($major, $minor, $patch + 1));
+    }
+
     public function testFilterIsStubbed(): void
     {
         $env = new StubbedEnvironment();

@@ -36,6 +36,14 @@
     - `spaceRatio`: how many spaces replace a tab (default 4).
     - `useTab`: indentation must be done with tab (default false).
 
+- **NamedArgumentSeparatorRule**:
+
+  Ensures named arguments use `:` syntax instead of `=` (For `twig/twig >= 3.12.0`).
+
+- **NamedArgumentSpacingRule**:
+
+  Ensures named arguments use no space around `=` and no space before/one space after `:`.
+
 - **OperatorNameSpacingRule**:
 
   Ensures there is no consecutive spaces inside operator names.
@@ -146,6 +154,7 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 
 **Twig**:
 - DelimiterSpacingRule
+- NamedArgumentSpacingRule
 - OperatorNameSpacingRule
 - OperatorSpacingRule
 - PunctuationSpacingRule

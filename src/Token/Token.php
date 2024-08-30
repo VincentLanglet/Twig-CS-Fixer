@@ -31,6 +31,7 @@ final class Token
     public const BLOCK_NAME_TYPE = 'BLOCK_NAME_TYPE';
     public const FUNCTION_NAME_TYPE = 'FUNCTION_NAME_TYPE';
     public const FILTER_NAME_TYPE = 'FILTER_NAME_TYPE';
+    public const MACRO_NAME_TYPE = 'MACRO_NAME_TYPE';
     public const TEST_NAME_TYPE = 'TEST_NAME_TYPE';
     public const WHITESPACE_TYPE = 'WHITESPACE_TYPE';
     public const TAB_TYPE = 'TAB_TYPE';
@@ -41,6 +42,7 @@ final class Token
     public const COMMENT_TAB_TYPE = 'COMMENT_TAB_TYPE';
     public const COMMENT_EOL_TYPE = 'COMMENT_EOL_TYPE';
     public const COMMENT_END_TYPE = 'COMMENT_END_TYPE';
+    public const NAMED_ARGUMENT_SEPARATOR_TYPE = 'NAMED_ARGUMENT_SEPARATOR_TYPE';
 
     public const WHITESPACE_TOKENS = [
         self::WHITESPACE_TYPE => self::WHITESPACE_TYPE,

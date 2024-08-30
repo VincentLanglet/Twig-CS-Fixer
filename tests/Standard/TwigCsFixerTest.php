@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
+use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
@@ -29,6 +30,7 @@ final class TwigCsFixerTest extends TestCase
 
         static::assertEquals([
             new DelimiterSpacingRule(),
+            new NamedArgumentSpacingRule(),
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
