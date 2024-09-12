@@ -11,7 +11,7 @@ use TwigCsFixer\Report\ViolationId;
 use Webmozart\Assert\Assert;
 
 /**
- * An override of Twig\Lexer to add whitespace and new line detection.
+ * An override of Twig\Lexer to add whitespace and new line detection and allow variable names containing dollar signs.
  */
 final class Tokenizer implements TokenizerInterface
 {
@@ -22,7 +22,7 @@ final class Tokenizer implements TokenizerInterface
     private const STATE_INTERPOLATION = 4;
     private const STATE_COMMENT = 5;
 
-    public const NAME_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
+    public const NAME_PATTERN = '[a-zA-Z_\x7f-\xff$][a-zA-Z0-9_\x7f-\xff$]*';
     public const NUMBER_PATTERN = '[0-9]+(?:\.[0-9]+)?([Ee][+\-][0-9]+)?';
     private const SQ_STRING_PATTERN = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
     private const DQ_STRING_PATTERN = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
