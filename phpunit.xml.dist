@@ -23,5 +23,8 @@
         <include>
             <directory>./src</directory>
         </include>
+        <exclude>
+            <directory>./src/Test</directory>
+        </exclude>
     </source>
 </phpunit>
