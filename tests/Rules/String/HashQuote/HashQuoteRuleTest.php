@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\String\HashQuote;
 
 use TwigCsFixer\Rules\String\HashQuoteRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class HashQuoteRuleTest extends AbstractRuleTestCase
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\File\DirectoryName;
 
 use TwigCsFixer\Rules\File\DirectoryNameRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class DirectoryNameRuleTest extends AbstractRuleTestCase
 {

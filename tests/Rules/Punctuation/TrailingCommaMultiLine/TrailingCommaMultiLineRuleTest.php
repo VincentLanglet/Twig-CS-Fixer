@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Punctuation\TrailingCommaMultiLine;
 
 use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class TrailingCommaMultiLineRuleTest extends AbstractRuleTestCase
 {

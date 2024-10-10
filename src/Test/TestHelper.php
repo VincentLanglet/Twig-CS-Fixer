@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests;
+namespace TwigCsFixer\Test;
 
 final class TestHelper
 {

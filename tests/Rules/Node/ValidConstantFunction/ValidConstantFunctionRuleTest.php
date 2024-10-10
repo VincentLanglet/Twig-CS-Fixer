@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Node\ValidConstantFunction;
 
 use TwigCsFixer\Rules\Node\ValidConstantFunctionRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class ValidConstantFunctionRuleTest extends AbstractRuleTestCase
 {

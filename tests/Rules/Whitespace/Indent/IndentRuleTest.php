@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Whitespace\Indent;
 
 use TwigCsFixer\Rules\Whitespace\IndentRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class IndentRuleTest extends AbstractRuleTestCase
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Node\ForbiddenFunction;
 
 use TwigCsFixer\Rules\Node\ForbiddenFunctionRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class ForbiddenFunctionRuleTest extends AbstractRuleTestCase
 {

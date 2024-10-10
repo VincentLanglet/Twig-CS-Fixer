@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\String\SimpleQuote;
 
 use TwigCsFixer\Rules\String\SingleQuoteRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class SingleQuoteRuleTest extends AbstractRuleTestCase
 {

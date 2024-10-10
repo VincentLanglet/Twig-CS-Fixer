@@ -11,7 +11,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
-use TwigCsFixer\Tests\TestHelper;
+use TwigCsFixer\Test\TestHelper;
 
 final class CheckstyleReporterTest extends TestCase
 {

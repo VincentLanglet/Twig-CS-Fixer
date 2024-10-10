@@ -10,6 +10,11 @@ $config = new Configuration();
 return $config
     ->addPathToScan(__DIR__.'/bin/twig-cs-fixer', isDev: false)
     ->ignoreErrorsOnPackageAndPath(
+        'phpunit/phpunit',
+        __DIR__.'/src/Test/AbstractRuleTestCase.php',
+        [ErrorType::DEV_DEPENDENCY_IN_PROD]
+    )
+    ->ignoreErrorsOnPackageAndPath(
         'symfony/twig-bridge',
         __DIR__.'/src/Environment/StubbedEnvironment.php',
         [ErrorType::DEV_DEPENDENCY_IN_PROD]

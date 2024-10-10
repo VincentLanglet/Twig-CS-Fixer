@@ -9,7 +9,7 @@ use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\ViolationId;
-use TwigCsFixer\Tests\TestHelper;
+use TwigCsFixer\Test\TestHelper;
 use TwigCsFixer\Tests\Token\Tokenizer\Fixtures\CustomTwigExtension;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokenizer;

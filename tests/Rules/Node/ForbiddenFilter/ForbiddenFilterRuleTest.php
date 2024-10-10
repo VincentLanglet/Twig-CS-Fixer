@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Node\ForbiddenFilter;
 
 use TwigCsFixer\Rules\Node\ForbiddenFilterRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class ForbiddenFilterRuleTest extends AbstractRuleTestCase
 {
