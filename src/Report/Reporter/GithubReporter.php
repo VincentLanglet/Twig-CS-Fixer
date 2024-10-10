@@ -26,7 +26,7 @@ final class GithubReporter implements ReporterInterface
         OutputInterface $output,
         Report $report,
         ?string $level,
-        bool $debug
+        bool $debug,
     ): void {
         $violations = $report->getViolations($level);
         foreach ($violations as $violation) {

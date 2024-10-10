@@ -164,7 +164,7 @@ final class LinterTest extends FileTestCase
      */
     public function testBuggyFixesAreReported(
         CannotFixFileException|CannotTokenizeException $exception,
-        string $expectedMessage
+        string $expectedMessage,
     ): void {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
         $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');

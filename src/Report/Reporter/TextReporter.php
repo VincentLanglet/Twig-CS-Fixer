@@ -32,7 +32,7 @@ final class TextReporter implements ReporterInterface
         OutputInterface $output,
         Report $report,
         ?string $level,
-        bool $debug
+        bool $debug,
     ): void {
         $io = new SymfonyStyle(new ArrayInput([]), $output);
 

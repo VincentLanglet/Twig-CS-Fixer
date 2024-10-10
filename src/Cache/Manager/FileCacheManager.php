@@ -30,7 +30,7 @@ final class FileCacheManager implements CacheManagerInterface
 
     public function __construct(
         private CacheFileHandlerInterface $handler,
-        private Signature $signature
+        private Signature $signature,
     ) {
         $this->cacheDirectory = \dirname($handler->getFile());
 

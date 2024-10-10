@@ -31,7 +31,7 @@ final class Linter
     public function __construct(
         private Environment $env,
         private TokenizerInterface $tokenizer,
-        ?CacheManagerInterface $cacheManager = null
+        ?CacheManagerInterface $cacheManager = null,
     ) {
         $this->cacheManager = $cacheManager ?? new NullCacheManager();
     }
