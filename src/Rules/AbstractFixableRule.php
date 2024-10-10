@@ -16,7 +16,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
     final protected function init(
         ?Report $report,
         array $ignoredViolations = [],
-        ?FixerInterface $fixer = null
+        ?FixerInterface $fixer = null,
     ): void {
         parent::init($report, $ignoredViolations);
         $this->fixer = $fixer;
@@ -34,7 +34,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
     final protected function addFixableWarning(
         string $message,
         Token $token,
-        ?string $messageId = null
+        ?string $messageId = null,
     ): ?FixerInterface {
         $added = $this->addWarning($message, $token, $messageId);
         if (!$added) {
@@ -47,7 +47,7 @@ abstract class AbstractFixableRule extends AbstractRule implements FixableRuleIn
     final protected function addFixableError(
         string $message,
         Token $token,
-        ?string $messageId = null
+        ?string $messageId = null,
     ): ?FixerInterface {
         $added = $this->addError($message, $token, $messageId);
         if (!$added) {

@@ -35,7 +35,7 @@ trait RuleTrait
         string $fileName,
         ?int $line = null,
         ?int $linePosition = null,
-        ?string $messageId = null
+        ?string $messageId = null,
     ): bool {
         $id = new ViolationId(
             $this->getShortName(),

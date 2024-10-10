@@ -73,7 +73,7 @@ final class Token
         private int $linePosition,
         private string $filename,
         private string $value = '',
-        private ?self $relatedToken = null
+        private ?self $relatedToken = null,
     ) {
     }
 

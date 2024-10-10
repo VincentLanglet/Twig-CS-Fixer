@@ -21,7 +21,7 @@ final class CheckstyleReporter implements ReporterInterface
         OutputInterface $output,
         Report $report,
         ?string $level,
-        bool $debug
+        bool $debug,
     ): void {
         $text = '<?xml version="1.0" encoding="UTF-8"?>'.\PHP_EOL;
 

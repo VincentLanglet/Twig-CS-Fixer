@@ -6,6 +6,8 @@ namespace TwigCsFixer\Test;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
+use TwigCsFixer\Exception\CannotFixFileException;
+use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Rules\Node\NodeRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
@@ -20,8 +22,8 @@ abstract class AbstractRuleTestCase extends TestCase
      * @param RuleInterface|NodeRuleInterface|array<RuleInterface|NodeRuleInterface> $rules
      * @param array<string|null>                                                     $expects
      *
-     * @throws \TwigCsFixer\Exception\CannotFixFileException
-     * @throws \TwigCsFixer\Exception\CannotTokenizeException
+     * @throws CannotFixFileException
+     * @throws CannotTokenizeException
      */
     protected function checkRule(
         RuleInterface|NodeRuleInterface|array $rules,

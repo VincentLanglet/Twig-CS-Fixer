@@ -123,7 +123,7 @@ final class ConfigResolverTest extends FileTestCase
         ?string $configPath,
         bool $disableCache,
         ?string $expectedCacheFile,
-        ?string $expectedCacheManager
+        ?string $expectedCacheManager,
     ): void {
         if (null !== $configPath) {
             $configPath = $this->getTmpPath($configPath);

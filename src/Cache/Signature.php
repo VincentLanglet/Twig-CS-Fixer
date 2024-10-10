@@ -15,7 +15,7 @@ final class Signature
     public function __construct(
         private string $phpVersion,
         private string $fixerVersion,
-        private array $rules
+        private array $rules,
     ) {
     }
 

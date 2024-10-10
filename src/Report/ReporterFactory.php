@@ -17,7 +17,7 @@ final class ReporterFactory
      * @param list<ReporterInterface> $customReporters
      */
     public function __construct(
-        private array $customReporters = []
+        private array $customReporters = [],
     ) {
     }
 
