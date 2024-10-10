@@ -7,8 +7,8 @@ namespace TwigCsFixer\Tests\Binary;
 use Composer\InstalledVersions;
 use Symfony\Component\Process\Process;
 use TwigCsFixer\Console\Application;
+use TwigCsFixer\Test\TestHelper;
 use TwigCsFixer\Tests\FileTestCase;
-use TwigCsFixer\Tests\TestHelper;
 
 /**
  * @group skip-windows

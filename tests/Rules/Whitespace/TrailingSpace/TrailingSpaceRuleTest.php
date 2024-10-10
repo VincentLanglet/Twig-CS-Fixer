@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Whitespace\TrailingSpace;
 
 use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class TrailingSpaceRuleTest extends AbstractRuleTestCase
 {

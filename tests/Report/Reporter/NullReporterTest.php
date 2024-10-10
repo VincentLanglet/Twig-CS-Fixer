@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Report\Violation;
-use TwigCsFixer\Tests\TestHelper;
+use TwigCsFixer\Test\TestHelper;
 
 final class NullReporterTest extends TestCase
 {

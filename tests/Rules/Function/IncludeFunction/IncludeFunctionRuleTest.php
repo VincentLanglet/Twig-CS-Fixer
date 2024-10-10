@@ -6,7 +6,7 @@ namespace TwigCsFixer\Tests\Rules\Function\IncludeFunction;
 
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class IncludeFunctionRuleTest extends AbstractRuleTestCase
 {

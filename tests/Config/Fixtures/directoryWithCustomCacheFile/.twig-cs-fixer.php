@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use TwigCsFixer\Config\Config;
-use TwigCsFixer\Tests\TestHelper;
+use TwigCsFixer\Test\TestHelper;
 
 $config = new Config('Custom');
 $config->setCacheFile(TestHelper::getOsPath(__DIR__.'/.twig-cs-fixer.cache'));

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Delimiter\DelimiterSpacing;
 
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
 {

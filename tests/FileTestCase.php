@@ -7,6 +7,7 @@ namespace TwigCsFixer\Tests;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use TwigCsFixer\Test\TestHelper;
 use Webmozart\Assert\Assert;
 
 abstract class FileTestCase extends TestCase

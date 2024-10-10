@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Whitespace\BlankEOF;
 
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class BlankEOFRuleTest extends AbstractRuleTestCase
 {

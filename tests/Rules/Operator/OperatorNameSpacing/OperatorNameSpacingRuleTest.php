@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Operator\OperatorNameSpacing;
 
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class OperatorNameSpacingRuleTest extends AbstractRuleTestCase
 {

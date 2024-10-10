@@ -11,7 +11,7 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\JUnitReporter;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
-use TwigCsFixer\Tests\TestHelper;
+use TwigCsFixer\Test\TestHelper;
 
 final class JUnitReporterTest extends TestCase
 {

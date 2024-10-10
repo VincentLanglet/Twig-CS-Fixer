@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\File\FileExtension;
 
 use TwigCsFixer\Rules\File\FileExtensionRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class FileExtensionRuleTest extends AbstractRuleTestCase
 {

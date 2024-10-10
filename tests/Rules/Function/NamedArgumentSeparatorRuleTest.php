@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Rules\Function;
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
 use TwigCsFixer\Rules\Function\NamedArgumentSeparatorRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class NamedArgumentSeparatorRuleTest extends AbstractRuleTestCase
 {

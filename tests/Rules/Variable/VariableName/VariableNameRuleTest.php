@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Rules\Variable\VariableName;
 
 use TwigCsFixer\Rules\Variable\VariableNameRule;
-use TwigCsFixer\Tests\Rules\AbstractRuleTestCase;
+use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class VariableNameRuleTest extends AbstractRuleTestCase
 {

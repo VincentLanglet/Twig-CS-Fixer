@@ -13,8 +13,8 @@ use TwigCsFixer\Cache\CacheEncoder;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Console\Command\TwigCsFixerCommand;
+use TwigCsFixer\Test\TestHelper;
 use TwigCsFixer\Tests\FileTestCase;
-use TwigCsFixer\Tests\TestHelper;
 
 final class TwigCsFixerCommandTest extends FileTestCase
 {

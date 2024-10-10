@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Rules;
+namespace TwigCsFixer\Test;
 
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -12,7 +12,6 @@ use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Runner\Fixer;
 use TwigCsFixer\Runner\Linter;
-use TwigCsFixer\Tests\TestHelper;
 use TwigCsFixer\Token\Tokenizer;
 
 abstract class AbstractRuleTestCase extends TestCase
@@ -20,6 +19,9 @@ abstract class AbstractRuleTestCase extends TestCase
     /**
      * @param RuleInterface|NodeRuleInterface|array<RuleInterface|NodeRuleInterface> $rules
      * @param array<string|null>                                                     $expects
+     *
+     * @throws \TwigCsFixer\Exception\CannotFixFileException
+     * @throws \TwigCsFixer\Exception\CannotTokenizeException
      */
     protected function checkRule(
         RuleInterface|NodeRuleInterface|array $rules,
