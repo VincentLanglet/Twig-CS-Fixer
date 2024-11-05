@@ -35,11 +35,6 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             return;
         }
 
-        $blockName = $tokens->findPrevious(Token::BLOCK_TOKENS, $tokenIndex - 1);
-        if (false !== $blockName && $tokens->get($blockName)->isMatching(Token::BLOCK_NAME_TYPE, 'types')) {
-            return;
-        }
-
         $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
         Assert::notFalse($previous, 'A punctuation cannot be the first token.');
 
@@ -62,6 +57,12 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             // so we let the developer chose the right value.
             $fixable = $this->isInteger($value);
         } elseif ($token->isMatching(Token::NAME_TYPE)) {
+            $blockName = $tokens->findPrevious(Token::BLOCK_TOKENS, $tokenIndex - 1);
+            if (false !== $blockName && $tokens->get($blockName)->isMatching(Token::BLOCK_NAME_TYPE, 'types')) {
+                // {% types {'foo': 'int'} %} is not a valid syntax
+                return;
+            }
+
             $fixable = true;
         } else {
             return;
