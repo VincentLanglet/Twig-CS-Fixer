@@ -21,6 +21,7 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
                     '.' => 0,
                     ',' => 0,
                     '|' => 0,
+                    '?:' => 0,
                 ],
                 'after' => [
                     '(' => 0,
@@ -30,6 +31,7 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
                     '|' => 0,
                     ':' => 1,
                     ',' => 1,
+                    '?:' => 1,
                 ],
             ],
             (new PunctuationSpacingRule())->getConfiguration()
@@ -45,6 +47,7 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
                     '.' => 0,
                     ',' => 0,
                     '|' => 0,
+                    '?:' => 0,
                 ],
                 'after' => [
                     '{' => null,
@@ -54,6 +57,7 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
                     '|' => 0,
                     ':' => 1,
                     ',' => 1,
+                    '?:' => 1,
                 ],
             ],
             (new PunctuationSpacingRule(['}' => null], ['{' => null]))->getConfiguration()
