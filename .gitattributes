@@ -1,14 +1,12 @@
 .* export-ignore
-patches export-ignore
+docs export-ignore
 tests export-ignore
 infection.json export-ignore
 Makefile export-ignore
-composer-require-checker.json export-ignore
+box.json.dist export-ignore
+composer-dependency-analyser.php export-ignore
 phpstan.neon export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml export-ignore
 rector.php export-ignore
-box.json.dist export-ignore
-composer-dependency-analyser.php export-ignore
 scoper.inc.php export-ignore
-docs export-ignore
