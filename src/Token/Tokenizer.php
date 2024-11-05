@@ -602,6 +602,18 @@ final class Tokenizer implements TokenizerInterface
             }
 
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
+        } elseif ('?:' === $operator) {
+            if (
+                self::STATE_BLOCK === $this->getState()
+                && 'types' === $this->getStateParam('blockName')
+            ) {
+                // This is an optional variable type declaration instead
+                $this->pushToken(Token::PUNCTUATION_TYPE, $operator);
+
+                return;
+            }
+
+            $this->pushToken(Token::OPERATOR_TYPE, $operator);
         } else {
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
         }
