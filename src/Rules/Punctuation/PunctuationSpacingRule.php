@@ -23,6 +23,7 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
         '.' => 0,
         ',' => 0,
         '|' => 0,
+        '?:' => 0,
     ];
     private const DEFAULT_SPACE_AFTER = [
         '(' => 0,
@@ -32,6 +33,7 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
         '|' => 0,
         ':' => 1,
         ',' => 1,
+        '?:' => 1,
     ];
 
     /** @var array<string, int|null> */
