@@ -67,6 +67,12 @@ final class Token
         self::COMMENT_END_TYPE => self::COMMENT_END_TYPE,
     ];
 
+    public const BLOCK_TOKENS = [
+        self::BLOCK_START_TYPE => self::BLOCK_START_TYPE,
+        self::BLOCK_NAME_TYPE => self::BLOCK_NAME_TYPE,
+        self::BLOCK_END_TYPE => self::BLOCK_END_TYPE,
+    ];
+
     public function __construct(
         private int|string $type,
         private int $line,

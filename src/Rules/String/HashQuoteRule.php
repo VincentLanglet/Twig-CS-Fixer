@@ -35,6 +35,11 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             return;
         }
 
+        $blockName = $tokens->findPrevious(Token::BLOCK_TOKENS, $tokenIndex - 1);
+        if (false !== $blockName && $tokens->get($blockName)->isMatching(Token::BLOCK_NAME_TYPE, 'types')) {
+            return;
+        }
+
         $previous = $tokens->findPrevious(Token::EMPTY_TOKENS, $tokenIndex - 1, exclude: true);
         Assert::notFalse($previous, 'A punctuation cannot be the first token.');
 
