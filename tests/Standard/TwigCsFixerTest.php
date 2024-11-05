@@ -12,6 +12,7 @@ use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
+use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
 use TwigCsFixer\Rules\String\HashQuoteRule;
 use TwigCsFixer\Rules\String\SingleQuoteRule;
@@ -42,6 +43,7 @@ final class TwigCsFixerTest extends TestCase
             new IncludeFunctionRule(),
             new IndentRule(),
             new SingleQuoteRule(),
+            new TrailingCommaMultiLineRule(),
             new TrailingCommaSingleLineRule(),
             new TrailingSpaceRule(),
         ], $standard->getRules());
