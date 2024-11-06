@@ -52,8 +52,14 @@ final class TrailingCommaMultiLineRule extends AbstractFixableRule implements Co
             return;
         }
 
-        $isMatchingComma = $tokens->get($previous)->isMatching(Token::PUNCTUATION_TYPE, ',');
+        $previousToken = $tokens->get($previous);
+        $isMatchingComma = $previousToken->isMatching(Token::PUNCTUATION_TYPE, ',');
         if ($this->useTrailingComma === $isMatchingComma) {
+            return;
+        }
+
+        if (!$isMatchingComma && $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', '{'])) {
+            // There is no element, so adding a trailing comma will break the code.
             return;
         }
 
