@@ -1,0 +1,17 @@
+{{ render('template.html', _context) }}
+{{ render('template.html', {'foo': 'bar'}|merge(_context)) }}
+{{ render('template.html', {'foo': 'bar'}|merge(_context), true) }}
+{{ render('template.html', {'foo': 'bar'}|merge(_context), true, true) }}
+{{ render('template.html', _context) }}
+
+{{ render(['template_a.html', 'template_b.html'], _context) }}
+{{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}|merge(_context)) }}
+{{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}|merge(_context), true) }}
+{{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}|merge(_context), true, true) }}
+{{ render(['template_a.html', 'template_b.html'], _context) }}
+
+{{ render(['template_a.html', 'template_b.html']) }}
+{{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}) }}
+{{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true) }}
+{{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true, true) }}
+{{ render(['template_a.html', 'template_b.html']) }}
