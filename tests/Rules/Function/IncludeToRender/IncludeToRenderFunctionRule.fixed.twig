@@ -14,4 +14,4 @@
 {{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}) }}
 {{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true) }}
 {{ render(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true, true) }}
-{{ render(['template_a.html', 'template_b.html']) }}
+{{ render(['template_a.html', 'template_b.html'], _context) }}
