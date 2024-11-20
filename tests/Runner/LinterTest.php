@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
@@ -369,6 +371,11 @@ final class LinterTest extends FileTestCase
 
         $messages = $report->getFileViolations($filePath);
         static::assertCount(1, $messages);
-        static::assertSame('File is invalid: Unexpected token "end of template" of value "".', $messages[0]->getMessage());
+
+        if (InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.15.0')) {
+            static::assertSame('File is invalid: Unexpected end of template.', $messages[0]->getMessage());
+        } else {
+            static::assertSame('File is invalid: Unexpected token "end of template" of value "".', $messages[0]->getMessage());
+        }
     }
 }
