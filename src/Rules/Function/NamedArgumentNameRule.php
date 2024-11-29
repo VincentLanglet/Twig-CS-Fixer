@@ -46,7 +46,7 @@ final class NamedArgumentNameRule extends AbstractRule implements ConfigurableRu
         $nameTokenIndex = $tokens->findPrevious(Token::NAME_TYPE, $tokenIndex);
         Assert::notFalse($nameTokenIndex, 'A NAMED_ARGUMENT_SEPARATOR_TYPE always follow a name');
 
-        $name = $token->getValue();
+        $name = $tokens->get($nameTokenIndex)->getValue();
         $expected = match ($this->case) {
             self::SNAKE_CASE => StringUtil::toSnakeCase($name),
             self::CAMEL_CASE => StringUtil::toCamelCase($name),
