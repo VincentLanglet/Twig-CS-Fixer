@@ -182,11 +182,16 @@ final class Tokenizer implements TokenizerInterface
         return array_filter($this->bracketsAndTernary, static fn (Token $token): bool => '?' !== $token->getValue());
     }
 
-    private function isInTernary(): bool
+    private function lastBracketMatch(string $value): bool
     {
         $lastBracket = end($this->bracketsAndTernary);
 
-        return false !== $lastBracket && '?' === $lastBracket->getValue();
+        return false !== $lastBracket && $value === $lastBracket->getValue();
+    }
+
+    private function isInTernary(): bool
+    {
+        return $this->lastBracketMatch('?');
     }
 
     /**
@@ -430,11 +435,8 @@ final class Tokenizer implements TokenizerInterface
      */
     private function lexInterpolation(): void
     {
-        $bracket = end($this->bracketsAndTernary);
-        Assert::notFalse($bracket, 'Interpolation always start with a bracket.');
-
         if (
-            '#{' === $bracket->getValue()
+            $this->lastBracketMatch('#{')
             && 1 === preg_match(self::REGEX_INTERPOLATION_END, $this->code, $match, 0, $this->cursor)
         ) {
             $bracket = array_pop($this->bracketsAndTernary);
@@ -592,8 +594,7 @@ final class Tokenizer implements TokenizerInterface
                 self::STATE_BLOCK !== $this->getState()
                 || 'macro' !== $this->getStateParam('blockName')
             ) {
-                $bracket = end($this->bracketsAndTernary);
-                if (false !== $bracket && '(' === $bracket->getValue()) {
+                if ($this->lastBracketMatch('(')) {
                     // This is a named argument separator instead
                     $this->pushToken(Token::NAMED_ARGUMENT_SEPARATOR_TYPE, $operator);
 
@@ -643,6 +644,7 @@ final class Tokenizer implements TokenizerInterface
             } elseif (
                 self::STATE_BLOCK === $this->getState()
                 && 'macro' === $this->getStateParam('blockName')
+                && $this->lastBracketMatch('(')
             ) {
                 $this->pushToken(Token::MACRO_VAR_NAME_TYPE, $name);
             } else {
@@ -708,14 +710,13 @@ final class Tokenizer implements TokenizerInterface
                 throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
             }
 
-            $bracket = end($this->bracketsAndTernary);
-            if ('[' === $bracket->getValue()) {
+            if ($this->lastBracketMatch('[')) {
                 // This is a slice shortcut '[0:1]' instead
                 $this->lexOperator($currentCode);
 
                 return;
             }
-            if ('(' === $bracket->getValue()) {
+            if ($this->lastBracketMatch('(')) {
                 // This is a named argument separator instead
                 $this->pushToken(Token::NAMED_ARGUMENT_SEPARATOR_TYPE, $currentCode);
 
