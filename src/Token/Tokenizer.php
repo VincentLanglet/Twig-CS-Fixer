@@ -706,10 +706,6 @@ final class Tokenizer implements TokenizerInterface
 
             $this->pushToken(Token::PUNCTUATION_TYPE, $currentCode, $bracket);
         } elseif (':' === $currentCode) {
-            if ([] === $this->bracketsAndTernary) {
-                throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
-            }
-
             if ($this->lastBracketMatch('[')) {
                 // This is a slice shortcut '[0:1]' instead
                 $this->lexOperator($currentCode);

@@ -839,6 +839,5 @@ final class TokenizerTest extends TestCase
         yield [__DIR__.'/Fixtures/invalid4.twig', 'Unexpected character ")" at line 1.'];
         yield [__DIR__.'/Fixtures/invalid5.twig', 'Unexpected character "#" at line 1.'];
         yield [__DIR__.'/Fixtures/invalid6.twig', 'Unclosed comment at line 1.'];
-        yield [__DIR__.'/Fixtures/invalid7.twig', 'Unexpected character ":" at line 1.'];
     }
 }
