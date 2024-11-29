@@ -753,7 +753,7 @@ final class TokenizerTest extends TestCase
                 58 => Token::WHITESPACE_TYPE,
                 59 => Token::MACRO_NAME_TYPE,
                 60 => Token::PUNCTUATION_TYPE,
-                61 => Token::NAME_TYPE,
+                61 => Token::MACRO_VAR_NAME_TYPE,
                 62 => Token::OPERATOR_TYPE,
                 63 => Token::STRING_TYPE,
                 64 => Token::PUNCTUATION_TYPE,

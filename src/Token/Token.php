@@ -32,6 +32,7 @@ final class Token
     public const FUNCTION_NAME_TYPE = 'FUNCTION_NAME_TYPE';
     public const FILTER_NAME_TYPE = 'FILTER_NAME_TYPE';
     public const MACRO_NAME_TYPE = 'MACRO_NAME_TYPE';
+    public const MACRO_VAR_NAME_TYPE = 'MACRO_VAR_NAME_TYPE';
     public const TEST_NAME_TYPE = 'TEST_NAME_TYPE';
     public const WHITESPACE_TYPE = 'WHITESPACE_TYPE';
     public const TAB_TYPE = 'TAB_TYPE';

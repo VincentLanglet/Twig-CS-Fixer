@@ -640,6 +640,11 @@ final class Tokenizer implements TokenizerInterface
                 && null === $lastNonEmptyToken->getRelatedToken()
             ) {
                 $this->pushToken(Token::TEST_NAME_TYPE, $name, $lastNonEmptyToken);
+            } elseif (
+                self::STATE_BLOCK === $this->getState()
+                && 'macro' === $this->getStateParam('blockName')
+            ) {
+                $this->pushToken(Token::MACRO_VAR_NAME_TYPE, $name);
             } else {
                 $this->pushToken(Token::NAME_TYPE, $name);
             }
