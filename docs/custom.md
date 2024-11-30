@@ -93,6 +93,10 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   The name used in the definition of a macro function. Like `foo` in `{% macro foo() %}`.
 
+- **TwigCsFixer\Token\Token::MACRO_VAR_NAME_TYPE**:
+
+  The name used for params of a macro function. Like `bar` in `{% macro foo(bar) %}`.
+
 - **TwigCsFixer\Token\Token::TEST_NAME_TYPE**:
 
   The name of a test function. Like in `{% if foo is test(bar) %}`.

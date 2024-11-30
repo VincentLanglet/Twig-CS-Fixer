@@ -753,24 +753,34 @@ final class TokenizerTest extends TestCase
                 58 => Token::WHITESPACE_TYPE,
                 59 => Token::MACRO_NAME_TYPE,
                 60 => Token::PUNCTUATION_TYPE,
-                61 => Token::NAME_TYPE,
+                61 => Token::MACRO_VAR_NAME_TYPE,
                 62 => Token::OPERATOR_TYPE,
                 63 => Token::STRING_TYPE,
                 64 => Token::PUNCTUATION_TYPE,
                 65 => Token::WHITESPACE_TYPE,
-                66 => Token::BLOCK_END_TYPE,
-                67 => Token::VAR_START_TYPE,
-                68 => Token::WHITESPACE_TYPE,
+                66 => Token::MACRO_VAR_NAME_TYPE,
+                67 => Token::OPERATOR_TYPE,
+                68 => Token::PUNCTUATION_TYPE,
                 69 => Token::NAME_TYPE,
-                70 => Token::WHITESPACE_TYPE,
-                71 => Token::VAR_END_TYPE,
-                72 => Token::BLOCK_START_TYPE,
-                73 => Token::WHITESPACE_TYPE,
-                74 => Token::BLOCK_NAME_TYPE,
+                70 => Token::PUNCTUATION_TYPE,
+                71 => Token::WHITESPACE_TYPE,
+                72 => Token::NUMBER_TYPE,
+                73 => Token::PUNCTUATION_TYPE,
+                74 => Token::PUNCTUATION_TYPE,
                 75 => Token::WHITESPACE_TYPE,
                 76 => Token::BLOCK_END_TYPE,
-                77 => Token::EOL_TYPE,
-                78 => Token::EOF_TYPE,
+                77 => Token::VAR_START_TYPE,
+                78 => Token::WHITESPACE_TYPE,
+                79 => Token::NAME_TYPE,
+                80 => Token::WHITESPACE_TYPE,
+                81 => Token::VAR_END_TYPE,
+                82 => Token::BLOCK_START_TYPE,
+                83 => Token::WHITESPACE_TYPE,
+                84 => Token::BLOCK_NAME_TYPE,
+                85 => Token::WHITESPACE_TYPE,
+                86 => Token::BLOCK_END_TYPE,
+                87 => Token::EOL_TYPE,
+                88 => Token::EOF_TYPE,
             ],
         ];
 
@@ -829,6 +839,5 @@ final class TokenizerTest extends TestCase
         yield [__DIR__.'/Fixtures/invalid4.twig', 'Unexpected character ")" at line 1.'];
         yield [__DIR__.'/Fixtures/invalid5.twig', 'Unexpected character "#" at line 1.'];
         yield [__DIR__.'/Fixtures/invalid6.twig', 'Unclosed comment at line 1.'];
-        yield [__DIR__.'/Fixtures/invalid7.twig', 'Unexpected character ":" at line 1.'];
     }
 }
