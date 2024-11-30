@@ -160,6 +160,7 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 **Twig**:
 - DelimiterSpacingRule
 - NamedArgumentNameRule
+- NamedArgumentSeparatorRule
 - NamedArgumentSpacingRule
 - OperatorNameSpacingRule
 - OperatorSpacingRule
