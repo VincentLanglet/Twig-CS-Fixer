@@ -9,6 +9,7 @@ use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\File\DirectoryNameRule;
 use TwigCsFixer\Rules\File\FileExtensionRule;
 use TwigCsFixer\Rules\File\FileNameRule;
+use TwigCsFixer\Rules\Function\NamedArgumentNameRule;
 use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
@@ -24,6 +25,7 @@ final class SymfonyTest extends TestCase
 
         static::assertEquals([
             new DelimiterSpacingRule(),
+            new NamedArgumentNameRule(),
             new NamedArgumentSpacingRule(),
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),

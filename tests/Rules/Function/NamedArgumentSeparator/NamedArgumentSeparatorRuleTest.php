@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Rules\Function;
+namespace TwigCsFixer\Tests\Rules\Function\NamedArgumentSeparator;
 
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;

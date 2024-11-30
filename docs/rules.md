@@ -100,6 +100,11 @@ To use these rules, you have to [allow non-fixable rules](configuration.md#non-f
     - `ignoredSubDirectories`: specific sub-directories to ignore.
     - `optionalPrefix`: allow to prefix file name by this prefix.
 
+- **NamedArgumentNameRule**:
+
+  Ensures named arguments uses snake_case. Options are:
+    - `case`: preferred case to use (default snake_case).
+
 - **VariableNameRule** (Configurable):
 
   Ensures that variable name uses snake_case. Options are:
@@ -154,6 +159,7 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 
 **Twig**:
 - DelimiterSpacingRule
+- NamedArgumentNameRule
 - NamedArgumentSpacingRule
 - OperatorNameSpacingRule
 - OperatorSpacingRule
