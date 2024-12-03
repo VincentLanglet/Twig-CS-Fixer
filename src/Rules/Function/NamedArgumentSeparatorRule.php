@@ -14,15 +14,12 @@ use TwigCsFixer\Token\Tokens;
  */
 final class NamedArgumentSeparatorRule extends AbstractFixableRule
 {
-    public function __construct()
-    {
-        if (!StubbedEnvironment::satisfiesTwigVersion(3, 12)) {
-            throw new \InvalidArgumentException('Named argument with semi colons requires twig/twig >= 3.12.0');
-        }
-    }
-
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
+        if (!StubbedEnvironment::satisfiesTwigVersion(3, 12)) {
+            return;
+        }
+
         $token = $tokens->get($tokenIndex);
         if (!$token->isMatching(Token::NAMED_ARGUMENT_SEPARATOR_TYPE)) {
             return;

@@ -14,7 +14,7 @@ final class NamedArgumentSeparatorRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         if (!InstalledVersions::satisfies(new VersionParser(), 'twig/twig', '>=3.12.0')) {
-            $this->expectException(\InvalidArgumentException::class);
+            static::markTestSkipped('twig/twig ^3.12.0 is required.');
         }
 
         $this->checkRule(new NamedArgumentSeparatorRule(), [

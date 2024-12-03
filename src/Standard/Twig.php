@@ -6,6 +6,7 @@ namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\Delimiter\DelimiterSpacingRule;
 use TwigCsFixer\Rules\Function\NamedArgumentNameRule;
+use TwigCsFixer\Rules\Function\NamedArgumentSeparatorRule;
 use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
@@ -24,6 +25,7 @@ final class Twig implements StandardInterface
         return [
             new DelimiterSpacingRule(),
             new NamedArgumentNameRule(),
+            new NamedArgumentSeparatorRule(),
             new NamedArgumentSpacingRule(),
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
