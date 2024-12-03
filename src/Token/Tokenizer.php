@@ -644,7 +644,7 @@ final class Tokenizer implements TokenizerInterface
             } elseif (
                 self::STATE_BLOCK === $this->getState()
                 && 'macro' === $this->getStateParam('blockName')
-                && $this->lastBracketMatch('(')
+                && $lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, ['(', ','])
             ) {
                 $this->pushToken(Token::MACRO_VAR_NAME_TYPE, $name);
             } else {
