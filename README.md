@@ -83,6 +83,24 @@ Removes any space before and after parenthesis in filter and function calls.
 
 Removes any space before and after opening and closing of arrays and hashes.
 
+### Macro & Function/Filter/Test
+
+Ensures there is a single space before and after `=` in macro argument declarations.
+
+Ensures there is no space before and after `=` sign when using named arguments.
+
+Ensures one space after the `:` sign when using named arguments.
+
+Use `:` instead of `=` to separate argument names and values.
+
+### Naming
+
+Use snake case for all variable names.
+
+Use snake case for all argument names.
+
+Use snake case for all named arguments.
+
 ## Custom configuration
 
 By default, the twig-cs-fixer standard is enabled with the twig coding standard rules and some extra rules.
