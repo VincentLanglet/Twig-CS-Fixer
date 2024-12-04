@@ -9,14 +9,13 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 use TwigCsFixer\Util\StringUtil;
-use Webmozart\Assert\Assert;
 
 /**
  * Ensures that named argument are in snake_case (Configurable).
  */
-final class NamedArgumentNameRule extends AbstractRule implements ConfigurableRuleInterface
+final class MacroArgumentNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
-    // Kebab case is not a valid case for named argument.
+    // Kebab case is not a valid case for argument.
     public const SNAKE_CASE = 'snake_case';
     public const CAMEL_CASE = 'camelCase';
     public const PASCAL_CASE = 'PascalCase';
@@ -38,14 +37,11 @@ final class NamedArgumentNameRule extends AbstractRule implements ConfigurableRu
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
         $token = $tokens->get($tokenIndex);
-        if (!$token->isMatching(Token::NAMED_ARGUMENT_SEPARATOR_TYPE)) {
+        if (!$token->isMatching(Token::MACRO_VAR_NAME_TYPE)) {
             return;
         }
 
-        $nameTokenIndex = $tokens->findPrevious(Token::NAME_TYPE, $tokenIndex);
-        Assert::notFalse($nameTokenIndex, 'A NAMED_ARGUMENT_SEPARATOR_TYPE always follow a name');
-
-        $name = $tokens->get($nameTokenIndex)->getValue();
+        $name = $token->getValue();
         $expected = match ($this->case) {
             self::SNAKE_CASE => StringUtil::toSnakeCase($name),
             self::CAMEL_CASE => StringUtil::toCamelCase($name),
@@ -54,7 +50,7 @@ final class NamedArgumentNameRule extends AbstractRule implements ConfigurableRu
 
         if ($expected !== $name) {
             $this->addError(
-                \sprintf('The named argument must use %s; expected %s.', $this->case, $expected),
+                \sprintf('The macro argument must use %s; expected %s.', $this->case, $expected),
                 $token,
             );
         }
