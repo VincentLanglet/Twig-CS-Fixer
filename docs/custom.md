@@ -137,6 +137,22 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   The `#}` delimiter.
 
+- **TwigCsFixer\Token\Token::INLINE_COMMENT_START_TYPE**:
+
+  The `#` delimiter.
+
+- **TwigCsFixer\Token\Token::INLINE_COMMENT_TEXT_TYPE**:
+
+  Any commented text inside an inline comment. Does not include whitespaces.
+
+- **TwigCsFixer\Token\Token::INLINE_COMMENT_WHITESPACE_TYPE**:
+
+  Any commented whitespace inside an inline comment.
+
+- **TwigCsFixer\Token\Token::INLINE_COMMENT_TAB_TYPE**:
+
+  Any commented tabulation inside an inline comment.
+
 - **TwigCsFixer\Token\Token::NAMED_ARGUMENT_SEPARATOR_TYPE**:
 
   The `=` or `:` separator used when using named argument. Like `{{ foo(bar=true, baz: false) }}`.

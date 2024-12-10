@@ -116,6 +116,7 @@ final class TokenizerTest extends TestCase
                 'Foo.Bar:5',
                 'Bar.Foo:5',
                 ':6',
+                ':9',
             ],
             array_map(
                 static fn (ViolationId $validationId) => $validationId->toString(),
@@ -814,6 +815,27 @@ final class TokenizerTest extends TestCase
                 19 => Token::EOF_TYPE,
             ],
         ];
+
+        yield [
+            __DIR__.'/Fixtures/test17.twig',
+            [
+                0 => Token::VAR_START_TYPE,
+                1 => Token::EOL_TYPE,
+                2 => Token::WHITESPACE_TYPE,
+                3 => Token::INLINE_COMMENT_START_TYPE,
+                4 => Token::INLINE_COMMENT_WHITESPACE_TYPE,
+                5 => Token::INLINE_COMMENT_TEXT_TYPE,
+                6 => Token::INLINE_COMMENT_TAB_TYPE,
+                7 => Token::INLINE_COMMENT_TEXT_TYPE,
+                8 => Token::EOL_TYPE,
+                9 => Token::WHITESPACE_TYPE,
+                10 => Token::NAME_TYPE,
+                11 => Token::EOL_TYPE,
+                12 => Token::VAR_END_TYPE,
+                13 => Token::EOL_TYPE,
+                14 => Token::EOF_TYPE,
+            ],
+        ];
     }
 
     /**
@@ -842,7 +864,6 @@ final class TokenizerTest extends TestCase
         yield [__DIR__.'/Fixtures/invalid2.twig', 'Unexpected character "&" at line 4.'];
         yield [__DIR__.'/Fixtures/invalid3.twig', 'Unclosed "(" at line 1.'];
         yield [__DIR__.'/Fixtures/invalid4.twig', 'Unexpected character ")" at line 1.'];
-        yield [__DIR__.'/Fixtures/invalid5.twig', 'Unexpected character "#" at line 1.'];
-        yield [__DIR__.'/Fixtures/invalid6.twig', 'Unclosed comment at line 1.'];
+        yield [__DIR__.'/Fixtures/invalid5.twig', 'Unclosed comment at line 1.'];
     }
 }

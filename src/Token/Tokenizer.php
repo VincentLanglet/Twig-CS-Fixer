@@ -21,6 +21,7 @@ final class Tokenizer implements TokenizerInterface
     private const STATE_DQ_STRING = 3;
     private const STATE_INTERPOLATION = 4;
     private const STATE_COMMENT = 5;
+    private const STATE_INLINE_COMMENT = 6;
 
     public const NAME_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
     public const NUMBER_PATTERN = '[0-9]+(?:\.[0-9]+)?([Ee][+\-][0-9]+)?';
@@ -66,7 +67,7 @@ final class Tokenizer implements TokenizerInterface
     private array $expressionStarters = [];
 
     /**
-     * @var array<array{int<0, 5>, array<string, string|null>}>
+     * @var array<array{int<0, 6>, array<string, string|null>}>
      */
     private array $state = [];
 
@@ -129,6 +130,9 @@ final class Tokenizer implements TokenizerInterface
                     break;
                 case self::STATE_COMMENT:
                     $this->lexComment();
+                    break;
+                case self::STATE_INLINE_COMMENT:
+                    $this->lexInlineComment();
                     break;
             }
 
@@ -195,7 +199,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return int<0, 5>
+     * @return int<0, 6>
      */
     private function getState(): int
     {
@@ -205,7 +209,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int<0, 5> $state
+     * @param int<0, 6> $state
      */
     private function pushState(int $state): void
     {
@@ -346,6 +350,8 @@ final class Tokenizer implements TokenizerInterface
             $this->lexString($match[0]);
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartDqString();
+        } elseif ('#' === $currentCode) {
+            $this->lexStartInlineComment();
         } else {
             throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
         }
@@ -401,13 +407,26 @@ final class Tokenizer implements TokenizerInterface
             $this->popState();
         } else {
             if (!$this->hasStateParam('ignoredViolations')) {
-                $comment = substr($this->code, $this->cursor, $match[0][1]);
+                $comment = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
                 $this->extractIgnoredViolations($comment);
             }
 
             // Parse as text until the end position.
             $this->lexData($match[0][1]);
         }
+    }
+
+    private function lexInlineComment(): void
+    {
+        if (!$this->hasStateParam('ignoredViolations')) {
+            preg_match('/(\r\n|\r|\n)/', $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
+            $comment = substr($this->code, $this->cursor, isset($match[0]) ? $match[0][1] - $this->cursor : null);
+
+            $this->extractIgnoredViolations($comment);
+            $this->processIgnoredViolations();
+        }
+
+        $this->lexData();
     }
 
     private function lexDqString(): void
@@ -465,14 +484,16 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
 
-            // Stop if cursor reaches the next expression starter.
-            if (0 !== $limit) {
-                $value = substr($value, 0, $limit - $this->cursor);
-            }
-
             if (self::STATE_COMMENT === $this->getState()) {
                 $this->pushToken(Token::COMMENT_TEXT_TYPE, $value);
+            } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
+                $this->pushToken(Token::INLINE_COMMENT_TEXT_TYPE, $value);
             } else {
+                // Stop if cursor reaches the next expression starter.
+                if (0 !== $limit) {
+                    $value = substr($value, 0, $limit - $this->cursor);
+                }
+
                 $this->pushToken(Token::TEXT_TYPE, $value);
             }
         } else {
@@ -514,6 +535,12 @@ final class Tokenizer implements TokenizerInterface
         $this->pushState($state);
     }
 
+    private function lexStartInlineComment(): void
+    {
+        $this->pushToken(Token::INLINE_COMMENT_START_TYPE, '#');
+        $this->pushState(self::STATE_INLINE_COMMENT);
+    }
+
     private function lexStartDqString(): void
     {
         $token = $this->pushToken(Token::DQ_STRING_START_TYPE, '"');
@@ -539,6 +566,8 @@ final class Tokenizer implements TokenizerInterface
 
         if (self::STATE_COMMENT === $this->getState()) {
             $this->pushToken(Token::COMMENT_TAB_TYPE, $whitespace);
+        } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
+            $this->pushToken(Token::INLINE_COMMENT_TAB_TYPE, $whitespace);
         } else {
             $this->pushToken(Token::TAB_TYPE, $whitespace);
         }
@@ -555,6 +584,8 @@ final class Tokenizer implements TokenizerInterface
 
         if (self::STATE_COMMENT === $this->getState()) {
             $this->pushToken(Token::COMMENT_WHITESPACE_TYPE, $whitespace);
+        } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
+            $this->pushToken(Token::INLINE_COMMENT_WHITESPACE_TYPE, $whitespace);
         } else {
             $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
         }
@@ -564,6 +595,9 @@ final class Tokenizer implements TokenizerInterface
     {
         if (self::STATE_COMMENT === $this->getState()) {
             $this->pushToken(Token::COMMENT_EOL_TYPE, $eol);
+        } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
+            $this->pushToken(Token::EOL_TYPE, $eol);
+            $this->popState();
         } else {
             $this->pushToken(Token::EOL_TYPE, $eol);
         }
@@ -774,8 +808,8 @@ final class Tokenizer implements TokenizerInterface
     private function extractIgnoredViolations(string $comment): void
     {
         $comment = trim($comment);
-        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line)\s+([\s\w,.:]*)/i', $comment, $match)) {
-            $this->setStateParam('ignoredViolations', preg_replace('/\s+/', ',', $match[2]) ?? '');
+        if (1 === preg_match('/^twig-cs-fixer-disable(|-line|-next-line)(?:$|\s+([\s\w,.:]*))/i', $comment, $match)) {
+            $this->setStateParam('ignoredViolations', preg_replace('/\s+/', ',', $match[2] ?? '') ?? '');
             $this->setStateParam('ignoredType', trim($match[1], '-'));
         } else {
             $this->setStateParam('ignoredViolations', null);
