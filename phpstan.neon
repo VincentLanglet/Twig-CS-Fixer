@@ -24,7 +24,7 @@ parameters:
             tooWideThrowType: true
         implicitThrows: false
     symfony:
-        console_application_loader: .phpstan/ConsoleApplicationLoader.php
+        consoleApplicationLoader: .phpstan/ConsoleApplicationLoader.php
 
     # This checks are disabled by default
     checkInternalClassCaseSensitivity: true
