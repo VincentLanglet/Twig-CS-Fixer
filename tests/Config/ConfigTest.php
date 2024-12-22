@@ -22,8 +22,8 @@ final class ConfigTest extends TestCase
 {
     public function testConfigName(): void
     {
-        static::assertEquals('Default', (new Config())->getName());
-        static::assertEquals('Custom', (new Config('Custom'))->getName());
+        static::assertSame('Default', (new Config())->getName());
+        static::assertSame('Custom', (new Config('Custom'))->getName());
     }
 
     public function testConfigRuleset(): void

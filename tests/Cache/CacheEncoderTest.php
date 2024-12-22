@@ -40,8 +40,8 @@ final class CacheEncoderTest extends TestCase
         $cache = CacheEncoder::fromJson('{"php_version":"7.4","fixer_version":"1.3","rules":{"TwigCsFixer\\\\Rules\\\\Operator\\\\OperatorSpacingRule":null},"hashes":{"folder/file.twig":"bnmdsa678dsa","anotherfolder/anotherfile.twig":"123bnmdsa678dsa"}}');
 
         $signature = $cache->getSignature();
-        static::assertEquals('7.4', $signature->getPhpVersion());
-        static::assertEquals('1.3', $signature->getFixerVersion());
+        static::assertSame('7.4', $signature->getPhpVersion());
+        static::assertSame('1.3', $signature->getFixerVersion());
         static::assertCount(2, $cache->getHashes());
         static::assertSame(
             ['folder/file.twig' => 'bnmdsa678dsa', 'anotherfolder/anotherfile.twig' => '123bnmdsa678dsa'],
