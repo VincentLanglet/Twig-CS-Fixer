@@ -33,15 +33,12 @@
         "phpstan/phpstan-symfony": "^2.0",
         "phpstan/phpstan-webmozart-assert": "^2.0",
         "phpunit/phpunit": "^9.5.26 || ^10.0.9",
-        "psalm/plugin-phpunit": "^0.19.0",
-        "psalm/plugin-symfony": "^5.0.0",
         "rector/rector": "^2.0.0",
         "shipmonk/composer-dependency-analyser": "^1.6",
         "symfony/process": "^5.4 || ^6.4 || ^7.0",
         "symfony/twig-bridge": "^5.4 || ^6.4 || ^7.0",
         "symfony/ux-twig-component": "^2.2.0",
-        "twig/cache-extra": "^3.2",
-        "vimeo/psalm": "^5.2.0"
+        "twig/cache-extra": "^3.2"
     },
     "autoload": {
         "psr-4": {

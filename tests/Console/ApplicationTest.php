@@ -26,11 +26,4 @@ final class ApplicationTest extends TestCase
         static::assertSame('Foo', $app->getName());
         static::assertSame('UNKNOWN', $app->getVersion());
     }
-
-    public function testLibWithoutVersion(): void
-    {
-        $app = new Application('Psalm', 'psalm/psalm');
-        static::assertSame('Psalm', $app->getName());
-        static::assertSame('dev', $app->getVersion());
-    }
 }

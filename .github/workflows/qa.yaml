@@ -18,7 +18,7 @@ jobs:
             - name: Install PHP with extensions
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   coverage: none
                   tools: composer:v2
                   ini-file: development
@@ -31,28 +31,3 @@ jobs:
 
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse --no-progress --error-format=github
-
-    psalm:
-        name: Psalm
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            - name: Install PHP with extensions
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.3
-                  coverage: none
-                  tools: composer:v2
-                  ini-file: development
-
-            - name: Install Composer dependencies
-              uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: highest
-                  composer-options: --prefer-dist --prefer-stable
-
-            - name: Run Psalm
-              run: vendor/bin/psalm --no-progress --output-format=github --shepherd

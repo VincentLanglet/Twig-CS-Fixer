@@ -46,7 +46,6 @@ final class TestHelper
         $filename = escapeshellarg($filename);
         $cmd = "diff -u -L{$filename} -LTwigCsFixer {$filename} \"{$tempName}\"";
 
-        /** @psalm-suppress ForbiddenCode */
         $diff = shell_exec($cmd);
 
         fclose($fixedFile);

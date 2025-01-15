@@ -102,7 +102,6 @@ final class StubbedEnvironment extends Environment
     public function getFilter($name): ?TwigFilter
     {
         if (!\array_key_exists($name, $this->stubFilters)) {
-            /** @psalm-suppress InternalMethod */
             $existingFilter = parent::getFilter($name);
             $this->stubFilters[$name] = $existingFilter instanceof TwigFilter
                 ? $existingFilter
@@ -118,7 +117,6 @@ final class StubbedEnvironment extends Environment
     public function getFunction($name): ?TwigFunction
     {
         if (!\array_key_exists($name, $this->stubFunctions)) {
-            /** @psalm-suppress InternalMethod */
             $existingFunction = parent::getFunction($name);
             $this->stubFunctions[$name] = $existingFunction instanceof TwigFunction
                 ? $existingFunction
@@ -134,7 +132,6 @@ final class StubbedEnvironment extends Environment
     public function getTest($name): ?TwigTest
     {
         if (!\array_key_exists($name, $this->stubTests)) {
-            /** @psalm-suppress InternalMethod */
             $existingTest = parent::getTest($name);
             $this->stubTests[$name] = $existingTest instanceof TwigTest
                 ? $existingTest
@@ -168,11 +165,9 @@ final class StubbedEnvironment extends Environment
             $this->addTokenParser(new ComponentTokenParser());
         }
         if (class_exists(PropsTokenParser::class)) {
-            /** @psalm-suppress InternalClass */
             $this->addTokenParser(new PropsTokenParser());
         }
         if (class_exists(ComponentLexer::class)) {
-            /** @psalm-suppress InternalClass */
             $this->setLexer(new ComponentLexer($this));
         }
     }
