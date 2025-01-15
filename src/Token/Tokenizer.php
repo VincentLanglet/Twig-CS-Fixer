@@ -478,17 +478,16 @@ final class Tokenizer implements TokenizerInterface
             $this->lexEOL($match[0]);
         } elseif (1 === preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
+            // Stop if cursor reaches the next expression starter.
+            if ($limit > $this->cursor) {
+                $value = substr($value, 0, $limit - $this->cursor);
+            }
 
             if (self::STATE_COMMENT === $this->getState()) {
                 $this->pushToken(Token::COMMENT_TEXT_TYPE, $value);
             } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
                 $this->pushToken(Token::INLINE_COMMENT_TEXT_TYPE, $value);
             } else {
-                // Stop if cursor reaches the next expression starter.
-                if (0 !== $limit) {
-                    $value = substr($value, 0, $limit - $this->cursor);
-                }
-
                 $this->pushToken(Token::TEXT_TYPE, $value);
             }
         } else {
