@@ -28,7 +28,7 @@ final class SignatureTest extends TestCase
     {
         $ruleset = new Ruleset();
 
-        $rule = self::createStub(RuleInterface::class);
+        $rule = static::createStub(RuleInterface::class);
         $ruleset->addRule($rule);
 
         $configurableRule = new class extends AbstractRule implements ConfigurableRuleInterface {

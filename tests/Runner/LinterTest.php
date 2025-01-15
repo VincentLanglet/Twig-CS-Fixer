@@ -70,7 +70,7 @@ final class LinterTest extends FileTestCase
         $filePath2 = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file2.twig');
 
         $env = new StubbedEnvironment();
-        $tokenizer = self::createStub(TokenizerInterface::class);
+        $tokenizer = static::createStub(TokenizerInterface::class);
 
         $call = 0;
         $tokenizer->method('tokenize')->willReturnCallback(
@@ -118,7 +118,7 @@ final class LinterTest extends FileTestCase
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
 
         $env = new StubbedEnvironment();
-        $tokenizer = self::createStub(TokenizerInterface::class);
+        $tokenizer = static::createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturnCallback(static function (): Tokens {
             @trigger_error('Default');
             trigger_error('User Deprecation', \E_USER_DEPRECATED);
@@ -176,7 +176,7 @@ final class LinterTest extends FileTestCase
         $ruleset = new Ruleset();
 
         $call = 0;
-        $fixer = self::createStub(FixerInterface::class);
+        $fixer = static::createStub(FixerInterface::class);
         $fixer->method('fixFile')->willReturnCallback(
             static function () use (&$call, $exception): string {
                 /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/10513 */
@@ -329,9 +329,9 @@ final class LinterTest extends FileTestCase
         $ruleset->addRule(new ForbiddenBlockRule(['trans']));
         $ruleset->addRule(new ForbiddenFunctionRule(['t']));
 
-        $env = self::createStub(Environment::class);
+        $env = static::createStub(Environment::class);
         $env->method('tokenize')->willThrowException(new SyntaxError('Error.'));
-        $tokenizer = self::createStub(TokenizerInterface::class);
+        $tokenizer = static::createStub(TokenizerInterface::class);
         $tokenizer->method('tokenize')->willReturn(new Tokens());
 
         $linter = new Linter($env, $tokenizer);
