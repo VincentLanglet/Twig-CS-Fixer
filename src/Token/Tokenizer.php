@@ -216,11 +216,6 @@ final class Tokenizer implements TokenizerInterface
         $this->state[] = [$state, []];
     }
 
-    /**
-     * @psalm-suppress PossiblyInvalidArrayAssignment, PropertyTypeCoercion
-     *
-     * @see https://github.com/vimeo/psalm/issues/8989
-     */
     private function setStateParam(string $name, ?string $value): void
     {
         Assert::notEmpty($this->state, 'Cannot set state params without a current state.');
@@ -769,9 +764,7 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getOperatorRegex(Environment $env): string
     {
-        /** @psalm-suppress InternalMethod */
         $unaryOperators = array_keys($env->getUnaryOperators());
-        /** @psalm-suppress InternalMethod */
         $binaryOperators = array_keys($env->getBinaryOperators());
 
         /** @var string[] $operators */

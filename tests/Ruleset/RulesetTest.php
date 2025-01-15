@@ -51,10 +51,10 @@ final class RulesetTest extends TestCase
         $rule1 = new SingleQuoteRule(true);
         $rule2 = new SingleQuoteRule(false);
 
-        $standard1 = self::createStub(StandardInterface::class);
+        $standard1 = static::createStub(StandardInterface::class);
         $standard1->method('getRules')->willReturn([$rule1]);
 
-        $standard2 = self::createStub(StandardInterface::class);
+        $standard2 = static::createStub(StandardInterface::class);
         $standard2->method('getRules')->willReturn([$rule2]);
 
         $ruleset->addStandard($standard1);
@@ -81,7 +81,7 @@ final class RulesetTest extends TestCase
             {
             }
         };
-        $standard = self::createStub(StandardInterface::class);
+        $standard = static::createStub(StandardInterface::class);
         $standard->method('getRules')->willReturn([$rule1, $rule2]);
 
         $ruleset->addStandard($standard);
