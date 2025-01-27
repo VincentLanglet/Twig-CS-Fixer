@@ -49,9 +49,9 @@ final class CacheFileHandlerTest extends FileTestCase
 
     public function testWriteFailureMissingDirectory(): void
     {
-        $cacheFileHandler = new CacheFileHandler('/fakeDir/foo.php');
+        $cacheFileHandler = new CacheFileHandler('/fake:Dir/foo.php');
 
-        $this->expectExceptionObject(CannotWriteCacheException::missingDirectory('/fakeDir/foo.php'));
+        $this->expectExceptionObject(CannotWriteCacheException::missingDirectory('/fake:Dir/foo.php'));
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
     }
 
@@ -87,6 +87,20 @@ final class CacheFileHandlerTest extends FileTestCase
     {
         $file = $this->getTmpPath(__DIR__.'/Fixtures/writable');
         unlink($file);
+        $cacheFileHandler = new CacheFileHandler($file);
+
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
+        $content = file_get_contents($file);
+        static::assertSame('{"php_version":"8.0","fixer_version":"1","rules":[],"hashes":[]}', $content);
+
+        $permissions = fileperms($file);
+        static::assertNotFalse($permissions);
+        static::assertSame('0666', substr(\sprintf('%o', $permissions), -4));
+    }
+
+    public function testWriteSuccessMissingDirectory(): void
+    {
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/fakeDir/foo.php');
         $cacheFileHandler = new CacheFileHandler($file);
 
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
