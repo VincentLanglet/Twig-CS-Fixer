@@ -49,9 +49,9 @@ final class CacheFileHandlerTest extends FileTestCase
 
     public function testWriteFailureMissingDirectory(): void
     {
-        $cacheFileHandler = new CacheFileHandler('/fakeDir/foo.php');
+        $cacheFileHandler = new CacheFileHandler('/fake:Dir/foo.php');
 
-        $this->expectExceptionObject(CannotWriteCacheException::missingDirectory('/fakeDir/foo.php'));
+        $this->expectExceptionObject(CannotWriteCacheException::missingDirectory('/fake:Dir/foo.php'));
         $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
     }
 
