@@ -50,7 +50,7 @@ final class CacheFileHandler implements CacheFileHandlerInterface
         } else {
             $dir = \dirname($this->file);
 
-            if (!is_dir($dir)) {
+            if (!is_dir($dir) && !@mkdir($dir, recursive: true)) {
                 throw CannotWriteCacheException::missingDirectory($this->file);
             }
 

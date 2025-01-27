@@ -97,4 +97,18 @@ final class CacheFileHandlerTest extends FileTestCase
         static::assertNotFalse($permissions);
         static::assertSame('0666', substr(\sprintf('%o', $permissions), -4));
     }
+
+    public function testWriteSuccessMissingDirectory(): void
+    {
+        $file = $this->getTmpPath(__DIR__.'/Fixtures/fakeDir/foo.php');
+        $cacheFileHandler = new CacheFileHandler($file);
+
+        $cacheFileHandler->write(new Cache(new Signature('8.0', '1', [])));
+        $content = file_get_contents($file);
+        static::assertSame('{"php_version":"8.0","fixer_version":"1","rules":[],"hashes":[]}', $content);
+
+        $permissions = fileperms($file);
+        static::assertNotFalse($permissions);
+        static::assertSame('0666', substr(\sprintf('%o', $permissions), -4));
+    }
 }
