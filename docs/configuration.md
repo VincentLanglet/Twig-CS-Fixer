@@ -8,7 +8,7 @@ By default, the twig-cs-fixer standard is enabled with the twig coding standard 
 - `BlockNameSpacingRule`: ensures there is one space before and after block names.
 - `EmptyLinesRule`: ensures that 2 empty lines do not follow each other.
 - `HashQuote`: ensures that hash keys are not unnecessarily quoted.
-- `IncludeFunctionRule`: ensures that include function is used instead of function tag.
+- `IncludeFunctionRule`: ensures that include function is used instead of include tag.
 - `IndentRule`: ensures that files are not indented with tabs.
 - `SingleQuoteRule`: ensures that strings use single quotes when possible.
 - `TrailingCommaMultiLineRule`: ensures that multi-line arrays, objects and argument lists have a trailing comma.
