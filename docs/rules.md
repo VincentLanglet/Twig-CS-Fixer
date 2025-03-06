@@ -28,7 +28,7 @@
 
 - **IncludeFunctionRule**:
 
-  Ensures that include function is used instead of function tag.
+  Ensures that include function is used instead of include tag.
 
 - **IndentRule** (Configurable):
 
