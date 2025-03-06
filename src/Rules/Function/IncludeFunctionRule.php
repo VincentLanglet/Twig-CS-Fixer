@@ -10,7 +10,7 @@ use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensures that include function is used instead of function tag.
+ * Ensures that include function is used instead of include tag.
  */
 final class IncludeFunctionRule extends AbstractFixableRule
 {
