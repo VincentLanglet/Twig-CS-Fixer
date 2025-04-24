@@ -553,7 +553,7 @@ final class Tokenizer implements TokenizerInterface
     {
         $whitespace = '';
         $cursor = $this->cursor;
-        while (preg_match('/\t/', $this->code[$cursor])) {
+        while (1 === preg_match('/\t/', $this->code[$cursor])) {
             $whitespace .= $this->code[$cursor];
             ++$cursor;
         }
