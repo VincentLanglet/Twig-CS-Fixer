@@ -82,6 +82,13 @@ final class GitlabReporter implements ReporterInterface
 
     /**
      * Generate a unique fingerprint to identify this specific code quality violation, such as a hash of its contents.
+     *
+     * We do not use the ViolationId to generate the fingerprint because :
+     * - The ViolationId::toString returns the line and linePosition of the violation.
+     * - Using code location when creating hash for Gitlab fingerprints makes the codequality reports in Gitlab very unstable.
+     * - Any change of position would trigger both a "fixed" message, and a "new problem detected" message in Gitlab, making it very noisy.
+     *
+     * @see https://github.com/astral-sh/ruff/pull/7203
      */
     private function generateFingerprint(string $relativePath, Violation $violation): string
     {
