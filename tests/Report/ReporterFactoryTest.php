@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\CheckstyleReporter;
 use TwigCsFixer\Report\Reporter\GithubReporter;
+use TwigCsFixer\Report\Reporter\GitlabReporter;
 use TwigCsFixer\Report\Reporter\JUnitReporter;
 use TwigCsFixer\Report\Reporter\NullReporter;
 use TwigCsFixer\Report\Reporter\ReporterInterface;
@@ -27,6 +28,7 @@ final class ReporterFactoryTest extends TestCase
         static::assertInstanceOf(CheckstyleReporter::class, $reporterFactory->getReporter(CheckstyleReporter::NAME));
         static::assertInstanceOf(JUnitReporter::class, $reporterFactory->getReporter(JUnitReporter::NAME));
         static::assertInstanceOf(GithubReporter::class, $reporterFactory->getReporter(GithubReporter::NAME));
+        static::assertInstanceOf(GitlabReporter::class, $reporterFactory->getReporter(GitlabReporter::NAME));
     }
 
     public function testGetUnsupporterReporter(): void

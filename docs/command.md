@@ -9,6 +9,7 @@ Supported formats are:
 - `checkstyle` following the common checkstyle XML schema.
 - `github` if you want annotations on GitHub actions.
 - `junit` following JUnit schema XML from Jenkins.
+- `gitlab` if you want annotations in Gitlab code quality format.
 - `null` if you don't want any reporting.
 
 If you implemented and configured [a custom reporter](configuration.md#custom-reporters),

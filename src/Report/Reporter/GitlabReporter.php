@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types=1);
+
+namespace TwigCsFixer\Report\Reporter;
+
+use JsonException;
+
+use Symfony\Component\Console\Output\OutputInterface;
+use TwigCsFixer\Report\Report;
+use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\Reporter\ReporterInterface;
+
+/**
+ * Allow errors to be reported in pull-requests diff when run in a Gitlab Merge Request.
+ *
+ * @see https://docs.gitlab.com/ci/testing/code_quality/#code-quality-report-format
+ */
+final class GitlabReporter implements ReporterInterface
+{
+    public const NAME = 'gitlab';
+
+    /** @var array<string> */
+    private array $hashes = [];
+
+    public function getName(): string
+    {
+        return self::NAME;
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function display(
+        OutputInterface $output,
+        Report $report,
+        ?string $level,
+        bool $debug,
+    ): void {
+        $reports = [];
+
+        foreach ($report->getFiles() as $file) {
+            $fileViolations = $report->getFileViolations($file, $level);
+            if (0 === \count($fileViolations)) {
+                continue;
+            }
+
+            foreach ($fileViolations as $violation) {
+                $severity = match ($violation->getLevel()) {
+                    Violation::LEVEL_NOTICE => 'info',
+                    Violation::LEVEL_WARNING => 'minor',
+                    Violation::LEVEL_ERROR => 'major',
+                    Violation::LEVEL_FATAL => 'critical',
+                    default => 'info'
+                };
+
+                $file = $violation->getFilename();
+                $filename = substr($file, 2, strlen($file));
+
+                $location = [
+                    'path' => $filename,
+                    'lines' => [
+                        'begin' => $violation->getLine() ?? 1
+                    ]
+                ];
+
+                $fingerprint = $this->generateFingerprint($filename, $violation);
+
+                $a = [
+                    'description' => $violation->getDebugMessage($debug),
+                    'check_name' => $violation->getRuleName() ?? '',
+                    'fingerprint' => $fingerprint,
+                    'severity' => $severity,
+                    'location' => $location
+                ];
+
+                $reports[] = $a;
+            }
+        }
+
+        $json = json_encode($reports, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+
+        $output->writeln($json);
+    }
+
+    /**
+     * Generate a unique fingerprint to identify this specific code quality violation, such as a hash of its contents.
+     */
+    private function generateFingerprint(string $relativePath, Violation $violation) : string
+    {
+        $base = $relativePath . $violation->getRuleName() . $violation->getMessage();
+
+        $hash = md5($base);
+
+        // Check if the generated hash does not already exists
+        // Keep generating new hashes until we get a unique one
+        while (in_array($hash, $this->hashes, true)) {
+            $hash = md5($hash);
+        }
+
+        $this->hashes[] = $hash;
+        return $hash;
+    }
+}

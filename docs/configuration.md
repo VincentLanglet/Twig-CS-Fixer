@@ -117,7 +117,7 @@ return $config;
 ## Custom Reporters
 
 By default, the output of the tool is rendered in one the following formats:
-`text`, `checkstyle`, `github`, `junit`, `null`. If you want to use a custom
+`text`, `checkstyle`, `github`, `junit`, `gitlab`, `null`. If you want to use a custom
 format for reporting, you can configure it in your config file:
 
 ```php

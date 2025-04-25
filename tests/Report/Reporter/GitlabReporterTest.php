@@ -1,0 +1,200 @@
+<?php
+
+declare(strict_types=1);
+
+namespace TwigCsFixer\Tests\Report\Reporter;
+
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use TwigCsFixer\Report\Report;
+use TwigCsFixer\Report\Reporter\GithubReporter;
+use TwigCsFixer\Report\Reporter\GitlabReporter;
+use TwigCsFixer\Report\Violation;
+use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Test\TestHelper;
+
+final class GitlabReporterTest extends TestCase
+{
+    public function testGetName(): void
+    {
+        static::assertSame(GitlabReporter::NAME, (new GitlabReporter())->getName());
+    }
+
+    /**
+     * @dataProvider displayDataProvider
+     */
+    public function testDisplayErrors(string $expected, ?string $level, bool $debug): void
+    {
+        $textFormatter = new GitlabReporter();
+
+        $file = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
+        $report = new Report([new \SplFileInfo($file)]);
+
+        $violation0 = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice',
+            $file,
+            'Rule',
+            new ViolationId('NoticeId', null, 1)
+        );
+        $report->addViolation($violation0);
+        $violation1 = new Violation(
+            Violation::LEVEL_WARNING,
+            'Warning',
+            $file,
+            'Rule',
+            new ViolationId('WarningId', null, 2, 22)
+        );
+        $report->addViolation($violation1);
+        $violation2 = new Violation(
+            Violation::LEVEL_ERROR,
+            'Error',
+            $file,
+            'Rule',
+            new ViolationId('ErrorId', null, 3, 33)
+        );
+        $report->addViolation($violation2);
+        $violation3 = new Violation(
+            Violation::LEVEL_FATAL,
+            'Fatal' . "\n" . 'with new line',
+            $file,
+            'Rule',
+            new ViolationId('FatalId')
+        );
+        $report->addViolation($violation3);
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+        $textFormatter->display($output, $report, $level, $debug);
+
+        $text = $output->fetch();
+
+        $actual = json_decode($text);
+        $actual = json_encode($actual, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+        static::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return iterable<array-key, array{string, string|null, bool}>
+     */
+    public static function displayDataProvider(): iterable
+    {
+        $json_1 = <<<JSON
+        [
+            {
+                "description": "Notice",
+                "check_name": "Rule",
+                "fingerprint": "b2182bc6995684015d16f0a58d8068fd",
+                "severity": "info",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 1
+                    }
+                }
+            },
+            {
+                "description": "Warning",
+                "check_name": "Rule",
+                "fingerprint": "d878f66f14f5066662c5bd4359197f7b",
+                "severity": "minor",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 2
+                    }
+                }
+            },
+            {
+                "description": "Error",
+                "check_name": "Rule",
+                "fingerprint": "ec20757f4576473c7f2e594843ea7468",
+                "severity": "major",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 3
+                    }
+                }
+            },
+            {
+                "description": "Fatal\\nwith new line",
+                "check_name": "Rule",
+                "fingerprint": "418e701561238d93e2c189fbb6205284",
+                "severity": "critical",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 1
+                    }
+                }
+            }
+        ]
+        JSON;
+
+        $json_2 = <<<JSON
+        [
+            {
+                "description": "NoticeId:1 -- Notice",
+                "check_name": "Rule",
+                "fingerprint": "b2182bc6995684015d16f0a58d8068fd",
+                "severity": "info",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 1
+                    }
+                }
+            },
+            {
+                "description": "WarningId:2:22 -- Warning",
+                "check_name": "Rule",
+                "fingerprint": "d878f66f14f5066662c5bd4359197f7b",
+                "severity": "minor",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 2
+                    }
+                }
+            },
+            {
+                "description": "ErrorId:3:33 -- Error",
+                "check_name": "Rule",
+                "fingerprint": "ec20757f4576473c7f2e594843ea7468",
+                "severity": "major",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 3
+                    }
+                }
+            },
+            {
+                "description": "FatalId -- Fatal\\nwith new line",
+                "check_name": "Rule",
+                "fingerprint": "418e701561238d93e2c189fbb6205284",
+                "severity": "critical",
+                "location": {
+                    "path": "sts/Report/Reporter/Fixtures/file.twig",
+                    "lines": {
+                        "begin": 1
+                    }
+                }
+            }
+        ]
+        JSON;
+
+        yield [
+            $json_1,
+            null,
+            false,
+        ];
+        yield [
+            $json_2,
+            null,
+            true,
+        ];
+    }
+}
