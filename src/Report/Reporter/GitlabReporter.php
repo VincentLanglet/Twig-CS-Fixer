@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Report\Reporter;
 
-use JsonException;
-
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
-use TwigCsFixer\Report\Reporter\ReporterInterface;
 
 /**
  * Allow errors to be reported in pull-requests diff when run in a Gitlab Merge Request.
@@ -51,17 +48,17 @@ final class GitlabReporter implements ReporterInterface
                     Violation::LEVEL_WARNING => 'minor',
                     Violation::LEVEL_ERROR => 'major',
                     Violation::LEVEL_FATAL => 'critical',
-                    default => 'info'
+                    default => 'info',
                 };
 
                 $file = $violation->getFilename();
-                $filename = substr($file, 2, strlen($file));
+                $filename = substr($file, 2, \strlen($file));
 
                 $location = [
                     'path' => $filename,
                     'lines' => [
-                        'begin' => $violation->getLine() ?? 1
-                    ]
+                        'begin' => $violation->getLine() ?? 1,
+                    ],
                 ];
 
                 $fingerprint = $this->generateFingerprint($filename, $violation);
@@ -71,14 +68,14 @@ final class GitlabReporter implements ReporterInterface
                     'check_name' => $violation->getRuleName() ?? '',
                     'fingerprint' => $fingerprint,
                     'severity' => $severity,
-                    'location' => $location
+                    'location' => $location,
                 ];
 
                 $reports[] = $a;
             }
         }
 
-        $json = json_encode($reports, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        $json = json_encode($reports, \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR);
 
         $output->writeln($json);
     }
@@ -86,19 +83,20 @@ final class GitlabReporter implements ReporterInterface
     /**
      * Generate a unique fingerprint to identify this specific code quality violation, such as a hash of its contents.
      */
-    private function generateFingerprint(string $relativePath, Violation $violation) : string
+    private function generateFingerprint(string $relativePath, Violation $violation): string
     {
-        $base = $relativePath . $violation->getRuleName() . $violation->getMessage();
+        $base = $relativePath.$violation->getRuleName().$violation->getMessage();
 
         $hash = md5($base);
 
         // Check if the generated hash does not already exists
         // Keep generating new hashes until we get a unique one
-        while (in_array($hash, $this->hashes, true)) {
+        while (\in_array($hash, $this->hashes, true)) {
             $hash = md5($hash);
         }
 
         $this->hashes[] = $hash;
+
         return $hash;
     }
 }
