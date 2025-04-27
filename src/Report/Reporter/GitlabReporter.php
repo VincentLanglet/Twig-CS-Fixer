@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Report\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
@@ -36,35 +37,28 @@ final class GitlabReporter implements ReporterInterface
     ): void {
         $reports = [];
 
-        foreach ($report->getFiles() as $file) {
-            $fileViolations = $report->getFileViolations($file, $level);
-            if (0 === \count($fileViolations)) {
-                continue;
-            }
+        foreach ($report->getViolations() as $violation) {
+            $filename = $violation->getFilename();
+            $severity = match ($violation->getLevel()) {
+                Violation::LEVEL_NOTICE => 'info',
+                Violation::LEVEL_WARNING => 'minor',
+                Violation::LEVEL_ERROR => 'major',
+                Violation::LEVEL_FATAL => 'critical',
+                default => 'info',
+            };
 
-            $filename = substr($file, 2, \strlen($file));
-            foreach ($fileViolations as $violation) {
-                $severity = match ($violation->getLevel()) {
-                    Violation::LEVEL_NOTICE => 'info',
-                    Violation::LEVEL_WARNING => 'minor',
-                    Violation::LEVEL_ERROR => 'major',
-                    Violation::LEVEL_FATAL => 'critical',
-                    default => 'info',
-                };
-
-                $reports[] = [
-                    'description' => $violation->getDebugMessage($debug),
-                    'check_name' => $violation->getRuleName() ?? '',
-                    'fingerprint' => $this->generateFingerprint($filename, $violation),
-                    'severity' => $severity,
-                    'location' => [
-                        'path' => $filename,
-                        'lines' => [
-                            'begin' => $violation->getLine() ?? 1,
-                        ],
+            $reports[] = [
+                'description' => $violation->getDebugMessage($debug),
+                'check_name' => $violation->getRuleName() ?? '',
+                'fingerprint' => $this->generateFingerprint($filename, $violation),
+                'severity' => $severity,
+                'location' => [
+                    'path' => $filename,
+                    'lines' => [
+                        'begin' => $violation->getLine() ?? 1,
                     ],
-                ];
-            }
+                ],
+            ];
         }
 
         $json = json_encode($reports, \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR);
@@ -84,7 +78,7 @@ final class GitlabReporter implements ReporterInterface
      */
     private function generateFingerprint(string $relativePath, Violation $violation): string
     {
-        $base = $relativePath.$violation->getRuleName().$violation->getMessage();
+        $base = FileHelper::normalizePath($relativePath).$violation->getRuleName().$violation->getMessage();
 
         $hash = md5($base);
 

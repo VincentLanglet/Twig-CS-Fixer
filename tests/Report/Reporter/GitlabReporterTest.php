@@ -67,7 +67,6 @@ final class GitlabReporterTest extends TestCase
         $textFormatter->display($output, $report, $level, $debug);
 
         $text = $output->fetch();
-
         static::assertJsonStringEqualsJsonString($expected, $text);
     }
 
@@ -78,14 +77,14 @@ final class GitlabReporterTest extends TestCase
      */
     public static function displayDataProvider(): iterable
     {
-        $path = TestHelper::getOsPath('sts/Report/Reporter/Fixtures/file.twig');
+        $path = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
 
         yield [
             json_encode([
                 [
                     'description' => 'Notice',
                     'check_name' => 'Rule',
-                    'fingerprint' => 'b2182bc6995684015d16f0a58d8068fd',
+                    'fingerprint' => '3500f606b8f132de65826104a5765c2f',
                     'severity' => 'info',
                     'location' => [
                         'path' => $path,
@@ -97,7 +96,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => 'Warning',
                     'check_name' => 'Rule',
-                    'fingerprint' => 'd878f66f14f5066662c5bd4359197f7b',
+                    'fingerprint' => '50e9d055100fe5918856eac2a08387b3',
                     'severity' => 'minor',
                     'location' => [
                         'path' => $path,
@@ -109,7 +108,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => 'Error',
                     'check_name' => 'Rule',
-                    'fingerprint' => 'ec20757f4576473c7f2e594843ea7468',
+                    'fingerprint' => '5b44cfe84bddc0f595bfa90b375b85fb',
                     'severity' => 'major',
                     'location' => [
                         'path' => $path,
@@ -121,7 +120,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => "Fatal\nwith new line",
                     'check_name' => 'Rule',
-                    'fingerprint' => '418e701561238d93e2c189fbb6205284',
+                    'fingerprint' => '05012bba79588cade3a7c78b288d023c',
                     'severity' => 'critical',
                     'location' => [
                         'path' => $path,
@@ -140,7 +139,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => 'NoticeId:1 -- Notice',
                     'check_name' => 'Rule',
-                    'fingerprint' => 'b2182bc6995684015d16f0a58d8068fd',
+                    'fingerprint' => '3500f606b8f132de65826104a5765c2f',
                     'severity' => 'info',
                     'location' => [
                         'path' => $path,
@@ -152,7 +151,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => 'WarningId:2:22 -- Warning',
                     'check_name' => 'Rule',
-                    'fingerprint' => 'd878f66f14f5066662c5bd4359197f7b',
+                    'fingerprint' => '50e9d055100fe5918856eac2a08387b3',
                     'severity' => 'minor',
                     'location' => [
                         'path' => $path,
@@ -164,7 +163,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => 'ErrorId:3:33 -- Error',
                     'check_name' => 'Rule',
-                    'fingerprint' => 'ec20757f4576473c7f2e594843ea7468',
+                    'fingerprint' => '5b44cfe84bddc0f595bfa90b375b85fb',
                     'severity' => 'major',
                     'location' => [
                         'path' => $path,
@@ -176,7 +175,7 @@ final class GitlabReporterTest extends TestCase
                 [
                     'description' => "FatalId -- Fatal\nwith new line",
                     'check_name' => 'Rule',
-                    'fingerprint' => '418e701561238d93e2c189fbb6205284',
+                    'fingerprint' => '05012bba79588cade3a7c78b288d023c',
                     'severity' => 'critical',
                     'location' => [
                         'path' => $path,
