@@ -42,6 +42,7 @@ final class GitlabReporter implements ReporterInterface
                 continue;
             }
 
+            $filename = substr($file, 2, \strlen($file));
             foreach ($fileViolations as $violation) {
                 $severity = match ($violation->getLevel()) {
                     Violation::LEVEL_NOTICE => 'info',
@@ -51,27 +52,18 @@ final class GitlabReporter implements ReporterInterface
                     default => 'info',
                 };
 
-                $file = $violation->getFilename();
-                $filename = substr($file, 2, \strlen($file));
-
-                $location = [
-                    'path' => $filename,
-                    'lines' => [
-                        'begin' => $violation->getLine() ?? 1,
-                    ],
-                ];
-
-                $fingerprint = $this->generateFingerprint($filename, $violation);
-
-                $a = [
+                $reports[] = [
                     'description' => $violation->getDebugMessage($debug),
                     'check_name' => $violation->getRuleName() ?? '',
-                    'fingerprint' => $fingerprint,
+                    'fingerprint' => $this->generateFingerprint($filename, $violation),
                     'severity' => $severity,
-                    'location' => $location,
+                    'location' => [
+                        'path' => $filename,
+                        'lines' => [
+                            'begin' => $violation->getLine() ?? 1,
+                        ],
+                    ],
                 ];
-
-                $reports[] = $a;
             }
         }
 
@@ -85,7 +77,7 @@ final class GitlabReporter implements ReporterInterface
      *
      * We do not use the ViolationId to generate the fingerprint because :
      * - The ViolationId::toString returns the line and linePosition of the violation.
-     * - Using code location when creating hash for Gitlab fingerprints makes the codequality reports in Gitlab very unstable.
+     * - Using code location when creating hash for Gitlab fingerprints makes the code-quality reports in Gitlab very unstable.
      * - Any change of position would trigger both a "fixed" message, and a "new problem detected" message in Gitlab, making it very noisy.
      *
      * @see https://github.com/astral-sh/ruff/pull/7203
@@ -96,7 +88,7 @@ final class GitlabReporter implements ReporterInterface
 
         $hash = md5($base);
 
-        // Check if the generated hash does not already exists
+        // Check if the generated hash does not already exist
         // Keep generating new hashes until we get a unique one
         while (\in_array($hash, $this->hashes, true)) {
             $hash = md5($hash);

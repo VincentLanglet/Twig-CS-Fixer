@@ -76,6 +76,8 @@ final class GitlabReporterTest extends TestCase
      */
     public static function displayDataProvider(): iterable
     {
+        $path = TestHelper::getOsPath('sts/Report/Reporter/Fixtures/file.twig');
+
         $json_1 = <<<JSON
             [
                 {
@@ -84,7 +86,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "b2182bc6995684015d16f0a58d8068fd",
                     "severity": "info",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 1
                         }
@@ -96,7 +98,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "d878f66f14f5066662c5bd4359197f7b",
                     "severity": "minor",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 2
                         }
@@ -108,7 +110,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "ec20757f4576473c7f2e594843ea7468",
                     "severity": "major",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 3
                         }
@@ -120,7 +122,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "418e701561238d93e2c189fbb6205284",
                     "severity": "critical",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 1
                         }
@@ -137,7 +139,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "b2182bc6995684015d16f0a58d8068fd",
                     "severity": "info",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 1
                         }
@@ -149,7 +151,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "d878f66f14f5066662c5bd4359197f7b",
                     "severity": "minor",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 2
                         }
@@ -161,7 +163,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "ec20757f4576473c7f2e594843ea7468",
                     "severity": "major",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 3
                         }
@@ -173,7 +175,7 @@ final class GitlabReporterTest extends TestCase
                     "fingerprint": "418e701561238d93e2c189fbb6205284",
                     "severity": "critical",
                     "location": {
-                        "path": "sts/Report/Reporter/Fixtures/file.twig",
+                        "path": "{$path}",
                         "lines": {
                             "begin": 1
                         }

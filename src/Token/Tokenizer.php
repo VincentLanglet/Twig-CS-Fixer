@@ -763,7 +763,9 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getOperatorRegex(Environment $env): string
     {
+        // @phpstan-ignore-next-line method.internal
         $unaryOperators = array_keys($env->getUnaryOperators());
+        // @phpstan-ignore-next-line method.internal
         $binaryOperators = array_keys($env->getBinaryOperators());
 
         /** @var string[] $operators */

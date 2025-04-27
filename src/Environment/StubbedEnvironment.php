@@ -102,6 +102,7 @@ final class StubbedEnvironment extends Environment
     public function getFilter($name): ?TwigFilter
     {
         if (!\array_key_exists($name, $this->stubFilters)) {
+            // @phpstan-ignore-next-line method.internal
             $existingFilter = parent::getFilter($name);
             $this->stubFilters[$name] = $existingFilter instanceof TwigFilter
                 ? $existingFilter
@@ -117,6 +118,7 @@ final class StubbedEnvironment extends Environment
     public function getFunction($name): ?TwigFunction
     {
         if (!\array_key_exists($name, $this->stubFunctions)) {
+            // @phpstan-ignore-next-line method.internal
             $existingFunction = parent::getFunction($name);
             $this->stubFunctions[$name] = $existingFunction instanceof TwigFunction
                 ? $existingFunction
@@ -132,6 +134,7 @@ final class StubbedEnvironment extends Environment
     public function getTest($name): ?TwigTest
     {
         if (!\array_key_exists($name, $this->stubTests)) {
+            // @phpstan-ignore-next-line method.internal
             $existingTest = parent::getTest($name);
             $this->stubTests[$name] = $existingTest instanceof TwigTest
                 ? $existingTest
@@ -161,13 +164,18 @@ final class StubbedEnvironment extends Environment
         if (class_exists(CacheTokenParser::class)) {
             $this->addTokenParser(new CacheTokenParser());
         }
+        // @phpstan-ignore-next-line classConstant.internalClass
         if (class_exists(TwigComponentTokenParser::class)) {
             $this->addTokenParser(new ComponentTokenParser());
         }
+        // @phpstan-ignore-next-line classConstant.internalClass
         if (class_exists(PropsTokenParser::class)) {
+            // @phpstan-ignore-next-line new.internalClass
             $this->addTokenParser(new PropsTokenParser());
         }
+        // @phpstan-ignore-next-line classConstant.internalClass
         if (class_exists(ComponentLexer::class)) {
+            // @phpstan-ignore-next-line new.internalClass
             $this->setLexer(new ComponentLexer($this));
         }
     }
