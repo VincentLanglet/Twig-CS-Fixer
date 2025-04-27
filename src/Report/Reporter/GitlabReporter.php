@@ -78,6 +78,9 @@ final class GitlabReporter implements ReporterInterface
      */
     private function generateFingerprint(string $relativePath, Violation $violation): string
     {
+        echo FileHelper::normalizePath($relativePath);
+        echo $violation->getRuleName();
+        echo $violation->getMessage();
         $base = FileHelper::normalizePath($relativePath).$violation->getRuleName().$violation->getMessage();
 
         $hash = md5($base);
