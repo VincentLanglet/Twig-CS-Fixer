@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Token\Tokenizer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -131,6 +132,7 @@ final class TokenizerTest extends TestCase
      *
      * @dataProvider tokenizeDataProvider
      */
+    #[DataProvider('tokenizeDataProvider')]
     public function testTokenizeTypes(string $filePath, array $expectedTokenTypes): void
     {
         $content = file_get_contents($filePath);
@@ -856,6 +858,7 @@ final class TokenizerTest extends TestCase
     /**
      * @dataProvider tokenizeInvalidDataProvider
      */
+    #[DataProvider('tokenizeInvalidDataProvider')]
     public function testTokenizeInvalid(string $filePath, string $expectedMessage): void
     {
         $content = file_get_contents($filePath);

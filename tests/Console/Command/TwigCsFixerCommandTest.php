@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Console\Command;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -120,6 +121,7 @@ final class TwigCsFixerCommandTest extends FileTestCase
     /**
      * @dataProvider aliasesDataProvider
      */
+    #[DataProvider('aliasesDataProvider')]
     public function testExecuteAliases(string $alias, bool $shouldFix): void
     {
         $command = new TwigCsFixerCommand();

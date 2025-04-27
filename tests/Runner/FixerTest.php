@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Runner;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotFixFileException;
@@ -243,6 +244,7 @@ final class FixerTest extends TestCase
     /**
      * @dataProvider addContentMethodsDataProvider
      */
+    #[DataProvider('addContentMethodsDataProvider')]
     public function testAddContentMethods(string $content, string $expected): void
     {
         $tokenizer = new Tokenizer(new StubbedEnvironment());

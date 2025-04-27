@@ -112,8 +112,9 @@ final class Linter
 
                 $report->addViolation($violation);
                 continue;
+            } finally {
+                restore_error_handler();
             }
-            restore_error_handler();
 
             foreach ($rules as $rule) {
                 $rule->lintFile($stream, $report);

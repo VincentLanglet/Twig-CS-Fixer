@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\File;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\File\FileHelper;
 
@@ -12,6 +13,7 @@ final class FileHelperTest extends TestCase
     /**
      * @dataProvider detectEOLDataProvider
      */
+    #[DataProvider('detectEOLDataProvider')]
     public function testDetectEOL(
         string $content,
         string $expected,
@@ -38,6 +40,7 @@ final class FileHelperTest extends TestCase
     /**
      * @dataProvider getRelativePathToDataProvider
      */
+    #[DataProvider('getRelativePathToDataProvider')]
     public function testGetRelativePathTo(string $directoryName, string $file, string $expected): void
     {
         static::assertSame($expected, FileHelper::getRelativePath($file, $directoryName));
@@ -66,6 +69,7 @@ final class FileHelperTest extends TestCase
     /**
      * @dataProvider removeDotDataProvider
      */
+    #[DataProvider('removeDotDataProvider')]
     public function testRemoveDot(
         string $fileName,
         string $expected,
@@ -88,6 +92,7 @@ final class FileHelperTest extends TestCase
      *
      * @dataProvider getFileNameDataProvider
      */
+    #[DataProvider('getFileNameDataProvider')]
     public function testGetFileName(
         string $path,
         ?string $baseDir,
@@ -155,6 +160,7 @@ final class FileHelperTest extends TestCase
      *
      * @dataProvider getDirectoriesDataProvider
      */
+    #[DataProvider('getDirectoriesDataProvider')]
     public function testGetDirectories(
         string $path,
         ?string $baseDir,

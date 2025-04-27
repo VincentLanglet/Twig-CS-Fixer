@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Rules\AbstractRule;
@@ -59,6 +60,7 @@ final class SignatureTest extends TestCase
     /**
      * @dataProvider equalsDataProvider
      */
+    #[DataProvider('equalsDataProvider')]
     public function testEquals(Signature $signature1, Signature $signature2, bool $expected): void
     {
         static::assertSame($expected, $signature1->equals($signature2));

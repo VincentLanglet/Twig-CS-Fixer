@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Report;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
@@ -44,6 +45,7 @@ final class ViolationTest extends TestCase
     /**
      * @dataProvider getLevelAsStringDataProvider
      */
+    #[DataProvider('getLevelAsStringDataProvider')]
     public function testGetLevelAsString(string $expected, int $level): void
     {
         static::assertSame($expected, Violation::getLevelAsString($level));
@@ -69,6 +71,7 @@ final class ViolationTest extends TestCase
     /**
      * @dataProvider getLevelAsIntDataProvider
      */
+    #[DataProvider('getLevelAsIntDataProvider')]
     public function testGetLevelAsInt(int $expected, string $level): void
     {
         static::assertSame($expected, Violation::getLevelAsInt($level));

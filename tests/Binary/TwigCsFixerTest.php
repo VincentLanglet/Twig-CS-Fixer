@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Binary;
 
 use Composer\InstalledVersions;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Process\Process;
 use TwigCsFixer\Console\Application;
 use TwigCsFixer\Test\TestHelper;
@@ -13,6 +14,7 @@ use TwigCsFixer\Tests\FileTestCase;
 /**
  * @group skip-windows
  */
+#[Group('skip-windows')]
 final class TwigCsFixerTest extends FileTestCase
 {
     public function testBinary(): void

@@ -6,6 +6,7 @@ namespace TwigCsFixer\Tests\Runner;
 
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
@@ -163,6 +164,7 @@ final class LinterTest extends FileTestCase
     /**
      * @dataProvider buggyFixesAreReportedDataProvider
      */
+    #[DataProvider('buggyFixesAreReportedDataProvider')]
     public function testBuggyFixesAreReported(
         CannotFixFileException|CannotTokenizeException $exception,
         string $expectedMessage,

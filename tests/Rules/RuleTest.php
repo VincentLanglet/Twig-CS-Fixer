@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Rules;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Report\Report;
@@ -119,6 +120,7 @@ final class RuleTest extends TestCase
      *
      * @dataProvider ignoredViolationsDataProvider
      */
+    #[DataProvider('ignoredViolationsDataProvider')]
     public function testIgnoredViolations(string $filePath, array $expectedLines): void
     {
         $env = new StubbedEnvironment();

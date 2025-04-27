@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Report\Reporter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,6 +23,7 @@ final class NullReporterTest extends TestCase
     /**
      * @dataProvider displayDataProvider
      */
+    #[DataProvider('displayDataProvider')]
     public function testDisplayErrors(?string $level): void
     {
         $textFormatter = new NullReporter();
