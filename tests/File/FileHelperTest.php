@@ -29,6 +29,12 @@ final class FileHelperTest extends TestCase
         yield ["foo\r\n", "\r\n"];
     }
 
+    public function testNormalizePath(): void
+    {
+        static::assertSame('foo/bar/baz', FileHelper::normalizePath('foo/bar\baz', '/'));
+        static::assertSame('foo\bar\baz', FileHelper::normalizePath('foo/bar\baz', '\\'));
+    }
+
     /**
      * @dataProvider getRelativePathToDataProvider
      */

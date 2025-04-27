@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Report\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use TwigCsFixer\File\FileHelper;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 
@@ -36,43 +37,28 @@ final class GitlabReporter implements ReporterInterface
     ): void {
         $reports = [];
 
-        foreach ($report->getFiles() as $file) {
-            $fileViolations = $report->getFileViolations($file, $level);
-            if (0 === \count($fileViolations)) {
-                continue;
-            }
+        foreach ($report->getViolations() as $violation) {
+            $filename = $violation->getFilename();
+            $severity = match ($violation->getLevel()) {
+                Violation::LEVEL_NOTICE => 'info',
+                Violation::LEVEL_WARNING => 'minor',
+                Violation::LEVEL_ERROR => 'major',
+                Violation::LEVEL_FATAL => 'critical',
+                default => 'info',
+            };
 
-            foreach ($fileViolations as $violation) {
-                $severity = match ($violation->getLevel()) {
-                    Violation::LEVEL_NOTICE => 'info',
-                    Violation::LEVEL_WARNING => 'minor',
-                    Violation::LEVEL_ERROR => 'major',
-                    Violation::LEVEL_FATAL => 'critical',
-                    default => 'info',
-                };
-
-                $file = $violation->getFilename();
-                $filename = substr($file, 2, \strlen($file));
-
-                $location = [
+            $reports[] = [
+                'description' => $violation->getDebugMessage($debug),
+                'check_name' => $violation->getRuleName() ?? '',
+                'fingerprint' => $this->generateFingerprint($filename, $violation),
+                'severity' => $severity,
+                'location' => [
                     'path' => $filename,
                     'lines' => [
                         'begin' => $violation->getLine() ?? 1,
                     ],
-                ];
-
-                $fingerprint = $this->generateFingerprint($filename, $violation);
-
-                $a = [
-                    'description' => $violation->getDebugMessage($debug),
-                    'check_name' => $violation->getRuleName() ?? '',
-                    'fingerprint' => $fingerprint,
-                    'severity' => $severity,
-                    'location' => $location,
-                ];
-
-                $reports[] = $a;
-            }
+                ],
+            ];
         }
 
         $json = json_encode($reports, \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR);
@@ -85,18 +71,20 @@ final class GitlabReporter implements ReporterInterface
      *
      * We do not use the ViolationId to generate the fingerprint because :
      * - The ViolationId::toString returns the line and linePosition of the violation.
-     * - Using code location when creating hash for Gitlab fingerprints makes the codequality reports in Gitlab very unstable.
+     * - Using code location when creating hash for Gitlab fingerprints makes the code-quality reports in Gitlab very unstable.
      * - Any change of position would trigger both a "fixed" message, and a "new problem detected" message in Gitlab, making it very noisy.
      *
      * @see https://github.com/astral-sh/ruff/pull/7203
      */
     private function generateFingerprint(string $relativePath, Violation $violation): string
     {
-        $base = $relativePath.$violation->getRuleName().$violation->getMessage();
+        // Use the same separator cross-platform to generate the same fingerprint.
+        $normalizedPath = FileHelper::normalizePath($relativePath, '/');
+        $base = $normalizedPath.$violation->getRuleName().$violation->getMessage();
 
         $hash = md5($base);
 
-        // Check if the generated hash does not already exists
+        // Check if the generated hash does not already exist
         // Keep generating new hashes until we get a unique one
         while (\in_array($hash, $this->hashes, true)) {
             $hash = md5($hash);
