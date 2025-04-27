@@ -73,124 +73,119 @@ final class GitlabReporterTest extends TestCase
 
     /**
      * @return iterable<array-key, array{string, string|null, bool}>
+     *
+     * @throws \JsonException
      */
     public static function displayDataProvider(): iterable
     {
         $path = TestHelper::getOsPath('sts/Report/Reporter/Fixtures/file.twig');
 
-        $json_1 = <<<JSON
-            [
-                {
-                    "description": "Notice",
-                    "check_name": "Rule",
-                    "fingerprint": "b2182bc6995684015d16f0a58d8068fd",
-                    "severity": "info",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 1
-                        }
-                    }
-                },
-                {
-                    "description": "Warning",
-                    "check_name": "Rule",
-                    "fingerprint": "d878f66f14f5066662c5bd4359197f7b",
-                    "severity": "minor",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 2
-                        }
-                    }
-                },
-                {
-                    "description": "Error",
-                    "check_name": "Rule",
-                    "fingerprint": "ec20757f4576473c7f2e594843ea7468",
-                    "severity": "major",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 3
-                        }
-                    }
-                },
-                {
-                    "description": "Fatal\\nwith new line",
-                    "check_name": "Rule",
-                    "fingerprint": "418e701561238d93e2c189fbb6205284",
-                    "severity": "critical",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 1
-                        }
-                    }
-                }
-            ]
-            JSON;
-
-        $json_2 = <<<JSON
-            [
-                {
-                    "description": "NoticeId:1 -- Notice",
-                    "check_name": "Rule",
-                    "fingerprint": "b2182bc6995684015d16f0a58d8068fd",
-                    "severity": "info",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 1
-                        }
-                    }
-                },
-                {
-                    "description": "WarningId:2:22 -- Warning",
-                    "check_name": "Rule",
-                    "fingerprint": "d878f66f14f5066662c5bd4359197f7b",
-                    "severity": "minor",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 2
-                        }
-                    }
-                },
-                {
-                    "description": "ErrorId:3:33 -- Error",
-                    "check_name": "Rule",
-                    "fingerprint": "ec20757f4576473c7f2e594843ea7468",
-                    "severity": "major",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 3
-                        }
-                    }
-                },
-                {
-                    "description": "FatalId -- Fatal\\nwith new line",
-                    "check_name": "Rule",
-                    "fingerprint": "418e701561238d93e2c189fbb6205284",
-                    "severity": "critical",
-                    "location": {
-                        "path": "{$path}",
-                        "lines": {
-                            "begin": 1
-                        }
-                    }
-                }
-            ]
-            JSON;
-
         yield [
-            $json_1,
+            json_encode([
+                [
+                    'description' => 'Notice',
+                    'check_name' => 'Rule',
+                    'fingerprint' => 'b2182bc6995684015d16f0a58d8068fd',
+                    'severity' => 'info',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 1,
+                        ],
+                    ],
+                ],
+                [
+                    'description' => 'Warning',
+                    'check_name' => 'Rule',
+                    'fingerprint' => 'd878f66f14f5066662c5bd4359197f7b',
+                    'severity' => 'minor',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 2,
+                        ],
+                    ],
+                ],
+                [
+                    'description' => 'Error',
+                    'check_name' => 'Rule',
+                    'fingerprint' => 'ec20757f4576473c7f2e594843ea7468',
+                    'severity' => 'major',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 3,
+                        ],
+                    ],
+                ],
+                [
+                    'description' => "Fatal\nwith new line",
+                    'check_name' => 'Rule',
+                    'fingerprint' => '418e701561238d93e2c189fbb6205284',
+                    'severity' => 'critical',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 1,
+                        ],
+                    ],
+                ],
+            ], \JSON_THROW_ON_ERROR),
             null,
             false,
         ];
+
         yield [
-            $json_2,
+            json_encode([
+                [
+                    'description' => 'NoticeId:1 -- Notice',
+                    'check_name' => 'Rule',
+                    'fingerprint' => 'b2182bc6995684015d16f0a58d8068fd',
+                    'severity' => 'info',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 1,
+                        ],
+                    ],
+                ],
+                [
+                    'description' => 'WarningId:2:22 -- Warning',
+                    'check_name' => 'Rule',
+                    'fingerprint' => 'd878f66f14f5066662c5bd4359197f7b',
+                    'severity' => 'minor',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 2,
+                        ],
+                    ],
+                ],
+                [
+                    'description' => 'ErrorId:3:33 -- Error',
+                    'check_name' => 'Rule',
+                    'fingerprint' => 'ec20757f4576473c7f2e594843ea7468',
+                    'severity' => 'major',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 3,
+                        ],
+                    ],
+                ],
+                [
+                    'description' => "FatalId -- Fatal\nwith new line",
+                    'check_name' => 'Rule',
+                    'fingerprint' => '418e701561238d93e2c189fbb6205284',
+                    'severity' => 'critical',
+                    'location' => [
+                        'path' => $path,
+                        'lines' => [
+                            'begin' => 1,
+                        ],
+                    ],
+                ],
+            ], \JSON_THROW_ON_ERROR),
             null,
             true,
         ];
