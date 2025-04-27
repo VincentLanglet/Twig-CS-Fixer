@@ -20,9 +20,9 @@ final class FileHelper
         return $matches[0] ?? \PHP_EOL;
     }
 
-    public static function normalizePath(string $path): string
+    public static function normalizePath(string $path, string $separator = \DIRECTORY_SEPARATOR): string
     {
-        return str_replace(['\\', '/'], \DIRECTORY_SEPARATOR, $path);
+        return str_replace(['\\', '/'], $separator, $path);
     }
 
     public static function getRelativePath(string $path, string $baseDir): string
