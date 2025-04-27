@@ -68,10 +68,7 @@ final class GitlabReporterTest extends TestCase
 
         $text = $output->fetch();
 
-        $actual = json_decode($text);
-        $actual = json_encode($actual, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES);
-
-        static::assertSame($expected, $actual);
+        static::assertJsonStringEqualsJsonString($expected, $text);
     }
 
     /**
