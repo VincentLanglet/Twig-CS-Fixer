@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\CacheEncoder;
@@ -15,6 +16,7 @@ final class CacheEncoderTest extends TestCase
     /**
      * @dataProvider fromJsonFailureDataProvider
      */
+    #[DataProvider('fromJsonFailureDataProvider')]
     public function testFromJsonFailure(string $input): void
     {
         $this->expectException(\InvalidArgumentException::class);

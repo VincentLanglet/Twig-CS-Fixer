@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Report;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Report\ViolationId;
 
@@ -12,6 +13,7 @@ final class ViolationIdTest extends TestCase
     /**
      * @dataProvider toStringDataProvider
      */
+    #[DataProvider('toStringDataProvider')]
     public function testToString(
         ?string $ruleShortName,
         ?string $identifier,
@@ -49,6 +51,7 @@ final class ViolationIdTest extends TestCase
     /**
      * @dataProvider matchDataProvider
      */
+    #[DataProvider('matchDataProvider')]
     public function testMatch(string $string1, string $string2, bool $expected): void
     {
         $violationId1 = ViolationId::fromString($string1);

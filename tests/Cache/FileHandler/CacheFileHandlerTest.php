@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Cache\FileHandler;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use TwigCsFixer\Cache\Cache;
 use TwigCsFixer\Cache\FileHandler\CacheFileHandler;
 use TwigCsFixer\Cache\Signature;
@@ -15,6 +16,7 @@ final class CacheFileHandlerTest extends FileTestCase
     /**
      * @dataProvider readFailureDataProvider
      */
+    #[DataProvider('readFailureDataProvider')]
     public function testReadFailure(string $file): void
     {
         $cacheFileHandler = new CacheFileHandler($file);

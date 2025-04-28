@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Config;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use TwigCsFixer\Cache\Manager\CacheManagerInterface;
 use TwigCsFixer\Cache\Manager\FileCacheManager;
 use TwigCsFixer\Cache\Manager\NullCacheManager;
@@ -28,6 +29,7 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @dataProvider resolveConfigDataProvider
      */
+    #[DataProvider('resolveConfigDataProvider')]
     public function testResolveConfig(string $workingDir, ?string $configPath, string $configName): void
     {
         if (null !== $configPath) {
@@ -55,6 +57,7 @@ final class ConfigResolverTest extends FileTestCase
     /**
      * @dataProvider resolveConfigExceptionDataProvider
      */
+    #[DataProvider('resolveConfigExceptionDataProvider')]
     public function testResolveConfigException(string $workingDir, ?string $path): void
     {
         $configResolver = new ConfigResolver($this->getTmpPath($workingDir));
@@ -79,6 +82,7 @@ final class ConfigResolverTest extends FileTestCase
      *
      * @dataProvider resolveFinderDataProvider
      */
+    #[DataProvider('resolveFinderDataProvider')]
     public function testResolveFinder(array $paths, string $configPath, int $expectedCount): void
     {
         $configResolver = new ConfigResolver($this->getTmpPath(__DIR__));
@@ -119,6 +123,7 @@ final class ConfigResolverTest extends FileTestCase
      *
      * @dataProvider resolveCacheManagerDataProvider
      */
+    #[DataProvider('resolveCacheManagerDataProvider')]
     public function testResolveCacheManager(
         ?string $configPath,
         bool $disableCache,

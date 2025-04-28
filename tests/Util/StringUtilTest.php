@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Util\StringUtil;
 
@@ -12,6 +13,7 @@ final class StringUtilTest extends TestCase
     /**
      * @dataProvider toSnakeCaseDataProvider
      */
+    #[DataProvider('toSnakeCaseDataProvider')]
     public function testToSnakeCase(string $string, string $expected): void
     {
         static::assertSame($expected, StringUtil::toSnakeCase($string));
@@ -46,6 +48,7 @@ final class StringUtilTest extends TestCase
     /**
      * @dataProvider toCamelCaseDataProvider
      */
+    #[DataProvider('toCamelCaseDataProvider')]
     public function testToCamelCase(string $string, string $expected): void
     {
         static::assertSame($expected, StringUtil::toCamelCase($string));
@@ -79,6 +82,7 @@ final class StringUtilTest extends TestCase
     /**
      * @dataProvider toPascalCaseDataProvider
      */
+    #[DataProvider('toPascalCaseDataProvider')]
     public function testToPascalCase(string $string, string $expected): void
     {
         static::assertSame($expected, StringUtil::toPascalCase($string));
@@ -113,6 +117,7 @@ final class StringUtilTest extends TestCase
     /**
      * @dataProvider toKebabCaseDataProvider
      */
+    #[DataProvider('toKebabCaseDataProvider')]
     public function testToKebabCase(string $string, string $expected): void
     {
         static::assertSame($expected, StringUtil::toKebabCase($string));
