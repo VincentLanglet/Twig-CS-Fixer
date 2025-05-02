@@ -6,6 +6,7 @@ namespace TwigCsFixer\Token;
 
 use Twig\Environment;
 use Twig\Source;
+use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
 use TwigCsFixer\Report\ViolationId;
 use Webmozart\Assert\Assert;
@@ -763,13 +764,31 @@ final class Tokenizer implements TokenizerInterface
      */
     private function getOperatorRegex(Environment $env): string
     {
-        // @phpstan-ignore-next-line method.internal
-        $unaryOperators = array_keys($env->getUnaryOperators());
-        // @phpstan-ignore-next-line method.internal
-        $binaryOperators = array_keys($env->getBinaryOperators());
+        if (StubbedEnvironment::satisfiesTwigVersion(3, 21)) {
+            $expressionParsers = [];
+            // @phpstan-ignore-next-line method.internal
+            foreach ($env->getExpressionParsers() as $expressionParser) {
+                $operator = $expressionParser->getName();
+                // Avoid conflict with ARROW_TYPE and PUNCTUATION_TYPE
+                if (\in_array($operator, ['=>', '(', '[', '|', '.'], true)) {
+                    continue;
+                }
+
+                $expressionParsers[] = $operator;
+                foreach ($expressionParser->getAliases() as $alias) {
+                    $expressionParsers[] = $alias;
+                }
+            }
+        } else {
+            // @phpstan-ignore-next-line
+            $unaryOperators = array_keys($env->getUnaryOperators());
+            // @phpstan-ignore-next-line
+            $binaryOperators = array_keys($env->getBinaryOperators());
+            $expressionParsers = [...$unaryOperators, ...$binaryOperators];
+        }
 
         /** @var string[] $operators */
-        $operators = ['=', '?', '?:', ...$unaryOperators, ...$binaryOperators];
+        $operators = ['=', '?', '?:', ...$expressionParsers];
         $lengthByOperator = [];
         foreach ($operators as $operator) {
             $lengthByOperator[$operator] = \strlen($operator);
