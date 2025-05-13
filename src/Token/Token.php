@@ -68,11 +68,20 @@ final class Token
         self::COMMENT_EOL_TYPE => self::COMMENT_EOL_TYPE,
     ];
 
-    public const EMPTY_TOKENS = self::INDENT_TOKENS + self::EOL_TOKENS + [
+    public const COMMENT_TOKENS = [
         self::COMMENT_START_TYPE => self::COMMENT_START_TYPE,
         self::COMMENT_TEXT_TYPE => self::COMMENT_TEXT_TYPE,
+        self::COMMENT_WHITESPACE_TYPE => self::COMMENT_WHITESPACE_TYPE,
+        self::COMMENT_TAB_TYPE => self::COMMENT_TAB_TYPE,
+        self::COMMENT_EOL_TYPE => self::COMMENT_EOL_TYPE,
         self::COMMENT_END_TYPE => self::COMMENT_END_TYPE,
+        self::INLINE_COMMENT_START_TYPE => self::INLINE_COMMENT_START_TYPE,
+        self::INLINE_COMMENT_TEXT_TYPE => self::INLINE_COMMENT_TEXT_TYPE,
+        self::INLINE_COMMENT_WHITESPACE_TYPE => self::INLINE_COMMENT_WHITESPACE_TYPE,
+        self::INLINE_COMMENT_TAB_TYPE => self::INLINE_COMMENT_TAB_TYPE,
     ];
+
+    public const EMPTY_TOKENS = self::INDENT_TOKENS + self::EOL_TOKENS + self::COMMENT_TOKENS;
 
     public const BLOCK_TOKENS = [
         self::BLOCK_START_TYPE => self::BLOCK_START_TYPE,
