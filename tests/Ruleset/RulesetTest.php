@@ -7,7 +7,7 @@ namespace TwigCsFixer\Tests\Ruleset;
 use PHPUnit\Framework\TestCase;
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\AbstractRule;
-use TwigCsFixer\Rules\String\SingleQuoteRule;
+use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\StandardInterface;
 use TwigCsFixer\Token\Tokens;

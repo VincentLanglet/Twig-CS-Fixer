@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Rules\String\SimpleQuote;
+namespace TwigCsFixer\Tests\Rules\Literal\SimpleQuote;
 
-use TwigCsFixer\Rules\String\SingleQuoteRule;
+use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class SingleQuoteRuleTest extends AbstractRuleTestCase

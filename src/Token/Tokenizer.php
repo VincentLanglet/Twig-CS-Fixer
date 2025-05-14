@@ -676,6 +676,11 @@ final class Tokenizer implements TokenizerInterface
                 && $lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, ['(', ','])
             ) {
                 $this->pushToken(Token::MACRO_VAR_NAME_TYPE, $name);
+            } elseif (
+                $this->lastBracketMatch('{')
+                && $lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, ['{', ','])
+            ) {
+                $this->pushToken(Token::HASH_KEY_NAME_TYPE, $name);
             } else {
                 $this->pushToken(Token::NAME_TYPE, $name);
             }
