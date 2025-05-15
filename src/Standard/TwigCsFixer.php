@@ -6,6 +6,7 @@ namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
+use TwigCsFixer\Rules\Literal\CompactHashRule;
 use TwigCsFixer\Rules\Literal\HashQuoteRule;
 use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
@@ -27,6 +28,7 @@ final class TwigCsFixer implements StandardInterface
             new BlankEOFRule(),
             new BlockNameSpacingRule(),
             new EmptyLinesRule(),
+            new CompactHashRule(),
             new HashQuoteRule(),
             new IncludeFunctionRule(),
             new IndentRule(),
