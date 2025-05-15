@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Tests\Rules\String\HashQuote;
+namespace TwigCsFixer\Tests\Rules\Literal\HashQuote;
 
-use TwigCsFixer\Rules\String\HashQuoteRule;
+use TwigCsFixer\Rules\Literal\HashQuoteRule;
 use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class HashQuoteRuleTest extends AbstractRuleTestCase

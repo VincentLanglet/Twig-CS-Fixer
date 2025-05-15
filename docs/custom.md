@@ -101,6 +101,10 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   The name of a test function. Like in `{% if foo is test(bar) %}`.
 
+- **TwigCsFixer\Token\Token::HASH_KEY_NAME_TYPE**:
+
+  Any hash key represented as name. Like `foo` in `{ foo: bar }` or `{ foo }` but not in `{ 'foo': bar }`.
+
 - **TwigCsFixer\Token\Token::WHITESPACE_TYPE**:
 
   Any whitespace separating text or expressions. Does not include commented whitespaces.

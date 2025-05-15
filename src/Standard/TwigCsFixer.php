@@ -6,10 +6,10 @@ namespace TwigCsFixer\Standard;
 
 use TwigCsFixer\Rules\Delimiter\BlockNameSpacingRule;
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
+use TwigCsFixer\Rules\Literal\HashQuoteRule;
+use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
-use TwigCsFixer\Rules\String\HashQuoteRule;
-use TwigCsFixer\Rules\String\SingleQuoteRule;
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
 use TwigCsFixer\Rules\Whitespace\EmptyLinesRule;
 use TwigCsFixer\Rules\Whitespace\IndentRule;

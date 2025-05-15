@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Rules\String;
+namespace TwigCsFixer\Rules\Literal;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
@@ -56,7 +56,7 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             // A value like `012` or `12.3` is cast to `12` by twig,
             // so we let the developer chose the right value.
             $fixable = $this->isInteger($value);
-        } elseif ($token->isMatching(Token::NAME_TYPE)) {
+        } elseif ($token->isMatching(Token::HASH_KEY_NAME_TYPE)) {
             $blockName = $tokens->findPrevious(Token::BLOCK_TOKENS, $tokenIndex - 1);
             if (false !== $blockName && $tokens->get($blockName)->isMatching(Token::BLOCK_NAME_TYPE, 'types')) {
                 // {% types {'foo': 'int'} %} is not a valid syntax
