@@ -1,1 +1,21 @@
 {{ {foo:foo, bar:baz, baz:baz + foo, thing:thing} }}
+
+{{ include('foo', {product:product}) }}
+{{ include('foo', {
+    product:product
+}) }}
+
+{{ include('foo', {product:product}) }}
+{{ include('foo', {
+    product:product
+}) }}
+
+{{ include('foo', {product: product}) }}
+{{ include('foo', {
+    product: product
+}) }}
+
+{{ include('foo', {product :product}) }}
+{{ include('foo', {
+    product :product
+}) }}
