@@ -40,7 +40,6 @@ final class GitlabReporter implements ReporterInterface
         foreach ($report->getViolations() as $violation) {
             $filename = $violation->getFilename();
             $severity = match ($violation->getLevel()) {
-                Violation::LEVEL_NOTICE => 'info',
                 Violation::LEVEL_WARNING => 'minor',
                 Violation::LEVEL_ERROR => 'major',
                 Violation::LEVEL_FATAL => 'critical',

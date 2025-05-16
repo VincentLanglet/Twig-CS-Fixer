@@ -17,7 +17,9 @@ final class NamedArgumentSeparatorRule extends AbstractFixableRule
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
         if (!StubbedEnvironment::satisfiesTwigVersion(3, 12)) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $token = $tokens->get($tokenIndex);
