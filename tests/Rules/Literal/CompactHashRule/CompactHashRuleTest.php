@@ -24,7 +24,7 @@ final class CompactHashRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new CompactHashRule(), [
-            'CompactHash.Error:1:38' => 'Hash key "thing" should be explicit.',
+            'CompactHash.Error:1:60' => 'Hash key "thing" should be explicit.',
             'CompactHash.Error:3:20' => 'Hash key "product" should be explicit.',
             'CompactHash.Error:5:5' => 'Hash key "product" should be explicit.',
         ]);
