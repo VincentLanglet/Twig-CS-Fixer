@@ -191,4 +191,53 @@ final class GitlabReporterTest extends TestCase
             true,
         ];
     }
+
+    public function testDisplayDuplicateError(): void
+    {
+        $textFormatter = new GitlabReporter();
+
+        $file = TestHelper::getOsPath('tests/Report/Reporter/Fixtures/file.twig');
+        $report = new Report([new \SplFileInfo($file)]);
+
+        $violation = new Violation(
+            Violation::LEVEL_NOTICE,
+            'Notice',
+            $file,
+            'Rule',
+            new ViolationId('NoticeId', null, 1)
+        );
+        $report->addViolation($violation);
+        $report->addViolation(clone $violation);
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+        $textFormatter->display($output, $report, null, false);
+
+        $text = $output->fetch();
+        static::assertJsonStringEqualsJsonString(json_encode([
+            [
+                'description' => 'Notice',
+                'check_name' => 'Rule',
+                'fingerprint' => '3500f606b8f132de65826104a5765c2f',
+                'severity' => 'info',
+                'location' => [
+                    'path' => $file,
+                    'lines' => [
+                        'begin' => 1,
+                    ],
+                ],
+            ],
+            [
+                'description' => 'Notice',
+                'check_name' => 'Rule',
+                'fingerprint' => '78e2796ff61fcc3899328eb71937ab07',
+                'severity' => 'info',
+                'location' => [
+                    'path' => $file,
+                    'lines' => [
+                        'begin' => 1,
+                    ],
+                ],
+            ],
+        ], \JSON_THROW_ON_ERROR), $text);
+    }
 }
