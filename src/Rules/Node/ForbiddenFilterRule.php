@@ -37,9 +37,9 @@ final class ForbiddenFilterRule extends AbstractNodeRule implements Configurable
 
         $filterName = $node->hasAttribute('name')
             ? $node->getAttribute('name')
-        // codeCoverageIgnoreStart
+        // @codeCoverageIgnoreStart
             : $node->getNode('filter')->getAttribute('value'); // BC for twig/twig < 3.12
-        // codeCoverageIgnoreEnd
+        // @codeCoverageIgnoreEnd
         if (!\in_array($filterName, $this->filters, true)) {
             return $node;
         }
