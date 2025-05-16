@@ -100,7 +100,29 @@ class CompactHashRule extends AbstractFixableRule implements ConfigurableRuleInt
         );
         if (null !== $fixer) {
             $fixer->replaceToken($previous, '');
+
+            // Clean whitespaces after the key.
+            $index = $previous + 1;
+            while ($tokens->get($index)->isMatching(Token::INDENT_TOKENS)) {
+                $fixer->replaceToken($index, '');
+                ++$index;
+            }
+
+            // Clean whitespaces before the `:`.
+            $index = $tokenIndex - 1;
+            while ($tokens->get($index)->isMatching(Token::INDENT_TOKENS)) {
+                $fixer->replaceToken($index, '');
+                --$index;
+            }
+
             $fixer->replaceToken($tokenIndex, '');
+
+            // Clean whitespaces after the `:`.
+            $index = $tokenIndex + 1;
+            while ($tokens->get($index)->isMatching(Token::INDENT_TOKENS)) {
+                $fixer->replaceToken($index, '');
+                ++$index;
+            }
         }
     }
 }
