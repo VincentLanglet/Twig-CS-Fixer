@@ -26,4 +26,11 @@ final class ApplicationTest extends TestCase
         static::assertSame('Foo', $app->getName());
         static::assertSame('UNKNOWN', $app->getVersion());
     }
+
+    public function testLibWithoutReference(): void
+    {
+        $app = new Application('NoReference', 'symfony/service-implementation');
+        static::assertSame('NoReference', $app->getName());
+        static::assertSame('dev', $app->getVersion());
+    }
 }
