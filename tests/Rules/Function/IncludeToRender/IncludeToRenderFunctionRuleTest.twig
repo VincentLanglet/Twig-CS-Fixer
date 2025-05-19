@@ -1,0 +1,17 @@
+{{ include('template.html') }}
+{{ include('template.html', {'foo': 'bar'}, true) }}
+{{ include('template.html', {'foo': 'bar'}, true, true) }}
+{{ include('template.html', {'foo': 'bar'}, true, true, true) }}
+{{ include('template.html', with_context = true) }}
+
+{{ include(['template_a.html', 'template_b.html']) }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true) }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true, true) }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, true, true, true) }}
+{{ include(['template_a.html', 'template_b.html'], with_context = true) }}
+
+{{ include(['template_a.html', 'template_b.html'], with_context = false) }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, false) }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, false, true) }}
+{{ include(['template_a.html', 'template_b.html'], {'foo': 'bar'}, false, true, true) }}
+{{ include(['template_a.html', 'template_b.html'], with_context = true) }}
