@@ -42,4 +42,11 @@ final class CompactHashRuleTest extends AbstractRuleTestCase
             'CompactHash.Error:20:5' => 'Hash key "product" should be implicit.',
         ], fixedFilePath: __DIR__.'/CompactHashRuleTest.compact.fixed.twig');
     }
+
+    public function testJDreesen(): void
+    {
+        $this->checkRule(new CompactHashRule(true), [
+            'CompactHash.Error:1:5' => 'Hash key "test" should be implicit.'
+        ], filePath: __DIR__.'/CompactHashRuleTest.jdreesen.twig');
+    }
 }
