@@ -99,6 +99,7 @@ class CompactHashRule extends AbstractFixableRule implements ConfigurableRuleInt
             $previousToken
         );
         if (null !== $fixer) {
+            $fixer->beginChangeSet();
             $fixer->replaceToken($previous, '');
 
             // Clean whitespaces after the key.
@@ -123,6 +124,7 @@ class CompactHashRule extends AbstractFixableRule implements ConfigurableRuleInt
                 $fixer->replaceToken($index, '');
                 ++$index;
             }
+            $fixer->endChangeSet();
         }
     }
 }
