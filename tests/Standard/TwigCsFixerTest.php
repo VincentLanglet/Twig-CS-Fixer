@@ -12,6 +12,7 @@ use TwigCsFixer\Rules\Function\MacroArgumentNameRule;
 use TwigCsFixer\Rules\Function\NamedArgumentNameRule;
 use TwigCsFixer\Rules\Function\NamedArgumentSeparatorRule;
 use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
+use TwigCsFixer\Rules\Literal\CompactHashRule;
 use TwigCsFixer\Rules\Literal\HashQuoteRule;
 use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
@@ -45,6 +46,7 @@ final class TwigCsFixerTest extends TestCase
             new BlankEOFRule(),
             new BlockNameSpacingRule(),
             new EmptyLinesRule(),
+            new CompactHashRule(),
             new HashQuoteRule(),
             new IncludeFunctionRule(),
             new IndentRule(),
