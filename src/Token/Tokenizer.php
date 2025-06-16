@@ -838,6 +838,10 @@ final class Tokenizer implements TokenizerInterface
 
     private function processIgnoredViolations(): void
     {
+        if (!$this->hasStateParam('ignoredViolations')) {
+            return;
+        }
+
         $ignoredViolations = $this->getStateParam('ignoredViolations');
         if (null === $ignoredViolations) {
             return;

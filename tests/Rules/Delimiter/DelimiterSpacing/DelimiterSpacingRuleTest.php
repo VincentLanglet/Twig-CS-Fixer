@@ -28,6 +28,10 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
             'DelimiterSpacing.Before:15:12' => 'Expecting 1 whitespace before "-%}"; found 2.',
             'DelimiterSpacing.After:15:15' => 'Expecting 1 whitespace after "{%-"; found 2.',
             'DelimiterSpacing.Before:15:25' => 'Expecting 1 whitespace before "-%}"; found 0.',
+            'DelimiterSpacing.After:42:1' => 'Expecting 0 whitespace after "{#"; found 1.',
+            'DelimiterSpacing.Before:42:4' => 'Expecting 0 whitespace before "#}"; found 1.',
+            'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
+            'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
         ]);
     }
 
@@ -46,6 +50,10 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
             'DelimiterSpacing.Before:22:5' => 'Expecting 1 whitespace before "}}"; found newline.',
             'DelimiterSpacing.After:33:1' => 'Expecting 1 whitespace after "{%"; found newline.',
             'DelimiterSpacing.Before:39:2' => 'Expecting 1 whitespace before "%}"; found newline.',
+            'DelimiterSpacing.After:42:1' => 'Expecting 0 whitespace after "{#"; found 1.',
+            'DelimiterSpacing.Before:42:4' => 'Expecting 0 whitespace before "#}"; found 1.',
+            'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
+            'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
         ], fixedFilePath: __DIR__.'/DelimiterSpacingRuleTest.fixed2.twig');
     }
 }

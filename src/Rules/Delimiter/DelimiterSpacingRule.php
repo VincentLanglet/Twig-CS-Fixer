@@ -11,6 +11,7 @@ use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
+ * Ensure there is no space inside empty comment `{##}` or `{#--#}.
  */
 final class DelimiterSpacingRule extends AbstractSpacingRule implements ConfigurableRuleInterface
 {
@@ -32,10 +33,18 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         if (
             $token->isMatching([
                 Token::BLOCK_END_TYPE,
-                Token::COMMENT_END_TYPE,
                 Token::VAR_END_TYPE,
             ])
         ) {
+            return 1;
+        }
+
+        if ($token->isMatching(Token::COMMENT_END_TYPE)) {
+            $previous = $tokens->findPrevious(Token::INDENT_TOKENS + Token::EOL_TOKENS, $tokenIndex - 1, exclude: true);
+            if (false !== $previous && $tokens->get($previous)->isMatching(Token::COMMENT_START_TYPE)) {
+                return 0;
+            }
+
             return 1;
         }
 
@@ -48,10 +57,18 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
         if (
             $token->isMatching([
                 Token::BLOCK_START_TYPE,
-                Token::COMMENT_START_TYPE,
                 Token::VAR_START_TYPE,
             ])
         ) {
+            return 1;
+        }
+
+        if ($token->isMatching(Token::COMMENT_START_TYPE)) {
+            $next = $tokens->findNext(Token::INDENT_TOKENS + Token::EOL_TOKENS, $tokenIndex + 1, exclude: true);
+            if (false !== $next && $tokens->get($next)->isMatching(Token::COMMENT_END_TYPE)) {
+                return 0;
+            }
+
             return 1;
         }
 
