@@ -41,7 +41,12 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
 
         if ($token->isMatching(Token::COMMENT_END_TYPE)) {
             $previous = $tokens->findPrevious(Token::INDENT_TOKENS + Token::EOL_TOKENS, $tokenIndex - 1, exclude: true);
-            if (false !== $previous && $tokens->get($previous)->isMatching(Token::COMMENT_START_TYPE)) {
+            if (
+                false !== $previous
+                && $tokens->get($previous)->isMatching(Token::COMMENT_START_TYPE)
+                // We cannot fix `{# -#}` since `{#-#}` means `{#- #}`
+                && \strlen($tokens->get($previous)->getValue()) === \strlen($token->getValue())
+            ) {
                 return 0;
             }
 
@@ -65,7 +70,12 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
 
         if ($token->isMatching(Token::COMMENT_START_TYPE)) {
             $next = $tokens->findNext(Token::INDENT_TOKENS + Token::EOL_TOKENS, $tokenIndex + 1, exclude: true);
-            if (false !== $next && $tokens->get($next)->isMatching(Token::COMMENT_END_TYPE)) {
+            if (
+                false !== $next
+                && $tokens->get($next)->isMatching(Token::COMMENT_END_TYPE)
+                // We cannot fix `{# -#}` since `{#-#}` means `{#- #}`
+                && \strlen($tokens->get($next)->getValue()) === \strlen($token->getValue())
+            ) {
                 return 0;
             }
 
