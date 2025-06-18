@@ -17,6 +17,8 @@ use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Rules\Node\NodeRuleInterface;
+use TwigCsFixer\Rules\Node\PathAwareNodeRuleInterface;
+use TwigCsFixer\Rules\PathAwareRuleInterface;
 use TwigCsFixer\Rules\RuleInterface;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Token\TokenizerInterface;
@@ -45,8 +47,6 @@ final class Linter
 
         $rules = array_filter($ruleset->getRules(), static fn ($rule) => $rule instanceof RuleInterface);
         $nodeVisitorRules = array_filter($ruleset->getRules(), static fn ($rule) => $rule instanceof NodeRuleInterface);
-
-        $traverser = new NodeTraverser($this->env, $nodeVisitorRules);
 
         // Process
         foreach ($files as $file) {
@@ -117,6 +117,10 @@ final class Linter
             }
 
             foreach ($rules as $rule) {
+                if ($rule instanceof PathAwareRuleInterface && !$rule->support($filePath)) {
+                    continue;
+                }
+
                 $rule->lintFile($stream, $report);
             }
 
@@ -126,10 +130,17 @@ final class Linter
                     continue;
                 }
 
+                $nodeVisitors = [];
                 foreach ($nodeVisitorRules as $nodeVisitor) {
+                    if ($nodeVisitor instanceof PathAwareNodeRuleInterface && !$nodeVisitor->support($filePath)) {
+                        continue;
+                    }
+
                     $nodeVisitor->setReport($report, $stream->getIgnoredViolations());
+                    $nodeVisitors[] = $nodeVisitor;
                 }
 
+                $traverser = new NodeTraverser($this->env, $nodeVisitors);
                 $traverser->traverse($node);
             }
 
