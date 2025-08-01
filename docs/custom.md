@@ -105,6 +105,10 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
   Any hash key represented as name. Like `foo` in `{ foo: bar }` or `{ foo }` but not in `{ 'foo': bar }`.
 
+- **TwigCsFixer\Token\Token::TYPE_NAME_TYPE**:
+
+  Similar to hash key, but in types definition. Like `foo` in `{% types { foo: 'bar' } %}`.
+
 - **TwigCsFixer\Token\Token::WHITESPACE_TYPE**:
 
   Any whitespace separating text or expressions. Does not include commented whitespaces.

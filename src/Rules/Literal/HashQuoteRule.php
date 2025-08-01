@@ -57,12 +57,6 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
             // so we let the developer chose the right value.
             $fixable = $this->isInteger($value);
         } elseif ($token->isMatching(Token::HASH_KEY_NAME_TYPE)) {
-            $blockName = $tokens->findPrevious(Token::BLOCK_TOKENS, $tokenIndex - 1);
-            if (false !== $blockName && $tokens->get($blockName)->isMatching(Token::BLOCK_NAME_TYPE, 'types')) {
-                // {% types {'foo': 'int'} %} is not a valid syntax
-                return;
-            }
-
             $fixable = true;
         } else {
             return;
