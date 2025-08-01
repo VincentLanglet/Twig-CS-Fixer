@@ -680,6 +680,16 @@ final class Tokenizer implements TokenizerInterface
                 $this->lastBracketMatch('{')
                 && $lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, ['{', ','])
             ) {
+                if (
+                    self::STATE_BLOCK === $this->getState()
+                    && 'types' === $this->getStateParam('blockName')
+                ) {
+                    // This is a type declaration instead
+                    $this->pushToken(Token::TYPE_NAME_TYPE, $name);
+
+                    return;
+                }
+
                 $this->pushToken(Token::HASH_KEY_NAME_TYPE, $name);
             } else {
                 $this->pushToken(Token::NAME_TYPE, $name);

@@ -35,6 +35,7 @@ final class Token
     public const MACRO_VAR_NAME_TYPE = 'MACRO_VAR_NAME_TYPE';
     public const TEST_NAME_TYPE = 'TEST_NAME_TYPE';
     public const HASH_KEY_NAME_TYPE = 'HASH_KEY_NAME_TYPE';
+    public const TYPE_NAME_TYPE = 'TYPE_NAME_TYPE';
     public const WHITESPACE_TYPE = 'WHITESPACE_TYPE';
     public const TAB_TYPE = 'TAB_TYPE';
     public const EOL_TYPE = 'EOL_TYPE';
