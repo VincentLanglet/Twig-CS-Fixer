@@ -163,7 +163,8 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 
 ## Standards
 
-**Twig**:
+### Twig
+
 - DelimiterSpacingRule
 - NamedArgumentNameRule
 - NamedArgumentSeparatorRule
@@ -173,7 +174,8 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 - PunctuationSpacingRule
 - VariableNameRule
 
-**TwigCsFixer**:
+### TwigCsFixer
+
 - Twig
 - BlankEOFRule
 - BlockNameSpacingRule
@@ -187,7 +189,8 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 - TrailingCommaSingleLineRule
 - TrailingSpaceRule
 
-**Symfony**:
+#### Symfony
+
 - Twig
 - DirectoryNameRule
 - FileNameRule
