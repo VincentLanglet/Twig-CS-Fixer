@@ -189,7 +189,7 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 - TrailingCommaSingleLineRule
 - TrailingSpaceRule
 
-#### Symfony
+### Symfony
 
 - Twig
 - DirectoryNameRule
