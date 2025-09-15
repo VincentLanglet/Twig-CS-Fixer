@@ -20,6 +20,11 @@ use TwigCsFixer\Console\Command\TwigCsFixerCommand;
 $command = new TwigCsFixerCommand();
 
 $application = new Application();
-$application->add($command);
+// Compatibility layer for symfony/console <7.4
+if (method_exists($application, 'addCommand')) {
+    $application->addCommand($command);
+} else {
+    $application->add($command);
+}
 $application->setDefaultCommand($command->getName());
 $application->run();

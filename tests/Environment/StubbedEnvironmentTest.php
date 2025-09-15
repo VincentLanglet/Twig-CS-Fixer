@@ -148,6 +148,10 @@ final class StubbedEnvironmentTest extends TestCase
 
     public function testParseCacheTag(): void
     {
+        if (!InstalledVersions::isInstalled('twig/cache-extra')) {
+            static::markTestSkipped('twig/cache-extra is required.');
+        }
+
         $content = file_get_contents(__DIR__.'/Fixtures/cache_tag.html.twig');
         static::assertNotFalse($content);
 

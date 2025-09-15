@@ -8,7 +8,7 @@ on:
 
 jobs:
     test:
-        name: PHP ${{ matrix.php-version }} + ${{ matrix.dependencies }}
+        name: ${{ matrix.name || format('PHP {0} - {1}', matrix.php-version, matrix.dependencies) }}
         runs-on: ubuntu-latest
 
         env:
@@ -28,9 +28,15 @@ jobs:
                 include:
                     - php-version: 8.0
                       dependencies: lowest
+                      name: PHP 8.0 - lowest
                     - php-version: 8.4
                       dependencies: highest
-                      symfony-require: 7.2.*
+                      symfony-require: 7.3.*
+                      name: PHP 8.4 - highest - Symfony 7.3
+                    - php-version: 8.4
+                      dependencies: highest
+                      symfony-require: 8.0.*@dev
+                      name: PHP 8.4 - highest - Symfony 8.0@dev
 
         steps:
             - name: Checkout
@@ -50,6 +56,14 @@ jobs:
                   composer config minimum-stability dev
                   composer global config --no-plugins allow-plugins.symfony/flex true
                   composer global require --no-progress --no-scripts --no-plugins symfony/flex
+
+            - name: Add matrix to composer.json for cache key
+              if: matrix.symfony-require != ''
+              run: composer config extra.symfony-require-for-cache "${{ matrix.symfony-require }}"
+
+            - name: Remove conflicting dependencies for Symfony 8 dev
+              if: matrix.symfony-require == '8.0.*@dev'
+              run: composer remove --dev friendsofphp/php-cs-fixer infection/infection twig/cache-extra --no-update
 
             - name: Install Composer dependencies ${{ matrix.dependencies }}
               uses: ramsey/composer-install@v3
