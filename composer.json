@@ -40,6 +40,11 @@
         "symfony/ux-twig-component": "^2.2.0",
         "twig/cache-extra": "^3.2"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "3.9.x-dev"
+        }
+    },
     "autoload": {
         "psr-4": {
             "TwigCsFixer\\": "src/"
