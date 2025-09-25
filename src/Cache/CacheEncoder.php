@@ -6,6 +6,12 @@ namespace TwigCsFixer\Cache;
 
 use Webmozart\Assert\Assert;
 
+/**
+ * This file was copied (and slightly modified) from PHP CS Fixer:
+ * - https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/blob/v3.13.0/src/Cache/Cache.php
+ * - (c) Fabien Potencier <fabien@symfony.com>, Dariusz Rumiński <dariusz.ruminski@gmail.com>
+ * - For the full copyright and license information, please see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/blob/v3.13.0/LICENSE
+ */
 final class CacheEncoder
 {
     /**
