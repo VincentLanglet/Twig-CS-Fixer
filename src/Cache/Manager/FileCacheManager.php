@@ -10,18 +10,6 @@ use TwigCsFixer\Cache\Signature;
 use TwigCsFixer\Exception\CannotWriteCacheException;
 use TwigCsFixer\File\FileHelper;
 
-/**
- * Class supports caching information about state of fixing files.
- *
- * Cache is supported only for phar version and version installed via composer.
- *
- * File will be processed by PHP CS Fixer only if any of the following conditions is fulfilled:
- *  - cache is corrupt
- *  - fixer version changed
- *  - rules changed
- *  - file is new
- *  - file changed
- */
 final class FileCacheManager implements CacheManagerInterface
 {
     private Cache $cache;
@@ -46,8 +34,7 @@ final class FileCacheManager implements CacheManagerInterface
     }
 
     /**
-     * This class is not intended to be serialized,
-     * and cannot be deserialized (see __wakeup method).
+     * This class is not intended to be serialized, and cannot be deserialized.
      */
     public function __sleep(): array
     {
@@ -55,8 +42,7 @@ final class FileCacheManager implements CacheManagerInterface
     }
 
     /**
-     * Disable the deserialization of the class to prevent attacker executing
-     * code by leveraging the __destruct method.
+     * Prevent attacker executing code by leveraging the __destruct method.
      *
      * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
      */
