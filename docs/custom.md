@@ -42,7 +42,7 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 - **TwigCsFixer\Token\Token::STRING_TYPE**:
 
   Any single quote string or double quote string without interpolation string inside `{%` or `{{` delimiters.
-  Like 'string'/"string" in `{{ 'string' }}`, `{% if foo('string') %}`, `{{ "string" }}` or `{% if foo("string") %}`.
+  Like `'string'`/`"string"` in `{{ 'string' }}`, `{% if foo('string') %}`, `{{ "string" }}` or `{% if foo("string") %}`.
   It can also include part of string with interpolation, like both string in `{{ 'string#{interpolation}string' }}`.
 
 - **TwigCsFixer\Token\Token::OPERATOR_TYPE**:
