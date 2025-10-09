@@ -107,8 +107,7 @@ This tool also provides a standard with only the twig rules
 and another standard with extra rules from the symfony coding standards.
 
 Everything is configurable, so take a look at the following documentation:
-- [CLI options](docs/command.md)
-- [Configuration file](docs/configuration.md)
-- [How to disable a rule on a specific file or line](docs/identifiers.md)
+- [Configuration](docs/configuration.md)
+- [Ignoring errors](docs/ignoring-errors.md)
 - [Rules & Standard](docs/rules.md)
 - [How to write a custom rule](docs/custom.md)

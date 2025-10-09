@@ -1,10 +1,28 @@
-# How to disable a rule on a specific file or line
+# Ignoring errors
+
+## Errors identifiers
 
 All errors have an identifier with the syntax: `A.B:C:D` with
 - A: The rule short name (mainly made from the class name)
 - B: The error identifier (like the error level or a specific name)
 - C: The line the error occurs
 - D: The position of the token in the line the error occurs
+
+> [!NOTE]
+> If you need to know the errors identifier you have/want to ignore, you can run
+> the linter command with the `--debug` options. This option will display error 
+> identifiers instead of messages. 
+
+## Ignoring an error with a comment
+
+### Ignoring a single error
+
+When you want to disable a rule, you can use of the following syntax:
+```twig
+{# twig-cs-fixer-disable A.B:C:D #} => Apply to the whole file
+{# twig-cs-fixer-disable-line A.B:C:D #} => Apply to the line of the comment
+{# twig-cs-fixer-disable-next-line A.B:C:D #} => Apply to the next line of the comment
+```
 
 NB: The four parts are optional, all those format are working
 - A
@@ -14,13 +32,6 @@ NB: The four parts are optional, all those format are working
 - A:C
 - A:C:D
 - A::D
-
-When you want to disable a rule, you can use of the following syntax:
-```twig
-{# twig-cs-fixer-disable A.B:C:D #} => Apply to the whole file
-{# twig-cs-fixer-disable-line A.B:C:D #} => Apply to the line of the comment
-{# twig-cs-fixer-disable-next-line A.B:C:D #} => Apply to the next line of the comment
-```
 
 For instance:
 ```twig
@@ -34,12 +45,11 @@ For instance:
 {# twig-cs-fixer-disable-next-line A::42 #} => Disable the rule A for the next line but only for the token 42
 ```
 
+### Ignoring multiple errors
+
 You can also disable multiple errors with a single comment, by separating them
 with a space or a comma:
 ```twig
 {# twig-cs-fixer-disable A B C #} => Disable A and B and C for the whole file
 {# twig-cs-fixer-disable-line A.B,C.D #} => Disable A.B and C.D for the current line
 ```
-
-If you need to know the errors identifier you have/want to ignore, you can run the 
-linter command with the `--debug` options. See also [the command options](command.md).

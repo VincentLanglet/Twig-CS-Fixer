@@ -1,4 +1,4 @@
-# Configuration file
+# Configuration
 
 ## Standard
 
@@ -114,11 +114,19 @@ $config->setCacheFile(null);
 return $config;
 ```
 
-## Custom Reporters
+## Reporters
 
-By default, the output of the tool is rendered in one the following formats:
-`text`, `checkstyle`, `github`, `junit`, `gitlab`, `null`. If you want to use a custom
-format for reporting, you can configure it in your config file:
+The `--report` option allows to choose the output format for the linter report.
+
+Supported formats are:
+- `text` selected by default.
+- `checkstyle` following the common checkstyle XML schema.
+- `github` if you want annotations on GitHub actions.
+- `junit` following JUnit schema XML from Jenkins.
+- `gitlab` if you want annotations in Gitlab code quality format.
+- `null` if you don't want any reporting.
+
+If you want to use a custom format for reporting, you can configure it in your config file:
 
 ```php
 <?php
