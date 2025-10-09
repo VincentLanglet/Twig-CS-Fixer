@@ -15,7 +15,7 @@ All errors have an identifier with the syntax: `A.B:C:D` with
 
 ## Ignoring an error with a comment
 
-### Ignoring a single error
+### A single error
 
 When you want to disable a rule, you can use of the following syntax:
 ```twig
@@ -45,7 +45,7 @@ For instance:
 {# twig-cs-fixer-disable-next-line A::42 #} => Disable the rule A for the next line but only for the token 42
 ```
 
-### Ignoring multiple errors
+### Multiple errors
 
 You can also disable multiple errors with a single comment, by separating them
 with a space or a comma:
