@@ -35,9 +35,6 @@ final class CustomTwigExtension implements ExtensionInterface
         return [];
     }
 
-    /**
-     * @phpstan-ignore missingType.iterableValue
-     */
     public function getOperators(): array
     {
         return [[], []];
