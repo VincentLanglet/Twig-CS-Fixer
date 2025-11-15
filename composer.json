@@ -59,6 +59,9 @@
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true
         },
+        "audit": {
+            "block-insecure": false
+        },
         "sort-packages": true
     }
 }
