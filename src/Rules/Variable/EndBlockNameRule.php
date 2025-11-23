@@ -9,7 +9,7 @@ use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
 /**
- * Ensures that block name is set at the end of the block.
+ * Ensures that the name is set at the end of the block.
  */
 final class EndBlockNameRule extends AbstractFixableRule
 {

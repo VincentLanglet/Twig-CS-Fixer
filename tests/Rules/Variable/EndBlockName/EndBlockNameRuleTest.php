@@ -1,6 +1,6 @@
 <?php
 
-namespace Rules\Variable\EndBlockName;
+namespace TwigCsFixer\Tests\Rules\Variable\EndBlockName;
 
 use TwigCsFixer\Rules\Variable\EndBlockNameRule;
 use TwigCsFixer\Test\AbstractRuleTestCase;
