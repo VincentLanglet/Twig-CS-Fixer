@@ -11,9 +11,9 @@ class EndMacroNameRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new EndMacroNameRule(), [
-            'EndMacroName.Error:2:4' => 'The end macro must have the "test" name.',
-            'EndMacroName.Error:6:4' => 'The end macro must have the "outer_macro" name.',
-            'EndMacroName.Error:9:8' => 'The end macro must have the "inner_macro" name.',
+            'EndMacroName.Error:2:4' => 'The endmacro must have the "test" name.',
+            'EndMacroName.Error:6:4' => 'The endmacro must have the "outer_macro" name.',
+            'EndMacroName.Error:9:8' => 'The endmacro must have the "inner_macro" name.',
         ]);
     }
 }
