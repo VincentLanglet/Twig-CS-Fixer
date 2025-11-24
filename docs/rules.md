@@ -27,6 +27,11 @@
 
   Ensures that 2 empty lines do not follow each other.
 
+- **EndBlockNameRule** (Configurable):
+
+  Ensures that end block or end macro has a name. Options are:
+    - `blocks`: list of the block to apply this rule to (default 'block' and 'macro').
+
 - **HashQuoteRule** (Configurable): 
 
   Ensures that hash key are not unnecessarily quoted. Options are:

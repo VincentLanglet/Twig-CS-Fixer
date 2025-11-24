@@ -789,9 +789,11 @@ final class TokenizerTest extends TestCase
                 88 => Token::WHITESPACE_TYPE,
                 89 => Token::BLOCK_NAME_TYPE,
                 90 => Token::WHITESPACE_TYPE,
-                91 => Token::BLOCK_END_TYPE,
-                92 => Token::EOL_TYPE,
-                93 => Token::EOF_TYPE,
+                91 => Token::NAME_TYPE,
+                92 => Token::WHITESPACE_TYPE,
+                93 => Token::BLOCK_END_TYPE,
+                94 => Token::EOL_TYPE,
+                95 => Token::EOF_TYPE,
             ],
         ];
 
