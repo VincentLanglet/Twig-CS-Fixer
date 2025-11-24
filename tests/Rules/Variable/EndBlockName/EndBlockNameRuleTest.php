@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Rules\Variable\EndBlockName;
 
 use TwigCsFixer\Rules\Variable\EndBlockNameRule;

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCsFixer\Tests\Rules\Variable\EndMacroName;
 
-use TwigCsFixer\Rules\Variable\EndBlockNameRule;
 use TwigCsFixer\Rules\Variable\EndMacroNameRule;
 use TwigCsFixer\Test\AbstractRuleTestCase;
 
