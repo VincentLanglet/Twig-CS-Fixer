@@ -22,6 +22,7 @@ jobs:
                     - 8.2
                     - 8.3
                     - 8.4
+                    - 8.5
                 dependencies: [highest]
                 runner: [ubuntu-latest]
                 symfony-require: ['']
@@ -29,14 +30,14 @@ jobs:
                     - php-version: 8.0
                       dependencies: lowest
                       name: PHP 8.0 - lowest
-                    - php-version: 8.4
+                    - php-version: 8.5
                       dependencies: highest
-                      symfony-require: 7.3.*
-                      name: PHP 8.4 - highest - Symfony 7.3
-                    - php-version: 8.4
+                      symfony-require: 7.4.*
+                      name: PHP 8.5 - highest - Symfony 7.4
+                    - php-version: 8.5
                       dependencies: highest
                       symfony-require: 8.0.*@dev
-                      name: PHP 8.4 - highest - Symfony 8.0@dev
+                      name: PHP 8.5 - highest - Symfony 8.0@dev
 
         steps:
             - name: Checkout
