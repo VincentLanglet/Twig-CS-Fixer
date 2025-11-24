@@ -48,6 +48,11 @@ class EndBlockNameRuleTest extends AbstractRuleTestCase
             'EndBlockName.Error:2:4' => 'The endmacro must have the "test" name.',
             'EndBlockName.Error:6:4' => 'The endmacro must have the "outer_macro" name.',
             'EndBlockName.Error:9:8' => 'The endmacro must have the "inner_macro" name.',
-        ], fixedFilePath: __DIR__.'/EndNameBlockRuleTest.fixed.macro.twig');
+        ], fixedFilePath: __DIR__.'/EndBlockNameRuleTest.fixed.macro.twig');
+    }
+
+    public function testRuleWithoutBlockName(): void
+    {
+        $this->checkRule(new EndBlockNameRule(['sandbox']), [], filePath: __DIR__.'/EndBlockNameRuleTest.custom.twig');
     }
 }

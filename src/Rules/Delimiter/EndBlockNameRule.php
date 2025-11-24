@@ -8,6 +8,7 @@ use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
+use Webmozart\Assert\Assert;
 
 /**
  * Ensures that end block or end macro has a name.
@@ -66,6 +67,7 @@ class EndBlockNameRule extends AbstractFixableRule implements ConfigurableRuleIn
         if (!$nameToken instanceof Token) {
             return;
         }
+
         $value = $nameToken->getValue();
         $fixer = $this->addFixableError(
             'The '.$endName.' must have the "'.$value.'" name.',
@@ -79,10 +81,8 @@ class EndBlockNameRule extends AbstractFixableRule implements ConfigurableRuleIn
 
     private function findNameToken(int $index, Tokens $tokens): ?Token
     {
-        $next = $tokens->findNext([Token::NAME_TYPE, Token::MACRO_NAME_TYPE, Token::BLOCK_END_TYPE], $index);
-        if (false === $next) {
-            return null;
-        }
+        $next = $tokens->findNext(Token::EMPTY_TOKENS, $index, exclude: true);
+        Assert::notFalse($next, 'A block name cannot be the last token.');
         $token = $tokens->get($next);
 
         return $token->isMatching(Token::BLOCK_END_TYPE) ? null : $token;
