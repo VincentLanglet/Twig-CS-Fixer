@@ -73,18 +73,5 @@ abstract class AbstractEndNameRule extends AbstractFixableRule
         $token = $tokens->get($next);
 
         return $token->isMatching(Token::BLOCK_END_TYPE) ? null : $token;
-
-        //        $matching = $token->isMatching(Token::BLOCK_END_TYPE);
-        //
-        //
-        //        while ($tokens->has($index) && $tokens->get($index)->isMatching(Token::WHITESPACE_TOKENS)) {
-        //            ++$index;
-        //        }
-        //        if (!$tokens->has($index)) {
-        //            return null;
-        //        }
-        //        $token = $tokens->get($index);
-        //
-        //        return $token->isMatching([Token::NAME_TYPE, Token::MACRO_NAME_TYPE]) ? $token : null;
     }
 }
