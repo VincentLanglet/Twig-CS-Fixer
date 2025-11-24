@@ -5,18 +5,38 @@ declare(strict_types=1);
 namespace TwigCsFixer\Rules\Variable;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
-/**
- * Ensures that the name is set at the end.
- */
-abstract class AbstractEndNameRule extends AbstractFixableRule
+class EndNameRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
+    /**
+     * @param list<string> $blocks
+     */
+    public function __construct(private array $blocks = ['block', 'macro'])
+    {
+    }
+
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
+        foreach ($this->blocks as $block) {
+            $this->processBlock($tokenIndex, $tokens, $block);
+        }
+    }
+
+    public function getConfiguration(): array
+    {
+        return [
+            'blocks' => $this->blocks,
+        ];
+    }
+
+    private function processBlock(int $tokenIndex, Tokens $tokens, string $block): void
+    {
+        $endName = 'end'.$block;
         $token = $tokens->get($tokenIndex);
-        if (!$token->isMatching(Token::BLOCK_NAME_TYPE, $this->getEndName())) {
+        if (!$token->isMatching(Token::BLOCK_NAME_TYPE, $endName)) {
             return;
         }
 
@@ -30,9 +50,9 @@ abstract class AbstractEndNameRule extends AbstractFixableRule
         while ($indent > 0) {
             $previous = $tokens->findPrevious(Token::BLOCK_NAME_TYPE, $index - 1);
             if (false !== $previous) {
-                if ($tokens->get($previous)->getValue() === $this->getEndName()) {
+                if ($tokens->get($previous)->getValue() === $endName) {
                     ++$indent;
-                } elseif ($tokens->get($previous)->getValue() === $this->getStartName()) {
+                } elseif ($tokens->get($previous)->getValue() === $block) {
                     --$indent;
                 }
                 $index = $previous;
@@ -45,7 +65,7 @@ abstract class AbstractEndNameRule extends AbstractFixableRule
         }
         $value = $nameToken->getValue();
         $fixer = $this->addFixableError(
-            'The '.$this->getEndName().' must have the "'.$value.'" name.',
+            'The '.$endName.' must have the "'.$value.'" name.',
             $token
         );
         if (null === $fixer) {
@@ -53,16 +73,6 @@ abstract class AbstractEndNameRule extends AbstractFixableRule
         }
         $fixer->addContent($tokenIndex, ' '.$value);
     }
-
-    /**
-     * Gets the end name.
-     */
-    abstract protected function getEndName(): string;
-
-    /**
-     * Gets the start name.
-     */
-    abstract protected function getStartName(): string;
 
     private function findNameToken(int $index, Tokens $tokens): ?Token
     {
