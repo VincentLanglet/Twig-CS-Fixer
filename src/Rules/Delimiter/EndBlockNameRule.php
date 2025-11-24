@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCsFixer\Rules\Variable;
+namespace TwigCsFixer\Rules\Delimiter;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
 use TwigCsFixer\Rules\ConfigurableRuleInterface;
@@ -12,7 +12,7 @@ use TwigCsFixer\Token\Tokens;
 /**
  * Ensures that end block or end macro has a name.
  */
-class EndNameRule extends AbstractFixableRule implements ConfigurableRuleInterface
+class EndBlockNameRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
     /**
      * @param list<string> $blocks

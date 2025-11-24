@@ -1,0 +1,24 @@
+{% macro test() %}
+{% endmacro %}
+{% macro outer_macro() %}
+    {% macro inner_macro() %}
+    {% endmacro inner_macro %}
+{% endmacro %}
+{% macro outer_macro() %}
+    {% macro inner_macro() %}
+    {% endmacro %}
+{% endmacro outer_macro %}
+{% macro valid() %}
+{% endmacro valid %}
+{% block test %}
+{% endblock test %}
+{% block outer_block %}
+    {% block inner_block %}
+    {% endblock inner_block %}
+{% endblock outer_block %}
+{% block outer_block %}
+    {% block inner_block %}
+    {% endblock inner_block %}
+{% endblock outer_block %}
+{% block valid %}
+{% endblock valid %}
