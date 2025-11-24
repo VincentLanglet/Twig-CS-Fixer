@@ -28,14 +28,14 @@ abstract class AbstractEndNameRule extends AbstractFixableRule
         $indent = 1;
         $index = $tokenIndex;
         while ($indent > 0) {
-            $index = $tokens->findPrevious(Token::BLOCK_NAME_TYPE, $index - 1);
-            if (false === $index) {
-                continue;
-            }
-            if ($tokens->get($index)->getValue() === $this->getEndName()) {
-                ++$indent;
-            } elseif ($tokens->get($index)->getValue() === $this->getStartName()) {
-                --$indent;
+            $previous = $tokens->findPrevious(Token::BLOCK_NAME_TYPE, $index - 1);
+            if (false !== $previous) {
+                if ($tokens->get($previous)->getValue() === $this->getEndName()) {
+                    ++$indent;
+                } elseif ($tokens->get($previous)->getValue() === $this->getStartName()) {
+                    --$indent;
+                }
+                $index = $previous;
             }
         }
 
@@ -73,5 +73,18 @@ abstract class AbstractEndNameRule extends AbstractFixableRule
         $token = $tokens->get($next);
 
         return $token->isMatching(Token::BLOCK_END_TYPE) ? null : $token;
+
+        //        $matching = $token->isMatching(Token::BLOCK_END_TYPE);
+        //
+        //
+        //        while ($tokens->has($index) && $tokens->get($index)->isMatching(Token::WHITESPACE_TOKENS)) {
+        //            ++$index;
+        //        }
+        //        if (!$tokens->has($index)) {
+        //            return null;
+        //        }
+        //        $token = $tokens->get($index);
+        //
+        //        return $token->isMatching([Token::NAME_TYPE, Token::MACRO_NAME_TYPE]) ? $token : null;
     }
 }
