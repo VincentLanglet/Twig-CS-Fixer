@@ -9,6 +9,9 @@ use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
+/**
+ * Ensures that end block or end macro has a name.
+ */
 class EndNameRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
     /**
@@ -76,7 +79,7 @@ class EndNameRule extends AbstractFixableRule implements ConfigurableRuleInterfa
 
     private function findNameToken(int $index, Tokens $tokens): ?Token
     {
-        $next = $tokens->findNext([Token::NAME_TYPE, Token::MACRO_NAME_TYPE, Token::BLOCK_END_TYPE], $index + 1);
+        $next = $tokens->findNext([Token::NAME_TYPE, Token::MACRO_NAME_TYPE, Token::BLOCK_END_TYPE], $index);
         if (false === $next) {
             return null;
         }
