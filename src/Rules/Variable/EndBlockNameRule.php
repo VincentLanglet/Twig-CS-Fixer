@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules\Variable;
 
-
 /**
  * Ensures that the name is set at the end of the block.
  */
