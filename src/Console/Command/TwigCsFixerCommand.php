@@ -26,10 +26,12 @@ use Webmozart\Assert\Assert;
  */
 final class TwigCsFixerCommand extends Command
 {
+    public const NAME = 'lint';
+
     protected function configure(): void
     {
         $this
-            ->setName('lint')
+            ->setName(self::NAME)
             ->setAliases(['check', 'fix'])
             ->setDescription('Lints a template and outputs encountered errors')
             ->setDefinition([

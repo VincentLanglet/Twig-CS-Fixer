@@ -8,10 +8,11 @@ includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
 parameters:
-    phpVersion: 80300
     tmpDir: /tmp/phpstan
     level: max
     paths:
+        - .phpstan
+        - bin
         - src
         - tests
     parallel:
