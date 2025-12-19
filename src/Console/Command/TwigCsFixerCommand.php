@@ -100,6 +100,10 @@ final class TwigCsFixerCommand extends Command
             return self::INVALID;
         }
 
+        foreach ($report->getFixedFiles() as $fixedFile) {
+            $output->writeln(\sprintf(' <fg=red>[FIX] %s</>', $fixedFile));
+        }
+
         return 0 === $report->getTotalErrors() ? self::SUCCESS : self::FAILURE;
     }
 

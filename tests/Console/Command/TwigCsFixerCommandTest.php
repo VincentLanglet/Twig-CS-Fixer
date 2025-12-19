@@ -82,16 +82,19 @@ final class TwigCsFixerCommandTest extends FileTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'paths' => [$this->getTmpPath(__DIR__.'/Fixtures')],
+            'paths' => [$tmpPath = $this->getTmpPath(__DIR__.'/Fixtures')],
             '--fix' => true,
         ]);
 
         $display = $commandTester->getDisplay();
         static::assertStringNotContainsString('Changed', $display);
-        static::assertStringNotContainsString(TestHelper::getOsPath('directory/fixable/file.twig'), $display);
         static::assertStringContainsString(TestHelper::getOsPath('directory/error/file.twig'), $display);
         static::assertStringContainsString(
             '[ERROR] Files linted: 3, notices: 0, warnings: 0, errors: 1',
+            $display
+        );
+        static::assertStringContainsString(
+            \sprintf('[FIX] %s', TestHelper::getOsPath("{$tmpPath}/directory/fixable/file.twig")),
             $display
         );
         static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
