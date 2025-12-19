@@ -251,4 +251,19 @@ final class TextReporterTest extends TestCase
         yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', Violation::LEVEL_ERROR];
         yield ['[ERROR] Files linted: 1, notices: 0, warnings: 0, errors: 1', Violation::LEVEL_FATAL];
     }
+
+    public function testDisplayPathOfFixedFile(): void
+    {
+        $textFormatter = new TextReporter();
+
+        $file = TestHelper::getOsPath(__DIR__.'/Fixtures/file.twig');
+        $report = new Report([new \SplFileInfo($file)]);
+        $report->addFixedFile($file);
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+        $textFormatter->display($output, $report, null, false);
+
+        $text = $output->fetch();
+        static::assertStringContainsString("[FIXED] {$file}", $text);
+    }
 }

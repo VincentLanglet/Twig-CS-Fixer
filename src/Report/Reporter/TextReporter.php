@@ -106,6 +106,10 @@ final class TextReporter implements ReporterInterface
         } else {
             $io->success($summaryString);
         }
+
+        foreach ($report->getFixedFiles() as $fixedFile) {
+            $output->writeln(\sprintf(' [FIXED] %s</>', $fixedFile));
+        }
     }
 
     /**
