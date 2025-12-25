@@ -10,6 +10,6 @@ require __DIR__.'/../vendor/autoload.php';
 $command = new TwigCsFixerCommand();
 
 $application = new Application();
-$application->add($command);
+$application->addCommands([$command]);
 
 return $application;

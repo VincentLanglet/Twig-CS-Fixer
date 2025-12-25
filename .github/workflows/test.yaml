@@ -36,8 +36,8 @@ jobs:
                       name: PHP 8.5 - highest - Symfony 7.4
                     - php-version: 8.5
                       dependencies: highest
-                      symfony-require: 8.0.*@dev
-                      name: PHP 8.5 - highest - Symfony 8.0@dev
+                      symfony-require: 8.0.*
+                      name: PHP 8.5 - highest - Symfony 8.0
 
         steps:
             - name: Checkout
@@ -61,10 +61,6 @@ jobs:
             - name: Add matrix to composer.json for cache key
               if: matrix.symfony-require != ''
               run: composer config extra.symfony-require-for-cache "${{ matrix.symfony-require }}"
-
-            - name: Remove conflicting dependencies for Symfony 8 dev
-              if: matrix.symfony-require == '8.0.*@dev'
-              run: composer remove --dev friendsofphp/php-cs-fixer infection/infection twig/cache-extra --no-update
 
             - name: Install Composer dependencies ${{ matrix.dependencies }}
               uses: ramsey/composer-install@v3
