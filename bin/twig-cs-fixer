@@ -20,11 +20,6 @@ use TwigCsFixer\Console\Command\TwigCsFixerCommand;
 $command = new TwigCsFixerCommand();
 
 $application = new Application();
-// Compatibility layer for symfony/console <7.4
-if (method_exists($application, 'addCommand')) { // @phpstan-ignore function.alreadyNarrowedType
-    $application->addCommand($command);
-} else {
-    $application->add($command);
-}
+$application->addCommands([$command]);
 $application->setDefaultCommand(TwigCsFixerCommand::NAME);
 $application->run();
