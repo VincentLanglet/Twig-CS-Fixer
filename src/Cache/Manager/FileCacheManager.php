@@ -42,7 +42,7 @@ final class FileCacheManager implements CacheManagerInterface
     /**
      * This class is not intended to be serialized, and cannot be deserialized.
      */
-    public function __sleep(): array
+    public function __serialize(): array
     {
         throw new \BadMethodCallException(\sprintf('Cannot serialize %s.', self::class));
     }
@@ -51,8 +51,10 @@ final class FileCacheManager implements CacheManagerInterface
      * Prevent attacker executing code by leveraging the __destruct method.
      *
      * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
+     *
+     * @param array<mixed> $data
      */
-    public function __wakeup(): void
+    public function __unserialize(array $data): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot unserialize %s.', self::class));
     }
