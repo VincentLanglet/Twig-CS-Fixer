@@ -331,8 +331,10 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match("/^\r\n?|^\n/", $currentCode.$nextToken, $match)) {
             $this->lexEOL($match[0]);
         } elseif ('.' === $currentCode && '.' === $nextToken && '.' === $next2Token) {
+            // NEXT_MAJOR: Should be an OPERATOR_TYPE like in Twig 3.21+
             $this->lexSpread();
         } elseif ('=' === $currentCode && '>' === $nextToken) {
+            // NEXT_MAJOR: Should be an OPERATOR_TYPE like in Twig 3.21+
             $this->lexArrowFunction();
         } elseif (1 === preg_match($this->operatorRegex, $this->code, $match, 0, $this->cursor)) {
             $this->lexOperator($match[0]);
@@ -341,6 +343,7 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $this->lexNumber($match[0]);
         } elseif (\in_array($currentCode, ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'], true)) {
+            // NEXT_MAJOR: `.` and `|` should be operator instead like in Twig 3.21+
             $this->lexPunctuation();
         } elseif (1 === preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
             $this->lexString($match[0]);
@@ -805,7 +808,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         /** @var string[] $operators */
-        $operators = ['=', '?', '?:', ...$expressionParsers];
+        $operators = ['=', '?', '?:', '?.', ...$expressionParsers];
         $lengthByOperator = [];
         foreach ($operators as $operator) {
             $lengthByOperator[$operator] = \strlen($operator);
