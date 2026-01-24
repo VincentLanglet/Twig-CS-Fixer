@@ -13,26 +13,8 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
     {
         static::assertSame(
             [
-                'before' => [
-                    ')' => 0,
-                    ']' => 0,
-                    '}' => 0,
-                    ':' => 0,
-                    '.' => 0,
-                    ',' => 0,
-                    '|' => 0,
-                    '?:' => 0,
-                ],
-                'after' => [
-                    '(' => 0,
-                    '[' => 0,
-                    '{' => 0,
-                    '.' => 0,
-                    '|' => 0,
-                    ':' => 1,
-                    ',' => 1,
-                    '?:' => 1,
-                ],
+                'before' => [],
+                'after' => [],
             ],
             (new PunctuationSpacingRule())->getConfiguration()
         );
@@ -41,23 +23,9 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
             [
                 'before' => [
                     '}' => null,
-                    ')' => 0,
-                    ']' => 0,
-                    ':' => 0,
-                    '.' => 0,
-                    ',' => 0,
-                    '|' => 0,
-                    '?:' => 0,
                 ],
                 'after' => [
                     '{' => null,
-                    '(' => 0,
-                    '[' => 0,
-                    '.' => 0,
-                    '|' => 0,
-                    ':' => 1,
-                    ',' => 1,
-                    '?:' => 1,
                 ],
             ],
             (new PunctuationSpacingRule(['}' => null], ['{' => null]))->getConfiguration()

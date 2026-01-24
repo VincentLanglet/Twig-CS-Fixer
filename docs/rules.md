@@ -59,15 +59,18 @@
 
   Ensures there is no consecutive spaces inside operator names.
 
-- **OperatorSpacingRule**:
+- **OperatorSpacingRule**: (Configurable):
 
-  Ensures there is one space before and after an operator except for `..`.
+  Ensures there is no space before and after ':', '..' and '?.', and 
+  there is one space before and after other operators. Options are:
+    - `beforeOverride`: used to override the space before check for specific operators.
+    - `afterOverride`: used to override the space after check for specific operators.
 
 - **PunctuationSpacingRule** (Configurable):
 
   Ensures there is no space before and after a punctuation except for `:` and `,`. Options are:
-    - `punctuationWithSpaceBefore`: used to override the space before check.
-    - `punctuationWithSpaceAfter`: used to override the space after check.
+    - `beforeOverride`: used to override the space before check for specific punctuations.
+    - `afterOverride`: used to override the space after check for specific punctuations.
 
 - **SingleQuoteRule** (Configurable):
 

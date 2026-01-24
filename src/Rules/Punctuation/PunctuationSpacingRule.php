@@ -36,29 +36,21 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
         '?:' => 1,
     ];
 
-    /** @var array<string, int|null> */
-    private array $punctuationWithSpaceBefore;
-
-    /** @var array<string, int|null> */
-    private array $punctuationWithSpaceAfter;
-
     /**
-     * @param array<string, int|null> $punctuationWithSpaceBefore
-     * @param array<string, int|null> $punctuationWithSpaceAfter
+     * @param array<string, int|null> $beforeOverride
+     * @param array<string, int|null> $afterOverride
      */
     public function __construct(
-        array $punctuationWithSpaceBefore = [],
-        array $punctuationWithSpaceAfter = [],
+        private array $beforeOverride = [],
+        private array $afterOverride = [],
     ) {
-        $this->punctuationWithSpaceBefore = $punctuationWithSpaceBefore + self::DEFAULT_SPACE_BEFORE;
-        $this->punctuationWithSpaceAfter = $punctuationWithSpaceAfter + self::DEFAULT_SPACE_AFTER;
     }
 
     public function getConfiguration(): array
     {
         return [
-            'before' => $this->punctuationWithSpaceBefore,
-            'after' => $this->punctuationWithSpaceAfter,
+            'before' => $this->beforeOverride,
+            'after' => $this->afterOverride,
         ];
     }
 
@@ -69,7 +61,12 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
             return null;
         }
 
-        return $this->punctuationWithSpaceBefore[$token->getValue()] ?? null;
+        $value = $token->getValue();
+        if (\array_key_exists($value, $this->beforeOverride)) {
+            return $this->beforeOverride[$value];
+        }
+
+        return self::DEFAULT_SPACE_BEFORE[$value] ?? null;
     }
 
     protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
@@ -87,6 +84,11 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
             return null;
         }
 
-        return $this->punctuationWithSpaceAfter[$token->getValue()] ?? null;
+        $value = $token->getValue();
+        if (\array_key_exists($value, $this->afterOverride)) {
+            return $this->afterOverride[$value];
+        }
+
+        return self::DEFAULT_SPACE_AFTER[$value] ?? null;
     }
 }

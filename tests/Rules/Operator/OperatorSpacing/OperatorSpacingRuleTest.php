@@ -9,6 +9,29 @@ use TwigCsFixer\Test\AbstractRuleTestCase;
 
 final class OperatorSpacingRuleTest extends AbstractRuleTestCase
 {
+    public function testConfiguration(): void
+    {
+        static::assertSame(
+            [
+                'before' => [],
+                'after' => [],
+            ],
+            (new OperatorSpacingRule())->getConfiguration()
+        );
+
+        static::assertSame(
+            [
+                'before' => [
+                    '+' => null,
+                ],
+                'after' => [
+                    '-' => null,
+                ],
+            ],
+            (new OperatorSpacingRule(['+' => null], ['-' => null]))->getConfiguration()
+        );
+    }
+
     public function testRule(): void
     {
         $this->checkRule(new OperatorSpacingRule(), [
@@ -71,6 +94,19 @@ final class OperatorSpacingRuleTest extends AbstractRuleTestCase
             new OperatorSpacingRule(),
             [],
             __DIR__.'/OperatorSpacingRuleTest.tab.twig'
+        );
+    }
+
+    public function testRuleWithConfiguration(): void
+    {
+        $this->checkRule(
+            new OperatorSpacingRule(['=' => 2], ['=' => 0]),
+            [
+                'OperatorSpacing.After:1:12' => 'Expecting 0 whitespace after "="; found 1.',
+                'OperatorSpacing.Before:1:12' => 'Expecting 2 whitespace before "="; found 1.',
+            ],
+            __DIR__.'/OperatorSpacingRuleTest.tab.twig',
+            false,
         );
     }
 }
