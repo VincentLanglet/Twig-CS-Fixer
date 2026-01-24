@@ -25,7 +25,7 @@ final class OperatorSpacingRule extends AbstractSpacingRule
             return $this->isUnary($tokenIndex, $tokens) ? null : 1;
         }
 
-        if ($token->isMatching(Token::OPERATOR_TYPE, '..')) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, ['..', '?.'])) {
             return 0;
         }
 
@@ -49,7 +49,7 @@ final class OperatorSpacingRule extends AbstractSpacingRule
             return $this->isUnary($tokenIndex, $tokens) ? 0 : 1;
         }
 
-        if ($token->isMatching(Token::OPERATOR_TYPE, '..')) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, ['..', '?.'])) {
             return 0;
         }
 
