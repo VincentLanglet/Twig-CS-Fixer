@@ -76,7 +76,7 @@ Ensures there is a single space after `:` in hashes and `,` in arrays and hashes
 
 Removes any space after an opening parenthesis and before a closing parenthesis in expressions.
 
-Removes any space before and after the following operators: `|`, `.`, `[]`.
+Removes any space before and after the following operators: `|`, `.`,`[]`.
 
 Removes any space before and after parenthesis in filter and function calls.
 

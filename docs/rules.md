@@ -62,7 +62,7 @@
 - **OperatorSpacingRule**: (Configurable):
 
   Ensures there is no space before and after ':', '..' and '?.', and 
-  there is one space before and after other operators. Options are:
+  there is one space before and after other non-unary and non-ternary operators. Options are:
     - `beforeOverride`: used to override the space before check for specific operators.
     - `afterOverride`: used to override the space after check for specific operators.
 
@@ -77,6 +77,10 @@
   Ensures that strings use single quotes when possible. Options are:
     - `skipStringContainingSingleQuote`: ignore double-quoted strings that contains single-quotes (default true).
 
+- **TernaryOperatorSpacingRule**:
+
+  Ensures there is one space before and after ternary operators.
+
 - **TrailingCommaMultiLineRule** (Configurable):
 
   Ensures that multi-line arrays, objects and argument lists have a trailing comma. Options are:
@@ -89,6 +93,10 @@
 - **TrailingSpaceRule**:
 
   Ensures that files have no trailing spaces.
+
+- **UnaryOperatorSpacingRule**:
+
+  Ensures there is one space after `not` and no space after others unary operators.
 
 ### Non-fixable
 
@@ -180,6 +188,8 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 - OperatorNameSpacingRule
 - OperatorSpacingRule
 - PunctuationSpacingRule
+- TernaryOperatorSpacingRule
+- UnaryOperatorSpacingRule
 - VariableNameRule
 
 ### TwigCsFixer

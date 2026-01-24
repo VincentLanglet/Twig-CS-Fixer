@@ -17,6 +17,8 @@ use TwigCsFixer\Rules\Literal\HashQuoteRule;
 use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\TernaryOperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\UnaryOperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
@@ -42,6 +44,8 @@ final class TwigCsFixerTest extends TestCase
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
+            new TernaryOperatorSpacingRule(),
+            new UnaryOperatorSpacingRule(),
             new VariableNameRule(),
             new BlankEOFRule(),
             new BlockNameSpacingRule(),

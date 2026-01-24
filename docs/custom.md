@@ -47,11 +47,20 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
 - **TwigCsFixer\Token\Token::OPERATOR_TYPE**:
 
-  Any twig operator like `+`, `-`, `and`, `or`, etc. Also include `?` and `:` when used in ternary.
+  Any twig operator like `+`, `-`, `and`, `or`, etc. Do not include unary and ternary operators.
+
+- **TwigCsFixer\Token\Token::UNARY_OPERATOR_TYPE**:
+
+  Any twig unary operator like `not`, `-`, `+`.
+
+- **TwigCsFixer\Token\Token::TERNARY_OPERATOR_TYPE**:
+
+  `?` and `:` when used in ternary.
 
 - **TwigCsFixer\Token\Token::PUNCTUATION_TYPE**:
 
-  One of the `(`, `)`, `[`, `]`, `{`, `}`, `:`, `.`, `,`, `|` characters. For `:`, only when it's not a ternary.
+  One of the `(`, `)`, `[`, `]`, `{`, `}`, `:`, `.`, `,`, `|` characters. 
+  For `:`, only when it's not a ternary nor a slice operator.
 
 - **TwigCsFixer\Token\Token::INTERPOLATION_START_TYPE**:
 
