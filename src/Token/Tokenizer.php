@@ -43,6 +43,8 @@ final class Tokenizer implements TokenizerInterface
     private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PATTERN.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
 
+    private const PUNCTUATIONS = ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'];
+
     /**
      * @var non-empty-string
      */
@@ -342,7 +344,7 @@ final class Tokenizer implements TokenizerInterface
             $this->lexName($match[0]);
         } elseif (1 === preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $this->lexNumber($match[0]);
-        } elseif (\in_array($currentCode, ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'], true)) {
+        } elseif (\in_array($currentCode, self::PUNCTUATIONS, true)) {
             // NEXT_MAJOR: `.` and `|` should be operator instead like in Twig 3.21+
             $this->lexPunctuation();
         } elseif (1 === preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
@@ -787,8 +789,8 @@ final class Tokenizer implements TokenizerInterface
             // @phpstan-ignore-next-line method.internal
             foreach ($env->getExpressionParsers() as $expressionParser) {
                 foreach ([$expressionParser->getName(), ...$expressionParser->getAliases()] as $name) {
-                    // Avoid conflict with ARROW_TYPE and PUNCTUATION_TYPE
-                    if (\in_array($name, ['=>', '(', '[', '|', '.'], true)) {
+                    // Avoid conflict with PUNCTUATION_TYPE
+                    if (\in_array($name, self::PUNCTUATIONS, true)) {
                         continue;
                     }
 
@@ -806,7 +808,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         /** @var string[] $operators */
-        $operators = ['=', '?', '?:', ...$expressionParsers];
+        $operators = ['=', '?', '?:', '?.', ...$expressionParsers];
         $lengthByOperator = [];
         foreach ($operators as $operator) {
             $lengthByOperator[$operator] = \strlen($operator);
