@@ -786,15 +786,13 @@ final class Tokenizer implements TokenizerInterface
             $expressionParsers = [];
             // @phpstan-ignore-next-line method.internal
             foreach ($env->getExpressionParsers() as $expressionParser) {
-                $operator = $expressionParser->getName();
-                // Avoid conflict with ARROW_TYPE and PUNCTUATION_TYPE
-                if (\in_array($operator, ['=>', '(', '[', '|', '.'], true)) {
-                    continue;
-                }
+                foreach ([$expressionParser->getName(), ...$expressionParser->getAliases()] as $name) {
+                    // Avoid conflict with ARROW_TYPE and PUNCTUATION_TYPE
+                    if (\in_array($name, ['=>', '(', '[', '|', '.'], true)) {
+                        continue;
+                    }
 
-                $expressionParsers[] = $operator;
-                foreach ($expressionParser->getAliases() as $alias) {
-                    $expressionParsers[] = $alias;
+                    $expressionParsers[] = $name;
                 }
             }
         } else {
@@ -808,7 +806,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         /** @var string[] $operators */
-        $operators = ['=', '?', '?:', '?.', ...$expressionParsers];
+        $operators = ['=', '?', '?:', ...$expressionParsers];
         $lengthByOperator = [];
         foreach ($operators as $operator) {
             $lengthByOperator[$operator] = \strlen($operator);
