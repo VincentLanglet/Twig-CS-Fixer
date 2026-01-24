@@ -45,7 +45,7 @@ final class OperatorSpacingRule extends AbstractSpacingRule implements Configura
             return $this->beforeOverride[$value];
         }
 
-        if ($token->isMatching(Token::OPERATOR_TYPE, [':', '..', '?.'])) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, ['.', '|', ':', '..', '?.'])) {
             return 0;
         }
 
@@ -64,7 +64,7 @@ final class OperatorSpacingRule extends AbstractSpacingRule implements Configura
             return $this->afterOverride[$value];
         }
 
-        if ($token->isMatching(Token::OPERATOR_TYPE, [':', '..', '?.'])) {
+        if ($token->isMatching(Token::OPERATOR_TYPE, ['.', '|', ':', '..', '?.'])) {
             return 0;
         }
 
