@@ -295,7 +295,7 @@ final class Tokenizer implements TokenizerInterface
             $value,
             $relatedToken
         );
-        $relatedToken?->setRelatedToken($token);
+        $relatedToken?->setRelatedToken($token, true);
 
         if (!\in_array($type, Token::EMPTY_TOKENS, true)) {
             $this->lastNonEmptyToken = $token;

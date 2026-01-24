@@ -136,9 +136,17 @@ final class Token
         return $this->relatedToken;
     }
 
-    public function setRelatedToken(self $token): void
+    public function setRelatedToken(self $token, bool $bidirectional = false): void
     {
         $this->relatedToken = $token;
+
+        if ($bidirectional) {
+            if (null !== $token->getRelatedToken()) {
+                throw new \InvalidArgumentException('Cannot create bidirectional relationship on token with a related token.');
+            }
+
+            $token->setRelatedToken($this);
+        }
     }
 
     /**

@@ -22,6 +22,38 @@ final class TokenTest extends TestCase
         static::assertSame($relatedToken, $token->getRelatedToken());
     }
 
+    public function testRelatedToken(): void
+    {
+        $relatedToken = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '[');
+        $token1 = new Token(Token::PUNCTUATION_TYPE, 1, 2, 'file.twig', ']', $relatedToken);
+
+        static::assertSame($relatedToken, $token1->getRelatedToken());
+        static::assertNull($relatedToken->getRelatedToken());
+
+        $token2 = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '[');
+        $token2->setRelatedToken($relatedToken);
+
+        static::assertSame($relatedToken, $token2->getRelatedToken());
+        static::assertNull($relatedToken->getRelatedToken());
+
+        $token3 = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '[');
+        $token3->setRelatedToken($relatedToken, true);
+
+        static::assertSame($relatedToken, $token3->getRelatedToken());
+        static::assertSame($token3, $relatedToken->getRelatedToken());
+
+        $token4 = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '[');
+        $token4->setRelatedToken($relatedToken);
+
+        static::assertSame($relatedToken, $token4->getRelatedToken());
+        static::assertSame($token3, $relatedToken->getRelatedToken());
+
+        $token5 = new Token(Token::PUNCTUATION_TYPE, 1, 1, 'file.twig', '[');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $token5->setRelatedToken($relatedToken, true);
+    }
+
     public function testNullValue(): void
     {
         $token = new Token(Token::EOF_TYPE, 2, 1, 'file.twig');
