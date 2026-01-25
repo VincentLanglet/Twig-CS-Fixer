@@ -18,6 +18,12 @@ The `Token::OPERATOR_TYPE` has been split in three:
 - `Token::TERNARY_OPERATOR_TYPE`
 - `Token::UNARY_OPERATOR_TYPE`
 
+The `Token::SPREAD_TYPE` has been removed in favor of `Token::UNARY_OPERATOR_TYPE`.
+
+The `Token::ARROW_TYPE` has been removed in favor of `Token::OPERATOR_TYPE`.
+
+The tokens `.` and `|` moved from `Token::PUNCTUATION_TYPE` to `Token::OPERATOR_TYPE`.
+
 FROM 2.x to 3.0
 ---------------
 
