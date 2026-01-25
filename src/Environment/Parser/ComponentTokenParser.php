@@ -17,7 +17,7 @@ final class ComponentTokenParser extends AbstractTokenParser
     {
         $stream = $this->parser->getStream();
 
-        $this->parser->getExpressionParser()->parseExpression();
+        $this->parseExpression();
         $this->parseArguments();
 
         $fakeParentToken = new Token(Token::STRING_TYPE, '__parent__', $token->getLine());
@@ -47,11 +47,22 @@ final class ComponentTokenParser extends AbstractTokenParser
         $stream = $this->parser->getStream();
 
         if (null !== $stream->nextIf(Token::NAME_TYPE, 'with')) {
-            $this->parser->getExpressionParser()->parseExpression();
+            $this->parseExpression();
         }
 
         $stream->nextIf(Token::NAME_TYPE, 'only');
 
         $stream->expect(Token::BLOCK_END_TYPE);
+    }
+
+    private function parseExpression(): void
+    {
+        // @phpstan-ignore-next-line
+        if (method_exists($this->parser, 'parseExpression')) {
+            // Since Twig 3.21
+            $this->parser->parseExpression();
+        } else {
+            $this->parser->getExpressionParser()->parseExpression();
+        }
     }
 }
