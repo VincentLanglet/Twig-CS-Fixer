@@ -46,7 +46,7 @@ final class CustomTwigExtension implements ExtensionInterface
             ['+sum' => [
                 'precedence' => 0,
                 'class' => AddBinary::class,
-                'associativity' => ExpressionParser::OPERATOR_RIGHT,
+                'associativity' => ExpressionParser::OPERATOR_RIGHT, // @phpstan-ignore classConstant.deprecatedClass
             ]],
         ];
     }

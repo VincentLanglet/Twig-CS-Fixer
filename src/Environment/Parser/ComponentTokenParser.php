@@ -57,12 +57,14 @@ final class ComponentTokenParser extends AbstractTokenParser
 
     private function parseExpression(): void
     {
-        // @phpstan-ignore-next-line
-        if (method_exists($this->parser, 'parseExpression')) {
-            // Since Twig 3.21
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (method_exists($this->parser, 'parseExpression')) { // Since Twig 3.21
             $this->parser->parseExpression();
         } else {
+            // @codeCoverageIgnoreStart
+            // @phpstan-ignore-next-line method.deprecated, method.deprecatedClass
             $this->parser->getExpressionParser()->parseExpression();
+            // @codeCoverageIgnoreEnd
         }
     }
 }

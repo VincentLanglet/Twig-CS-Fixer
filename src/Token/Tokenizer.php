@@ -799,9 +799,9 @@ final class Tokenizer implements TokenizerInterface
             }
         } else {
             // @codeCoverageIgnoreStart
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line method.notFound, argument.type
             $unaryOperators = array_keys($env->getUnaryOperators());
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line method.notFound, argument.type
             $binaryOperators = array_keys($env->getBinaryOperators());
             $expressionParsers = [...$unaryOperators, ...$binaryOperators];
             // @codeCoverageIgnoreEnd
