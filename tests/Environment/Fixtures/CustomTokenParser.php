@@ -13,6 +13,7 @@ final class CustomTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         if (!$this->parser->getStream()->test(Token::BLOCK_END_TYPE)) {
+            // @phpstan-ignore-next-line method.deprecated, method.deprecatedClass
             $this->parser->getExpressionParser()->parseMultitargetExpression();
         }
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
