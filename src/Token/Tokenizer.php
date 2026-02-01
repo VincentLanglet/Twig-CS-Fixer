@@ -285,7 +285,7 @@ final class Tokenizer implements TokenizerInterface
         ++$this->currentExpressionStarter;
     }
 
-    private function pushToken(int|string $type, string $value = '', ?Token $relatedToken = null): Token
+    private function pushToken(string $type, string $value = '', ?Token $relatedToken = null): Token
     {
         $token = new Token(
             $type,
