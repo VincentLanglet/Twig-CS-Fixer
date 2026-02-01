@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules;
 
+use TwigCsFixer\Report\IgnoredViolationId;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
-use TwigCsFixer\Report\ViolationId;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
@@ -24,7 +24,7 @@ abstract class AbstractRule implements RuleInterface
     }
 
     /**
-     * @param list<ViolationId> $ignoredViolations
+     * @param list<IgnoredViolationId> $ignoredViolations
      */
     protected function init(?Report $report, array $ignoredViolations = []): void
     {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Tests\Token;
 
 use PHPUnit\Framework\TestCase;
-use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Report\IgnoredViolationId;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
@@ -44,12 +44,12 @@ final class TokensTest extends TestCase
     public function testAddIgnoredViolation(): void
     {
         $tokens = new Tokens();
-        $tokens->addIgnoredViolation(new ViolationId());
+        $tokens->addIgnoredViolation(new IgnoredViolationId());
         $tokens->setReadOnly();
 
         $this->expectException(\LogicException::class);
 
-        $tokens->addIgnoredViolation(new ViolationId());
+        $tokens->addIgnoredViolation(new IgnoredViolationId());
     }
 
     public function testInvalidGet(): void

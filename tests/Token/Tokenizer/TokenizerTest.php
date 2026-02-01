@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
-use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Report\IgnoredViolationId;
 use TwigCsFixer\Test\TestHelper;
 use TwigCsFixer\Tests\Token\Tokenizer\Fixtures\CustomTwigExtension;
 use TwigCsFixer\Token\Token;
@@ -109,20 +109,18 @@ final class TokenizerTest extends TestCase
         $source = new Source($content, $filePath);
 
         $result = $tokenizer->tokenize($source);
+
         static::assertEquals(
             [
-                'Foo.Bar',
-                'Foo.BarInsensitive',
-                'Foo.Bar:3',
-                'Foo.Bar:5',
-                'Bar.Foo:5',
-                ':6',
-                ':9',
+                new IgnoredViolationId('Foo', 'Bar'),
+                new IgnoredViolationId('Foo', 'BarInsensitive'),
+                new IgnoredViolationId('Foo', 'Bar', 3, endLine: 3),
+                new IgnoredViolationId('Foo', 'Bar', 5, endLine: 5),
+                new IgnoredViolationId('Bar', 'Foo', 5, endLine: 5),
+                new IgnoredViolationId(startLine: 6, endLine: 6),
+                new IgnoredViolationId(startLine: 9, endLine: 9),
             ],
-            array_map(
-                static fn (ViolationId $validationId) => $validationId->toString(),
-                $result->getIgnoredViolations()
-            )
+            $result->getIgnoredViolations(),
         );
         static::assertTrue($result->isReadOnly());
     }

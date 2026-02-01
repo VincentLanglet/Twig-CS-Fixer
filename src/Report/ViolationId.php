@@ -14,6 +14,16 @@ final class ViolationId
     ) {
     }
 
+    public function getRuleIdentifier(): ?string
+    {
+        return $this->ruleIdentifier;
+    }
+
+    public function getMessageIdentifier(): ?string
+    {
+        return $this->messageIdentifier;
+    }
+
     public function getLine(): ?int
     {
         return $this->line;
@@ -55,18 +65,5 @@ final class ViolationId
             $this->line ?? '',
             $this->linePosition ?? '',
         ), ':');
-    }
-
-    public function match(self $violationId): bool
-    {
-        return $this->matchValue($this->ruleIdentifier, $violationId->ruleIdentifier)
-            && $this->matchValue($this->messageIdentifier, $violationId->messageIdentifier)
-            && $this->matchValue($this->line, $violationId->line)
-            && $this->matchValue($this->linePosition, $violationId->linePosition);
-    }
-
-    private function matchValue(string|int|null $self, string|int|null $other): bool
-    {
-        return null === $self || strtolower((string) $self) === strtolower((string) $other);
     }
 }
