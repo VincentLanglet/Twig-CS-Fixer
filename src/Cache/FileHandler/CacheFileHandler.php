@@ -16,7 +16,7 @@ use TwigCsFixer\Exception\CannotWriteCacheException;
  */
 final class CacheFileHandler implements CacheFileHandlerInterface
 {
-    public function __construct(private string $file)
+    public function __construct(private readonly string $file)
     {
     }
 

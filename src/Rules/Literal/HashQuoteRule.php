@@ -17,7 +17,7 @@ use Webmozart\Assert\Assert;
  */
 final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
-    public function __construct(private bool $useQuote = false)
+    public function __construct(private readonly bool $useQuote = false)
     {
     }
 

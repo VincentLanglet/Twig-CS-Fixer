@@ -19,9 +19,9 @@ final class Signature
      * @param array<mixed> $rules
      */
     public function __construct(
-        private string $phpVersion,
-        private string $fixerVersion,
-        private array $rules,
+        private readonly string $phpVersion,
+        private readonly string $fixerVersion,
+        private readonly array $rules,
     ) {
     }
 

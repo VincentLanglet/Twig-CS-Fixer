@@ -87,7 +87,7 @@ final class ConfigResolverTest extends FileTestCase
     {
         $configResolver = new ConfigResolver($this->getTmpPath(__DIR__));
         $config = $configResolver->resolveConfig(
-            array_map([$this, 'getTmpPath'], $paths),
+            array_map($this->getTmpPath(...), $paths),
             $this->getTmpPath($configPath)
         );
 

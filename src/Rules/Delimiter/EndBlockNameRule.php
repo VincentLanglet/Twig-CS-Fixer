@@ -18,7 +18,7 @@ class EndBlockNameRule extends AbstractFixableRule implements ConfigurableRuleIn
     /**
      * @param list<string> $blocks
      */
-    public function __construct(private array $blocks = ['block', 'macro'])
+    public function __construct(private readonly array $blocks = ['block', 'macro'])
     {
     }
 

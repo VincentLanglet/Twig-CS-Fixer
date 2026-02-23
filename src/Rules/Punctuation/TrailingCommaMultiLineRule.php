@@ -15,7 +15,7 @@ use Webmozart\Assert\Assert;
  */
 final class TrailingCommaMultiLineRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
-    public function __construct(private bool $useTrailingComma = true)
+    public function __construct(private readonly bool $useTrailingComma = true)
     {
     }
 

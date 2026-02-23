@@ -48,7 +48,7 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @var non-empty-string
      */
-    private string $operatorRegex;
+    private readonly string $operatorRegex;
 
     private int $cursor = 0;
 

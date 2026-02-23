@@ -53,7 +53,7 @@ final class Config
 
     private bool $allowNonFixableRules = false;
 
-    public function __construct(private string $name = 'Default')
+    public function __construct(private readonly string $name = 'Default')
     {
         $this->ruleset = new Ruleset();
         $this->ruleset->addStandard(new TwigCsFixer());

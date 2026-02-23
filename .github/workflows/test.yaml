@@ -17,7 +17,6 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - 8.0
                     - 8.1
                     - 8.2
                     - 8.3
@@ -27,9 +26,9 @@ jobs:
                 runner: [ubuntu-latest]
                 symfony-require: ['']
                 include:
-                    - php-version: 8.0
+                    - php-version: 8.1
                       dependencies: lowest
-                      name: PHP 8.0 - lowest
+                      name: PHP 8.1 - lowest
                     - php-version: 8.5
                       dependencies: highest
                       symfony-require: 7.4.*

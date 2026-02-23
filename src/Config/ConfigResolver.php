@@ -21,7 +21,7 @@ use TwigCsFixer\Ruleset\Ruleset;
  */
 final class ConfigResolver
 {
-    public function __construct(private string $workingDir)
+    public function __construct(private readonly string $workingDir)
     {
     }
 

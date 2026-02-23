@@ -17,7 +17,7 @@ final class ForbiddenBlockRule extends AbstractNodeRule implements ConfigurableR
      * @param list<string> $blocks
      */
     public function __construct(
-        private array $blocks,
+        private readonly array $blocks,
     ) {
     }
 
