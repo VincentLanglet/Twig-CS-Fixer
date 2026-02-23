@@ -93,10 +93,10 @@ final class Token
 
     public function __construct(
         private int|string $type,
-        private int $line,
-        private int $linePosition,
-        private string $filename,
-        private string $value = '',
+        private readonly int $line,
+        private readonly int $linePosition,
+        private readonly string $filename,
+        private readonly string $value = '',
         private ?self $relatedToken = null,
     ) {
     }

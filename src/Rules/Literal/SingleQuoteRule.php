@@ -14,7 +14,7 @@ use TwigCsFixer\Token\Tokens;
  */
 final class SingleQuoteRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
-    public function __construct(private bool $skipStringContainingSingleQuote = true)
+    public function __construct(private readonly bool $skipStringContainingSingleQuote = true)
     {
     }
 

@@ -20,11 +20,11 @@ final class FileCacheManager implements CacheManagerInterface
 {
     private Cache $cache;
 
-    private string $cacheDirectory;
+    private readonly string $cacheDirectory;
 
     public function __construct(
-        private CacheFileHandlerInterface $handler,
-        private Signature $signature,
+        private readonly CacheFileHandlerInterface $handler,
+        private readonly Signature $signature,
     ) {
         $this->cacheDirectory = \dirname($handler->getFile());
 

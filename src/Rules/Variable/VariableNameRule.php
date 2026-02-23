@@ -25,8 +25,8 @@ final class VariableNameRule extends AbstractRule implements ConfigurableRuleInt
      * @param self::* $case
      */
     public function __construct(
-        private string $case = self::SNAKE_CASE,
-        private string $optionalPrefix = '',
+        private readonly string $case = self::SNAKE_CASE,
+        private readonly string $optionalPrefix = '',
     ) {
     }
 

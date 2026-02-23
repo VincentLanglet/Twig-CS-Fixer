@@ -15,11 +15,11 @@ final class Violation
     public const LEVEL_FATAL = 3;
 
     public function __construct(
-        private int $level,
-        private string $message,
-        private string $filename,
-        private ?string $ruleName = null,
-        private ?ViolationId $identifier = null,
+        private readonly int $level,
+        private readonly string $message,
+        private readonly string $filename,
+        private readonly ?string $ruleName = null,
+        private readonly ?ViolationId $identifier = null,
     ) {
     }
 

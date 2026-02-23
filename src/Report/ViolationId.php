@@ -7,10 +7,10 @@ namespace TwigCsFixer\Report;
 final class ViolationId
 {
     public function __construct(
-        private ?string $ruleIdentifier = null,
-        private ?string $messageIdentifier = null,
-        private ?int $line = null,
-        private ?int $linePosition = null,
+        private readonly ?string $ruleIdentifier = null,
+        private readonly ?string $messageIdentifier = null,
+        private readonly ?int $line = null,
+        private readonly ?int $linePosition = null,
     ) {
     }
 

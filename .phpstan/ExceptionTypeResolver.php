@@ -10,7 +10,7 @@ use PHPStan\Rules\Exceptions\ExceptionTypeResolver as PHPStanExceptionTypeResolv
 
 final class ExceptionTypeResolver implements PHPStanExceptionTypeResolver
 {
-    public function __construct(private DefaultExceptionTypeResolver $defaultExceptionTypeResolver)
+    public function __construct(private readonly DefaultExceptionTypeResolver $defaultExceptionTypeResolver)
     {
     }
 

@@ -15,8 +15,8 @@ use TwigCsFixer\Token\Tokens;
 final class IndentRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
     public function __construct(
-        private int $spaceRatio = 4,
-        private bool $useTab = false,
+        private readonly int $spaceRatio = 4,
+        private readonly bool $useTab = false,
     ) {
     }
 

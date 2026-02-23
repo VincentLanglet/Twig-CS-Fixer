@@ -26,11 +26,11 @@ use TwigCsFixer\Token\TokenizerInterface;
  */
 final class Linter
 {
-    private CacheManagerInterface $cacheManager;
+    private readonly CacheManagerInterface $cacheManager;
 
     public function __construct(
-        private Environment $env,
-        private TokenizerInterface $tokenizer,
+        private readonly Environment $env,
+        private readonly TokenizerInterface $tokenizer,
         ?CacheManagerInterface $cacheManager = null,
     ) {
         $this->cacheManager = $cacheManager ?? new NullCacheManager();

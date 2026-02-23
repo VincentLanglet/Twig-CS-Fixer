@@ -15,7 +15,7 @@ use Webmozart\Assert\Assert;
  */
 class CompactHashRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
-    public function __construct(private bool $compact = false)
+    public function __construct(private readonly bool $compact = false)
     {
     }
 

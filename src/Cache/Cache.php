@@ -17,7 +17,7 @@ final class Cache
      */
     private array $hashes = [];
 
-    public function __construct(private Signature $signature)
+    public function __construct(private readonly Signature $signature)
     {
     }
 

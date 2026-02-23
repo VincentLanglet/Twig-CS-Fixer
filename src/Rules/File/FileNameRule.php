@@ -25,10 +25,10 @@ final class FileNameRule extends AbstractRule implements ConfigurableRuleInterfa
      * @param array<string> $ignoredSubDirectories
      */
     public function __construct(
-        private string $case = self::SNAKE_CASE,
-        private ?string $baseDirectory = null,
-        private array $ignoredSubDirectories = [],
-        private string $optionalPrefix = '',
+        private readonly string $case = self::SNAKE_CASE,
+        private readonly ?string $baseDirectory = null,
+        private readonly array $ignoredSubDirectories = [],
+        private readonly string $optionalPrefix = '',
     ) {
     }
 

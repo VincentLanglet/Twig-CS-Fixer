@@ -24,7 +24,7 @@ final class NamedArgumentNameRule extends AbstractRule implements ConfigurableRu
     /**
      * @param self::* $case
      */
-    public function __construct(private string $case = self::SNAKE_CASE)
+    public function __construct(private readonly string $case = self::SNAKE_CASE)
     {
     }
 

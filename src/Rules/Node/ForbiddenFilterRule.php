@@ -18,7 +18,7 @@ final class ForbiddenFilterRule extends AbstractNodeRule implements Configurable
      * @param list<string> $filters
      */
     public function __construct(
-        private array $filters,
+        private readonly array $filters,
     ) {
     }
 

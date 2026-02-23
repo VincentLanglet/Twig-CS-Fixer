@@ -18,7 +18,7 @@ final class ForbiddenFunctionRule extends AbstractNodeRule implements Configurab
      * @param list<string> $functions
      */
     public function __construct(
-        private array $functions,
+        private readonly array $functions,
     ) {
     }
 

@@ -74,7 +74,7 @@ final class Fixer implements FixerInterface
      */
     private bool $inConflict = false;
 
-    public function __construct(private TokenizerInterface $tokenizer)
+    public function __construct(private readonly TokenizerInterface $tokenizer)
     {
     }
 
