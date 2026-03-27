@@ -12,10 +12,14 @@ final class StrictComparisonOperatorRuleTest extends AbstractRuleTestCase
     public function testRule(): void
     {
         $this->checkRule(new StrictComparisonOperatorRule(), [
-            'StrictComparisonOperator.Error:1:6' => 'Use strict comparison operators === / !== instead of same as / not same as.',
-            'StrictComparisonOperator.Error:2:6' => 'Use strict comparison operators === / !== instead of same as / not same as.',
-            'StrictComparisonOperator.Error:3:6' => 'Use strict comparison operators === / !== instead of same as / not same as.',
-            'StrictComparisonOperator.Error:4:6' => 'Use strict comparison operators === / !== instead of same as / not same as.',
+            'StrictComparisonOperator.Error:1:6' => 'Use strict comparison operator "===" instead of "same as".',
+            'StrictComparisonOperator.Error:2:6' => 'Use strict comparison operator "!==" instead of "not same as".',
+            'StrictComparisonOperator.Error:3:6' => 'Use strict comparison operator "===" instead of "same as".',
+            'StrictComparisonOperator.Error:4:6' => 'Use strict comparison operator "!==" instead of "not same as".',
+            'StrictComparisonOperator.Error:5:6' => 'Use strict comparison operator "===" instead of "same as".',
+            'StrictComparisonOperator.Error:6:6' => 'Use strict comparison operator "!==" instead of "not same as".',
+            'StrictComparisonOperator.Error:7:6' => 'Use strict comparison operator "===" instead of "same as".',
+            'StrictComparisonOperator.Error:10:6' => 'Use strict comparison operator "===" instead of "same as".',
         ]);
     }
 }
