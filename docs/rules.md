@@ -150,7 +150,7 @@ All of them can be found in `src/Rules/Node` folder.
   Ensures some functions are not used. Options are:
     - `function`: the name of the forbidden functions.
 
-- **ValidConstantRule**:
+- **ValidConstantFunctionRule**:
 
   Ensures constant function is used on defined constant strings.
 
