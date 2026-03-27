@@ -9,6 +9,7 @@ use TwigCsFixer\Rules\Function\IncludeFunctionRule;
 use TwigCsFixer\Rules\Literal\CompactHashRule;
 use TwigCsFixer\Rules\Literal\HashQuoteRule;
 use TwigCsFixer\Rules\Literal\SingleQuoteRule;
+use TwigCsFixer\Rules\Operator\StrictComparisonOperatorRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaMultiLineRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
@@ -33,6 +34,7 @@ final class TwigCsFixer implements StandardInterface
             new IncludeFunctionRule(),
             new IndentRule(),
             new SingleQuoteRule(),
+            new StrictComparisonOperatorRule(),
             new TrailingCommaMultiLineRule(),
             new TrailingCommaSingleLineRule(),
             new TrailingSpaceRule(),
