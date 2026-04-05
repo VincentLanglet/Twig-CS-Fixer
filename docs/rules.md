@@ -77,6 +77,10 @@
   Ensures that strings use single quotes when possible. Options are:
     - `skipStringContainingSingleQuote`: ignore double-quoted strings that contains single-quotes (default true).
 
+- **StrictComparisonOperatorRule**:
+
+  Ensures that strict comparison operators `===` and `!==` are used instead of `same as` and `not same as`.
+
 - **TrailingCommaMultiLineRule** (Configurable):
 
   Ensures that multi-line arrays, objects and argument lists have a trailing comma. Options are:
@@ -193,6 +197,7 @@ new TwigCsFixer\Rules\Whitespace\IndentRule(3);
 - IncludeFunctionRule
 - IndentRule
 - SingleQuoteRule
+- StrictComparisonOperatorRule
 - TrailingCommaMultiLineRule
 - TrailingCommaSingleLineRule
 - TrailingSpaceRule
