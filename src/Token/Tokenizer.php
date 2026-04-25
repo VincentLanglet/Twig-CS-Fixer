@@ -8,7 +8,7 @@ use Twig\Environment;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
-use TwigCsFixer\Report\ViolationId;
+use TwigCsFixer\Report\IgnoredViolationId;
 use Webmozart\Assert\Assert;
 
 /**
@@ -881,7 +881,7 @@ final class Tokenizer implements TokenizerInterface
         };
 
         if ('' === $ignoredViolations) {
-            $this->tokens->addIgnoredViolation(ViolationId::fromString($ignoredViolations, $line));
+            $this->tokens->addIgnoredViolation(IgnoredViolationId::fromString($ignoredViolations, $line));
 
             return;
         }
@@ -891,7 +891,7 @@ final class Tokenizer implements TokenizerInterface
             if ('' === $ignoredViolation) {
                 continue;
             }
-            $this->tokens->addIgnoredViolation(ViolationId::fromString($ignoredViolation, $line));
+            $this->tokens->addIgnoredViolation(IgnoredViolationId::fromString($ignoredViolation, $line));
         }
     }
 }

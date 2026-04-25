@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Rules;
 
+use TwigCsFixer\Report\IgnoredViolationId;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Violation;
 use TwigCsFixer\Report\ViolationId;
@@ -13,7 +14,7 @@ trait RuleTrait
     private ?Report $report = null;
 
     /**
-     * @var list<ViolationId>
+     * @var list<IgnoredViolationId>
      */
     private array $ignoredViolations = [];
 
