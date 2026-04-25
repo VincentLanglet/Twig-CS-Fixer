@@ -23,8 +23,6 @@ final class Token
     public const PUNCTUATION_TYPE = 9;
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
-    public const ARROW_TYPE = 12;
-    public const SPREAD_TYPE = 13;
     // New constants
     public const DQ_STRING_START_TYPE = 'DQ_STRING_START_TYPE';
     public const DQ_STRING_END_TYPE = 'DQ_STRING_END_TYPE';

@@ -43,7 +43,7 @@ final class Tokenizer implements TokenizerInterface
     private const REGEX_DQ_STRING_PART = '/'.self::DQ_STRING_PATTERN.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
 
-    private const PUNCTUATIONS = ['(', ')', '[', ']', '{', '}', ':', '.', ',', '|'];
+    private const PUNCTUATIONS = ['(', ')', '[', ']', '{', '}', ':', ','];
 
     /**
      * @var non-empty-string
@@ -332,12 +332,6 @@ final class Tokenizer implements TokenizerInterface
             $this->lexWhitespace();
         } elseif (1 === preg_match("/^\r\n?|^\n/", $currentCode.$nextToken, $match)) {
             $this->lexEOL($match[0]);
-        } elseif ('.' === $currentCode && '.' === $nextToken && '.' === $next2Token) {
-            // NEXT_MAJOR: Should be an OPERATOR_TYPE like in Twig 3.21+
-            $this->lexSpread();
-        } elseif ('=' === $currentCode && '>' === $nextToken) {
-            // NEXT_MAJOR: Should be an OPERATOR_TYPE like in Twig 3.21+
-            $this->lexArrowFunction();
         } elseif (1 === preg_match($this->operatorRegex, $this->code, $match, 0, $this->cursor)) {
             $this->lexOperator($match[0]);
         } elseif (1 === preg_match(self::REGEX_NAME, $this->code, $match, 0, $this->cursor)) {
@@ -605,16 +599,6 @@ final class Tokenizer implements TokenizerInterface
         $this->lastEOL = $this->cursor;
     }
 
-    private function lexSpread(): void
-    {
-        $this->pushToken(Token::SPREAD_TYPE, '...');
-    }
-
-    private function lexArrowFunction(): void
-    {
-        $this->pushToken(Token::ARROW_TYPE, '=>');
-    }
-
     private function lexOperator(string $operator): void
     {
         if ('?' === $operator) {
@@ -695,7 +679,7 @@ final class Tokenizer implements TokenizerInterface
 
             if ($lastNonEmptyToken->isMatching(Token::BLOCK_NAME_TYPE, 'macro')) {
                 $this->pushToken(Token::MACRO_NAME_TYPE, $name);
-            } elseif ($lastNonEmptyToken->isMatching(Token::PUNCTUATION_TYPE, '|')) {
+            } elseif ($lastNonEmptyToken->isMatching(Token::OPERATOR_TYPE, '|')) {
                 $this->pushToken(Token::FILTER_NAME_TYPE, $name);
             } elseif ($lastNonEmptyToken->isMatching(Token::OPERATOR_TYPE, ['is', 'is not'])) {
                 $this->pushToken(Token::TEST_NAME_TYPE, $name);
@@ -838,7 +822,7 @@ final class Tokenizer implements TokenizerInterface
         }
 
         /** @var string[] $operators */
-        $operators = ['=', '?', '?:', '?.', ...$expressionParsers];
+        $operators = ['=', '.', '|', '?', '?:', '?.', '=>', '...', ...$expressionParsers];
         $lengthByOperator = [];
         foreach ($operators as $operator) {
             $lengthByOperator[$operator] = \strlen($operator);

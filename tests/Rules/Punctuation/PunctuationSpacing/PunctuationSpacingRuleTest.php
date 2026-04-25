@@ -46,10 +46,8 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
             'PunctuationSpacing.Before:5:16' => 'Expecting 0 whitespace before ","; found 1.',
             'PunctuationSpacing.Before:5:20' => 'Expecting 0 whitespace before ","; found 1.',
             'PunctuationSpacing.Before:5:24' => 'Expecting 0 whitespace before "]"; found 1.',
-            'PunctuationSpacing.After:6:6' => 'Expecting 0 whitespace after "|"; found 1.',
-            'PunctuationSpacing.Before:6:6' => 'Expecting 0 whitespace before "|"; found 1.',
-            'PunctuationSpacing.Before:7:12' => 'Expecting 0 whitespace before "}"; found 1.',
-            'PunctuationSpacing.Before:7:15' => 'Expecting 0 whitespace before "]"; found 1.',
+            'PunctuationSpacing.Before:6:12' => 'Expecting 0 whitespace before "}"; found 1.',
+            'PunctuationSpacing.Before:6:15' => 'Expecting 0 whitespace before "]"; found 1.',
         ]);
     }
 
@@ -65,9 +63,7 @@ final class PunctuationSpacingRuleTest extends AbstractRuleTestCase
             'PunctuationSpacing.Before:5:16' => 'Expecting 0 whitespace before ","; found 1.',
             'PunctuationSpacing.Before:5:20' => 'Expecting 0 whitespace before ","; found 1.',
             'PunctuationSpacing.Before:5:24' => 'Expecting 0 whitespace before "]"; found 1.',
-            'PunctuationSpacing.After:6:6' => 'Expecting 0 whitespace after "|"; found 1.',
-            'PunctuationSpacing.Before:6:6' => 'Expecting 0 whitespace before "|"; found 1.',
-            'PunctuationSpacing.Before:7:15' => 'Expecting 0 whitespace before "]"; found 1.',
+            'PunctuationSpacing.Before:6:15' => 'Expecting 0 whitespace before "]"; found 1.',
         ], fixedFilePath: false);
     }
 }
