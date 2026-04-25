@@ -98,9 +98,9 @@ final class Tokens
     }
 
     /**
-     * @param int|string|array<int|string> $type
+     * @param string|string[] $type
      */
-    public function findNext(int|string|array $type, int $start, ?int $end = null, bool $exclude = false): int|false
+    public function findNext(string|array $type, int $start, ?int $end = null, bool $exclude = false): int|false
     {
         $end ??= $this->tokenCount;
         for ($i = $start; $i < $end; ++$i) {
@@ -113,9 +113,9 @@ final class Tokens
     }
 
     /**
-     * @param int|string|array<int|string> $type
+     * @param string|string[] $type
      */
-    public function findPrevious(int|string|array $type, int $start, int $end = 0, bool $exclude = false): int|false
+    public function findPrevious(string|array $type, int $start, int $end = 0, bool $exclude = false): int|false
     {
         for ($i = $start; $i >= $end; --$i) {
             if ($exclude !== $this->get($i)->isMatching($type)) {

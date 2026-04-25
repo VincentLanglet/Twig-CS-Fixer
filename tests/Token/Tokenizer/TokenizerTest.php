@@ -128,7 +128,7 @@ final class TokenizerTest extends TestCase
     }
 
     /**
-     * @param array<int, int|string> $expectedTokenTypes
+     * @param array<int, string> $expectedTokenTypes
      *
      * @dataProvider tokenizeDataProvider
      */
@@ -151,13 +151,13 @@ final class TokenizerTest extends TestCase
             static::fail($diff);
         }
 
-        $tokenTypes = array_map(static fn (Token $token): int|string => $token->getType(), $tokens->toArray());
+        $tokenTypes = array_map(static fn (Token $token): string => $token->getType(), $tokens->toArray());
         static::assertSame($expectedTokenTypes, $tokenTypes);
         static::assertTrue($tokens->isReadOnly());
     }
 
     /**
-     * @return iterable<array-key, array{string, array<int, int|string>}>
+     * @return iterable<array-key, array{string, array<int, string>}>
      */
     public static function tokenizeDataProvider(): iterable
     {

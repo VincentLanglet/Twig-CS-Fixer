@@ -10,19 +10,19 @@ namespace TwigCsFixer\Token;
 final class Token
 {
     // From Twig\Token
-    public const EOF_TYPE = -1;
-    public const TEXT_TYPE = 0;
-    public const BLOCK_START_TYPE = 1;
-    public const VAR_START_TYPE = 2;
-    public const BLOCK_END_TYPE = 3;
-    public const VAR_END_TYPE = 4;
-    public const NAME_TYPE = 5;
-    public const NUMBER_TYPE = 6;
-    public const STRING_TYPE = 7;
-    public const OPERATOR_TYPE = 8;
-    public const PUNCTUATION_TYPE = 9;
-    public const INTERPOLATION_START_TYPE = 10;
-    public const INTERPOLATION_END_TYPE = 11;
+    public const EOF_TYPE = 'EOF_TYPE';
+    public const TEXT_TYPE = 'TEXT_TYPE';
+    public const BLOCK_START_TYPE = 'BLOCK_START_TYPE';
+    public const VAR_START_TYPE = 'VAR_START_TYPE';
+    public const BLOCK_END_TYPE = 'BLOCK_END_TYPE';
+    public const VAR_END_TYPE = 'VAR_END_TYPE';
+    public const NAME_TYPE = 'NAME_TYPE';
+    public const NUMBER_TYPE = 'NUMBER_TYPE';
+    public const STRING_TYPE = 'STRING_TYPE';
+    public const OPERATOR_TYPE = 'OPERATOR_TYPE';
+    public const PUNCTUATION_TYPE = 'PUNCTUATION_TYPE';
+    public const INTERPOLATION_START_TYPE = 'INTERPOLATION_START_TYPE';
+    public const INTERPOLATION_END_TYPE = 'INTERPOLATION_END_TYPE';
     // New constants
     public const DQ_STRING_START_TYPE = 'DQ_STRING_START_TYPE';
     public const DQ_STRING_END_TYPE = 'DQ_STRING_END_TYPE';
@@ -92,7 +92,7 @@ final class Token
     ];
 
     public function __construct(
-        private int|string $type,
+        private string $type,
         private readonly int $line,
         private readonly int $linePosition,
         private readonly string $filename,
@@ -101,12 +101,12 @@ final class Token
     ) {
     }
 
-    public function getType(): int|string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType(int|string $type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -142,10 +142,10 @@ final class Token
     }
 
     /**
-     * @param int|string|array<int|string> $type
-     * @param string|string[]              $value
+     * @param string|string[] $type
+     * @param string|string[] $value
      */
-    public function isMatching(int|string|array $type, string|array $value = []): bool
+    public function isMatching(string|array $type, string|array $value = []): bool
     {
         if (!\is_array($type)) {
             $type = [$type];
