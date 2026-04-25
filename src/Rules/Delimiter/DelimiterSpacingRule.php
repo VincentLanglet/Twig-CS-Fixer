@@ -11,18 +11,27 @@ use TwigCsFixer\Token\Tokens;
 
 /**
  * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
- * Ensure there is no space inside empty comment `{##}` or `{#--#}.
+ * Ensure there is no space inside the empty comment `{##}` or `{#--#}.
  */
 final class DelimiterSpacingRule extends AbstractSpacingRule implements ConfigurableRuleInterface
 {
-    public function __construct(bool $skipIfNewLine = true)
-    {
+    /**
+     * @param array<string, int|null> $beforeOverride
+     * @param array<string, int|null> $afterOverride
+     */
+    public function __construct(
+        private readonly array $beforeOverride = [],
+        private readonly array $afterOverride = [],
+        bool $skipIfNewLine = true,
+    ) {
         $this->skipIfNewLine = $skipIfNewLine;
     }
 
     public function getConfiguration(): array
     {
         return [
+            'before' => $this->beforeOverride,
+            'after' => $this->afterOverride,
             'skipIfNewLine' => $this->skipIfNewLine,
         ];
     }
@@ -30,13 +39,13 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
     protected function getSpaceBefore(int $tokenIndex, Tokens $tokens): ?int
     {
         $token = $tokens->get($tokenIndex);
-        if (
-            $token->isMatching([
-                Token::BLOCK_END_TYPE,
-                Token::VAR_END_TYPE,
-            ])
-        ) {
-            return 1;
+        if (!$token->isMatching([Token::BLOCK_END_TYPE, Token::VAR_END_TYPE, Token::COMMENT_END_TYPE])) {
+            return null;
+        }
+
+        $value = $token->getValue();
+        if (\array_key_exists($token->getValue(), $this->beforeOverride)) {
+            return $this->beforeOverride[$value];
         }
 
         if ($token->isMatching(Token::COMMENT_END_TYPE)) {
@@ -49,23 +58,21 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
             ) {
                 return 0;
             }
-
-            return 1;
         }
 
-        return null;
+        return 1;
     }
 
     protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
         $token = $tokens->get($tokenIndex);
-        if (
-            $token->isMatching([
-                Token::BLOCK_START_TYPE,
-                Token::VAR_START_TYPE,
-            ])
-        ) {
-            return 1;
+        if (!$token->isMatching([Token::BLOCK_START_TYPE, Token::VAR_START_TYPE, Token::COMMENT_START_TYPE])) {
+            return null;
+        }
+
+        $value = $token->getValue();
+        if (\array_key_exists($token->getValue(), $this->afterOverride)) {
+            return $this->afterOverride[$value];
         }
 
         if ($token->isMatching(Token::COMMENT_START_TYPE)) {
@@ -78,10 +85,8 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
             ) {
                 return 0;
             }
-
-            return 1;
         }
 
-        return null;
+        return 1;
     }
 }
