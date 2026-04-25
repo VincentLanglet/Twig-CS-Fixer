@@ -4,9 +4,20 @@ UPGRADE
 FROM 3.x to 4.0
 ---------------
 
+### DelimiterSpacingRule
+
+The `DelimiterSpacingRule` constructor signature changed from
+```php
+__construct(bool $skipIfNewLine = true)
+```
+to
+```php
+__construct(array $beforeOverride = [], array $afterOverride = [], bool $skipIfNewLine = true)
+```
+
 ### OperatorSpacingRule
 
-The `OperatorSpacingRule` has speen split in three:
+The `OperatorSpacingRule` has been split in three:
 - `TwigCsFixer\Rules\Operator\OperatorSpacingRule` 
 - `TwigCsFixer\Rules\Operator\TernaryOperatorSpacingRule` 
 - `TwigCsFixer\Rules\Operator\UnaryOperatorSpacingRule` 
@@ -27,7 +38,7 @@ The tokens `.` and `|` moved from `Token::PUNCTUATION_TYPE` to `Token::OPERATOR_
 FROM 2.x to 3.0
 ---------------
 
-- The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.
+- The `checkstyle` and `junit` reporter now try to use an absolute path rather than relative path.
 - In debug mode, the report now contains both the identifier and the message of the error.
 - The position of `TrailingCommaMultiLineRule` error changed.
 - The position of `TrailingCommaSingleLineRule` error changed.
