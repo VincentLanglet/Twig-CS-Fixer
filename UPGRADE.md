@@ -1,5 +1,25 @@
-UPGRADE FROM 2.x to 3.0
-=======================
+UPGRADE
+=======
+
+FROM 3.x to 4.0
+---------------
+
+### OperatorSpacingRule
+
+The `OperatorSpacingRule` has speen split in three:
+- `TwigCsFixer\Rules\Operator\OperatorSpacingRule` 
+- `TwigCsFixer\Rules\Operator\TernaryOperatorSpacingRule` 
+- `TwigCsFixer\Rules\Operator\UnaryOperatorSpacingRule` 
+
+### Token
+
+The `Token::OPERATOR_TYPE` has been split in three:
+- `Token::OPERATOR_TYPE`
+- `Token::TERNARY_OPERATOR_TYPE`
+- `Token::UNARY_OPERATOR_TYPE`
+
+FROM 2.x to 3.0
+---------------
 
 - The `checkstyle` and `junit` reporter now try to use absolute path rather than relative path.
 - In debug mode, the report now contains both the identifier and the message of the error.

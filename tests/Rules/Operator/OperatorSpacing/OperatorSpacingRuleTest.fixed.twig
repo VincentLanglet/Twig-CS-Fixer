@@ -6,9 +6,9 @@
 {{ 1 // 2 }}
 {{ 1 ** 2 }}
 {{ foo ~ bar }}
-{{ true ? true : false }}
+{{ true  ?  true  :  false }}
 {{ 1 == 2 }}
-{{ not true }}
+{{ not   true }}
 {{ false and true }}
 {{ false or true }}
 {{ a in array }}
@@ -20,7 +20,7 @@ Untouch +-/*%==:
 {{ 1 ?? 2 }}
 
 {{ 1 + -2 }}
-{{ 1 + (-2 + 3) }}
+{{ (1) + (-2 + 3) }}
 {{ a[-2] }}
 {{ { 'foo': -2 } }}
 {{ foo.name }}
@@ -55,3 +55,4 @@ Untouch +-/*%==:
 {% types {foo: 'int', bar?: 'string'} %}
 
 {{ foo?.bar }}
+{{ foo ? -1 : -2 }}

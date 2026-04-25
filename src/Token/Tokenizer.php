@@ -618,11 +618,7 @@ final class Tokenizer implements TokenizerInterface
     private function lexOperator(string $operator): void
     {
         if ('?' === $operator) {
-            $token = $this->pushToken(Token::OPERATOR_TYPE, $operator);
-            $this->bracketsAndTernary[] = $token;
-        } elseif (':' === $operator && $this->isInTernary()) {
-            $bracket = array_pop($this->bracketsAndTernary);
-            $this->pushToken(Token::OPERATOR_TYPE, $operator, $bracket);
+            $this->lexTernary($operator);
         } elseif ('=' === $operator) {
             if (
                 self::STATE_BLOCK !== $this->getState()
@@ -650,7 +646,41 @@ final class Tokenizer implements TokenizerInterface
 
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
         } else {
-            $this->pushToken(Token::OPERATOR_TYPE, $operator);
+            $previousToken = $this->lastNonEmptyToken;
+            Assert::notNull($previousToken, 'An operator cannot be the first non empty token.');
+
+            $isUnary = $previousToken->isMatching([
+                // {{ 1 * -2 }}
+                Token::OPERATOR_TYPE,
+                // {{ -2 }}
+                Token::VAR_START_TYPE,
+                // {% if -2 ... %}
+                Token::BLOCK_NAME_TYPE,
+                // {{ foo ? -1 : -2 }}
+                Token::TERNARY_OPERATOR_TYPE,
+            ])
+            // {{ 1 + (-2) }}
+            || $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', ':', ',']);
+
+            $this->pushToken(
+                $isUnary ? Token::UNARY_OPERATOR_TYPE : Token::OPERATOR_TYPE,
+                $operator,
+            );
+        }
+    }
+
+    private function lexTernary(string $operator): void
+    {
+        if ('?' === $operator) {
+            $token = $this->pushToken(Token::TERNARY_OPERATOR_TYPE, $operator);
+            $this->bracketsAndTernary[] = $token;
+        } elseif (':' === $operator) {
+            $ternary = array_pop($this->bracketsAndTernary);
+            $this->pushToken(Token::TERNARY_OPERATOR_TYPE, $operator, $ternary);
+        } else {
+            // @codeCoverageIgnoreStart
+            throw new \LogicException(\sprintf('Unexpected ternary operator "%s".', $operator));
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -717,7 +747,7 @@ final class Tokenizer implements TokenizerInterface
         if ($this->isInTernary()) {
             if (':' === $currentCode) {
                 // This is a ternary instead
-                $this->lexOperator($currentCode);
+                $this->lexTernary($currentCode);
 
                 return;
             }

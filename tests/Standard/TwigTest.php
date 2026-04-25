@@ -12,6 +12,8 @@ use TwigCsFixer\Rules\Function\NamedArgumentSeparatorRule;
 use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\TernaryOperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\UnaryOperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
 use TwigCsFixer\Rules\Variable\VariableNameRule;
 use TwigCsFixer\Standard\Twig;
@@ -31,6 +33,8 @@ final class TwigTest extends TestCase
             new OperatorNameSpacingRule(),
             new OperatorSpacingRule(),
             new PunctuationSpacingRule(),
+            new TernaryOperatorSpacingRule(),
+            new UnaryOperatorSpacingRule(),
             new VariableNameRule(),
         ], $standard->getRules());
     }

@@ -17,6 +17,7 @@ $rules = [
     'class_attributes_separation' => [
         'elements' => ['method' => 'one', 'property' => 'one'],
     ], // Instead of ['elements' => ['method' => 'one']]
+    'declare_strict_types' => true,
     'error_suppression' => false, // For testing purpose
     'no_trailing_whitespace_in_string' => false, // For string comparison in tests
     'operator_linebreak' => true, // Instead of ['only_booleans' => true]
