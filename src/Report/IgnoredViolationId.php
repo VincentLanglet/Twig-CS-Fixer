@@ -7,12 +7,12 @@ namespace TwigCsFixer\Report;
 final class IgnoredViolationId
 {
     public function __construct(
-        private ?string $ruleIdentifier = null,
-        private ?string $messageIdentifier = null,
-        private ?int $startLine = null,
-        private ?int $startLinePosition = null,
-        private ?int $endLine = null,
-        private ?int $endLinePosition = null,
+        private readonly ?string $ruleIdentifier = null,
+        private readonly ?string $messageIdentifier = null,
+        private readonly ?int $startLine = null,
+        private readonly ?int $startLinePosition = null,
+        private readonly ?int $endLine = null,
+        private readonly ?int $endLinePosition = null,
     ) {
     }
 
