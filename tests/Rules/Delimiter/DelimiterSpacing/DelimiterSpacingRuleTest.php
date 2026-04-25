@@ -12,12 +12,24 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
     public function testConfiguration(): void
     {
         static::assertSame(
-            ['skipIfNewLine' => true],
+            [
+                'before' => [],
+                'after' => [],
+                'skipIfNewLine' => true,
+            ],
             (new DelimiterSpacingRule())->getConfiguration()
         );
         static::assertSame(
-            ['skipIfNewLine' => false],
-            (new DelimiterSpacingRule(false))->getConfiguration()
+            [
+                'before' => ['#}' => 2],
+                'after' => ['{#' => 2],
+                'skipIfNewLine' => false,
+            ],
+            (new DelimiterSpacingRule(
+                ['#}' => 2],
+                ['{#' => 2],
+                false,
+            ))->getConfiguration()
         );
     }
 
@@ -37,7 +49,7 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
 
     public function testRuleWithoutSkipIfNewLine(): void
     {
-        $this->checkRule(new DelimiterSpacingRule(false), [
+        $this->checkRule(new DelimiterSpacingRule(skipIfNewLine: false), [
             'DelimiterSpacing.After:9:1' => 'Expecting 1 whitespace after "{{"; found newline.',
             'DelimiterSpacing.Before:11:1' => 'Expecting 1 whitespace before "}}"; found newline.',
             'DelimiterSpacing.After:12:1' => 'Expecting 1 whitespace after "{#"; found newline.',
@@ -55,5 +67,18 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
             'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
             'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
         ], fixedFilePath: __DIR__.'/DelimiterSpacingRuleTest.fixed2.twig');
+    }
+
+    public function testRuleWithOverride(): void
+    {
+        $this->checkRule(new DelimiterSpacingRule(
+            ['-%}' => null],
+            ['{%-' => null],
+        ), [
+            'DelimiterSpacing.After:42:1' => 'Expecting 0 whitespace after "{#"; found 1.',
+            'DelimiterSpacing.Before:42:4' => 'Expecting 0 whitespace before "#}"; found 1.',
+            'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
+            'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
+        ], fixedFilePath: false);
     }
 }

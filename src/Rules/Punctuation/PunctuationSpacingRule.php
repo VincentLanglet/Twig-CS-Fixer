@@ -37,8 +37,8 @@ final class PunctuationSpacingRule extends AbstractSpacingRule implements Config
      * @param array<string, int|null> $afterOverride
      */
     public function __construct(
-        private array $beforeOverride = [],
-        private array $afterOverride = [],
+        private readonly array $beforeOverride = [],
+        private readonly array $afterOverride = [],
     ) {
     }
 
