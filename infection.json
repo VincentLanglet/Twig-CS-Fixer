@@ -21,5 +21,6 @@
         "stryker": {
             "report": "main"
         }
-    }
+    },
+    "staticAnalysisTool": "phpstan"
 }
