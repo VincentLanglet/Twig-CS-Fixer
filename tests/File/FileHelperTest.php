@@ -99,10 +99,12 @@ final class FileHelperTest extends TestCase
         array $ignoredDir,
         ?string $expected,
     ): void {
-        static::assertSame($expected, FileHelper::getFileName($path, $baseDir, $ignoredDir));
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            // Simulate windows.
+            $path = str_replace('/', '\\', $path);
+        }
 
-        $windowsPath = str_replace('/', '\\', $path);
-        static::assertSame($expected, FileHelper::getFileName($windowsPath, $baseDir, $ignoredDir));
+        static::assertSame($expected, FileHelper::getFileName($path, $baseDir, $ignoredDir));
     }
 
     /**
@@ -146,12 +148,6 @@ final class FileHelperTest extends TestCase
             ['directory'],
             'file.twig',
         ];
-        yield [
-            str_replace('/', '\\', __DIR__.'/Fixtures/directory/file.twig'), // To simulate Windows
-            null,
-            ['directory'],
-            'file.twig',
-        ];
     }
 
     /**
@@ -167,10 +163,11 @@ final class FileHelperTest extends TestCase
         array $ignoredDir,
         array $expected,
     ): void {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            // Simulate windows.
+            $path = str_replace('/', '\\', $path);
+        }
         static::assertSame($expected, FileHelper::getDirectories($path, $baseDir, $ignoredDir, __DIR__));
-
-        $windowsPath = str_replace('/', '\\', $path);
-        static::assertSame($expected, FileHelper::getDirectories($windowsPath, $baseDir, $ignoredDir, __DIR__));
     }
 
     /**
