@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Environment\Fixtures;
 
+use Twig\ExpressionParser\ExpressionParserInterface;
 use Twig\Extension\ExtensionInterface;
 
 final class CustomTwigExtension implements ExtensionInterface
@@ -38,5 +39,13 @@ final class CustomTwigExtension implements ExtensionInterface
     public function getOperators(): array
     {
         return [[], []];
+    }
+
+    /**
+     * @return array<ExpressionParserInterface>
+     */
+    public function getExpressionParsers(): array
+    {
+        return [];
     }
 }
