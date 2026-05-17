@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Environment\Parser;
 
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
@@ -34,7 +35,7 @@ final class ComponentTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new Node();
+        return new Nodes();
     }
 
     public function getTag(): string

@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeTraverser;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
@@ -39,7 +40,7 @@ final class NodeRuleTest extends TestCase
         $traverser = new NodeTraverser(new StubbedEnvironment(), [$rule]);
 
         $source = new Source('code', 'fakeFile.html.twig');
-        $node = new Node();
+        $node = new Nodes();
         $node->setSourceContext($source);
         $traverser->traverse($node);
 
@@ -65,7 +66,7 @@ final class NodeRuleTest extends TestCase
         $traverser = new NodeTraverser(new StubbedEnvironment(), [$rule]);
 
         $source = new Source('code', 'fakeFile.html.twig');
-        $node = new Node();
+        $node = new Nodes();
         $node->setSourceContext($source);
         $traverser->traverse($node);
 
