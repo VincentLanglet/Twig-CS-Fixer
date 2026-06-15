@@ -97,6 +97,8 @@ final class HashQuoteRule extends AbstractFixableRule implements ConfigurableRul
 
     private function isInteger(string $value): bool
     {
-        return $value === (string) (int) $value;
+        // A negative integer like `-1` is not a valid unquoted hash key,
+        // so it must keep its quotes.
+        return $value === (string) (int) $value && !str_starts_with($value, '-');
     }
 }
