@@ -9,7 +9,7 @@ use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 
 /**
- * Ensures there is no consecutive spaces inside operator names.
+ * Ensures there are no consecutive spaces inside operator names.
  */
 final class OperatorNameSpacingRule extends AbstractFixableRule
 {

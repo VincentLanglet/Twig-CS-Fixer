@@ -11,7 +11,7 @@ use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensures that multi-line arrays, objects and argument lists have a trailing comma.
+ * Ensures that multi-line arrays, objects, and argument lists have a trailing comma.
  */
 final class TrailingCommaMultiLineRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {

@@ -9,7 +9,7 @@ use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Token\Tokens;
 
 /**
- * Ensures that file name uses two extensions (e.g. index.html.twig).
+ * Ensures that file names use two extensions (e.g. index.html.twig).
  */
 final class FileExtensionRule extends AbstractRule
 {

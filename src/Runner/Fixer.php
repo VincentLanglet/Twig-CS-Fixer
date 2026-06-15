@@ -154,14 +154,14 @@ final class Fixer implements FixerInterface
             return false;
         }
 
-        if (!$this->inChangeSet && isset($this->fixedTokens[$tokenIndex])) {
-            return false;
-        }
-
         if ($this->inChangeSet) {
             $this->changeSet[$tokenIndex] = $content;
 
             return true;
+        }
+
+        if (isset($this->fixedTokens[$tokenIndex])) {
+            return false;
         }
 
         if (!isset($this->oldTokenValues[$tokenIndex])) {

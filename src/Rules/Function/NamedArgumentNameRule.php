@@ -12,7 +12,7 @@ use TwigCsFixer\Util\StringUtil;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensures that named argument are in snake_case (Configurable).
+ * Ensures that named arguments are in snake_case (Configurable).
  */
 final class NamedArgumentNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
