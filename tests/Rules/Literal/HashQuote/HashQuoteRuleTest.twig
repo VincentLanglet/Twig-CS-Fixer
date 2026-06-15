@@ -14,6 +14,8 @@
 {% set float = {12.3: a} %} {# It's the same than `{123: a}` #}
 {% set float = {'12.3': a} %}
 
+{% set negativeNumber = {'-1': a} %} {# `-1` is not a valid unquoted hash key #}
+
 {% set needQuote = {'data-foo': a} %}
 
 {% set namedArgument = foo(bar: true, baz: false) %}
