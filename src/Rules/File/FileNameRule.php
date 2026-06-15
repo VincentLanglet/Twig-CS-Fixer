@@ -11,7 +11,7 @@ use TwigCsFixer\Token\Tokens;
 use TwigCsFixer\Util\StringUtil;
 
 /**
- * Ensures that file name uses snake_case (Configurable).
+ * Ensures that file names use snake_case (Configurable).
  */
 final class FileNameRule extends AbstractRule implements ConfigurableRuleInterface
 {

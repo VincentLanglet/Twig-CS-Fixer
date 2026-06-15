@@ -12,7 +12,7 @@ use TwigCsFixer\Util\StringUtil;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensures that variable name use snake_case (Configurable).
+ * Ensures that variable names use snake_case (Configurable).
  */
 final class VariableNameRule extends AbstractRule implements ConfigurableRuleInterface
 {

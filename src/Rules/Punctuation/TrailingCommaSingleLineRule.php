@@ -10,7 +10,7 @@ use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
 
 /**
- * Ensures that single-line arrays, objects and argument lists do not have a trailing comma.
+ * Ensures that single-line arrays, objects, and argument lists do not have a trailing comma.
  */
 final class TrailingCommaSingleLineRule extends AbstractFixableRule
 {

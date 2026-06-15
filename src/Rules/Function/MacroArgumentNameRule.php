@@ -11,7 +11,7 @@ use TwigCsFixer\Token\Tokens;
 use TwigCsFixer\Util\StringUtil;
 
 /**
- * Ensures that named argument are in snake_case (Configurable).
+ * Ensures that named arguments are in snake_case (Configurable).
  */
 final class MacroArgumentNameRule extends AbstractRule implements ConfigurableRuleInterface
 {

@@ -11,7 +11,7 @@ use TwigCsFixer\Token\Tokens;
 use TwigCsFixer\Util\StringUtil;
 
 /**
- * Ensures that directory name uses snake_case (Configurable).
+ * Ensures that directory names use snake_case (Configurable).
  */
 final class DirectoryNameRule extends AbstractRule implements ConfigurableRuleInterface
 {
