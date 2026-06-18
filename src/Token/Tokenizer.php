@@ -642,6 +642,8 @@ final class Tokenizer implements TokenizerInterface
                 Token::BLOCK_NAME_TYPE,
                 // {{ foo ? -1 : -2 }}
                 Token::TERNARY_OPERATOR_TYPE,
+                // {{ string[:-1] }}
+                Token::UNARY_OPERATOR_TYPE,
             ])
             // {{ 1 + (-2) }}
             || $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', ':', ',']);
