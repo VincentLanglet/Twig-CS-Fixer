@@ -51,7 +51,7 @@ If you never implemented a custom rule, nothing else changed. Otherwise, ...
 
 ```diff
 - $this->isTokenMatching($token, $type, $value)
-+ $token->isTokenMatching($type, $value)
++ $token->isMatching($type, $value)
 ```
 
 ```diff
@@ -67,12 +67,12 @@ If you never implemented a custom rule, nothing else changed. Otherwise, ...
 + $tokens->findPrevious($type, $start)
 
 - $this->findPrevious($type, $tokens, $start, true)
-+ $tokens->findPrevious($type, $start, null, true)
++ $tokens->findPrevious($type, $start, 0, true)
 ```
 
 ```diff
 - protected function process(int $tokenPosition, array $tokens): void;
-+ protected function process(int $tokenIndex, Tokens $tokens): ?int;
++ protected function process(int $tokenIndex, Tokens $tokens): void;
 ```
 
 ### AbstractSpacingRule
