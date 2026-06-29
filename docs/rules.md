@@ -37,9 +37,10 @@
   Ensures that hash key are not unnecessarily quoted. Options are:
     - `useQuote`: hash key must be preferred quoted (default false).
 
-- **IncludeFunctionRule**:
+- **IncludeFunctionRule** (Configurable):
 
-  Ensures that include function is used instead of include tag.
+  Ensures that include function is used instead of include tag. Options are:
+    - `namedArguments`: use named arguments for `with_context` and `ignore_missing` instead of positional ones (default false).
 
 - **IndentRule** (Configurable):
 
