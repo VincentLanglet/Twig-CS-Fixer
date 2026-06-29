@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Token;
 
 use Twig\Environment;
+use Twig\ExpressionParser\PrefixExpressionParserInterface;
 use Twig\Source;
 use TwigCsFixer\Environment\StubbedEnvironment;
 use TwigCsFixer\Exception\CannotTokenizeException;
@@ -50,6 +51,11 @@ final class Tokenizer implements TokenizerInterface
      */
     private readonly string $operatorRegex;
 
+    /**
+     * @var list<string>
+     */
+    private readonly array $unaryAlphaOperators;
+
     private int $cursor = 0;
 
     private int $lastEOL = 0;
@@ -87,8 +93,7 @@ final class Tokenizer implements TokenizerInterface
 
     public function __construct(Environment $env)
     {
-        // Caching the regex.
-        $this->operatorRegex = $this->getOperatorRegex($env);
+        [$this->operatorRegex, $this->unaryAlphaOperators] = $this->precomputeOperators($env);
         $this->tokens = new Tokens();
     }
 
@@ -648,6 +653,14 @@ final class Tokenizer implements TokenizerInterface
             // {{ 1 + (-2) }}
             || $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', ':', ',']);
 
+            // A word-based token that is not a known unary operator is a name used as a variable
+            // e.g. `{% for row in matches %}` where `matches` is the iterable, not the operator
+            if ($isUnary && ctype_alpha($operator[0]) && !\in_array($operator, $this->unaryAlphaOperators, true)) {
+                $this->lexName($operator);
+
+                return;
+            }
+
             $this->pushToken(
                 $isUnary ? Token::UNARY_OPERATOR_TYPE : Token::OPERATOR_TYPE,
                 $operator,
@@ -796,14 +809,16 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return non-empty-string
+     * @return array{non-empty-string, list<string>}
      */
-    private function getOperatorRegex(Environment $env): string
+    private function precomputeOperators(Environment $env): array
     {
         if (StubbedEnvironment::satisfiesTwigVersion(3, 21)) {
             $expressionParsers = [];
+            $unaryAlphaOperators = [];
             // @phpstan-ignore-next-line method.internal
             foreach ($env->getExpressionParsers() as $expressionParser) {
+                $isUnary = $expressionParser instanceof PrefixExpressionParserInterface;
                 foreach ([$expressionParser->getName(), ...$expressionParser->getAliases()] as $name) {
                     // Avoid conflict with PUNCTUATION_TYPE
                     if (\in_array($name, self::PUNCTUATIONS, true)) {
@@ -811,6 +826,10 @@ final class Tokenizer implements TokenizerInterface
                     }
 
                     $expressionParsers[] = $name;
+
+                    if ($isUnary && '' !== $name && ctype_alpha($name[0])) {
+                        $unaryAlphaOperators[] = $name;
+                    }
                 }
             }
         } else {
@@ -820,6 +839,7 @@ final class Tokenizer implements TokenizerInterface
             // @phpstan-ignore-next-line method.notFound, argument.type
             $binaryOperators = array_keys($env->getBinaryOperators());
             $expressionParsers = [...$unaryOperators, ...$binaryOperators];
+            $unaryAlphaOperators = array_values(array_filter($unaryOperators, static fn ($op) => \is_string($op) && '' !== $op && ctype_alpha($op[0])));
             // @codeCoverageIgnoreEnd
         }
 
@@ -851,7 +871,7 @@ final class Tokenizer implements TokenizerInterface
             $regex[] = $r;
         }
 
-        return '/'.implode('|', $regex).'/A';
+        return ['/'.implode('|', $regex).'/A', $unaryAlphaOperators];
     }
 
     private function extractIgnoredViolations(string $comment): void
