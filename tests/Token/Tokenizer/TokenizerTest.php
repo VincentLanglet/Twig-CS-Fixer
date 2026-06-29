@@ -903,6 +903,47 @@ final class TokenizerTest extends TestCase
                 11 => Token::EOF_TYPE,
             ],
         ];
+
+        yield [
+            __DIR__.'/Fixtures/test21.twig',
+            [
+                0 => Token::BLOCK_START_TYPE,
+                1 => Token::WHITESPACE_TYPE,
+                2 => Token::BLOCK_NAME_TYPE,
+                3 => Token::WHITESPACE_TYPE,
+                4 => Token::NAME_TYPE,
+                5 => Token::WHITESPACE_TYPE,
+                6 => Token::OPERATOR_TYPE,
+                7 => Token::WHITESPACE_TYPE,
+                8 => Token::NAME_TYPE,
+                9 => Token::WHITESPACE_TYPE,
+                10 => Token::BLOCK_END_TYPE,
+                11 => Token::BLOCK_START_TYPE,
+                12 => Token::WHITESPACE_TYPE,
+                13 => Token::BLOCK_NAME_TYPE,
+                14 => Token::WHITESPACE_TYPE,
+                15 => Token::BLOCK_END_TYPE,
+                16 => Token::EOL_TYPE,
+                17 => Token::BLOCK_START_TYPE,
+                18 => Token::WHITESPACE_TYPE,
+                19 => Token::BLOCK_NAME_TYPE,
+                20 => Token::WHITESPACE_TYPE,
+                21 => Token::NAME_TYPE,
+                22 => Token::WHITESPACE_TYPE,
+                23 => Token::OPERATOR_TYPE,
+                24 => Token::WHITESPACE_TYPE,
+                25 => Token::STRING_TYPE,
+                26 => Token::WHITESPACE_TYPE,
+                27 => Token::BLOCK_END_TYPE,
+                28 => Token::BLOCK_START_TYPE,
+                29 => Token::WHITESPACE_TYPE,
+                30 => Token::BLOCK_NAME_TYPE,
+                31 => Token::WHITESPACE_TYPE,
+                32 => Token::BLOCK_END_TYPE,
+                33 => Token::EOL_TYPE,
+                34 => Token::EOF_TYPE,
+            ],
+        ];
     }
 
     /**
