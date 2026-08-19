@@ -20,7 +20,8 @@
 - **DelimiterSpacingRule** (Configurable):
 
   Ensures there is one space before `}}`, `%}` and `#}`, and after `{{`, `{%`, `{#` if the content
-  is non-empty. Options are:
+  is non-empty. Documentation comments `{## ... #}` (and their whitespace-trim variants `{##- ... -#}`
+  and `{##~ ... ~#}`) are allowed, with one space still required after the `##` marker. Options are:
     - `skipIfNewLine`: ignore the spacing check if there is a new line (default true).
 
 - **EmptyLinesRule**:

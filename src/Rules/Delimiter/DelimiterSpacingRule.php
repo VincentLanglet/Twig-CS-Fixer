@@ -12,6 +12,8 @@ use TwigCsFixer\Token\Tokens;
 /**
  * Ensures there is one space before '}}', '%}' and '#}', and after '{{', '{%', '{#'.
  * Ensure there is no space inside the empty comment `{##}` or `{#--#}.
+ * Allow documentation comments `{## ... #}` (and their whitespace-trim variants)
+ * while still requiring one space after the `##`, `##-` or `##~` marker.
  */
 final class DelimiterSpacingRule extends AbstractSpacingRule implements ConfigurableRuleInterface
 {
@@ -66,27 +68,48 @@ final class DelimiterSpacingRule extends AbstractSpacingRule implements Configur
     protected function getSpaceAfter(int $tokenIndex, Tokens $tokens): ?int
     {
         $token = $tokens->get($tokenIndex);
+
+        if ($this->isDocCommentMarker($token)) {
+            $previous = $tokens->findPrevious(Token::INDENT_TOKENS + Token::EOL_TOKENS, $tokenIndex - 1, exclude: true);
+            if (false !== $previous && $tokens->get($previous)->isMatching(Token::COMMENT_START_TYPE)) {
+                return 1;
+            }
+
+            return null;
+        }
+
         if (!$token->isMatching([Token::BLOCK_START_TYPE, Token::VAR_START_TYPE, Token::COMMENT_START_TYPE])) {
             return null;
         }
 
         $value = $token->getValue();
-        if (\array_key_exists($token->getValue(), $this->afterOverride)) {
+        if (\array_key_exists($value, $this->afterOverride)) {
             return $this->afterOverride[$value];
         }
 
         if ($token->isMatching(Token::COMMENT_START_TYPE)) {
             $next = $tokens->findNext(Token::INDENT_TOKENS + Token::EOL_TOKENS, $tokenIndex + 1, exclude: true);
-            if (
-                false !== $next
-                && $tokens->get($next)->isMatching(Token::COMMENT_END_TYPE)
-                // We cannot fix `{# -#}` since `{#-#}` means `{#- #}`
-                && \strlen($tokens->get($next)->getValue()) === \strlen($token->getValue())
-            ) {
-                return 0;
+            if (false !== $next) {
+                $nextToken = $tokens->get($next);
+                if (
+                    $nextToken->isMatching(Token::COMMENT_END_TYPE)
+                    // We cannot fix `{# -#}` since `{#-#}` means `{#- #}`
+                    && \strlen($nextToken->getValue()) === \strlen($value)
+                ) {
+                    return 0;
+                }
+                // Documentation comment `{## ... #}`: keep `{#` glued to the `##` marker.
+                if ($this->isDocCommentMarker($nextToken)) {
+                    return 0;
+                }
             }
         }
 
         return 1;
+    }
+
+    private function isDocCommentMarker(Token $token): bool
+    {
+        return $token->isMatching(Token::COMMENT_TEXT_TYPE, ['#', '#-', '#~']);
     }
 }

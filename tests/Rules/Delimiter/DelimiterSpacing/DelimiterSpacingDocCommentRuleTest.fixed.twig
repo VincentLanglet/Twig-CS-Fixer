@@ -1,0 +1,19 @@
+{## foo #}
+{## foo ~#}
+{##- foo -#}
+{##~ foo ~#}
+{##}
+{## foo #}
+{# #foo #}
+{## foo #}
+{%- props
+    ## 'default'|'secondary' The visual style variant.
+    variant = 'default'
+-%}
+{% types {
+    ## The unique identifier of the article
+    id: 'string',
+
+    ## Whether the article should be highlighted
+    featured?: 'boolean',
+} %}
