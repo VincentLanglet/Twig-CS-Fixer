@@ -55,9 +55,7 @@ abstract class FileTestCase extends TestCase
 
     final protected function getFilesystem(): Filesystem
     {
-        if (null === $this->filesystem) {
-            $this->filesystem = new Filesystem();
-        }
+        $this->filesystem ??= new Filesystem();
 
         return $this->filesystem;
     }

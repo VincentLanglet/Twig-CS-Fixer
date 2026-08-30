@@ -44,6 +44,9 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
             'DelimiterSpacing.Before:42:4' => 'Expecting 0 whitespace before "#}"; found 1.',
             'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
             'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
+            'DelimiterSpacing.After:52:1' => 'Expecting 1 whitespace after "{##"; found 2.',
+            'DelimiterSpacing.After:53:1' => 'Expecting 1 whitespace after "{##"; found 0.',
+            'DelimiterSpacing.Before:54:8' => 'Expecting 1 whitespace before "#}"; found 0.',
         ]);
     }
 
@@ -66,6 +69,9 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
             'DelimiterSpacing.Before:42:4' => 'Expecting 0 whitespace before "#}"; found 1.',
             'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
             'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
+            'DelimiterSpacing.After:52:1' => 'Expecting 1 whitespace after "{##"; found 2.',
+            'DelimiterSpacing.After:53:1' => 'Expecting 1 whitespace after "{##"; found 0.',
+            'DelimiterSpacing.Before:54:8' => 'Expecting 1 whitespace before "#}"; found 0.',
         ], fixedFilePath: __DIR__.'/DelimiterSpacingRuleTest.fixed2.twig');
     }
 
@@ -79,6 +85,9 @@ final class DelimiterSpacingRuleTest extends AbstractRuleTestCase
             'DelimiterSpacing.Before:42:4' => 'Expecting 0 whitespace before "#}"; found 1.',
             'DelimiterSpacing.After:44:1' => 'Expecting 0 whitespace after "{#-"; found 1.',
             'DelimiterSpacing.Before:44:5' => 'Expecting 0 whitespace before "-#}"; found 1.',
+            'DelimiterSpacing.After:52:1' => 'Expecting 1 whitespace after "{##"; found 2.',
+            'DelimiterSpacing.After:53:1' => 'Expecting 1 whitespace after "{##"; found 0.',
+            'DelimiterSpacing.Before:54:8' => 'Expecting 1 whitespace before "#}"; found 0.',
         ], fixedFilePath: false);
     }
 }

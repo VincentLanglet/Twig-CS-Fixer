@@ -19,8 +19,8 @@
 
 - **DelimiterSpacingRule** (Configurable):
 
-  Ensures there is one space before `}}`, `%}` and `#}`, and after `{{`, `{%`, `{#` if the content
-  is non-empty. Options are:
+  Ensures there is one space before `}}`, `%}`, `#}` and `##}`, and after `{{`, `{%`, `{#` and `{##`
+  if the content is non-empty. Options are:
     - `skipIfNewLine`: ignore the spacing check if there is a new line (default true).
 
 - **EmptyLinesRule**:

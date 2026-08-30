@@ -24,15 +24,18 @@ final class Tokenizer implements TokenizerInterface
     private const STATE_INTERPOLATION = 4;
     private const STATE_COMMENT = 5;
     private const STATE_INLINE_COMMENT = 6;
+    private const STATE_DOC_COMMENT = 7;
+    private const STATE_INLINE_DOC_COMMENT = 8;
 
     public const NAME_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
     public const NUMBER_PATTERN = '[0-9]+(?:\.[0-9]+)?([Ee][+\-][0-9]+)?';
     private const SQ_STRING_PATTERN = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
     private const DQ_STRING_PATTERN = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
 
-    private const REGEX_EXPRESSION_START = '/({%|{#|{{)[-~]?/';
+    private const REGEX_EXPRESSION_START = '/({%|{##(?!})|{#|{{)[-~]?/';
     private const REGEX_BLOCK_END = '/[-~]?%}/A';
     private const REGEX_COMMENT_END = '/[-~]?#}/'; // Must not be anchored
+    private const REGEX_DOC_COMMENT_END = '/[-~]?##}|[-~]?#}/'; // Must not be anchored
     private const REGEX_VAR_END = '/[-~]?}}/A';
     private const REGEX_VERBATIM_END = '/{%[-~]?\s*?endverbatim\s*?[-~]?%}/A';
     private const REGEX_INTERPOLATION_START = '/#{/A';
@@ -76,7 +79,7 @@ final class Tokenizer implements TokenizerInterface
     private array $expressionStarters = [];
 
     /**
-     * @var array<array{int<0, 6>, array<string, string|null>}>
+     * @var array<array{int<0, 8>, array<string, string|null>}>
      */
     private array $state = [];
 
@@ -139,7 +142,11 @@ final class Tokenizer implements TokenizerInterface
                 case self::STATE_COMMENT:
                     $this->lexComment();
                     break;
+                case self::STATE_DOC_COMMENT:
+                    $this->lexComment(true);
+                    break;
                 case self::STATE_INLINE_COMMENT:
+                case self::STATE_INLINE_DOC_COMMENT:
                     $this->lexInlineComment();
                     break;
             }
@@ -207,7 +214,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @return int<0, 6>
+     * @return int<0, 8>
      */
     private function getState(): int
     {
@@ -217,7 +224,7 @@ final class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param int<0, 6> $state
+     * @param int<0, 8> $state
      */
     private function pushState(int $state): void
     {
@@ -329,7 +336,6 @@ final class Tokenizer implements TokenizerInterface
     {
         $currentCode = $this->code[$this->cursor];
         $nextToken = $this->code[$this->cursor + 1] ?? '';
-        $next2Token = $this->code[$this->cursor + 2] ?? '';
 
         if (1 === preg_match('/\t/', $currentCode)) {
             $this->lexTab();
@@ -351,7 +357,11 @@ final class Tokenizer implements TokenizerInterface
         } elseif (1 === preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $this->lexStartDqString();
         } elseif ('#' === $currentCode) {
-            $this->lexStartInlineComment();
+            if ('#' === $nextToken) {
+                $this->lexStartInlineDocComment();
+            } else {
+                $this->lexStartInlineComment();
+            }
         } else {
             throw CannotTokenizeException::unexpectedCharacter($currentCode, $this->line);
         }
@@ -394,16 +404,19 @@ final class Tokenizer implements TokenizerInterface
     /**
      * @throws CannotTokenizeException
      */
-    private function lexComment(): void
+    private function lexComment(bool $isDocumentation = false): void
     {
-        preg_match(self::REGEX_COMMENT_END, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
+        $regex = $isDocumentation ? self::REGEX_DOC_COMMENT_END : self::REGEX_COMMENT_END;
+        preg_match($regex, $this->code, $match, \PREG_OFFSET_CAPTURE, $this->cursor);
 
         if (!isset($match[0])) {
             throw CannotTokenizeException::unclosedComment($this->line);
         }
         if ($match[0][1] === $this->cursor) {
+            $endType = $isDocumentation ? Token::DOC_COMMENT_END_TYPE : Token::COMMENT_END_TYPE;
+
             $this->processIgnoredViolations();
-            $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
+            $this->pushToken($endType, $match[0][0]);
             $this->popState();
         } else {
             if (!$this->hasStateParam('ignoredViolations')) {
@@ -492,6 +505,10 @@ final class Tokenizer implements TokenizerInterface
                 $this->pushToken(Token::COMMENT_TEXT_TYPE, $value);
             } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
                 $this->pushToken(Token::INLINE_COMMENT_TEXT_TYPE, $value);
+            } elseif (self::STATE_DOC_COMMENT === $this->getState()) {
+                $this->pushToken(Token::DOC_COMMENT_TEXT_TYPE, $value);
+            } elseif (self::STATE_INLINE_DOC_COMMENT === $this->getState()) {
+                $this->pushToken(Token::INLINE_DOC_COMMENT_TEXT_TYPE, $value);
             } else {
                 $this->pushToken(Token::TEXT_TYPE, $value);
             }
@@ -515,7 +532,10 @@ final class Tokenizer implements TokenizerInterface
         }
 
         $expressionStarter = $this->getExpressionStarter();
-        if ('{#' === $expressionStarter['match']) {
+        if ('{##' === $expressionStarter['match']) {
+            $state = self::STATE_DOC_COMMENT;
+            $tokenType = Token::DOC_COMMENT_START_TYPE;
+        } elseif ('{#' === $expressionStarter['match']) {
             $state = self::STATE_COMMENT;
             $tokenType = Token::COMMENT_START_TYPE;
         } elseif ('{%' === $expressionStarter['match']) {
@@ -538,6 +558,12 @@ final class Tokenizer implements TokenizerInterface
     {
         $this->pushToken(Token::INLINE_COMMENT_START_TYPE, '#');
         $this->pushState(self::STATE_INLINE_COMMENT);
+    }
+
+    private function lexStartInlineDocComment(): void
+    {
+        $this->pushToken(Token::INLINE_DOC_COMMENT_START_TYPE, '##');
+        $this->pushState(self::STATE_INLINE_DOC_COMMENT);
     }
 
     private function lexStartDqString(): void
@@ -567,6 +593,10 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::COMMENT_TAB_TYPE, $whitespace);
         } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
             $this->pushToken(Token::INLINE_COMMENT_TAB_TYPE, $whitespace);
+        } elseif (self::STATE_DOC_COMMENT === $this->getState()) {
+            $this->pushToken(Token::DOC_COMMENT_TAB_TYPE, $whitespace);
+        } elseif (self::STATE_INLINE_DOC_COMMENT === $this->getState()) {
+            $this->pushToken(Token::INLINE_DOC_COMMENT_TAB_TYPE, $whitespace);
         } else {
             $this->pushToken(Token::TAB_TYPE, $whitespace);
         }
@@ -585,6 +615,10 @@ final class Tokenizer implements TokenizerInterface
             $this->pushToken(Token::COMMENT_WHITESPACE_TYPE, $whitespace);
         } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
             $this->pushToken(Token::INLINE_COMMENT_WHITESPACE_TYPE, $whitespace);
+        } elseif (self::STATE_DOC_COMMENT === $this->getState()) {
+            $this->pushToken(Token::DOC_COMMENT_WHITESPACE_TYPE, $whitespace);
+        } elseif (self::STATE_INLINE_DOC_COMMENT === $this->getState()) {
+            $this->pushToken(Token::INLINE_DOC_COMMENT_WHITESPACE_TYPE, $whitespace);
         } else {
             $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
         }
@@ -594,7 +628,9 @@ final class Tokenizer implements TokenizerInterface
     {
         if (self::STATE_COMMENT === $this->getState()) {
             $this->pushToken(Token::COMMENT_EOL_TYPE, $eol);
-        } elseif (self::STATE_INLINE_COMMENT === $this->getState()) {
+        } elseif (self::STATE_DOC_COMMENT === $this->getState()) {
+            $this->pushToken(Token::DOC_COMMENT_EOL_TYPE, $eol);
+        } elseif (\in_array($this->getState(), [self::STATE_INLINE_COMMENT, self::STATE_INLINE_DOC_COMMENT], true)) {
             $this->pushToken(Token::EOL_TYPE, $eol);
             $this->popState();
         } else {
