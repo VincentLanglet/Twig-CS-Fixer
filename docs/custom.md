@@ -4,7 +4,7 @@
 
 ### Token types
 
-In order to write a custom rule, you first need to understand how the twig file is parsed.
+To write a custom rule, you first need to understand how the twig file is parsed.
 The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which can be:
 
 - **TwigCsFixer\Token\Token::EOF_TYPE**:
@@ -121,7 +121,7 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
 - **TwigCsFixer\Token\Token::EOL_TYPE**:
 
-  Any end of line except commented end of lines.
+  Any end of line except the commented end of lines.
 
 - **TwigCsFixer\Token\Token::COMMENT_START_TYPE**:
 
@@ -145,7 +145,7 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 
 - **TwigCsFixer\Token\Token::COMMENT_END_TYPE**:
 
-  The `#}` delimiter.
+  The `#}` delimiter related to the `{#` delimiter.
 
 - **TwigCsFixer\Token\Token::INLINE_COMMENT_START_TYPE**:
 
@@ -162,6 +162,46 @@ The `TwigCsFixer\Token\Tokenizer` transform the file into a list of tokens which
 - **TwigCsFixer\Token\Token::INLINE_COMMENT_TAB_TYPE**:
 
   Any commented tabulation inside an inline comment.
+
+- **TwigCsFixer\Token\Token::DOC_COMMENT_START_TYPE**:
+
+  The `{##` delimiter.
+
+- **TwigCsFixer\Token\Token::DOC_COMMENT_TEXT_TYPE**:
+
+  Any commented text inside a doc comment. Does not include whitespaces.
+
+- **TwigCsFixer\Token\Token::DOC_COMMENT_WHITESPACE_TYPE**:
+
+  Any commented whitespace inside a doc comment.
+
+- **TwigCsFixer\Token\Token::DOC_COMMENT_TAB_TYPE**:
+
+  Any commented tabulation inside a doc comment.
+
+- **TwigCsFixer\Token\Token::DOC_COMMENT_EOL_TYPE**:
+
+  Any commented end of line inside a doc comment.
+
+- **TwigCsFixer\Token\Token::DOC_COMMENT_END_TYPE**:
+
+  The `##}` or `#}` delimiter related to the `{##` delimiter.
+
+- **TwigCsFixer\Token\Token::INLINE_DOC_COMMENT_START_TYPE**:
+
+  The `##` delimiter.
+
+- **TwigCsFixer\Token\Token::INLINE_DOC_COMMENT_TEXT_TYPE**:
+
+  Any commented text inside an inline doc comment. Does not include whitespaces.
+
+- **TwigCsFixer\Token\Token::INLINE_DOC_COMMENT_WHITESPACE_TYPE**:
+
+  Any commented whitespace inside an inline doc comment.
+
+- **TwigCsFixer\Token\Token::INLINE_DOC_COMMENT_TAB_TYPE**:
+
+  Any commented tabulation inside an doc inline comment.
 
 - **TwigCsFixer\Token\Token::NAMED_ARGUMENT_SEPARATOR_TYPE**:
 
@@ -211,7 +251,7 @@ final class MyCustomRule extends \TwigCsFixer\Rules\AbstractRule {
 ## Node-based rules
 
 Rules can also be based on the Twig Node and NodeVisitor logic. Because they are
-different from the default token based rules, these rules have some limitations:
+different from the default token-based rules, these rules have some limitations:
 - they cannot be fixable.
 - they can only report the line with the error but not the token position.
 
