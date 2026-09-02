@@ -646,7 +646,16 @@ final class TokenizerTest extends TestCase
                 41 => Token::WHITESPACE_TYPE,
                 42 => Token::VAR_END_TYPE,
                 43 => Token::EOL_TYPE,
-                44 => Token::EOF_TYPE,
+                44 => Token::VAR_START_TYPE,
+                45 => Token::WHITESPACE_TYPE,
+                46 => Token::PUNCTUATION_TYPE,
+                47 => Token::UNARY_OPERATOR_TYPE,
+                48 => Token::NAME_TYPE,
+                49 => Token::PUNCTUATION_TYPE,
+                50 => Token::WHITESPACE_TYPE,
+                51 => Token::VAR_END_TYPE,
+                52 => Token::EOL_TYPE,
+                53 => Token::EOF_TYPE,
             ],
         ];
 

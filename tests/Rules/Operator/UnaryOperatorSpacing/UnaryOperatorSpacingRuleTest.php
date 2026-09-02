@@ -15,6 +15,7 @@ final class UnaryOperatorSpacingRuleTest extends AbstractRuleTestCase
             'UnaryOperatorSpacing.After:1:4' => 'Expecting 1 whitespace after "not"; found 3.',
             'UnaryOperatorSpacing.After:4:15' => 'Expecting 0 whitespace after "-"; found 1.',
             'UnaryOperatorSpacing.After:5:4' => 'Expecting 0 whitespace after "..."; found 1.',
+            'UnaryOperatorSpacing.After:6:5' => 'Expecting 0 whitespace after "..."; found 1.',
         ]);
     }
 }
