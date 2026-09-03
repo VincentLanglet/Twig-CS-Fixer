@@ -84,7 +84,22 @@ final class TwigCsFixerCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        if ($input->hasArgument('command') && 'fix' === $input->getArgument('command')) {
+        /*
+         * This check is needed to avoid calling getFirstArgument when no command name is set.
+         * Otherwise, a \TypeError error is thrown.
+         *
+         * @see https://github.com/symfony/symfony/issues/52580
+         */
+        if (!$input->hasArgument('command')) {
+            return;
+        }
+
+        /*
+         * `$input->getArgument('command')` cannot be used since Symfony 8.1.6.
+         *
+         * @see https://github.com/symfony/symfony/pull/65613
+         */
+        if ('fix' === $input->getFirstArgument()) {
             $input->setOption('fix', true);
         }
     }
