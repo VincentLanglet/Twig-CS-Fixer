@@ -687,7 +687,7 @@ final class Tokenizer implements TokenizerInterface
                 Token::UNARY_OPERATOR_TYPE,
             ])
             // {{ 1 + (-2) }}
-            || $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', ':', ',']);
+            || $previousToken->isMatching(Token::PUNCTUATION_TYPE, ['(', '[', '{', ':', ',']);
 
             // A word-based token that is not a known unary operator is a name used as a variable
             // e.g. `{% for row in matches %}` where `matches` is the iterable, not the operator
