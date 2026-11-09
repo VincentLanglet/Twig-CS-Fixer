@@ -1,0 +1,8 @@
+{% embed 'card.html.twig' %}
+    {% block content %}
+        {{ 'Hello'|trans }}
+        {% embed 'card.html.twig' %}
+            {% block content %}{{ t('hi') }}{% endblock %}
+        {% endembed %}
+    {% endblock %}
+{% endembed %}
