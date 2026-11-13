@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TwigCsFixer\Rules\Function;
 
 use TwigCsFixer\Rules\AbstractFixableRule;
+use TwigCsFixer\Rules\ConfigurableRuleInterface;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
 use Webmozart\Assert\Assert;
@@ -12,8 +13,19 @@ use Webmozart\Assert\Assert;
 /**
  * Ensures that the include function is used instead of include tag.
  */
-final class IncludeFunctionRule extends AbstractFixableRule
+final class IncludeFunctionRule extends AbstractFixableRule implements ConfigurableRuleInterface
 {
+    public function __construct(private readonly bool $namedArguments = false)
+    {
+    }
+
+    public function getConfiguration(): array
+    {
+        return [
+            'namedArguments' => $this->namedArguments,
+        ];
+    }
+
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
         $token = $tokens->get($tokenIndex);
@@ -69,14 +81,24 @@ final class IncludeFunctionRule extends AbstractFixableRule
         }
 
         $endInclude = ') '.str_replace('%}', '}}', $tokens->get($closingTag)->getValue());
-        if ($ignoreMissing) {
-            $endInclude = ', true'.$endInclude;
-        }
-        if ($ignoreMissing || $withoutContext) {
-            $endInclude = \sprintf(', %s', $withoutContext ? 'false' : 'true').$endInclude;
+        if ($this->namedArguments) {
+            // Named arguments let us skip default-valued and placeholder arguments.
+            if ($ignoreMissing) {
+                $endInclude = ', ignore_missing=true'.$endInclude;
+            }
+            if ($withoutContext) {
+                $endInclude = ', with_context=false'.$endInclude;
+            }
+        } else {
+            if ($ignoreMissing) {
+                $endInclude = ', true'.$endInclude;
+            }
+            if ($ignoreMissing || $withoutContext) {
+                $endInclude = \sprintf(', %s', $withoutContext ? 'false' : 'true').$endInclude;
 
-            if (!$withVariable) {
-                $endInclude = ', []'.$endInclude;
+                if (!$withVariable) {
+                    $endInclude = ', []'.$endInclude;
+                }
             }
         }
 
