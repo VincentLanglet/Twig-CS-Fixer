@@ -129,7 +129,7 @@ final class Linter
                     $nodeVisitor->setReport($report, $stream->getIgnoredViolations());
                 }
 
-                $traverser->traverse($node);
+                $this->traverse($traverser, $node);
             }
 
             // Only cache the file if there is no error in order to
@@ -141,6 +141,21 @@ final class Linter
         }
 
         return $report;
+    }
+
+    /**
+     * Embedded templates (`{% embed %}`, components) are stored in an attribute
+     * of the module, which the traverser does not visit.
+     */
+    private function traverse(NodeTraverser $traverser, ModuleNode $node): void
+    {
+        $traverser->traverse($node);
+
+        /** @var iterable<ModuleNode> $embeddedTemplates */
+        $embeddedTemplates = $node->getAttribute('embedded_templates');
+        foreach ($embeddedTemplates as $embeddedTemplate) {
+            $this->traverse($traverser, $embeddedTemplate);
+        }
     }
 
     private function parseTemplate(string $content, string $filePath, Report $report): ?ModuleNode
