@@ -73,7 +73,6 @@ final class Linter
                     $newContent = $fixer->fixFile($content, $ruleset);
                     // Don't write the file if it is unchanged in order not to invalidate mtime based caches.
                     if ($newContent !== $content) {
-                        $node = null;
                         file_put_contents($filePath, $newContent);
                         $content = $newContent;
                         $report->addFixedFile($filePath);
