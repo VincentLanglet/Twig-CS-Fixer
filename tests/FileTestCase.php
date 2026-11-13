@@ -92,7 +92,8 @@ abstract class FileTestCase extends TestCase
             if (false === $tmp) {
                 $this->tmp = $this->getDir();
             } else {
-                $this->tmp = $tmp.\DIRECTORY_SEPARATOR.'twig-cs-fixer';
+                // Use a dedicated directory per test class to avoid sharing fixtures
+                $this->tmp = $tmp.\DIRECTORY_SEPARATOR.'twig-cs-fixer'.\DIRECTORY_SEPARATOR.md5($this->getDir());
             }
         }
 
