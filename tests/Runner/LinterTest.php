@@ -318,6 +318,37 @@ final class LinterTest extends FileTestCase
         static::assertSame(13, $message->getLine());
     }
 
+    public function testNodeVisitorRuleVisitsEmbeddedTemplates(): void
+    {
+        $filePath = __DIR__.'/Fixtures/Linter/node_visitor_embed.twig';
+
+        static::assertSame(
+            [
+                3 => 'Filter "trans" is not allowed.',
+                5 => 'Function "t" is not allowed.',
+            ],
+            $this->getNodeVisitorViolations($filePath),
+        );
+    }
+
+    public function testNodeVisitorRuleVisitsComponents(): void
+    {
+        if (!InstalledVersions::satisfies(new VersionParser(), 'symfony/ux-twig-component', '>=2.11.0')) {
+            static::markTestSkipped('symfony/ux-twig-component >=2.11.0 is required.');
+        }
+
+        $filePath = __DIR__.'/Fixtures/Linter/node_visitor_component.twig';
+
+        static::assertSame(
+            [
+                2 => 'Filter "trans" is not allowed.',
+                5 => 'Function "t" is not allowed.',
+                8 => 'Filter "trans" is not allowed.',
+            ],
+            $this->getNodeVisitorViolations($filePath),
+        );
+    }
+
     public function testNodeVisitorWithInvalidFiles(): void
     {
         $filePath = $this->getTmpPath(__DIR__.'/Fixtures/Linter/file.twig');
@@ -377,5 +408,28 @@ final class LinterTest extends FileTestCase
         } else {
             static::assertSame('File is invalid: Unexpected token "end of template" of value "".', $messages[0]->getMessage());
         }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function getNodeVisitorViolations(string $filePath): array
+    {
+        $ruleset = new Ruleset();
+        $ruleset->addRule(new ForbiddenFilterRule(['trans']));
+        $ruleset->addRule(new ForbiddenFunctionRule(['t']));
+
+        $env = new StubbedEnvironment();
+        $linter = new Linter($env, new Tokenizer($env));
+
+        $report = $linter->run([new \SplFileInfo($filePath)], $ruleset);
+
+        $violations = [];
+        foreach ($report->getFileViolations($filePath) as $violation) {
+            $violations[(int) $violation->getLine()] = $violation->getMessage();
+        }
+        ksort($violations);
+
+        return $violations;
     }
 }

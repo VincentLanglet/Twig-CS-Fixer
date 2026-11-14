@@ -1,0 +1,9 @@
+{% component 'Card' %}
+    {% block content %}{{ 'Hello'|trans }}{% endblock %}
+{% endcomponent %}
+<twig:Card>
+    {{ t('hi') }}
+</twig:Card>
+<twig:Card>
+    <twig:block name="footer">{{ 'World'|trans }}</twig:block>
+</twig:Card>
