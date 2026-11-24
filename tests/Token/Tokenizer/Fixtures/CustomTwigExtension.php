@@ -4,41 +4,23 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Token\Tokenizer\Fixtures;
 
-use Twig\ExpressionParser;
 use Twig\ExpressionParser\ExpressionParserInterface;
 use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
-use Twig\Extension\ExtensionInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Unary\NotUnary;
 
-final class CustomTwigExtension implements ExtensionInterface
+final class CustomTwigExtension extends AbstractExtension
 {
-    public function getTokenParsers(): array
-    {
-        return [];
-    }
+    private const LEGACY_OPERATOR_RIGHT = 2;
 
-    public function getNodeVisitors(): array
-    {
-        return [];
-    }
-
-    public function getFilters(): array
-    {
-        return [];
-    }
-
-    public function getTests(): array
-    {
-        return [];
-    }
-
-    public function getFunctions(): array
-    {
-        return [];
-    }
-
+    /**
+     * @return array{
+     *     array<string, array{precedence: int, class: class-string<NotUnary>}>,
+     *     array<string, array{precedence: int, class: class-string<AddBinary>, associativity: 2}>
+     * }
+     */
     public function getOperators(): array
     {
         return [
@@ -49,7 +31,7 @@ final class CustomTwigExtension implements ExtensionInterface
             ['+sum' => [
                 'precedence' => 0,
                 'class' => AddBinary::class,
-                'associativity' => ExpressionParser::OPERATOR_RIGHT, // @phpstan-ignore classConstant.deprecatedClass
+                'associativity' => self::LEGACY_OPERATOR_RIGHT,
             ]],
         ];
     }

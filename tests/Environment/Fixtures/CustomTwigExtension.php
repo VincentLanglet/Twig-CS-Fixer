@@ -4,48 +4,18 @@ declare(strict_types=1);
 
 namespace TwigCsFixer\Tests\Environment\Fixtures;
 
-use Twig\ExpressionParser\ExpressionParserInterface;
-use Twig\Extension\ExtensionInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TokenParser\TokenParserInterface;
 
-final class CustomTwigExtension implements ExtensionInterface
+final class CustomTwigExtension extends AbstractExtension
 {
+    /**
+     * @return list<TokenParserInterface>
+     */
     public function getTokenParsers(): array
     {
         return [
             new CustomTokenParser(),
         ];
-    }
-
-    public function getNodeVisitors(): array
-    {
-        return [];
-    }
-
-    public function getFilters(): array
-    {
-        return [];
-    }
-
-    public function getTests(): array
-    {
-        return [];
-    }
-
-    public function getFunctions(): array
-    {
-        return [];
-    }
-
-    public function getOperators(): array
-    {
-        return [[], []];
-    }
-
-    /**
-     * @return array<ExpressionParserInterface>
-     */
-    public function getExpressionParsers(): array
-    {
-        return [];
     }
 }

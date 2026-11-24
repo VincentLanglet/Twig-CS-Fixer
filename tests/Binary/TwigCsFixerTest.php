@@ -41,4 +41,18 @@ final class TwigCsFixerTest extends FileTestCase
         $version = InstalledVersions::getPrettyVersion(Application::PACKAGE_NAME) ?? '';
         static::assertStringContainsString('Twig-CS-Fixer '.$version, $process->getOutput());
     }
+
+    public function testBinaryWithCustomConfiguration(): void
+    {
+        $process = new Process([
+            TestHelper::getOsPath(__DIR__.'/../../bin/twig-cs-fixer'),
+            'lint',
+            '-c',
+            'Fixtures/.twig-cs-fixer.php',
+            'Fixtures/file.twig',
+        ]);
+
+        static::assertSame(0, $process->run(), $process->getErrorOutput());
+        static::assertStringContainsString('OK', $process->getOutput());
+    }
 }

@@ -29,7 +29,7 @@ final class ApplicationTest extends TestCase
 
     public function testLibWithoutReference(): void
     {
-        $app = new Application('NoReference', 'symfony/service-implementation');
+        $app = new Application('NoReference', 'psr/log-implementation');
         static::assertSame('NoReference', $app->getName());
         static::assertSame('dev', $app->getVersion());
     }

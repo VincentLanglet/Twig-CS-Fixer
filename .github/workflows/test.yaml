@@ -25,6 +25,7 @@ jobs:
                 dependencies: [highest]
                 runner: [ubuntu-latest]
                 symfony-require: ['']
+                twig-require: ['']
                 include:
                     - php-version: 8.1
                       dependencies: lowest
@@ -37,6 +38,10 @@ jobs:
                       dependencies: highest
                       symfony-require: 8.0.*
                       name: PHP 8.5 - highest - Symfony 8.0
+                    - php-version: 8.5
+                      dependencies: highest
+                      twig-require: ^4.0@beta
+                      name: PHP 8.5 - highest - Twig 4
 
         steps:
             - name: Checkout
@@ -60,6 +65,10 @@ jobs:
             - name: Add matrix to composer.json for cache key
               if: matrix.symfony-require != ''
               run: composer config extra.symfony-require-for-cache "${{ matrix.symfony-require }}"
+
+            - name: Select Twig version
+              if: matrix.twig-require != ''
+              run: composer require --no-update "twig/twig:${{ matrix.twig-require }}"
 
             - name: Install Composer dependencies ${{ matrix.dependencies }}
               uses: ramsey/composer-install@v3
