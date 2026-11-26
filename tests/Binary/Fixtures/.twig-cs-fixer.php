@@ -5,12 +5,11 @@ declare(strict_types=1);
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Twig\Environment;
-use Twig\Extension\ExtensionInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
-use Twig\Parser;
 use Twig\Token;
-use Twig\TokenParser\TokenParserInterface;
+use Twig\TokenParser\AbstractTokenParser;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\Report\Report;
 use TwigCsFixer\Report\Reporter\ReporterInterface;
@@ -55,43 +54,10 @@ $reporter = new class implements ReporterInterface {
     }
 };
 
-$twigExtension = new class implements ExtensionInterface {
-    public function getTokenParsers(): array
-    {
-        return [];
-    }
-
-    public function getNodeVisitors(): array
-    {
-        return [];
-    }
-
-    public function getFilters(): array
-    {
-        return [];
-    }
-
-    public function getTests(): array
-    {
-        return [];
-    }
-
-    public function getFunctions(): array
-    {
-        return [];
-    }
-
-    public function getOperators(): array
-    {
-        return [[], []];
-    }
+$twigExtension = new class extends AbstractExtension {
 };
 
-$tokenParser = new class implements TokenParserInterface {
-    public function setParser(Parser $parser): void
-    {
-    }
-
+$tokenParser = new class extends AbstractTokenParser {
     public function parse(Token $token): Node
     {
         return new Node();
